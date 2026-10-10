@@ -900,6 +900,10 @@
     <!-- TAMBAHKAN DUA BARIS SCRIPT INI DI SINI -->
     <script src="database_pegawai.js?v=1"></script>
     <script src="database_perangkat.js?v=1"></script>
+
+	<!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 	
     <script>
 
@@ -1076,19 +1080,68 @@
         }
 
         // 1. SAVE DENGAN TRY CATCH
+        <script>
+        // 1. MASUKKAN KONFIGURASI FIREBASE ANDA DI SINI
+        const firebaseConfig = {
+  			apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+  			authDomain: "smfr-database.firebaseapp.com",
+  			databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+  			projectId: "smfr-database",
+  			storageBucket: "smfr-database.firebasestorage.app",
+  			messagingSenderId: "890374389163",
+  			appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
+  			measurementId: "G-S4YSHLR19V"
+		};
+
+        // 2. INISIALISASI FIREBASE
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 3. VARIABEL DATA (Dikosongkan dulu, akan diisi oleh Firebase)
+        let dataPegawai = [];
+        let dataPerangkat = [];
+        let logPeminjaman = [];
+
+        // 4. LISTENER REAL-TIME (Menarik data otomatis setiap ada perubahan di server)
+        database.ref('smfr_sistem_v1').on('value', (snapshot) => {
+            const dataServer = snapshot.val();
+            
+            if (dataServer) {
+                // Jika database di server ada isinya, gunakan data dari server
+                dataPegawai = dataServer.pegawai || [];
+                dataPerangkat = dataServer.perangkat || [];
+                logPeminjaman = dataServer.logs || [];
+            } else {
+                // Jika database server KOSONG (baru pertama kali dibuat), 
+                // tarik data dari file database_pegawai.js & database_perangkat.js, lalu dorong ke Firebase
+                dataPegawai = initialPegawai;
+                dataPerangkat = initialPerangkat;
+                logPeminjaman = [];
+                saveDataToStorage(); // Memicu upload ke Firebase
+            }
+
+            // PERBARUI SELURUH TAMPILAN WEB SECARA OTOMATIS
+            renderPegawaiTable();
+            renderTableDatabase(dataPerangkat);
+            renderSelectedFormDevicesTable();
+            updateDashboardStats();
+            renderLogTable();
+            renderPengembalianTable();
+        });
+
+        // 5. FUNGSI SAVE TERBARU (Mengirim data ke Firebase, bukan ke LocalStorage)
         function saveDataToStorage() {
             try {
-                localStorage.setItem('smfr_pegawai_v19', JSON.stringify(dataPegawai));
-                localStorage.setItem('smfr_perangkat_v19', JSON.stringify(dataPerangkat));
-                localStorage.setItem('smfr_logs_v19', JSON.stringify(logPeminjaman));
-                updateDashboardStats();
+                // Kirim ke server Firebase
+                database.ref('smfr_sistem_v1').set({
+                    pegawai: dataPegawai,
+                    perangkat: dataPerangkat,
+                    logs: logPeminjaman
+                });
+                
                 return true;
             } catch (e) {
-                if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                    alert('GAGAL MENYIMPAN! Memori penyimpanan penuh. Hal ini dikarenakan ukuran gambar yang diupload terlalu besar atau data sudah terlalu banyak.');
-                } else {
-                    alert('Terjadi kesalahan saat menyimpan data: ' + e.message);
-                }
+                alert('GAGAL MENYIMPAN KE SERVER! Pastikan Anda terhubung ke internet. Error: ' + e.message);
                 return false;
             }
         }
