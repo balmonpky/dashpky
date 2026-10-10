@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATABASE PERANGKAT SMFR BALMON SFRID KELAS II PALANGKARAYA</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SheetJS for Excel Import -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: #0f4c81;
+            --accent-blue: #1b75bc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+
+        /* BACKGROUND BIRU MUDA TRANSPARAN */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0f2fe; /* Light Blue */
+            background-image: linear-gradient(135deg, rgba(224, 242, 254, 0.8) 0%, rgba(186, 230, 253, 0.7) 100%);
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            padding: 0.8rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .logo-container:hover {
+            transform: scale(1.08);
+        }
+        .logo-container img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        /* WARNA ICON MENARIK */
+        .icn-form { color: #f43f5e; } /* Rose */
+        .icn-return { color: #10b981; } /* Emerald */
+        .icn-db { color: #3b82f6; } /* Blue */
+        .icn-peg { color: #8b5cf6; } /* Violet */
+        .icn-log { color: #f59e0b; } /* Amber */
+        .icn-save { color: #14b8a6; } /* Teal */
+        .icn-add { color: #ec4899; } /* Pink */
+        .icn-search { color: #06b6d4; } /* Cyan */
+
+        /* Ukuran Standar Foto 2,5 cm x 2,5 cm (~94px x 94px) */
+        .device-img-thumbnail {
+            width: 94px;
+            height: 94px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .device-img-sm {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Efek Transparan (Glassmorphism) pada Card */
+        .stat-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-left: 5px solid var(--primary-blue);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .card-custom {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 12px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 76, 129, 0.3);
+        }
+
+        /* Profile Card Styling */
+        .peminjam-profile-card {
+            background: linear-gradient(135deg, rgba(224, 242, 254, 0.9) 0%, rgba(240, 249, 255, 0.9) 100%);
+            border: 1px solid #bae6fd;
+            border-radius: 14px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(15, 76, 129, 0.2);
+        }
+
+        .table-custom {
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.88rem;
+        }
+        .table-custom thead th {
+            background-color: rgba(241, 245, 249, 0.9);
+            color: #475569;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.85rem 0.75rem;
+            white-space: nowrap;
+        }
+        .table-custom tbody td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            background: transparent;
+        }
+
+        .kop-surat-img {
+            width: 100%;
+            max-height: 130px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 15px auto;
+            border-bottom: 3px double #333;
+            padding-bottom: 8px;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+ <!-- NAVBAR HEADER -->
+    <nav class="navbar navbar-dark navbar-custom sticky-top mb-4">
+        <div class="container-fluid px-lg-4 d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center fw-bold fs-5" href="#">
+                <div class="logo-container me-3">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                </div>
+                <div>
+                    <span class="text-white d-block fs-6 tracking-wide">DATABASE PERANGKAT SMFR</span>
+                    <small class="text-warning fw-semibold">BALMON SFRID KELAS II PALANGKARAYA</small>
+                </div>
+            </a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <span class="navbar-text text-white-50 d-none d-lg-inline small">
+                    Sistem Informasi Inventaris, Peminjaman & Pengembalian Perangkat
+                </span>
+                <!-- Tambahan Tombol Home -->
+                <a href="index.html" class="btn btn-outline-light btn-sm fw-bold" onclick="loopToHome(event)">
+                    <i class="bi bi-house-door-fill me-1"></i> Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-lg-4 mb-5">
+        
+        <!-- DASHBOARD STATISTIK -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="card stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle p-3 bg-primary-subtle text-primary me-3">
+                            <i class="bi bi-hdd-stack fs-3 icn-db"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Total Perangkat</div>
+                            <h3 class="mb-0 fw-bold" id="statTotalPerangkat">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card stat-card p-3" style="border-left-color: #198754;">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle p-3 bg-success-subtle text-success me-3">
+                            <i class="bi bi-check-circle fs-3 icn-return"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Tersedia</div>
+                            <h3 class="mb-0 fw-bold text-success" id="statTersedia">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card stat-card p-3" style="border-left-color: #ffc107;">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle p-3 bg-warning-subtle text-warning me-3">
+                            <i class="bi bi-box-arrow-up-right fs-3 icn-log"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Sedang Dipinjam</div>
+                            <h3 class="mb-0 fw-bold text-warning" id="statDipinjam">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card stat-card p-3" style="border-left-color: #dc3545;">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle p-3 bg-danger-subtle text-danger me-3">
+                            <i class="bi bi-exclamation-triangle fs-3 icn-form"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Terlambat Kembali</div>
+                            <h3 class="mb-0 fw-bold text-danger" id="statTerlambat">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN TABS NAVIGATION -->
+        <ul class="nav nav-pills mb-4 gap-2 p-2 rounded-4 card-custom shadow-sm" id="mainTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form-pane" type="button">
+                    <i class="bi bi-file-earmark-plus me-2 fs-6 icn-form"></i>Form Peminjaman
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="pengembalian-tab" data-bs-toggle="tab" data-bs-target="#pengembalian-pane" type="button">
+                    <i class="bi bi-box-arrow-in-down-left me-2 fs-6 icn-return"></i>Pengembalian Perangkat
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database-pane" type="button">
+                    <i class="bi bi-database me-2 fs-6 icn-db"></i>Database Perangkat (<span id="countDevTab">0</span>)
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="pegawai-tab" data-bs-toggle="tab" data-bs-target="#pegawai-pane" type="button">
+                    <i class="bi bi-people-fill me-2 fs-6 icn-peg"></i>Database Pegawai (<span id="countPegTab">0</span>)
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="pinjam-tab" data-bs-toggle="tab" data-bs-target="#pinjam-pane" type="button">
+                    <i class="bi bi-journal-text me-2 fs-6 icn-log"></i>Log Peminjaman (<span id="logBadge">0</span>)
+                </button>
+            </li>
+        </ul>
+
+        <!-- TAB CONTENT -->
+        <div class="tab-content" id="mainTabContent">
+            
+            <!-- PANEL FORM PEMINJAMAN -->
+            <div class="tab-pane fade show active" id="form-pane" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <div class="card card-custom p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                <div>
+                                    <h4 class="fw-bold text-primary mb-1"><i class="bi bi-card-checklist me-2 icn-form"></i>Formulir Peminjaman Perangkat</h4>
+                                    <p class="text-muted small mb-0">Pilih pegawai, susun nomor surat tugas, dan tentukan perangkat.</p>
+                                </div>
+                                <button class="btn btn-outline-success btn-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#modalAddPegawai">
+                                    <i class="bi bi-person-plus me-1 icn-peg"></i>+ Input Pegawai Baru
+                                </button>
+                            </div>
+
+                            <form id="loanForm">
+                                <!-- PEGAWAI SECTION -->
+                                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-person-badge me-2 icn-peg"></i>Data Peminjam Perangkat</h5>
+                                <div class="row g-3 mb-4 align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <label class="form-label fw-semibold mb-0">Pilih Pegawai / Peminjam <span class="text-danger">*</span></label>
+                                            <button type="button" class="btn btn-primary btn-sm fw-semibold shadow-sm" onclick="openSelectPegawaiModalForForm()">
+                                                <i class="bi bi-search me-1"></i> Cari & Pilih Pegawai
+                                            </button>
+                                        </div>
+                                        <div id="peminjamCardPreview" class="peminjam-profile-card d-none mt-2">
+                                            <div class="user-avatar-circle" id="previewAvatar">--</div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1 text-primary" id="previewNama">-</h6>
+                                                <div class="small text-muted"><i class="bi bi-card-heading me-1"></i>NIP: <span id="previewNip" class="fw-semibold text-dark">-</span></div>
+                                                <div class="small text-muted"><i class="bi bi-briefcase me-1"></i><span id="previewJabatan">-</span></div>
+                                            </div>
+                                        </div>
+                                        <div id="noPegawaiSelectedNote" class="text-muted small fst-italic p-2 border rounded bg-white">
+                                            Belum ada pegawai yang dipilih. Klik tombol <strong>"Cari & Pilih Pegawai"</strong> di atas.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- DASAR SURAT TUGAS SECTION -->
+                                <h5 class="fw-bold text-dark mb-3 pt-3 border-top"><i class="bi bi-file-earmark-text me-2 icn-log"></i>Dasar Peminjaman (Surat Tugas)</h5>
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Nomor Surat Tugas <span class="text-danger">*</span></label>
+                                    <div class="input-group shadow-sm border rounded">
+                                        <span class="input-group-text bg-white fw-bold text-dark border-0 border-end">Nomor :</span>
+                                        <input type="number" class="form-control border-0" id="noSuratUrut" placeholder="Contoh: 15" required style="max-width: 120px;">
+                                        
+                                        <span class="input-group-text bg-primary-subtle text-primary border-0 fw-bold border-start border-end">
+                                            /Balmon.62/KP.01.06/
+                                        </span>
+                                        
+                                        <select class="form-select border-0" id="noSuratBulan" required style="max-width: 90px; cursor: pointer;">
+                                            <option value="" disabled selected>Bln</option>
+                                            <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                                            <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                                            <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                                            <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                                        </select>
+                                        
+                                        <span class="input-group-text bg-white fw-bold border-0 border-start border-end">/</span>
+                                        
+                                        <select class="form-select border-0" id="noSuratTahun" required style="max-width: 110px; cursor: pointer;">
+                                            <option value="" disabled selected>Thn</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                        </select>
+                                    </div>
+                                    <small class="text-muted mt-1 d-block">Format otomatis disusun menjadi: <code>Nomor : [Isian] /Balmon.62/KP.01.06/[Bulan]/[Tahun]</code></small>
+                                </div>
+
+                                <!-- PERANGKAT MULTI-ITEM -->
+                                <div class="d-flex justify-content-between align-items-center mb-3 pt-3 border-top">
+                                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-tools me-2 icn-db"></i>Daftar Perangkat Yang Dipinjam</h5>
+                                    <button type="button" class="btn btn-primary btn-sm fw-semibold shadow-sm" onclick="openSelectDeviceModalForForm()">
+                                        <i class="bi bi-plus-circle me-1 icn-add text-white"></i>+ Tambah Perangkat
+                                    </button>
+                                </div>
+
+                                <div class="table-responsive mb-4 rounded border bg-white">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Foto (2,5x2,5cm)</th>
+                                                <th>NUP</th>
+                                                <th>Nama Perangkat</th>
+                                                <th>Merk / Type</th>
+                                                <th>Kondisi Saat Ini</th>
+                                                <th>Lokasi Storage</th>
+                                                <th class="text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="selectedFormDevicesTableBody">
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted py-3">Belum ada perangkat yang dipilih. Klik tombol <strong>"+ Tambah Perangkat"</strong> di atas.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- DETAIL WAKTU & KEPERLUAN -->
+                                <h5 class="fw-bold text-dark mb-3 pt-3 border-top"><i class="bi bi-calendar-event me-2 icn-return"></i>Waktu & Maksud Peminjaman</h5>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Tanggal Pinjam <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="tglPinjam" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Rencana Tanggal Kembali <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="tglKembali" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-medium">Maksud / Keperluan Kegiatan <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="kegiatan" rows="3" placeholder="Contoh: Monitoring Spektrum Frekuensi Radio Lapangan" required></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="button" class="btn btn-light px-4 bg-white border" onclick="resetFormPeminjaman()">Reset Form</button>
+                                    <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm"><i class="bi bi-check2-circle me-2"></i>Proses Peminjaman</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL KHUSUS PENGEMBALIAN PERANGKAT -->
+            <div class="tab-pane fade" id="pengembalian-pane" role="tabpanel">
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="fw-bold text-primary mb-1"><i class="bi bi-box-arrow-in-down-left me-2 icn-return"></i>Menu Pengembalian Perangkat</h4>
+                            <p class="text-muted small mb-0">Proses pengembalian perangkat, konfirmasi waktu, kondisi fisik, dan evaluasi keterlambatan.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive rounded-3 border bg-white">
+                        <table class="table table-hover table-custom align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Peminjam</th>
+                                    <th>No Surat Tugas</th>
+                                    <th>Daftar Perangkat & Foto</th>
+                                    <th>Rencana Kembali</th>
+                                    <th>Indikator Tenggat</th>
+                                    <th class="text-center">Aksi Pengembalian</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pengembalianTableBody">
+                                <!-- Dynamic Active Borrowings -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL DATABASE PERANGKAT SMFR -->
+            <div class="tab-pane fade" id="database-pane" role="tabpanel">
+                <div class="card card-custom p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                        <div>
+                            <h4 class="fw-bold text-primary mb-1"><i class="bi bi-hdd-network me-2 icn-db"></i>Database Perangkat SMFR</h4>
+                            <p class="text-muted small mb-0">Menampilkan seluruh data perangkat BMN resmi secara presisi.</p>
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <label class="btn btn-outline-success btn-sm fw-semibold mb-0 cursor-pointer">
+                                <i class="bi bi-file-earmark-excel me-1"></i>Import Excel
+                                <input type="file" id="excelPerangkatInput" accept=".xlsx, .xls, .csv" class="d-none" onchange="importExcelPerangkat(event)">
+                            </label>
+                            <button class="btn btn-primary fw-semibold btn-sm" onclick="openAddDeviceModal()">
+                                <i class="bi bi-plus-lg me-1 icn-add text-white"></i>+ Input Perangkat
+                            </button>
+                            <button class="btn btn-danger btn-sm fw-semibold shadow-sm" onclick="deleteAllPerangkat()" title="Hapus Semua Perangkat">
+                                <i class="bi bi-trash me-1"></i> Hapus Semua
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 align-items-center mb-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted icn-search"></i></span>
+                                <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Cari Perangkat, Merk, NUP, Satker, atau Lokasi...">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="filterStasiun">
+                                <option value="ALL">Semua Stasiun</option>
+                                <option value="PORTABLE">PORTABLE</option>
+                                <option value="BERGERAK">BERGERAK</option>
+                                <option value="FIXED">FIXED</option>
+                                <option value="TRANSPORTABLE">TRANSPORTABLE</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive rounded-3 border bg-white" style="max-height: 600px; overflow: auto;">
+                        <table class="table table-hover table-custom align-middle mb-0" id="deviceTable">
+                            <thead class="sticky-top" style="z-index: 2;">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Foto (2,5x2,5cm)</th>
+                                    <th>Satker</th>
+                                    <th>Kode BMN</th>
+                                    <th>NUP</th>
+                                    <th>Nama Perangkat</th>
+                                    <th>Merk</th>
+                                    <th>Type</th>
+                                    <th>Tahun Pengadaan</th>
+                                    <th>Jenis</th>
+                                    <th>Stasiun</th>
+                                    <th>Site</th>
+                                    <th>Kondisi</th>
+                                    <th>Keterangan</th>
+                                    <th>Integrasi Web</th>
+                                    <th>Lokasi Perangkat</th>
+                                    <th class="text-center sticky-end bg-light">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deviceTableBody">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL DATABASE PEGAWAI -->
+            <div class="tab-pane fade" id="pegawai-pane" role="tabpanel">
+                <div class="card card-custom p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                        <div>
+                            <h4 class="fw-bold text-primary mb-1"><i class="bi bi-people-fill me-2 icn-peg"></i>Database Pegawai</h4>
+                            <p class="text-muted small mb-0">Daftar seluruh pegawai Balai Monitor SFR Kelas II Palangkaraya.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <label class="btn btn-outline-success btn-sm fw-semibold mb-0 cursor-pointer">
+                                <i class="bi bi-file-earmark-excel me-1"></i>Import Excel
+                                <input type="file" id="excelPegawaiInput" accept=".xlsx, .xls, .csv" class="d-none" onchange="importExcelPegawai(event)">
+                            </label>
+                            <button class="btn btn-danger btn-sm fw-semibold shadow-sm" onclick="deleteAllPegawai()" title="Hapus Semua Pegawai">
+                                <i class="bi bi-trash me-1"></i> Hapus Semua
+                            </button>
+                            <button class="btn btn-success fw-semibold btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddPegawai">
+                                <i class="bi bi-person-plus me-1"></i>+ Tambah Pegawai
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive rounded-3 border bg-white" style="max-height: 600px; overflow-y: auto;">
+                        <table class="table table-hover table-custom align-middle mb-0">
+                            <thead class="sticky-top">
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIP</th>
+                                    <th>Nama Lengkap & Gelar</th>
+                                    <th>Jabatan</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pegawaiTableBody">
+                                <!-- Dynamic Pegawai -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL LOG PEMINJAMAN DENGAN SURAT TUGAS -->
+            <div class="tab-pane fade" id="pinjam-pane" role="tabpanel">
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="fw-bold text-primary mb-1"><i class="bi bi-clock-history me-2 icn-log"></i>Log & Riwayat Peminjaman</h4>
+                            <p class="text-muted small mb-0">Daftar peminjaman perangkat beserta nomor surat tugas dan kondisi fisik.</p>
+                        </div>
+                        <button class="btn btn-outline-success fw-semibold btn-sm" onclick="exportToCSV()">
+                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export Log (CSV)
+                        </button>
+                    </div>
+
+                    <div class="table-responsive rounded-3 border bg-white">
+                        <table class="table table-hover table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Peminjam</th>
+                                    <th>No Surat Tugas</th>
+                                    <th>Daftar Perangkat & Foto</th>
+                                    <th>Kondisi (Awal ➔ Akhir)</th>
+                                    <th>Tgl Pinjam</th>
+                                    <th>Tgl Kembali</th>
+                                    <th>Keperluan</th>
+                                    <th>Status / Indikator</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logTableBody">
+                                <!-- Dynamic Log Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL PEMILIHAN PEGAWAI -->
+    <div class="modal fade" id="modalSelectPegawaiForForm" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-search me-2 icn-search text-white"></i>Pilih Pegawai / Peminjam</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" class="form-control" id="searchModalPegawaiInput" placeholder="Ketik nama pegawai, NIP, atau jabatan..." onkeyup="filterFormModalPegawai()">
+                    </div>
+                    <div id="modalAvailablePegawaiList" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PEMILIHAN PERANGKAT -->
+    <div class="modal fade" id="modalSelectDeviceForForm" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-tools me-2 text-white"></i>Pilih Perangkat Yang Tersedia</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" class="form-control" id="searchModalDeviceInput" placeholder="Ketik nama perangkat, merk, NUP, stasiun..." onkeyup="filterFormModalDevices()">
+                    </div>
+                    <div id="modalAvailableDevicesList" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROSES PENGEMBALIAN PERANGKAT -->
+    <div class="modal fade" id="modalProsesPengembalian" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-box-arrow-in-down-left me-2 text-white"></i>Proses Pengembalian Perangkat</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formProsesPengembalian">
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="returnTxId">
+                        <div class="alert alert-info py-2 mb-3 small">
+                            <strong>Peminjam:</strong> <span id="returnNamaPeminjam">-</span> | <strong>No Surat Tugas:</strong> <span id="returnNoSurat">-</span> | <strong>Rencana Kembali:</strong> <span id="returnRencanaTgl">-</span>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Waktu Pengembalian (Tanggal & Jam) <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="returnWaktu" required onchange="hitungIndikatorPengembalian()">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Indikator Jadwal Pengembalian</label>
+                                <div id="returnIndikatorBadge" class="p-2 text-center rounded fw-bold bg-light border">
+                                    -- Pilih Waktu Pengembalian --
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="fw-bold mt-4 mb-2 text-primary">Kondisi Perangkat Saat Dikembalikan:</h6>
+                        <div id="returnDeviceListContainer"></div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-check-circle me-1"></i>Konfirmasi Pengembalian</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT SELURUH ISI PEMINJAMAN -->
+    <div class="modal fade" id="modalEditLoanItems" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2 text-dark"></i>Edit Seluruh Data Peminjaman</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="editLoanTxId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Pilih Pegawai / Peminjam Baru <span class="text-danger">*</span></label>
+                        <select class="form-select border-warning" id="editPegawaiSelect" required></select>
+                    </div>
+
+                    <!-- EDIT SURAT TUGAS DENGAN INPUT GROUP (SAMA SEPERTI FORM UTAMA) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nomor Surat Tugas <span class="text-danger">*</span></label>
+                        <div class="input-group shadow-sm border border-warning rounded">
+                            <span class="input-group-text bg-white fw-bold text-dark border-0 border-end">Nomor :</span>
+                            <input type="text" class="form-control border-0" id="editNoSuratUrut" placeholder="Contoh: 15" required style="max-width: 120px;">
+                            <span class="input-group-text bg-warning-subtle text-dark border-0 fw-bold border-start border-end">/Balmon.62/KP.01.06/</span>
+                            <select class="form-select border-0" id="editNoSuratBulan" required style="max-width: 90px;">
+                                <option value="" disabled selected>Bln</option>
+                                <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                                <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                                <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                                <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                            </select>
+                            <span class="input-group-text bg-white fw-bold border-0 border-start border-end">/</span>
+                            <select class="form-select border-0" id="editNoSuratTahun" required style="max-width: 110px;">
+                                <option value="" disabled selected>Thn</option>
+                                <option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option>
+                                <option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6"><label class="form-label fw-medium">Tanggal Pinjam <span class="text-danger">*</span></label><input type="date" class="form-control" id="editTglPinjam" required></div>
+                        <div class="col-md-6"><label class="form-label fw-medium">Rencana Tanggal Kembali <span class="text-danger">*</span></label><input type="date" class="form-control" id="editTglKembali" required></div>
+                        <div class="col-12"><label class="form-label fw-medium">Keperluan Kegiatan <span class="text-danger">*</span></label><textarea class="form-control" id="editKegiatan" rows="2" required></textarea></div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-tools me-2 icn-log"></i>Daftar Perangkat yang Dipinjam:</h6>
+                        <button type="button" class="btn btn-sm btn-primary fw-semibold" onclick="openAvailableDevicesSelector()">
+                            <i class="bi bi-plus-circle me-1"></i>+ Tambah Item
+                        </button>
+                    </div>
+
+                    <div id="editLoanItemsContainer" class="mb-3"></div>
+
+                    <div id="addDeviceSelectorArea" class="d-none card p-3 bg-light border-primary mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="fw-bold text-primary mb-0"><i class="bi bi-search me-1"></i>Pilih Perangkat:</h6>
+                            <button type="button" class="btn-close btn-sm" onclick="closeAvailableDevicesSelector()"></button>
+                        </div>
+                        <input type="text" class="form-control form-control-sm mb-2" id="searchAvailableDevInput" placeholder="Ketik cari nama perangkat / NUP..." onkeyup="filterAvailableDevicesSelector()">
+                        <div id="availableDevicesList" style="max-height: 180px; overflow-y: auto;" class="list-group"></div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-warning fw-bold px-4" onclick="saveEditedLoanTransaction()">
+                        <i class="bi bi-check2-circle me-1"></i>Simpan Perubahan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INPUT / EDIT PERANGKAT -->
+    <div class="modal fade" id="modalDevice" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold" id="modalDeviceTitle"><i class="bi bi-hdd-plus me-2 text-white"></i>Input Perangkat Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="deviceForm">
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="devEditId">
+                        <div class="row g-3">
+                            <div class="col-12 border-bottom pb-3 mb-2">
+                                <label class="form-label fw-bold text-primary"><i class="bi bi-camera me-1 icn-add"></i>Foto Perangkat</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img id="devPhotoPreview" src="https://via.placeholder.com/94?text=No+Photo" alt="Preview Foto" class="device-img-thumbnail">
+                                    <div>
+                                        <input type="file" class="form-control form-control-sm mb-1" id="devPhotoInput" accept="image/*" onchange="previewDevicePhoto(event)">
+                                        <small class="text-danger d-block">Sistem akan otomatis mengecilkan (compress) resolusi gambar agar tidak berat.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"><label class="form-label fw-medium">Nama Satker</label><input type="text" class="form-control" id="devSatker" value="BALMON PALANGKARAYA"></div>
+                            <div class="col-md-6"><label class="form-label fw-medium">Kode Barang BMN</label><input type="text" class="form-control" id="devKode" placeholder="Contoh: 3020105007"></div>
+                            <div class="col-md-4"><label class="form-label fw-medium">NUP <span class="text-danger">*</span></label><input type="text" class="form-control" id="devNup" required placeholder="Contoh: 1"></div>
+                            <div class="col-md-8"><label class="form-label fw-medium">Nama Perangkat <span class="text-danger">*</span></label><input type="text" class="form-control" id="devNama" required placeholder="Contoh: SPEKTRUM ANALYZER"></div>
+                            <div class="col-md-6"><label class="form-label fw-medium">Merk <span class="text-danger">*</span></label><input type="text" class="form-control" id="devMerk" required placeholder="Contoh: KEYSIGHT"></div>
+                            <div class="col-md-6"><label class="form-label fw-medium">Type / Model <span class="text-danger">*</span></label><input type="text" class="form-control" id="devType" required placeholder="Contoh: N9918A"></div>
+                            <div class="col-md-4"><label class="form-label fw-medium">Tahun Pengadaan</label><input type="text" class="form-control" id="devTahun" placeholder="Contoh: 2023"></div>
+                            <div class="col-md-4"><label class="form-label fw-medium">Jenis Perangkat</label><input type="text" class="form-control" id="devJenis" placeholder="Contoh: UTAMA"></div>
+                            <div class="col-md-4"><label class="form-label fw-medium">Stasiun <span class="text-danger">*</span></label>
+                                <select class="form-select" id="devStasiun" required>
+                                    <option value="PORTABLE">PORTABLE</option><option value="BERGERAK">BERGERAK</option><option value="FIXED">FIXED</option><option value="TRANSPORTABLE">TRANSPORTABLE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4"><label class="form-label fw-medium">Nama Site</label><input type="text" class="form-control" id="devSite" value="PALANGKA RAYA"></div>
+                            <div class="col-md-4"><label class="form-label fw-medium">Kondisi</label>
+                                <select class="form-select" id="devKondisi">
+                                    <option value="BAIK">BAIK</option><option value="RUSAK RINGAN">RUSAK RINGAN</option><option value="RUSAK BERAT">RUSAK BERAT</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4"><label class="form-label fw-medium">Keterangan</label><input type="text" class="form-control" id="devKeterangan" value="DIGUNAKAN"></div>
+                            <div class="col-md-6"><label class="form-label fw-medium">Integrasi Web</label><input type="text" class="form-control" id="devIntegrasi" value="ada di web SMFR"></div>
+                            <div class="col-md-6"><label class="form-label fw-medium">Lokasi Perangkat <span class="text-danger">*</span></label><input type="text" class="form-control" id="devLokasi" required placeholder="Contoh: LEMARI RUANG PERANGKAT"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-save me-1"></i>Simpan Perangkat</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INPUT PEGAWAI -->
+    <div class="modal fade" id="modalAddPegawai" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-plus me-2 text-white"></i>Input Data Pegawai Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="pegawaiForm">
+                    <div class="modal-body p-4">
+                        <div class="mb-3"><label class="form-label fw-medium">NIP Pegawai <span class="text-danger">*</span></label><input type="text" class="form-control" id="pegNip" required></div>
+                        <div class="mb-3"><label class="form-label fw-medium">Nama Lengkap & Gelar <span class="text-danger">*</span></label><input type="text" class="form-control" id="pegNama" required></div>
+                        <div class="mb-3"><label class="form-label fw-medium">Jabatan <span class="text-danger">*</span></label><input type="text" class="form-control" id="pegJabatan" required></div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-save me-1"></i>Simpan Pegawai</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BERITA ACARA PEMINJAMAN DENGAN FOTO PERANGKAT -->
+    <div class="modal fade" id="printModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-light no-print">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-printer me-2"></i>Berita Acara Peminjaman Perangkat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- BAGIAN INI AKAN DI-RENDER OLEH JAVASCRIPT SAAT DICETAK -->
+                <div class="modal-body p-5 bg-white" id="printableArea">
+                    <!-- TAUTAN NAMA GAMBAR KOP SURAT TELAH DIPERBARUI -->
+                    <img src="KOP surat.png" alt="Kop Surat Komdigi Balmon Palangkaraya" class="kop-surat-img" onerror="this.onerror=null; this.src='https://placehold.co/1000x150/ffffff/0f4c81?text=GAMBAR+KOP+SURAT+TIDAK+DITEMUKAN';">
+                    
+                    <div class="text-center my-4">
+                        <h5 class="fw-bold text-decoration-underline mb-1">BERITA ACARA PEMINJAMAN & PENGEMBALIAN PERANGKAT SMFR</h5>
+                        <small class="text-muted" id="printTxId">Nomor Transaksi: -</small>
+                    </div>
+                    <div class="row g-2 mb-4 small">
+                        <div class="col-12"><strong class="text-primary fs-6" id="printNoSuratTugas">-</strong></div>
+                        <div class="col-6"><strong>Nama Peminjam:</strong> <span id="printNama">-</span></div>
+                        <div class="col-6"><strong>NIP:</strong> <span id="printNip">-</span></div>
+                        <div class="col-6"><strong>Jabatan:</strong> <span id="printJabatan">-</span></div>
+                        <div class="col-6"><strong>Masa Peminjaman:</strong> <span id="printTglPinjam">-</span> s/d <span id="printTglKembali">-</span></div>
+                        <div class="col-12"><strong>Maksud / Keperluan:</strong> <span id="printKegiatan">-</span></div>
+                        <div class="col-12"><strong>Waktu Realisasi Pengembalian:</strong> <span id="printWaktuPengembalian">-</span></div>
+                    </div>
+                    <h6 class="fw-bold border-bottom pb-2 mt-4 small text-uppercase">Daftar Perangkat SMFR yang Dipinjam & Kondisi Fisik:</h6>
+                    <table class="table table-sm table-bordered align-middle mt-2 small">
+                        <thead class="table-light">
+                            <tr><th>No</th><th>Foto</th><th>NUP</th><th>Nama Perangkat</th><th>Merk & Type</th><th>Kondisi Awal</th><th>Kondisi Akhir</th><th>Lokasi Storage</th></tr>
+                        </thead>
+                        <tbody id="printDeviceTableBody"></tbody>
+                    </table>
+                    <div class="row mt-5 pt-3 small text-center" style="page-break-inside: avoid;">
+                        <div class="col-6">
+                            <p class="mb-5">Mengetahui,<br>Petugas Perangkat SMFR</p><br><br>
+                            <p class="fw-bold mb-0 text-decoration-underline">KRISTIAN LIMBONG, S.T.</p>
+                            <small class="text-muted">NIP. 199003212022031002</small>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-5">Palangka Raya, <span id="printCurrentDate">-</span><br>Peminjam Perangkat</p><br><br>
+                            <p class="fw-bold mb-0 text-decoration-underline" id="printTTDNama">( ............................................ )</p>
+                            <small class="text-muted">NIP. <span id="printTTDNip">-</span></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light no-print">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <!-- FUNGSI TOMBOL CETAK DIGANTI MENJADI PANGGILAN JAVASCRIPT KHUSUS -->
+                    <button type="button" class="btn btn-primary fw-bold" onclick="cetakBeritaAcara()"><i class="bi bi-printer me-2"></i>Download PDF / Cetak Berita Acara</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS DEPENDENCIES -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- TAMBAHKAN DUA BARIS SCRIPT INI DI SINI -->
+    <script src="database_pegawai.js"></script>
+    <script src="database_perangkat.js"></script>
+	
+    <script>
+
+        let dataPegawai = JSON.parse(localStorage.getItem('smfr_pegawai_v19')) || initialPegawai;
+        let dataPerangkat = JSON.parse(localStorage.getItem('smfr_perangkat_v19')) || initialPerangkat;
+        let logPeminjaman = JSON.parse(localStorage.getItem('smfr_logs_v19')) || [];
+        
+        let selectedFormDevices = [];
+        let selectedFormPegawai = null;
+        let currentPhotoBase64 = "";
+        let bsModalDevice, bsModalPegawai, bsModalProsesReturn, bsModalEditLoan, bsModalSelectFormDev, bsModalSelectFormPeg;
+
+        document.addEventListener('DOMContentLoaded', () => {
+		// === SCRIPT PEMBATASAN AKSES (REVISI LEBIH AMAN) ===
+            const userRole = sessionStorage.getItem('smfr_role');
+            
+            // 1. Jika belum login sama sekali, lempar kembali ke halaman depan
+            if (!userRole) {
+                window.location.href = 'index.html';
+                return; // Hentikan eksekusi script
+            }
+
+            // 2. Jika yang login adalah 'user', HAPUS menu Database
+            if (userRole === 'user') {
+                const tabDev = document.getElementById('database-tab');
+                const tabPeg = document.getElementById('pegawai-tab');
+                
+                // Gunakan .remove() agar tombol benar-benar lenyap dari kode HTML
+                if(tabDev && tabDev.parentElement) tabDev.parentElement.remove();
+                if(tabPeg && tabPeg.parentElement) tabPeg.parentElement.remove();
+
+                // 3. Keamanan tambahan: Cegah user memaksa masuk lewat parameter URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const activeTabId = urlParams.get('tab');
+                if (activeTabId === 'database-tab' || activeTabId === 'pegawai-tab') {
+                    // Jika ketahuan mencoba mengakses tab admin, tendang ke form peminjaman
+                    window.location.href = 'app.html?tab=form-tab';
+                    return;
+                }
+            }
+            // ================================================
+            bsModalDevice = new bootstrap.Modal(document.getElementById('modalDevice'));
+            bsModalPegawai = new bootstrap.Modal(document.getElementById('modalAddPegawai'));
+            bsModalProsesReturn = new bootstrap.Modal(document.getElementById('modalProsesPengembalian'));
+            bsModalEditLoan = new bootstrap.Modal(document.getElementById('modalEditLoanItems'));
+            bsModalSelectFormDev = new bootstrap.Modal(document.getElementById('modalSelectDeviceForForm'));
+            bsModalSelectFormPeg = new bootstrap.Modal(document.getElementById('modalSelectPegawaiForForm'));
+
+            renderPegawaiTable();
+            renderTableDatabase(dataPerangkat);
+            renderSelectedFormDevicesTable();
+            updateDashboardStats();
+            renderLogTable();
+            renderPengembalianTable();
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tglPinjam').value = today;
+            
+            // Set current month and year automatically in form dropdowns
+            const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+            const currentYear = String(new Date().getFullYear());
+            if(document.getElementById('noSuratBulan').querySelector(`option[value="${currentMonth}"]`)) {
+                document.getElementById('noSuratBulan').value = currentMonth;
+            }
+            if(document.getElementById('noSuratTahun').querySelector(`option[value="${currentYear}"]`)) {
+                document.getElementById('noSuratTahun').value = currentYear;
+            }
+			// --- SCRIPT PINDAH TAB OTOMATIS (DIJAMIN BERHASIL) ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTabId = urlParams.get('tab');
+            
+            if (activeTabId) {
+                // Gunakan setTimeout agar Bootstrap selesai melakukan setup awal (mengatasi timpa-menimpa class)
+                setTimeout(() => {
+                    // 1. Matikan semua tab di area navigasi
+                    document.querySelectorAll('#mainTab .nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        link.setAttribute('aria-selected', 'false');
+                    });
+                    
+                    // 2. Sembunyikan semua isi (panel) tab
+                    document.querySelectorAll('.tab-content .tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                    });
+                    
+                    // 3. Cari tombol tab yang diminta dari index.html
+                    const targetTabBtn = document.getElementById(activeTabId);
+                    if (targetTabBtn) {
+                        // Nyalakan tombol tab tersebut
+                        targetTabBtn.classList.add('active');
+                        targetTabBtn.setAttribute('aria-selected', 'true');
+                        
+                        // 4. Cari dan nyalakan isi (panel) tab yang sesuai
+                        const targetPaneId = targetTabBtn.getAttribute('data-bs-target');
+                        if (targetPaneId) {
+                            const targetPane = document.querySelector(targetPaneId);
+                            if (targetPane) {
+                                targetPane.classList.add('show', 'active');
+                            }
+                        }
+                    }
+                }, 100); // Penundaan 100 milidetik adalah kuncinya!
+            }
+        });
+
+        // ===================== FUNGSI CETAK BERITA ACARA BARU =========================
+        function cetakBeritaAcara() {
+            const printContent = document.getElementById('printableArea').innerHTML;
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="id">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Cetak Berita Acara - SMFR</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <style>
+                        body { 
+                            font-family: 'Arial', sans-serif; 
+                            padding: 20px; 
+                            background-color: white; 
+                            color: black; 
+                        }
+                        .kop-surat-img { 
+                            width: 100%; 
+                            max-height: 130px; 
+                            object-fit: contain; 
+                            display: block; 
+                            margin: 0 auto 15px auto; 
+                            border-bottom: 3px double #333; 
+                            padding-bottom: 8px; 
+                        }
+                        .table th { background-color: #f8f9fa !important; }
+                        
+                        /* Pengaturan Print */
+                        @media print {
+                            @page { margin: 15mm; }
+                            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                            .no-print { display: none !important; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                    <script>
+                        // Memastikan konten di-render dahulu, lalu otomatis membuka dialog cetak
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                                window.close();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        // 1. SAVE DENGAN TRY CATCH
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem('smfr_pegawai_v19', JSON.stringify(dataPegawai));
+                localStorage.setItem('smfr_perangkat_v19', JSON.stringify(dataPerangkat));
+                localStorage.setItem('smfr_logs_v19', JSON.stringify(logPeminjaman));
+                updateDashboardStats();
+                return true;
+            } catch (e) {
+                if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                    alert('GAGAL MENYIMPAN! Memori penyimpanan penuh. Hal ini dikarenakan ukuran gambar yang diupload terlalu besar atau data sudah terlalu banyak.');
+                } else {
+                    alert('Terjadi kesalahan saat menyimpan data: ' + e.message);
+                }
+                return false;
+            }
+        }
+
+        // 2. KOMPRESI GAMBAR CANVAS HTML5
+        function previewDevicePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 150; 
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('devPhotoPreview').src = currentPhotoBase64;
+                };
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function deleteAllPerangkat() {
+            if (confirm("Apakah Anda yakin ingin menghapus seluruh data perangkat? Tindakan ini tidak dapat dibatalkan.")) {
+                dataPerangkat = [];
+                saveDataToStorage();
+                renderTableDatabase(dataPerangkat);
+                alert("Database perangkat berhasil dikosongkan!");
+            }
+        }
+
+        function deleteAllPegawai() {
+            if (confirm("Apakah Anda yakin ingin menghapus seluruh data pegawai? Tindakan ini tidak dapat dibatalkan.")) {
+                dataPegawai = [];
+                saveDataToStorage();
+                renderPegawaiTable();
+                alert("Database pegawai berhasil dikosongkan!");
+            }
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('statTotalPerangkat').textContent = dataPerangkat.length;
+            document.getElementById('countDevTab').textContent = dataPerangkat.length;
+            document.getElementById('countPegTab').textContent = dataPegawai.length;
+            
+            const borrowedCount = dataPerangkat.filter(d => d.isBorrowed).length;
+            document.getElementById('statDipinjam').textContent = borrowedCount;
+            document.getElementById('statTersedia').textContent = dataPerangkat.length - borrowedCount;
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            let lateCount = 0;
+            logPeminjaman.forEach(log => {
+                if (log.status === 'Dipinjam' && log.tglKembali < todayStr) {
+                    lateCount++;
+                }
+            });
+            document.getElementById('statTerlambat').textContent = lateCount;
+        }
+
+        // ========================== PEGAWAI ============================
+        function renderPegawaiTable() {
+            const tbody = document.getElementById('pegawaiTableBody');
+            tbody.innerHTML = '';
+            dataPegawai.forEach((p, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td class="fw-bold">${p.NIP}</td>
+                    <td>${p.NAMA}</td>
+                    <td><span class="badge bg-light text-dark border">${p.JABATAN}</span></td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-danger btn-sm" onclick="deletePegawai(${idx})" title="Hapus Pegawai"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deletePegawai(idx) {
+            if (confirm(`Hapus pegawai "${dataPegawai[idx].NAMA}" dari database?`)) {
+                dataPegawai.splice(idx, 1);
+                saveDataToStorage();
+                renderPegawaiTable();
+            }
+        }
+
+        document.getElementById('pegawaiForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newPeg = {
+                NIP: document.getElementById('pegNip').value.trim(),
+                NAMA: document.getElementById('pegNama').value.trim(),
+                JABATAN: document.getElementById('pegJabatan').value.trim()
+            };
+            dataPegawai.push(newPeg);
+            saveDataToStorage();
+            renderPegawaiTable();
+            document.getElementById('pegawaiForm').reset();
+            bsModalPegawai.hide();
+            alert(`Pegawai ${newPeg.NAMA} berhasil ditambahkan!`);
+        });
+
+        // ======================= IMPORT EXCEL =========================
+        function importExcelPegawai(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const json = XLSX.utils.sheet_to_json(worksheet, {defval: ''});
+
+                    let countAdded = 0;
+                    json.forEach(row => {
+                        let nip = '', nama = '', jabatan = '';
+                        Object.keys(row).forEach(k => {
+                            const keyClean = k.trim().toLowerCase();
+                            const val = String(row[k]).trim();
+                            if (keyClean.includes('nip')) nip = val;
+                            else if (keyClean.includes('nama')) nama = val;
+                            else if (keyClean.includes('jabatan')) jabatan = val;
+                        });
+
+                        if (nip && nip !== '-' && nama) {
+                            dataPegawai.push({ NIP: String(nip), NAMA: String(nama), JABATAN: String(jabatan || '-') });
+                            countAdded++;
+                        }
+                    });
+
+                    if (countAdded > 0) {
+                        saveDataToStorage();
+                        renderPegawaiTable();
+                        alert(`Berhasil mengimpor ${countAdded} data pegawai baru!`);
+                    } else {
+                        alert('Tidak ditemukan data pegawai yang valid pada file Excel!');
+                    }
+                } catch(err) {
+                    alert('Gagal membaca file Excel pegawai: ' + err.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function importExcelPerangkat(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    let targetSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    for (let name of workbook.SheetNames) {
+                        if (name.toLowerCase().includes('perangkat') || name.toLowerCase().includes('bmn')) {
+                            targetSheet = workbook.Sheets[name];
+                            break;
+                        }
+                    }
+
+                    const json = XLSX.utils.sheet_to_json(targetSheet, {defval: ''});
+                    let importedDevices = [];
+
+                    json.forEach((row, idx) => {
+                        let devObj = {
+                            id: Date.now() + idx,
+                            no: String(idx + 1),
+                            satker: 'BALMON PALANGKARAYA',
+                            kode_barang: '-',
+                            nup: '-',
+                            nama_bmn: '-',
+                            nama_perangkat: '',
+                            merk: '-',
+                            type: '-',
+                            tahun: '-',
+                            jenis: 'UTAMA',
+                            stasiun: 'PORTABLE',
+                            site: 'PALANGKA RAYA',
+                            kondisi: 'BAIK',
+                            keterangan: 'DIGUNAKAN',
+                            integrasi: 'ada di web SMFR',
+                            lokasi: 'LEMARI RUANG PERANGKAT',
+                            foto: '',
+                            isBorrowed: false
+                        };
+
+                        Object.keys(row).forEach(k => {
+                            const keyUpper = k.trim().toUpperCase();
+                            let val = String(row[k]).trim();
+
+                            if (keyUpper === 'NO' || keyUpper === 'NO.') devObj.no = val;
+                            else if (keyUpper.includes('SATKER')) devObj.satker = val;
+                            else if (keyUpper.includes('KODE BARANG') || keyUpper.includes('KODE BMN')) devObj.kode_barang = val;
+                            else if (keyUpper === 'NUP') devObj.nup = val;
+                            else if (keyUpper === 'NAMA PERANGKAT') devObj.nama_perangkat = val;
+                            else if (keyUpper === 'NAMA BMN') devObj.nama_bmn = val;
+                            else if (keyUpper === 'MERK') devObj.merk = val;
+                            else if (keyUpper === 'TYPE' || keyUpper === 'TIPE' || keyUpper === 'MODEL') devObj.type = val;
+                            else if (keyUpper.includes('TAHUN')) {
+                                if (val.includes(' ')) val = val.split(' ')[0].split('-')[0];
+                                devObj.tahun = val || '-';
+                            } else if (keyUpper.includes('JENIS')) devObj.jenis = val;
+                            else if (keyUpper.includes('STASIUN')) devObj.stasiun = val;
+                            else if (keyUpper.includes('SITE') || keyUpper.includes('NAMA SITE')) devObj.site = val;
+                            else if (keyUpper.includes('KONDISI')) devObj.kondisi = val;
+                            else if (keyUpper.includes('KETERANGAN')) devObj.keterangan = val;
+                            else if (keyUpper.includes('INTEGRASI')) devObj.integrasi = val;
+                            else if (keyUpper.includes('LOKASI')) devObj.lokasi = val;
+                        });
+
+                        if (!devObj.nama_perangkat && devObj.nama_bmn && devObj.nama_bmn !== '-') {
+                            devObj.nama_perangkat = devObj.nama_bmn;
+                        }
+
+                        if (devObj.nama_perangkat) {
+                            importedDevices.push(devObj);
+                        }
+                    });
+
+                    if (importedDevices.length > 0) {
+                        dataPerangkat = importedDevices;
+                        saveDataToStorage();
+                        renderTableDatabase(dataPerangkat);
+                        alert(`Berhasil mengimpor ${importedDevices.length} perangkat ke database!`);
+                    } else {
+                        alert('Format Excel tidak sesuai.');
+                    }
+                } catch(err) {
+                    alert('Gagal membaca file Excel perangkat: ' + err.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // ===================== FORM PEMINJAMAN =========================
+        function openSelectPegawaiModalForForm() {
+            document.getElementById('searchModalPegawaiInput').value = '';
+            filterFormModalPegawai();
+            bsModalSelectFormPeg.show();
+        }
+
+        function filterFormModalPegawai() {
+            const keyword = document.getElementById('searchModalPegawaiInput').value.toLowerCase();
+            const filteredPeg = dataPegawai.filter(p => 
+                p.NAMA.toLowerCase().includes(keyword) ||
+                p.NIP.toLowerCase().includes(keyword) ||
+                p.JABATAN.toLowerCase().includes(keyword)
+            );
+
+            const container = document.getElementById('modalAvailablePegawaiList');
+            if (filteredPeg.length === 0) {
+                container.innerHTML = '<div class="p-3 text-center text-muted">Tidak ada pegawai yang cocok.</div>';
+                return;
+            }
+
+            container.innerHTML = filteredPeg.map((p) => `
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+                    <div>
+                        <strong class="text-primary">${p.NAMA}</strong>
+                        <br><small class="text-muted">NIP: <strong>${p.NIP}</strong> | Jabatan: ${p.JABATAN}</small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary fw-bold" onclick='selectPegawaiForForm(${JSON.stringify(p)})'>
+                        <i class="bi bi-check-lg me-1"></i>Pilih
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function selectPegawaiForForm(pegObj) {
+            selectedFormPegawai = pegObj;
+            const card = document.getElementById('peminjamCardPreview');
+            const note = document.getElementById('noPegawaiSelectedNote');
+
+            const initials = pegObj.NAMA.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('previewAvatar').textContent = initials;
+            document.getElementById('previewNama').textContent = pegObj.NAMA;
+            document.getElementById('previewNip').textContent = pegObj.NIP;
+            document.getElementById('previewJabatan').textContent = pegObj.JABATAN;
+
+            card.classList.remove('d-none');
+            note.classList.add('d-none');
+            bsModalSelectFormPeg.hide();
+        }
+
+        function openSelectDeviceModalForForm() {
+            document.getElementById('searchModalDeviceInput').value = '';
+            filterFormModalDevices();
+            bsModalSelectFormDev.show();
+        }
+
+        function filterFormModalDevices() {
+            const keyword = document.getElementById('searchModalDeviceInput').value.toLowerCase();
+            const availableList = dataPerangkat.filter(d => 
+                !d.isBorrowed && 
+                !selectedFormDevices.some(s => s.id === d.id) &&
+                (
+                    d.nama_perangkat.toLowerCase().includes(keyword) ||
+                    d.merk.toLowerCase().includes(keyword) ||
+                    d.type.toLowerCase().includes(keyword) ||
+                    d.nup.toString().includes(keyword) ||
+                    d.stasiun.toLowerCase().includes(keyword) ||
+                    d.lokasi.toLowerCase().includes(keyword)
+                )
+            );
+
+            const container = document.getElementById('modalAvailableDevicesList');
+            if (availableList.length === 0) {
+                container.innerHTML = '<div class="p-3 text-center text-muted">Tidak ada perangkat tersedia yang cocok.</div>';
+                return;
+            }
+
+            container.innerHTML = availableList.map(d => `
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <div>
+                            <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong>
+                            <br><small class="text-muted">Merk/Type: <strong>${d.merk} ${d.type}</strong> | Lokasi: <strong>${d.lokasi}</strong></small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary fw-bold" onclick="addDeviceToFormSelection('${d.id}')">
+                        <i class="bi bi-plus-lg me-1"></i>Pilih
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addDeviceToFormSelection(devId) {
+            const dev = dataPerangkat.find(d => d.id == devId);
+            if (dev && !selectedFormDevices.some(s => s.id === dev.id)) {
+                selectedFormDevices.push({
+                    ...dev,
+                    kondisiAwal: dev.kondisi,
+                    kondisiAkhir: '-'
+                });
+                renderSelectedFormDevicesTable();
+                filterFormModalDevices();
+            }
+        }
+
+        function removeDeviceFromFormSelection(index) {
+            selectedFormDevices.splice(index, 1);
+            renderSelectedFormDevicesTable();
+        }
+
+        function renderSelectedFormDevicesTable() {
+            const tbody = document.getElementById('selectedFormDevicesTableBody');
+            if (selectedFormDevices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Belum ada perangkat yang dipilih. Klik tombol <strong>"+ Tambah Perangkat"</strong> di atas.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = selectedFormDevices.map((d, idx) => `
+                <tr>
+                    <td><img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto"></td>
+                    <td class="fw-bold text-primary">${d.nup}</td>
+                    <td class="fw-semibold">${d.nama_perangkat}</td>
+                    <td>${d.merk} ${d.type}</td>
+                    <td><span class="badge ${d.kondisiAwal === 'BAIK' ? 'bg-success' : 'bg-danger'}">${d.kondisiAwal}</span></td>
+                    <td><small>${d.lokasi}</small></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeDeviceFromFormSelection(${idx})">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function resetFormPeminjaman() {
+            document.getElementById('loanForm').reset();
+            selectedFormDevices = [];
+            selectedFormPegawai = null;
+            document.getElementById('peminjamCardPreview').classList.add('d-none');
+            document.getElementById('noPegawaiSelectedNote').classList.remove('d-none');
+            renderSelectedFormDevicesTable();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tglPinjam').value = today;
+            
+            const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+            const currentYear = String(new Date().getFullYear());
+            document.getElementById('noSuratBulan').value = currentMonth;
+            document.getElementById('noSuratTahun').value = currentYear;
+        }
+
+        document.getElementById('loanForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!selectedFormPegawai) {
+                alert('Silakan pilih pegawai / peminjam terlebih dahulu!');
+                return;
+            }
+
+            if (selectedFormDevices.length === 0) {
+                alert('Silakan pilih minimal 1 perangkat yang ingin dipinjam.');
+                return;
+            }
+
+            // GABUNGKAN NOMOR SURAT
+            const urut = document.getElementById('noSuratUrut').value.trim();
+            const bln = document.getElementById('noSuratBulan').value;
+            const thn = document.getElementById('noSuratTahun').value;
+            const noSuratTugasFinal = `Nomor : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
+
+            selectedFormDevices.forEach(d => {
+                const devInDb = dataPerangkat.find(item => item.id === d.id);
+                if (devInDb) devInDb.isBorrowed = true;
+            });
+
+            const txId = 'SMFR-' + Math.floor(100000 + Math.random() * 900000);
+
+            const loanRecord = {
+                id: txId,
+                pegawai: selectedFormPegawai,
+                noSuratTugas: noSuratTugasFinal,
+                perangkatList: [...selectedFormDevices],
+                tglPinjam: document.getElementById('tglPinjam').value,
+                tglKembali: document.getElementById('tglKembali').value,
+                kegiatan: document.getElementById('kegiatan').value,
+                status: 'Dipinjam',
+                waktuPengembalian: '-',
+                indikatorJadwal: '-'
+            };
+
+            logPeminjaman.push(loanRecord);
+            saveDataToStorage();
+
+            resetFormPeminjaman();
+            renderTableDatabase(dataPerangkat);
+            renderLogTable();
+            renderPengembalianTable();
+
+            alert(`Peminjaman Berhasil Dicatat! ID Transaksi: ${txId}`);
+        });
+
+        // ===================== DATABASE PERANGKAT =========================
+        function openAddDeviceModal() {
+            document.getElementById('deviceForm').reset();
+            document.getElementById('devEditId').value = "";
+            currentPhotoBase64 = "";
+            document.getElementById('devPhotoPreview').src = "https://via.placeholder.com/94?text=No+Photo";
+            document.getElementById('modalDeviceTitle').innerHTML = '<i class="bi bi-hdd-plus me-2 text-white"></i>Input Perangkat Baru';
+            bsModalDevice.show();
+        }
+
+        function openEditDeviceModal(devId) {
+            const dev = dataPerangkat.find(d => d.id == devId);
+            if (!dev) return;
+
+            document.getElementById('devEditId').value = dev.id;
+            document.getElementById('devSatker').value = dev.satker;
+            document.getElementById('devKode').value = dev.kode_barang;
+            document.getElementById('devNup').value = dev.nup;
+            document.getElementById('devNama').value = dev.nama_perangkat;
+            document.getElementById('devMerk').value = dev.merk;
+            document.getElementById('devType').value = dev.type;
+            document.getElementById('devTahun').value = dev.tahun;
+            document.getElementById('devJenis').value = dev.jenis;
+            document.getElementById('devStasiun').value = dev.stasiun;
+            document.getElementById('devSite').value = dev.site;
+            document.getElementById('devKondisi').value = dev.kondisi;
+            document.getElementById('devKeterangan').value = dev.keterangan;
+            document.getElementById('devIntegrasi').value = dev.integrasi;
+            document.getElementById('devLokasi').value = dev.lokasi;
+
+            currentPhotoBase64 = dev.foto || "";
+            document.getElementById('devPhotoPreview').src = currentPhotoBase64 || "https://via.placeholder.com/94?text=No+Photo";
+            document.getElementById('devPhotoInput').value = "";
+
+            document.getElementById('modalDeviceTitle').innerHTML = '<i class="bi bi-pencil-square me-2 text-white"></i>Edit Data Perangkat';
+            bsModalDevice.show();
+        }
+
+        document.getElementById('deviceForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('devEditId').value;
+
+            if (editId) {
+                const dev = dataPerangkat.find(d => d.id == editId);
+                if (dev) {
+                    dev.satker = document.getElementById('devSatker').value;
+                    dev.kode_barang = document.getElementById('devKode').value;
+                    dev.nup = document.getElementById('devNup').value;
+                    dev.nama_perangkat = document.getElementById('devNama').value;
+                    dev.merk = document.getElementById('devMerk').value;
+                    dev.type = document.getElementById('devType').value;
+                    dev.tahun = document.getElementById('devTahun').value;
+                    dev.jenis = document.getElementById('devJenis').value;
+                    dev.stasiun = document.getElementById('devStasiun').value;
+                    dev.site = document.getElementById('devSite').value;
+                    dev.kondisi = document.getElementById('devKondisi').value;
+                    dev.keterangan = document.getElementById('devKeterangan').value;
+                    dev.integrasi = document.getElementById('devIntegrasi').value;
+                    dev.lokasi = document.getElementById('devLokasi').value;
+                    if(currentPhotoBase64 !== "") { dev.foto = currentPhotoBase64; }
+                }
+            } else {
+                const newDev = {
+                    id: Date.now(),
+                    no: String(dataPerangkat.length + 1),
+                    satker: document.getElementById('devSatker').value,
+                    kode_barang: document.getElementById('devKode').value,
+                    nup: document.getElementById('devNup').value,
+                    nama_bmn: document.getElementById('devNama').value,
+                    nama_perangkat: document.getElementById('devNama').value,
+                    merk: document.getElementById('devMerk').value,
+                    type: document.getElementById('devType').value,
+                    tahun: document.getElementById('devTahun').value,
+                    jenis: document.getElementById('devJenis').value,
+                    stasiun: document.getElementById('devStasiun').value,
+                    site: document.getElementById('devSite').value,
+                    kondisi: document.getElementById('devKondisi').value,
+                    keterangan: document.getElementById('devKeterangan').value,
+                    integrasi: document.getElementById('devIntegrasi').value,
+                    lokasi: document.getElementById('devLokasi').value,
+                    foto: currentPhotoBase64,
+                    isBorrowed: false
+                };
+                dataPerangkat.push(newDev);
+            }
+
+            if (saveDataToStorage()) {
+                renderTableDatabase(dataPerangkat);
+                bsModalDevice.hide();
+                alert('Data Perangkat Berhasil Disimpan!');
+            }
+        });
+
+        function deleteDevice(devId) {
+            const dev = dataPerangkat.find(d => d.id == devId);
+            if (!dev) return;
+            if (dev.isBorrowed) {
+                alert('Perangkat sedang dipinjam dan tidak dapat dihapus!');
+                return;
+            }
+            if (confirm(`Hapus perangkat "${dev.nama_perangkat}" (NUP: ${dev.nup})?`)) {
+                dataPerangkat = dataPerangkat.filter(d => d.id != devId);
+                saveDataToStorage();
+                renderTableDatabase(dataPerangkat);
+            }
+        }
+
+        function renderTableDatabase(items) {
+            const tbody = document.getElementById('deviceTableBody');
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="17" class="text-center text-muted py-4">Tidak ada data perangkat.</td></tr>';
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.no || (index + 1)}</td>
+                    <td><img src="${item.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-thumbnail" alt="Foto"></td>
+                    <td><small>${item.satker}</small></td>
+                    <td><small>${item.kode_barang}</small></td>
+                    <td class="fw-bold">${item.nup}</td>
+                    <td class="fw-semibold text-primary">${item.nama_perangkat}</td>
+                    <td>${item.merk}</td>
+                    <td><small>${item.type}</small></td>
+                    <td><small>${item.tahun}</small></td>
+                    <td><span class="badge bg-secondary">${item.jenis}</span></td>
+                    <td><span class="badge bg-light text-dark border">${item.stasiun}</span></td>
+                    <td><small>${item.site}</small></td>
+                    <td><span class="badge ${item.kondisi === 'BAIK' ? 'bg-success' : 'bg-danger'}">${item.kondisi}</span></td>
+                    <td><small>${item.keterangan}</small></td>
+                    <td><small class="text-muted">${item.integrasi}</small></td>
+                    <td><small>${item.lokasi}</small></td>
+                    <td class="text-center sticky-end bg-white">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" onclick="openEditDeviceModal('${item.id}')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                            <button class="btn btn-outline-danger" onclick="deleteDevice('${item.id}')" title="Hapus"><i class="bi bi-trash-fill"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function applyDatabaseFilters() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const stasiunFilter = document.getElementById('filterStasiun').value;
+
+            const filtered = dataPerangkat.filter(dev => {
+                const matchKeyword = dev.nama_perangkat.toLowerCase().includes(keyword) ||
+                                     dev.merk.toLowerCase().includes(keyword) ||
+                                     dev.type.toLowerCase().includes(keyword) ||
+                                     dev.nup.toString().includes(keyword) ||
+                                     dev.satker.toLowerCase().includes(keyword) ||
+                                     dev.lokasi.toLowerCase().includes(keyword);
+                
+                const matchStasiun = (stasiunFilter === 'ALL') || (dev.stasiun === stasiunFilter);
+                return matchKeyword && matchStasiun;
+            });
+
+            renderTableDatabase(filtered);
+        }
+
+        // ================== MENU PENGEMBALIAN & LOG =====================
+        function renderPengembalianTable() {
+            const tbody = document.getElementById('pengembalianTableBody');
+            tbody.innerHTML = '';
+
+            const activeLoans = logPeminjaman.filter(l => l.status === 'Dipinjam');
+
+            if (activeLoans.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4"><i class="bi bi-check-circle text-success me-2 fs-5"></i>Tidak ada perangkat yang sedang dipinjam saat ini.</td></tr>';
+                return;
+            }
+
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            activeLoans.forEach((log) => {
+                const tr = document.createElement('tr');
+                const isLate = log.tglKembali < todayStr;
+                const devNames = log.perangkatList.map(d => `
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <div>• ${d.nama_perangkat} (NUP: ${d.nup})</div>
+                    </div>
+                `).join('');
+
+                tr.innerHTML = `
+                    <td class="fw-bold text-primary">${log.id}</td>
+                    <td><strong>${log.pegawai.NAMA}</strong><br><small class="text-muted">NIP. ${log.pegawai.NIP}</small></td>
+                    <td><small class="fw-semibold text-dark">${log.noSuratTugas || '-'}</small></td>
+                    <td>${devNames}</td>
+                    <td>${log.tglKembali}</td>
+                    <td>
+                        ${isLate ? 
+                            '<span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Terlambat (Melewati Tenggat)</span>' : 
+                            '<span class="badge bg-success"><i class="bi bi-clock me-1"></i>Dalam Tenggat Peminjaman</span>'}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-success btn-sm fw-bold" onclick="bukaModalProsesReturn('${log.id}')">
+                            <i class="bi bi-box-arrow-in-left me-1"></i>Proses Pengembalian
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function bukaModalProsesReturn(txId) {
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            document.getElementById('returnTxId').value = log.id;
+            document.getElementById('returnNamaPeminjam').textContent = `${log.pegawai.NAMA} (${log.pegawai.NIP})`;
+            document.getElementById('returnNoSurat').textContent = log.noSuratTugas || '-';
+            document.getElementById('returnRencanaTgl').textContent = log.tglKembali;
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('returnWaktu').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+            const container = document.getElementById('returnDeviceListContainer');
+            container.innerHTML = log.perangkatList.map((d) => `
+                <div class="card p-2 mb-2 bg-light border">
+                    <div class="row align-items-center">
+                        <div class="col-md-7 d-flex align-items-center gap-3">
+                            <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                            <div>
+                                <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong>
+                                <br><small class="text-muted">${d.merk} ${d.type} - Kondisi Awal: <span class="badge bg-secondary">${d.kondisiAwal || d.kondisi}</span></small>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label small mb-1 fw-bold">Kondisi Pengembalian:</label>
+                            <select class="form-select form-select-sm return-kondisi-select" data-devid="${d.id}">
+                                <option value="BAIK" ${d.kondisiAwal === 'BAIK' ? 'selected' : ''}>BAIK</option>
+                                <option value="RUSAK RINGAN" ${d.kondisiAwal === 'RUSAK RINGAN' ? 'selected' : ''}>RUSAK RINGAN</option>
+                                <option value="RUSAK BERAT" ${d.kondisiAwal === 'RUSAK BERAT' ? 'selected' : ''}>RUSAK BERAT</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            hitungIndikatorPengembalian();
+            bsModalProsesReturn.show();
+        }
+
+        function hitungIndikatorPengembalian() {
+            const returnWaktuVal = document.getElementById('returnWaktu').value;
+            const txId = document.getElementById('returnTxId').value;
+            const log = logPeminjaman.find(l => l.id === txId);
+            const badgeDiv = document.getElementById('returnIndikatorBadge');
+
+            if (!returnWaktuVal || !log) return;
+
+            const returnDateOnly = returnWaktuVal.split('T')[0];
+            const targetDateOnly = log.tglKembali;
+
+            if (returnDateOnly <= targetDateOnly) {
+                badgeDiv.className = 'p-2 text-center rounded fw-bold bg-success text-white';
+                badgeDiv.innerHTML = '<i class="bi bi-check-circle me-1"></i>TEPAT WAKTU';
+            } else {
+                const d1 = new Date(returnDateOnly);
+                const d2 = new Date(targetDateOnly);
+                const diffTime = Math.abs(d1 - d2);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                badgeDiv.className = 'p-2 text-center rounded fw-bold bg-danger text-white';
+                badgeDiv.innerHTML = `<i class="bi bi-exclamation-triangle me-1"></i>TERLAMBAT (${diffDays} Hari)`;
+            }
+        }
+
+        document.getElementById('formProsesPengembalian').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const txId = document.getElementById('returnTxId').value;
+            const returnWaktuVal = document.getElementById('returnWaktu').value;
+            const log = logPeminjaman.find(l => l.id === txId);
+
+            if (!log) return;
+
+            const returnDateOnly = returnWaktuVal.split('T')[0];
+            const targetDateOnly = log.tglKembali;
+            let statusIndikator = 'TEPAT WAKTU';
+
+            if (returnDateOnly > targetDateOnly) {
+                const d1 = new Date(returnDateOnly);
+                const d2 = new Date(targetDateOnly);
+                const diffDays = Math.ceil(Math.abs(d1 - d2) / (1000 * 60 * 60 * 24));
+                statusIndikator = `TERLAMBAT (${diffDays} Hari)`;
+            }
+
+            const selects = document.querySelectorAll('.return-kondisi-select');
+            selects.forEach(sel => {
+                const devId = sel.getAttribute('data-devid');
+                const kondisiAkhirVal = sel.value;
+
+                const itemInLog = log.perangkatList.find(d => d.id == devId);
+                if (itemInLog) itemInLog.kondisiAkhir = kondisiAkhirVal;
+
+                const devInDb = dataPerangkat.find(d => d.id == devId);
+                if (devInDb) {
+                    devInDb.isBorrowed = false;
+                    devInDb.kondisi = kondisiAkhirVal;
+                }
+            });
+
+            log.status = 'Dikembalikan';
+            log.waktuPengembalian = returnWaktuVal.replace('T', ' Jam ');
+            log.indikatorJadwal = statusIndikator;
+
+            saveDataToStorage();
+            renderTableDatabase(dataPerangkat);
+            renderLogTable();
+            renderPengembalianTable();
+
+            bsModalProsesReturn.hide();
+            alert(`Pengembalian perangkat berhasil diproses!`);
+        });
+
+        // ====================== EDIT LOG PEMINJAMAN ======================
+        function editLoanItems(txId) {
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            if (log.status === 'Dikembalikan') {
+                alert('Transaksi ini telah dikembalikan dan dikunci.');
+                return;
+            }
+
+            document.getElementById('editLoanTxId').value = log.id;
+            
+            // PARSING NOMOR SURAT TUGAS
+            let oldSurat = log.noSuratTugas || '';
+            let m = oldSurat.match(/Nomor\s*:\s*(.*?)\s*\/Balmon\.62\/KP\.01\.06\/(.*?)\/(.*)/);
+            if(m) {
+                document.getElementById('editNoSuratUrut').value = m[1].trim();
+                document.getElementById('editNoSuratBulan').value = m[2].trim();
+                document.getElementById('editNoSuratTahun').value = m[3].trim();
+            } else {
+                document.getElementById('editNoSuratUrut').value = '';
+                document.getElementById('editNoSuratBulan').value = '';
+                document.getElementById('editNoSuratTahun').value = '';
+            }
+
+            document.getElementById('editTglPinjam').value = log.tglPinjam || '';
+            document.getElementById('editTglKembali').value = log.tglKembali || '';
+            document.getElementById('editKegiatan').value = log.kegiatan || '';
+
+            const editPegSelect = document.getElementById('editPegawaiSelect');
+            editPegSelect.innerHTML = '';
+            dataPegawai.forEach((p, idx) => {
+                let opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${p.NAMA} - NIP. ${p.NIP}`;
+                if (log.pegawai && log.pegawai.NIP === p.NIP) opt.selected = true;
+                editPegSelect.appendChild(opt);
+            });
+
+            closeAvailableDevicesSelector();
+            renderEditLoanItemsContainer(log);
+            bsModalEditLoan.show();
+        }
+
+        function renderEditLoanItemsContainer(log) {
+            const container = document.getElementById('editLoanItemsContainer');
+            container.innerHTML = log.perangkatList.map((d, idx) => `
+                <div class="d-flex align-items-center justify-content-between p-2 mb-2 bg-light border rounded">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <div>
+                            <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong><br>
+                            <small class="text-muted">${d.merk} ${d.type} - Kondisi: ${d.kondisiAwal || d.kondisi}</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeDeviceFromEditLoan(${idx})">
+                        <i class="bi bi-trash"></i> Hapus
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeDeviceFromEditLoan(index) {
+            const txId = document.getElementById('editLoanTxId').value;
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            if (log.perangkatList.length <= 1) {
+                alert('Peminjaman harus memiliki minimal 1 perangkat!');
+                return;
+            }
+
+            const removedDev = log.perangkatList.splice(index, 1)[0];
+            const devInDb = dataPerangkat.find(d => d.id == removedDev.id);
+            if (devInDb) devInDb.isBorrowed = false;
+
+            saveDataToStorage();
+            renderEditLoanItemsContainer(log);
+            renderTableDatabase(dataPerangkat);
+            renderLogTable();
+            renderPengembalianTable();
+        }
+
+        function openAvailableDevicesSelector() {
+            document.getElementById('addDeviceSelectorArea').classList.remove('d-none');
+            renderAvailableDevicesList(dataPerangkat.filter(d => !d.isBorrowed));
+        }
+
+        function closeAvailableDevicesSelector() {
+            document.getElementById('addDeviceSelectorArea').classList.add('d-none');
+        }
+
+        function renderAvailableDevicesList(items) {
+            const list = document.getElementById('availableDevicesList');
+            if (items.length === 0) {
+                list.innerHTML = '<div class="p-2 text-center text-muted small">Tidak ada perangkat tersedia.</div>';
+                return;
+            }
+
+            list.innerHTML = items.map(d => `
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <div>
+                            <strong>[NUP ${d.nup}] ${d.nama_perangkat}</strong>
+                            <br><small class="text-muted">${d.merk} ${d.type}</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary fw-bold" onclick="selectDeviceToAddToLoan('${d.id}')">
+                        <i class="bi bi-plus-lg"></i> Tambah
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function filterAvailableDevicesSelector() {
+            const keyword = document.getElementById('searchAvailableDevInput').value.toLowerCase();
+            const filtered = dataPerangkat.filter(d => 
+                !d.isBorrowed && (
+                    d.nama_perangkat.toLowerCase().includes(keyword) ||
+                    d.merk.toLowerCase().includes(keyword) ||
+                    d.type.toLowerCase().includes(keyword) ||
+                    d.nup.toString().includes(keyword)
+                )
+            );
+            renderAvailableDevicesList(filtered);
+        }
+
+        function selectDeviceToAddToLoan(devId) {
+            const txId = document.getElementById('editLoanTxId').value;
+            const log = logPeminjaman.find(l => l.id === txId);
+            const selectedDev = dataPerangkat.find(d => d.id == devId);
+
+            if (log && selectedDev) {
+                selectedDev.isBorrowed = true;
+                log.perangkatList.push({
+                    ...selectedDev,
+                    kondisiAwal: selectedDev.kondisi,
+                    kondisiAkhir: '-'
+                });
+
+                saveDataToStorage();
+                renderEditLoanItemsContainer(log);
+                openAvailableDevicesSelector();
+                renderTableDatabase(dataPerangkat);
+                renderLogTable();
+                renderPengembalianTable();
+            }
+        }
+
+        function saveEditedLoanTransaction() {
+            const txId = document.getElementById('editLoanTxId').value;
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            const pegIdx = document.getElementById('editPegawaiSelect').value;
+            const selectedPegawai = dataPegawai[pegIdx];
+            
+            // GABUNGKAN NOMOR SURAT TUGAS DI EDIT
+            const urut = document.getElementById('editNoSuratUrut').value.trim();
+            const bln = document.getElementById('editNoSuratBulan').value;
+            const thn = document.getElementById('editNoSuratTahun').value;
+            const noSuratTugasVal = `Nomor : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
+
+            const tglPinjamVal = document.getElementById('editTglPinjam').value;
+            const tglKembaliVal = document.getElementById('editTglKembali').value;
+            const kegiatanVal = document.getElementById('editKegiatan').value.trim();
+
+            if (!urut || !bln || !thn || !tglPinjamVal || !tglKembaliVal || !kegiatanVal) {
+                alert('Semua field wajib diisi!');
+                return;
+            }
+
+            log.pegawai = selectedPegawai;
+            log.noSuratTugas = noSuratTugasVal;
+            log.tglPinjam = tglPinjamVal;
+            log.tglKembali = tglKembaliVal;
+            log.kegiatan = kegiatanVal;
+
+            saveDataToStorage();
+            renderTableDatabase(dataPerangkat);
+            renderLogTable();
+            renderPengembalianTable();
+
+            bsModalEditLoan.hide();
+            alert('Data peminjaman berhasil diperbarui!');
+        }
+
+        function renderLogTable() {
+            const tbody = document.getElementById('logTableBody');
+            document.getElementById('logBadge').textContent = logPeminjaman.length;
+
+            if (logPeminjaman.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Belum ada transaksi peminjaman.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            logPeminjaman.forEach((log) => {
+                const tr = document.createElement('tr');
+                const isReturned = log.status === 'Dikembalikan';
+
+                const indikatorBadge = isReturned ? 
+                    (log.indikatorJadwal.includes('TERLAMBAT') ? 
+                        `<span class="badge bg-danger"><i class="bi bi-lock-fill me-1"></i>${log.indikatorJadwal} (Dikunci)</span>` : 
+                        `<span class="badge bg-success"><i class="bi bi-lock-fill me-1"></i>${log.indikatorJadwal} (Dikunci)</span>`) : 
+                    `<span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Sedang Dipinjam</span>`;
+
+                const devListStr = log.perangkatList.map(d => `
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <div>• NUP ${d.nup} - ${d.nama_perangkat}</div>
+                    </div>
+                `).join('');
+                
+                const kondisiStr = log.perangkatList.map(d => {
+                    const kAwal = d.kondisiAwal || d.kondisi || 'BAIK';
+                    const kAkhir = d.kondisiAkhir || '-';
+                    const badgeAwal = `<span class="badge ${kAwal === 'BAIK' ? 'bg-success' : 'bg-danger'}">${kAwal}</span>`;
+                    const badgeAkhir = kAkhir !== '-' ? `<span class="badge ${kAkhir === 'BAIK' ? 'bg-success' : 'bg-danger'}">${kAkhir}</span>` : `<span class="badge bg-secondary">-</span>`;
+                    return `${badgeAwal} ➔ ${badgeAkhir}`;
+                }).join('<br>');
+
+                tr.innerHTML = `
+                    <td class="fw-bold text-primary">${log.id}</td>
+                    <td><strong>${log.pegawai.NAMA}</strong><br><small class="text-muted">NIP. ${log.pegawai.NIP}</small></td>
+                    <td><small class="fw-semibold text-dark">${log.noSuratTugas || '-'}</small></td>
+                    <td>${devListStr}</td>
+                    <td><small>${kondisiStr}</small></td>
+                    <td>${log.tglPinjam}</td>
+                    <td>${log.tglKembali}</td>
+                    <td><small>${log.kegiatan}</small></td>
+                    <td>${indikatorBadge}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" onclick="openPrintModal('${log.id}')" title="Cetak Surat"><i class="bi bi-printer-fill"></i> Cetak</button>
+                            ${isReturned ? 
+                                `<button class="btn btn-outline-secondary" disabled title="Terkunci"><i class="bi bi-lock-fill"></i> Terkunci</button>` : 
+                                `<button class="btn btn-outline-warning" onclick="editLoanItems('${log.id}')" title="Edit"><i class="bi bi-pencil"></i> Edit</button>`}
+                            <button class="btn btn-outline-danger" onclick="deleteLoanLog('${log.id}')" title="Hapus"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteLoanLog(txId) {
+            const index = logPeminjaman.findIndex(l => l.id === txId);
+            if (index !== -1) {
+                if (confirm(`Hapus transaksi peminjaman ID ${txId}?`)) {
+                    const log = logPeminjaman[index];
+                    if (log.status === 'Dipinjam') {
+                        log.perangkatList.forEach(devRef => {
+                            const dev = dataPerangkat.find(d => d.id == devRef.id);
+                            if (dev) dev.isBorrowed = false;
+                        });
+                    }
+                    logPeminjaman.splice(index, 1);
+                    saveDataToStorage();
+                    renderTableDatabase(dataPerangkat);
+                    renderLogTable();
+                    renderPengembalianTable();
+                }
+            }
+        }
+
+        function openPrintModal(txId) {
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            document.getElementById('printTxId').textContent = `Nomor Transaksi: ${log.id}`;
+            document.getElementById('printNoSuratTugas').textContent = log.noSuratTugas || 'Nomor : -';
+            document.getElementById('printNama').textContent = log.pegawai.NAMA;
+            document.getElementById('printNip').textContent = log.pegawai.NIP;
+            document.getElementById('printJabatan').textContent = log.pegawai.JABATAN;
+            document.getElementById('printTglPinjam').textContent = log.tglPinjam;
+            document.getElementById('printTglKembali').textContent = log.tglKembali;
+            document.getElementById('printKegiatan').textContent = log.kegiatan;
+            document.getElementById('printWaktuPengembalian').textContent = log.waktuPengembalian || '-';
+            document.getElementById('printTTDNama').textContent = `( ${log.pegawai.NAMA} )`;
+            document.getElementById('printTTDNip').textContent = log.pegawai.NIP;
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('printCurrentDate').textContent = new Date().toLocaleDateString('id-ID', options);
+
+            const tbody = document.getElementById('printDeviceTableBody');
+            tbody.innerHTML = '';
+            log.perangkatList.forEach((d, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td><img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-thumbnail" alt="Foto"></td>
+                    <td>${d.nup}</td>
+                    <td>${d.nama_perangkat}</td>
+                    <td>${d.merk} / ${d.type}</td>
+                    <td><span class="badge bg-light text-dark border">${d.kondisiAwal || d.kondisi || 'BAIK'}</span></td>
+                    <td><span class="badge bg-light text-dark border">${d.kondisiAkhir || '-'}</span></td>
+                    <td>${d.lokasi}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const modal = new bootstrap.Modal(document.getElementById('printModal'));
+            modal.show();
+        }
+
+        function exportToCSV() {
+            if (logPeminjaman.length === 0) {
+                alert('Belum ada data log peminjaman!');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,ID Transaksi,Peminjam,NIP,No Surat Tugas,Tgl Pinjam,Tgl Kembali,Waktu Pengembalian,Keperluan,Status,Indikator\n";
+            logPeminjaman.forEach(l => {
+                csvContent += `"${l.id}","${l.pegawai.NAMA}","${l.pegawai.NIP}","${l.noSuratTugas || '-'}","${l.tglPinjam}","${l.tglKembali}","${l.waktuPengembalian || '-'}","${l.kegiatan}","${l.status}","${l.indikatorJadwal || '-'}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Log_Peminjaman_SMFR_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+	<script>
+    // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
+    function loopToHome(event) {
+        event.preventDefault(); // Mencegah klik default
+        
+        // Dapatkan URL lengkap saat ini
+        const currentUrl = window.location.href;
+        
+        // Deteksi apakah saat ini kita sedang membuka index.html
+        if (currentUrl.includes('index.html') || currentUrl.endsWith('/')) {
+            // Jika sudah di menu Home (index.html), paksa muat ulang halaman (looping)
+            window.location.reload();
+        } else {
+            // Jika sedang di app.html, arahkan kembali ke index.html
+            window.location.href = 'index.html';
+        }
+    }
+</script>
+</body>
+</html>
