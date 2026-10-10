@@ -906,6 +906,21 @@
         let dataPegawai = JSON.parse(localStorage.getItem('smfr_pegawai_v19')) || initialPegawai;
         let dataPerangkat = JSON.parse(localStorage.getItem('smfr_perangkat_v19')) || initialPerangkat;
         let logPeminjaman = JSON.parse(localStorage.getItem('smfr_logs_v19')) || [];
+		
+		// --- TAMBAHKAN SCRIPT INI ---
+        function getDeviceImage(fotoData) {
+            // Jika kosong, gunakan gambar default
+            if (!fotoData) return 'https://via.placeholder.com/94?text=No+Photo';
+            
+            // Jika foto sudah berupa link dari web lain (http) atau hasil upload manual base64 (data:image)
+            if (fotoData.startsWith('http') || fotoData.startsWith('data:image')) {
+                return fotoData;
+            }
+            
+            // Arahkan ke folder GitHub 'perangkat_img/' untuk nama file biasa
+            return `perangkat_img/${fotoData}`;
+        }
+        // ----------------------------
         
         let selectedFormDevices = [];
         let selectedFormPegawai = null;
@@ -1411,7 +1426,7 @@
             container.innerHTML = availableList.map(d => `
                 <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3">
                     <div class="d-flex align-items-center gap-3">
-                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
                         <div>
                             <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong>
                             <br><small class="text-muted">Merk/Type: <strong>${d.merk} ${d.type}</strong> | Lokasi: <strong>${d.lokasi}</strong></small>
@@ -1451,7 +1466,7 @@
 
             tbody.innerHTML = selectedFormDevices.map((d, idx) => `
                 <tr>
-                    <td><img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto"></td>
+                    <td><img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto"></td>
                     <td class="fw-bold text-primary">${d.nup}</td>
                     <td class="fw-semibold">${d.nama_perangkat}</td>
                     <td>${d.merk} ${d.type}</td>
@@ -1652,7 +1667,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${item.no || (index + 1)}</td>
-                    <td><img src="${item.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-thumbnail" alt="Foto"></td>
+                    <td><img src="${getDeviceImage(item.foto)}" class="device-img-thumbnail" alt="Foto"></td>
                     <td><small>${item.satker}</small></td>
                     <td><small>${item.kode_barang}</small></td>
                     <td class="fw-bold">${item.nup}</td>
@@ -1716,7 +1731,7 @@
                 const isLate = log.tglKembali < todayStr;
                 const devNames = log.perangkatList.map(d => `
                     <div class="d-flex align-items-center gap-2 mb-1">
-                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
                         <div>• ${d.nama_perangkat} (NUP: ${d.nup})</div>
                     </div>
                 `).join('');
@@ -1764,7 +1779,7 @@
                 <div class="card p-2 mb-2 bg-light border">
                     <div class="row align-items-center">
                         <div class="col-md-7 d-flex align-items-center gap-3">
-                            <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                            <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
                             <div>
                                 <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong>
                                 <br><small class="text-muted">${d.merk} ${d.type} - Kondisi Awal: <span class="badge bg-secondary">${d.kondisiAwal || d.kondisi}</span></small>
@@ -1907,7 +1922,7 @@
             container.innerHTML = log.perangkatList.map((d, idx) => `
                 <div class="d-flex align-items-center justify-content-between p-2 mb-2 bg-light border rounded">
                     <div class="d-flex align-items-center gap-3">
-                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
                         <div>
                             <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong><br>
                             <small class="text-muted">${d.merk} ${d.type} - Kondisi: ${d.kondisiAwal || d.kondisi}</small>
@@ -1960,7 +1975,7 @@
             list.innerHTML = items.map(d => `
                 <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-3">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
                         <div>
                             <strong>[NUP ${d.nup}] ${d.nama_perangkat}</strong>
                             <br><small class="text-muted">${d.merk} ${d.type}</small>
@@ -2068,7 +2083,7 @@
 
                 const devListStr = log.perangkatList.map(d => `
                     <div class="d-flex align-items-center gap-2 mb-1">
-                        <img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-sm" alt="Foto">
+                        <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
                         <div>• NUP ${d.nup} - ${d.nama_perangkat}</div>
                     </div>
                 `).join('');
@@ -2150,7 +2165,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${idx + 1}</td>
-                    <td><img src="${d.foto || 'https://via.placeholder.com/94?text=No+Photo'}" class="device-img-thumbnail" alt="Foto"></td>
+                    <td><img src="${getDeviceImage(d.foto)}" class="device-img-thumbnail" alt="Foto"></td>
                     <td>${d.nup}</td>
                     <td>${d.nama_perangkat}</td>
                     <td>${d.merk} / ${d.type}</td>
