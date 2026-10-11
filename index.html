@@ -313,53 +313,49 @@
             Chart.defaults.font.family = "'Poppins', sans-serif";
             Chart.defaults.color = "#64748b";
 
-            // 2. KITA SAMAKAN JALURNYA DENGAN APP.HTML ('smfr_sistem_v1')
             database.ref('smfr_sistem_v1').on('value', (snapshot) => {
                 const dataServer = snapshot.val();
                 let dataPerangkat = [];
 
-                // Mencegah Error jika Firebase mengubah Array menjadi Object
                 if (dataServer && dataServer.perangkat) {
                     if (Array.isArray(dataServer.perangkat)) {
                         dataPerangkat = dataServer.perangkat;
                     } else {
-                        // Ubah Object menjadi Array
                         dataPerangkat = Object.values(dataServer.perangkat);
                     }
                 }
-
-                // Hapus data kosong (null/undefined) jika ada
                 dataPerangkat = dataPerangkat.filter(d => d != null);
 
                 let countTersedia = 0; let countDipinjam = 0;
                 let condBaik = 0; let condRusakRingan = 0; let condRusakBerat = 0;
                 let stasiunCounts = {};
 
+                // PROSES PENGHITUNGAN DATA
                 dataPerangkat.forEach(d => {
-                    // Hitung Ketersediaan
+                    // Ketersediaan
                     if (d.isBorrowed) countDipinjam++; else countTersedia++;
 
-                    // Hitung Kondisi dengan pembersihan teks ekstra (spasi)
+                    // Kondisi (Mendeteksi semua perangkat yang ada kata RUSAK)
                     const kond = (d.kondisi || '').toString().trim().toUpperCase();
-                    
                     if (kond.includes('RUSAK')) {
-                        // Jika ada kata RUSAK, cek apakah itu parah/berat
                         if (kond.includes('BERAT') || kond.includes('TOTAL')) {
                             condRusakBerat++;
                         } else {
-                            // Mencakup "RUSAK RINGAN", atau yang hanya ditulis "RUSAK" saja
                             condRusakRingan++;
                         }
                     } else {
-                        // Jika tidak ada kata "RUSAK" (misal: "BAIK", "NORMAL", atau kosong), masuk ke Baik
                         condBaik++;
                     }
+
+                    // Stasiun
+                    let st = (d.stasiun || '').toString().trim().toUpperCase();
+                    if (st === '' || st === '-') {
+                        st = 'BELUM DISET';
+                    }
+                    stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
                 });
 
-                // Cek data di Console F12 untuk memastikan hitungan sukses
-                console.log("Status Kondisi -> Baik:", condBaik, "| Rusak Ringan:", condRusakRingan, "| Rusak Berat:", condRusakBerat);
-
-                // --- MENGISI KARTU STATISTIK ANGKA ---
+                // UPDATE ANGKA DI KARTU STATISTIK
                 const elTotal = document.getElementById('idxTotal');
                 if (elTotal) elTotal.textContent = dataPerangkat.length;
 
@@ -369,38 +365,36 @@
                 const elDipinjam = document.getElementById('idxDipinjam');
                 if (elDipinjam) elDipinjam.textContent = countDipinjam;
 
-                // --- MENGHAPUS GRAFIK LAMA AGAR TIDAK MENUMPUK ---
+                // MENGHAPUS GRAFIK LAMA SEBELUM MENGGAMBAR BARU
                 if (chartKetersediaan) chartKetersediaan.destroy();
                 if (chartKondisi) chartKondisi.destroy();
                 if (chartStasiun) chartStasiun.destroy();
 
-                // ==== CHART 1: KETERSEDIAAN ====
+                // ==== 1. MEMBUAT CHART KETERSEDIAAN ====
                 const ctxKetersediaan = document.getElementById('chartKetersediaan').getContext('2d');
                 chartKetersediaan = new Chart(ctxKetersediaan, {
                     type: 'doughnut',
-                    data: { labels: ['Tersedia / Di Gudang', 'Sedang Dipinjam'], datasets: [{ data: [countTersedia, countDipinjam], backgroundColor: ['#10b981', '#f59e0b'], borderWidth: 0 }] },
+                    data: { 
+                        labels: ['Tersedia / Di Gudang', 'Sedang Dipinjam'], 
+                        datasets: [{ data: [countTersedia, countDipinjam], backgroundColor: ['#10b981', '#f59e0b'], borderWidth: 0 }] 
+                    },
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
                 });
 
-                // ==== CHART 2: KONDISI FISIK (PIE CHART) ====
+                // ==== 2. MEMBUAT CHART KONDISI ====
                 const ctxKondisi = document.getElementById('chartKondisi').getContext('2d');
                 chartKondisi = new Chart(ctxKondisi, {
                     type: 'pie',
                     data: { 
                         labels: ['Kondisi Baik', 'Rusak Ringan', 'Rusak Berat'], 
-                        datasets: [{ 
-                            data: [condBaik, condRusakRingan, condRusakBerat], 
-                            backgroundColor: ['#3b82f6', '#fcd34d', '#ef4444'], 
-                            borderWidth: 0 
-                        }] 
+                        datasets: [{ data: [condBaik, condRusakRingan, condRusakBerat], backgroundColor: ['#3b82f6', '#fcd34d', '#ef4444'], borderWidth: 0 }] 
                     },
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
                 });
 
-                // ==== CHART 3: DISTRIBUSI STASIUN ====
-             	const stasiunLabels = Object.keys(stasiunCounts);
+                // ==== 3. MEMBUAT CHART STASIUN ====
+                const stasiunLabels = Object.keys(stasiunCounts);
                 const stasiunData = Object.values(stasiunCounts);
-                
                 const ctxStasiun = document.getElementById('chartStasiun').getContext('2d');
                 chartStasiun = new Chart(ctxStasiun, {
                     type: 'bar',
@@ -409,7 +403,6 @@
                         datasets: [{ 
                             label: 'Jumlah Perangkat', 
                             data: stasiunData.length > 0 ? stasiunData : [0], 
-                            // Memberikan variasi warna pada bar chart
                             backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'], 
                             borderRadius: 6, 
                             barPercentage: 0.5 
@@ -418,12 +411,11 @@
                     options: { 
                         responsive: true, 
                         plugins: { legend: { display: false } }, 
-                        scales: { 
-                            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }, 
-                            x: { grid: { display: false } } 
-                        } 
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }, x: { grid: { display: false } } } 
                     }
                 });
+            });
+        });
 	</script>
     // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
     function loopToHome(event) {
