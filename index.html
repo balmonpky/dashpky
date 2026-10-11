@@ -342,18 +342,18 @@
                     // Hitung Kondisi dengan pembersihan teks ekstra (spasi)
                     const kond = (d.kondisi || '').toString().trim().toUpperCase();
                     
-                    if (kond.includes('BERAT')) {
-                        condRusakBerat++;
-                    } else if (kond.includes('RINGAN') || kond.includes('RUSAK RINGAN')) {
-                        condRusakRingan++;
+                    if (kond.includes('RUSAK')) {
+                        // Jika ada kata RUSAK, cek apakah itu parah/berat
+                        if (kond.includes('BERAT') || kond.includes('TOTAL')) {
+                            condRusakBerat++;
+                        } else {
+                            // Mencakup "RUSAK RINGAN", atau yang hanya ditulis "RUSAK" saja
+                            condRusakRingan++;
+                        }
                     } else {
-                        // Jika statusnya "BAIK" atau kosong, masuk ke Baik
+                        // Jika tidak ada kata "RUSAK" (misal: "BAIK", "NORMAL", atau kosong), masuk ke Baik
                         condBaik++;
                     }
-
-                    // Hitung Stasiun
-                    const st = (d.stasiun || 'LAINNYA').toString().trim().toUpperCase();
-                    stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
                 });
 
                 // Cek data di Console F12 untuk memastikan hitungan sukses
