@@ -280,6 +280,11 @@
                 <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database-pane" type="button">
                     <i class="bi bi-database me-2 fs-6 icn-db"></i>Database Perangkat (<span id="countDevTab">0</span>)
                 </button>
+			</li>
+			<li class="nav-item">
+                <button class="nav-link" id="rusak-tab" data-bs-toggle="tab" data-bs-target="#rusak-pane" type="button">
+                    <i class="bi bi-wrench-adjustable me-2 fs-6 text-danger"></i>Perangkat Rusak (<span id="countRusakTab">0</span>)
+                </button>	
             </li>
             <li class="nav-item">
                 <button class="nav-link" id="pegawai-tab" data-bs-toggle="tab" data-bs-target="#pegawai-pane" type="button">
@@ -400,7 +405,35 @@
                                         </tbody>
                                     </table>
                                 </div>
+							<!-- PANEL KHUSUS PERANGKAT RUSAK -->
+            <div class="tab-pane fade" id="rusak-pane" role="tabpanel">
+                <div class="card card-custom p-4 border-danger border-top border-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="fw-bold text-danger mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Daftar Perangkat Rusak</h4>
+                            <p class="text-muted small mb-0">Data inventaris perangkat dengan kondisi Rusak Ringan atau Rusak Berat yang memerlukan perbaikan.</p>
+                        </div>
+                    </div>
 
+                    <div class="table-responsive rounded-3 border bg-white" style="max-height: 500px; overflow: auto;">
+                        <table class="table table-hover table-custom align-middle mb-0">
+                            <thead class="table-danger sticky-top">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Foto</th>
+                                    <th>NUP</th>
+                                    <th>Nama Perangkat</th>
+                                    <th>Merk / Type</th>
+                                    <th>Kondisi Kerusakan</th>
+                                    <th>Lokasi Penyimpanan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rusakTableBody">
+                                <!-- Data akan dirender otomatis dari JS -->
+                            </tbody>
+                        </table>
+                    </div>
+           
                                 <!-- DETAIL WAKTU & KEPERLUAN -->
                                 <h5 class="fw-bold text-dark mb-3 pt-3 border-top"><i class="bi bi-calendar-event me-2 icn-return"></i>Waktu & Maksud Peminjaman</h5>
                                 <div class="row g-3 mb-3">
@@ -1121,6 +1154,7 @@
             updateDashboardStats();
             renderLogTable();
             renderPengembalianTable();
+			renderPerangkatRusakTable();
         });
 
         // 5. FUNGSI SAVE TERBARU (Mengirim data ke Firebase, bukan ke LocalStorage)
@@ -1205,6 +1239,11 @@
             const borrowedCount = dataPerangkat.filter(d => d.isBorrowed).length;
             document.getElementById('statDipinjam').textContent = borrowedCount;
             document.getElementById('statTersedia').textContent = dataPerangkat.length - borrowedCount;
+
+			// Menghitung dan menampilkan total perangkat rusak pada badge menu
+            const rusakCount = dataPerangkat.filter(d => (d.kondisi || '').toUpperCase().includes('RUSAK')).length;
+            const tabRusak = document.getElementById('countRusakTab');
+            if (tabRusak) tabRusak.textContent = rusakCount;
 
             const todayStr = new Date().toISOString().split('T')[0];
             let lateCount = 0;
@@ -2166,7 +2205,36 @@
                 tbody.appendChild(tr);
             });
         }
+		
+function renderPerangkatRusakTable() {
+            const tbody = document.getElementById('rusakTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
 
+            // Saring (filter) hanya perangkat yang kondisinya mengandung kata "RUSAK"
+            const rusakDevices = dataPerangkat.filter(d => (d.kondisi || '').toUpperCase().includes('RUSAK'));
+
+            if (rusakDevices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4"><i class="bi bi-check-circle-fill text-success me-2"></i>Tidak ada perangkat yang rusak. Semua perangkat dalam kondisi baik.</td></tr>';
+                return;
+            }
+
+            rusakDevices.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><img src="${getDeviceImage(item.foto)}" class="device-img-sm" alt="Foto"></td>
+                    <td class="fw-bold text-dark">${item.nup}</td>
+                    <td class="fw-bold text-danger">${item.nama_perangkat}</td>
+                    <td><small>${item.merk} / ${item.type}</small></td>
+                    <td><span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>${item.kondisi}</span></td>
+                    <td><small class="fw-medium">${item.lokasi}</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+		
         function deleteLoanLog(txId) {
             const index = logPeminjaman.findIndex(l => l.id === txId);
             if (index !== -1) {
