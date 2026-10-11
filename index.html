@@ -236,118 +236,106 @@
 
     <!-- SCRIPT UNTUK MENGAMBIL DATA & MEMBUAT GRAFIK -->
     <script>
+<!-- 1. TAMBAHKAN FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+    <script>
+        // 2. MASUKKAN FIREBASE CONFIG ANDA (Sama persis seperti di app.html)
+        const firebaseConfig = {
+            apiKey: "KODE_API_ANDA",
+            authDomain: "proyek-anda.firebaseapp.com",
+            databaseURL: "https://proyek-anda-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "proyek-anda",
+            storageBucket: "proyek-anda.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdefg"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Variabel untuk menampung grafik agar bisa diperbarui (real-time)
+        let chartKetersediaan = null;
+        let chartKondisi = null;
+        let chartStasiun = null;
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Mengambil database perangkat dari LocalStorage yang sama dengan app utama
-            const rawData = localStorage.getItem('smfr_perangkat_v19');
-            let dataPerangkat = [];
-            
-            if (rawData) {
-                dataPerangkat = JSON.parse(rawData);
-            }
-
-            // Jika database kosong, tampilkan alert
-            if(dataPerangkat.length === 0) {
-                console.log("Database masih kosong atau belum disetup.");
-            }
-
-            // 1. Proses Data untuk Chart Ketersediaan (Tersedia vs Dipinjam)
-            let countTersedia = 0;
-            let countDipinjam = 0;
-            
-            // 2. Proses Data untuk Chart Kondisi
-            let condBaik = 0;
-            let condRusakRingan = 0;
-            let condRusakBerat = 0;
-
-            // 3. Proses Data untuk Chart Stasiun
-            let stasiunCounts = {};
-
-            dataPerangkat.forEach(d => {
-                // Ketersediaan
-                if(d.isBorrowed) countDipinjam++; else countTersedia++;
-
-                // Kondisi
-                const kond = (d.kondisi || '').toUpperCase();
-                if(kond.includes('BERAT')) condRusakBerat++;
-                else if(kond.includes('RINGAN')) condRusakRingan++;
-                else condBaik++;
-
-                // Stasiun
-                const st = (d.stasiun || 'LAINNYA').toUpperCase();
-                stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
-            });
-
             // Konfigurasi Global Font Chart.js
             Chart.defaults.font.family = "'Poppins', sans-serif";
             Chart.defaults.color = "#64748b";
 
-            // ==== CHART 1: KETERSEDIAAN (DOUGHNUT) ====
-            const ctxKetersediaan = document.getElementById('chartKetersediaan').getContext('2d');
-            new Chart(ctxKetersediaan, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Tersedia / Di Gudang', 'Sedang Dipinjam'],
-                    datasets: [{
-                        data: [countTersedia, countDipinjam],
-                        backgroundColor: ['#10b981', '#f59e0b'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } },
-                    cutout: '65%'
+            // 3. AMBIL DATA DARI FIREBASE SECARA REAL-TIME
+            database.ref('smfr_sistem_v1/perangkat').on('value', (snapshot) => {
+                let dataPerangkat = snapshot.val() || [];
+
+                if(dataPerangkat.length === 0) {
+                    console.log("Database masih kosong atau belum disetup.");
                 }
-            });
 
-            // ==== CHART 2: KONDISI FISIK (PIE) ====
-            const ctxKondisi = document.getElementById('chartKondisi').getContext('2d');
-            new Chart(ctxKondisi, {
-                type: 'pie',
-                data: {
-                    labels: ['Kondisi Baik', 'Rusak Ringan', 'Rusak Berat'],
-                    datasets: [{
-                        data: [condBaik, condRusakRingan, condRusakBerat],
-                        backgroundColor: ['#3b82f6', '#fcd34d', '#ef4444'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
+                // Proses Data Statistik
+                let countTersedia = 0; let countDipinjam = 0;
+                let condBaik = 0; let condRusakRingan = 0; let condRusakBerat = 0;
+                let stasiunCounts = {};
 
-            // ==== CHART 3: DISTRIBUSI STASIUN (BAR) ====
-            const stasiunLabels = Object.keys(stasiunCounts);
-            const stasiunData = Object.values(stasiunCounts);
+                dataPerangkat.forEach(d => {
+                    // Ketersediaan
+                    if(d.isBorrowed) countDipinjam++; else countTersedia++;
 
-            const ctxStasiun = document.getElementById('chartStasiun').getContext('2d');
-            new Chart(ctxStasiun, {
-                type: 'bar',
-                data: {
-                    labels: stasiunLabels.length > 0 ? stasiunLabels : ['Belum ada data'],
-                    datasets: [{
-                        label: 'Jumlah Perangkat',
-                        data: stasiunData.length > 0 ? stasiunData : [0],
-                        backgroundColor: '#8b5cf6',
-                        borderRadius: 6,
-                        barPercentage: 0.6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } },
-                        x: { grid: { display: false } }
+                    // Kondisi
+                    const kond = (d.kondisi || '').toUpperCase();
+                    if(kond.includes('BERAT')) condRusakBerat++;
+                    else if(kond.includes('RINGAN')) condRusakRingan++;
+                    else condBaik++;
+
+                    // Stasiun
+                    const st = (d.stasiun || 'LAINNYA').toUpperCase();
+                    stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
+                });
+
+                // Hapus grafik lama jika layar di-update otomatis oleh Firebase
+                if (chartKetersediaan) chartKetersediaan.destroy();
+                if (chartKondisi) chartKondisi.destroy();
+                if (chartStasiun) chartStasiun.destroy();
+
+                // ==== CHART 1: KETERSEDIAAN ====
+                const ctxKetersediaan = document.getElementById('chartKetersediaan').getContext('2d');
+                chartKetersediaan = new Chart(ctxKetersediaan, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Tersedia / Di Gudang', 'Sedang Dipinjam'],
+                        datasets: [{ data: [countTersedia, countDipinjam], backgroundColor: ['#10b981', '#f59e0b'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+                });
+
+                // ==== CHART 2: KONDISI FISIK ====
+                const ctxKondisi = document.getElementById('chartKondisi').getContext('2d');
+                chartKondisi = new Chart(ctxKondisi, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Kondisi Baik', 'Rusak Ringan', 'Rusak Berat'],
+                        datasets: [{ data: [condBaik, condRusakRingan, condRusakBerat], backgroundColor: ['#3b82f6', '#fcd34d', '#ef4444'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                });
+
+                // ==== CHART 3: DISTRIBUSI STASIUN ====
+                const stasiunLabels = Object.keys(stasiunCounts);
+                const stasiunData = Object.values(stasiunCounts);
+                const ctxStasiun = document.getElementById('chartStasiun').getContext('2d');
+                chartStasiun = new Chart(ctxStasiun, {
+                    type: 'bar',
+                    data: {
+                        labels: stasiunLabels.length > 0 ? stasiunLabels : ['Belum ada data'],
+                        datasets: [{ label: 'Jumlah Perangkat', data: stasiunData.length > 0 ? stasiunData : [0], backgroundColor: '#8b5cf6', borderRadius: 6, barPercentage: 0.6 }]
+                    },
+                    options: {
+                        responsive: true, plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { grid: { display: false } } }
                     }
-                }
+                });
             });
         });
-    </script>
 	<script>
     // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
     function loopToHome(event) {
