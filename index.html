@@ -318,28 +318,48 @@
                 const dataServer = snapshot.val();
                 let dataPerangkat = [];
 
-                // Ambil data perangkat jika tersedia di server
-                if(dataServer && dataServer.perangkat) {
-                    dataPerangkat = dataServer.perangkat;
+                // Mencegah Error jika Firebase mengubah Array menjadi Object
+                if (dataServer && dataServer.perangkat) {
+                    if (Array.isArray(dataServer.perangkat)) {
+                        dataPerangkat = dataServer.perangkat;
+                    } else {
+                        // Ubah Object menjadi Array
+                        dataPerangkat = Object.values(dataServer.perangkat);
+                    }
                 }
+
+                // Hapus data kosong (null/undefined) jika ada
+                dataPerangkat = dataPerangkat.filter(d => d != null);
 
                 let countTersedia = 0; let countDipinjam = 0;
                 let condBaik = 0; let condRusakRingan = 0; let condRusakBerat = 0;
                 let stasiunCounts = {};
 
                 dataPerangkat.forEach(d => {
-                    if(d.isBorrowed) countDipinjam++; else countTersedia++;
+                    // Hitung Ketersediaan
+                    if (d.isBorrowed) countDipinjam++; else countTersedia++;
 
-                    const kond = (d.kondisi || '').toUpperCase();
-                    if(kond.includes('BERAT')) condRusakBerat++;
-                    else if(kond.includes('RINGAN')) condRusakRingan++;
-                    else condBaik++;
+                    // Hitung Kondisi dengan pembersihan teks ekstra (spasi)
+                    const kond = (d.kondisi || '').toString().trim().toUpperCase();
+                    
+                    if (kond.includes('BERAT')) {
+                        condRusakBerat++;
+                    } else if (kond.includes('RINGAN') || kond.includes('RUSAK RINGAN')) {
+                        condRusakRingan++;
+                    } else {
+                        // Jika statusnya "BAIK" atau kosong, masuk ke Baik
+                        condBaik++;
+                    }
 
-                    const st = (d.stasiun || 'LAINNYA').toUpperCase();
+                    // Hitung Stasiun
+                    const st = (d.stasiun || 'LAINNYA').toString().trim().toUpperCase();
                     stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
                 });
 
-                // --- 3. MENGISI KARTU STATISTIK ANGKA (DIJAMIN MUNCUL) ---
+                // Cek data di Console F12 untuk memastikan hitungan sukses
+                console.log("Status Kondisi -> Baik:", condBaik, "| Rusak Ringan:", condRusakRingan, "| Rusak Berat:", condRusakBerat);
+
+                // --- MENGISI KARTU STATISTIK ANGKA ---
                 const elTotal = document.getElementById('idxTotal');
                 if (elTotal) elTotal.textContent = dataPerangkat.length;
 
@@ -348,13 +368,13 @@
 
                 const elDipinjam = document.getElementById('idxDipinjam');
                 if (elDipinjam) elDipinjam.textContent = countDipinjam;
-                // ---------------------------------------------------------
 
-                // Hapus grafik lama sebelum menggambar yang baru (mencegah grafik menumpuk saat real-time)
+                // --- MENGHAPUS GRAFIK LAMA AGAR TIDAK MENUMPUK ---
                 if (chartKetersediaan) chartKetersediaan.destroy();
                 if (chartKondisi) chartKondisi.destroy();
                 if (chartStasiun) chartStasiun.destroy();
 
+                // ==== CHART 1: KETERSEDIAAN ====
                 const ctxKetersediaan = document.getElementById('chartKetersediaan').getContext('2d');
                 chartKetersediaan = new Chart(ctxKetersediaan, {
                     type: 'doughnut',
@@ -362,13 +382,22 @@
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
                 });
 
+                // ==== CHART 2: KONDISI FISIK (PIE CHART) ====
                 const ctxKondisi = document.getElementById('chartKondisi').getContext('2d');
                 chartKondisi = new Chart(ctxKondisi, {
                     type: 'pie',
-                    data: { labels: ['Kondisi Baik', 'Rusak Ringan', 'Rusak Berat'], datasets: [{ data: [condBaik, condRusakRingan, condRusakBerat], backgroundColor: ['#3b82f6', '#fcd34d', '#ef4444'], borderWidth: 0 }] },
+                    data: { 
+                        labels: ['Kondisi Baik', 'Rusak Ringan', 'Rusak Berat'], 
+                        datasets: [{ 
+                            data: [condBaik, condRusakRingan, condRusakBerat], 
+                            backgroundColor: ['#3b82f6', '#fcd34d', '#ef4444'], 
+                            borderWidth: 0 
+                        }] 
+                    },
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
                 });
 
+                // ==== CHART 3: DISTRIBUSI STASIUN ====
                 const stasiunLabels = Object.keys(stasiunCounts);
                 const stasiunData = Object.values(stasiunCounts);
                 const ctxStasiun = document.getElementById('chartStasiun').getContext('2d');
