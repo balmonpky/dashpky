@@ -416,7 +416,24 @@
                 });
             });
         });
-	
+	</script>
+    // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
+    function loopToHome(event) {
+        event.preventDefault(); // Mencegah klik default
+        
+        // Dapatkan URL lengkap saat ini
+        const currentUrl = window.location.href;
+        
+        // Deteksi apakah saat ini kita sedang membuka index.html
+        if (currentUrl.includes('index.html') || currentUrl.endsWith('/')) {
+            // Jika sudah di menu Home (index.html), paksa muat ulang halaman (looping)
+            window.location.reload();
+        } else {
+            // Jika sedang di app.html, arahkan kembali ke index.html
+            window.location.href = 'index.html';
+        }
+    }
+</script>
 <script>
         // ==========================================
         // SISTEM AUTENTIKASI LOGIN
