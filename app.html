@@ -978,12 +978,15 @@
             if (userRole === 'user') {
                 const tabDev = document.getElementById('database-tab');
                 const tabPeg = document.getElementById('pegawai-tab');
+                const tabRusak = document.getElementById('rusak-tab'); // <-- Tambahan
                 
+                // Menghapus tombol menu dari layar User
                 if (tabDev && tabDev.parentElement) tabDev.parentElement.remove();
                 if (tabPeg && tabPeg.parentElement) tabPeg.parentElement.remove();
+                if (tabRusak && tabRusak.parentElement) tabRusak.parentElement.remove(); // <-- Tambahan
 
-                // Jika user memaksa masuk ke link database, lempar ke form peminjaman
-                if (tabTarget === 'database-tab' || tabTarget === 'pegawai-tab') {
+                // Jika user memaksa masuk ke link yang dilarang, lempar ke form peminjaman
+                if (tabTarget === 'database-tab' || tabTarget === 'pegawai-tab' || tabTarget === 'rusak-tab') {
                     window.location.href = 'app.html?tab=form-tab';
                     return;
                 }
