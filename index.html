@@ -100,6 +100,69 @@
             margin-bottom: 1.5rem;
             text-align: center;
         }
+		/* PENGATURAN RESPONSIVITAS (HP, TABLET, LAPTOP)                            */
+        /* ======================================================================== */
+
+        /* 1. Pengaturan untuk Layar HP Biasa (Lebar maksimal 576px) */
+        @media (max-width: 576px) {
+            /* Membuat Tab Menu Aplikasi bisa di-swipe/geser ke samping di layar sentuh */
+            .nav-tabs {
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                white-space: nowrap !important;
+                -webkit-overflow-scrolling: touch;
+                border-bottom: 2px solid #e2e8f0;
+                padding-bottom: 5px;
+            }
+            
+            /* Mempercantik scrollbar pada tab menu di HP */
+            .nav-tabs::-webkit-scrollbar { height: 4px; }
+            .nav-tabs::-webkit-scrollbar-track { background: #f8fafc; }
+            .nav-tabs::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+
+            /* Mengecilkan ukuran huruf di tabel agar muat banyak di HP */
+            .table-custom th, .table-custom td {
+                font-size: 0.85rem !important;
+                padding: 0.5rem !important;
+            }
+
+            /* Mengecilkan judul di Dashboard */
+            .welcome-section h2 { font-size: 1.3rem !important; }
+            .welcome-section p { font-size: 0.9rem !important; }
+
+            /* Menyesuaikan ukuran tombol Shortcut di Dashboard */
+            .shortcut-card { padding: 1rem 0.5rem; }
+            .icon-wrapper { width: 50px; height: 50px; font-size: 1.3rem; }
+            
+            /* Form input lebih pas di jari */
+            .form-control, .form-select, .btn { font-size: 0.9rem !important; }
+        }
+
+        /* 2. Pengaturan untuk Layar Tablet / HP Layar Besar (Lebar maksimal 768px) */
+        @media (max-width: 768px) {
+            /* Mengecilkan logo dan tulisan di Navbar Atas */
+            .navbar-brand span { font-size: 1.1rem !important; }
+            .navbar-brand small { font-size: 0.75rem !important; }
+            .logo-container { width: 45px; height: 45px; }
+            .logo-container img { width: 35px; height: 35px; }
+            
+            /* Menyembunyikan nama user di layar sempit agar tombol Logout tidak terdorong */
+            #userWelcome { display: none !important; }
+
+            /* Jarak Card Statistik dan Chart lebih rapat */
+            .chart-box { padding: 1rem; }
+            .card-custom { padding: 1.5rem !important; }
+            
+            /* Agar gambar perangkat di tabel tidak terlalu memakan tempat */
+            .device-img-sm { width: 40px; height: 40px; }
+        }
+
+        /* 3. Pengaturan Khusus untuk Layar Sangat Kecil (Lebar maksimal 400px) */
+        @media (max-width: 400px) {
+            .navbar-brand span { font-size: 0.95rem !important; }
+            .navbar-custom { padding: 0.8rem 1rem; }
+        }
     </style>
 </head>
 <body>
