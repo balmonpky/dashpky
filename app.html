@@ -490,15 +490,15 @@
                         <div class="col-md-8">
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted icn-search"></i></span>
-                                <input type="text" id="searchPerangkatInput" class="form-control" placeholder="Cari NUP, Nama Perangkat, atau Merk..." oninput="fungsiCariPerangkat()">
+                                <input type="text" id="searchPerangkatInput" class="form-control" placeholder="Cari NUP, Nama Perangkat..." oninput="filterDataPerangkatUtama()">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <select class="form-select" id="filterStasiun">
-                                <option value="ALL">Semua Stasiun</option>
-                                <option value="PORTABLE">PORTABLE</option>
-                                <option value="BERGERAK">BERGERAK</option>
-                                <option value="FIXED">FIXED</option>
+                          <select id="filterStasiunInput" class="form-select" onchange="filterDataPerangkatUtama()">
+    							<option value="">Semua Stasiun</option>
+    							<option value="Fixed">Stasiun Fixed</option>
+    							<option value="Portable">Stasiun Portable</option>
+    							<option value="Bergerak">Stasiun Bergerak</option>
                                 <option value="TRANSPORTABLE">TRANSPORTABLE</option>
                             </select>
                         </div>
@@ -2293,29 +2293,43 @@ function renderPerangkatRusakTable() {
             window.location.href = 'index.html';
         }
     }
-		// FUNGSI PENCARIAN DATABASE PERANGKAT
+		// FUNGSI FILTER GABUNGAN (TEKS & STASIUN)
         // ==========================================
-        function fungsiCariPerangkat() {
-            // 1. Ambil kata kunci dari kolom pencarian dan jadikan huruf kecil semua
-            const keyword = document.getElementById('searchPerangkatInput').value.toLowerCase();
+        function filterDataPerangkatUtama() {
+            // 1. Ambil nilai dari kolom pencarian (jika ada)
+            const inputCari = document.getElementById('searchPerangkatInput');
+            const keyword = inputCari ? inputCari.value.toLowerCase() : '';
             
-            // 2. Saring (filter) dataPerangkat berdasarkan kata kunci
+            // 2. Ambil nilai dari dropdown stasiun (jika ada)
+            const inputStasiun = document.getElementById('filterStasiunInput');
+            const stasiunFilter = inputStasiun ? inputStasiun.value.toLowerCase() : '';
+
+            // 3. Saring data berdasarkan KEDUANYA
             const dataHasilPencarian = dataPerangkat.filter(item => {
+                
+                // --- Pengecekan Kata Kunci Teks ---
                 const nup = (item.nup || '').toLowerCase();
                 const nama = (item.nama_perangkat || '').toLowerCase();
                 const merk = (item.merk || '').toLowerCase();
                 const tipe = (item.type || '').toLowerCase();
                 const kondisi = (item.kondisi || '').toLowerCase();
                 
-                // Cek apakah kata kunci ada di NUP, Nama, Merk, Tipe, atau Kondisi
-                return nup.includes(keyword) || 
-                       nama.includes(keyword) || 
-                       merk.includes(keyword) || 
-                       tipe.includes(keyword) || 
-                       kondisi.includes(keyword);
+                const cocokTeks = nup.includes(keyword) || 
+                                  nama.includes(keyword) || 
+                                  merk.includes(keyword) || 
+                                  tipe.includes(keyword) || 
+                                  kondisi.includes(keyword);
+
+                // --- Pengecekan Kategori Stasiun ---
+                const stasiunItem = (item.stasiun || '').toLowerCase();
+                // Jika dropdown "Semua Stasiun" dipilih (kosong), maka anggap cocok
+                const cocokStasiun = (stasiunFilter === '') || (stasiunItem === stasiunFilter) || stasiunItem.includes(stasiunFilter);
+
+                // Data hanya akan tampil jika COCOK TEKS dan COCOK STASIUN
+                return cocokTeks && cocokStasiun;
             });
             
-            // 3. Render (gambar) ulang tabel TAPI hanya dengan data hasil pencarian
+            // 4. Gambar ulang tabel dengan data yang sudah disaring
             renderTableDatabase(dataHasilPencarian);
         }
 </script>
