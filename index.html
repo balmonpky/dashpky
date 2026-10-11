@@ -417,19 +417,21 @@
             });
         });
 	</script>
-    // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
+	<script>
+    // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING KE DASHBOARD
     function loopToHome(event) {
-        event.preventDefault(); // Mencegah klik default
+        event.preventDefault(); // Mencegah perilaku default dari tag <a>
         
-        // Dapatkan URL lengkap saat ini
+        // Dapatkan nama file yang sedang dibuka saat ini
+        const currentPath = window.location.pathname;
         const currentUrl = window.location.href;
         
-        // Deteksi apakah saat ini kita sedang membuka index.html
-        if (currentUrl.includes('index.html') || currentUrl.endsWith('/')) {
-            // Jika sudah di menu Home (index.html), paksa muat ulang halaman (looping)
-            window.location.reload();
+        // Cek apakah saat ini kita sedang berada di dashboard (index.html)
+        if (currentPath.includes('index.html') || currentPath.endsWith('/') || currentUrl.includes('index.html')) {
+            // Jika sudah di dashboard, paksa muat ulang halaman dari server (Looping)
+            window.location.reload(true);
         } else {
-            // Jika sedang di app.html, arahkan kembali ke index.html
+            // Jika sedang berada di app.html, tendang kembali ke dashboard
             window.location.href = 'index.html';
         }
     }
