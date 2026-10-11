@@ -201,7 +201,7 @@
                     <span class="fw-bold text-center small">Log<br>Peminjaman</span>
                 </a>	
             </div>
-			<div class="col-6 col-md-4 col-lg-2">
+			<div class="col-6 col-md-4 col-lg-2" id="menu-rusak">
                 <a href="app.html?tab=rusak-tab" class="shortcut-card">
                     <div class="icon-wrapper" style="background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);">
                         <i class="bi bi-wrench-adjustable"></i>
@@ -452,6 +452,9 @@
                 if (loggedInRole === 'user') {
                     document.getElementById('menu-db-dev').style.display = 'none';
                     document.getElementById('menu-db-peg').style.display = 'none';
+					// --- TAMBAHKAN BARIS INI UNTUK MENYEMBUNYIKAN MENU RUSAK ---
+                    const menuRusak = document.getElementById('menu-rusak');
+                    if (menuRusak) menuRusak.style.display = 'none';
                 }
             } else {
                 // Jika belum login, pastikan layar login muncul
