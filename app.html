@@ -963,33 +963,33 @@
 
         document.addEventListener('DOMContentLoaded', () => {
 		// === SCRIPT PEMBATASAN AKSES (REVISI LEBIH AMAN) ===
-            const userRole = sessionStorage.getItem('smfr_role');
+       const userRole = sessionStorage.getItem('smfr_role');
             
-            // 1. Jika belum login sama sekali, lempar kembali ke halaman depan
             if (!userRole) {
                 window.location.href = 'index.html';
-                return; // Hentikan eksekusi script
+                return; // Hentikan script jika belum login
             }
 
-            // 2. Jika yang login adalah 'user', HAPUS menu Database
+            // === 2. BACA URL UNTUK PINDAH TAB (Dideklarasikan 1x saja agar tidak crash) ===
+            const paramURL = new URLSearchParams(window.location.search);
+            const tabTarget = paramURL.get('tab');
+
+            // === 3. PEMBATASAN HAK AKSES KHUSUS 'USER' ===
             if (userRole === 'user') {
                 const tabDev = document.getElementById('database-tab');
                 const tabPeg = document.getElementById('pegawai-tab');
                 
-                // Gunakan .remove() agar tombol benar-benar lenyap dari kode HTML
-                if(tabDev && tabDev.parentElement) tabDev.parentElement.remove();
-                if(tabPeg && tabPeg.parentElement) tabPeg.parentElement.remove();
+                if (tabDev && tabDev.parentElement) tabDev.parentElement.remove();
+                if (tabPeg && tabPeg.parentElement) tabPeg.parentElement.remove();
 
-                // 3. Keamanan tambahan: Cegah user memaksa masuk lewat parameter URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const activeTabId = urlParams.get('tab');
-                if (activeTabId === 'database-tab' || activeTabId === 'pegawai-tab') {
-                    // Jika ketahuan mencoba mengakses tab admin, tendang ke form peminjaman
+                // Jika user memaksa masuk ke link database, lempar ke form peminjaman
+                if (tabTarget === 'database-tab' || tabTarget === 'pegawai-tab') {
                     window.location.href = 'app.html?tab=form-tab';
                     return;
                 }
             }
-            // ================================================
+            
+            // === 4. INISIALISASI POP-UP (MODAL) BOOTSTRAP ===
             bsModalDevice = new bootstrap.Modal(document.getElementById('modalDevice'));
             bsModalPegawai = new bootstrap.Modal(document.getElementById('modalAddPegawai'));
             bsModalProsesReturn = new bootstrap.Modal(document.getElementById('modalProsesPengembalian'));
@@ -997,60 +997,16 @@
             bsModalSelectFormDev = new bootstrap.Modal(document.getElementById('modalSelectDeviceForForm'));
             bsModalSelectFormPeg = new bootstrap.Modal(document.getElementById('modalSelectPegawaiForForm'));
 
-            renderPegawaiTable();
-            renderTableDatabase(dataPerangkat);
-            renderSelectedFormDevicesTable();
-            updateDashboardStats();
-            renderLogTable();
-            renderPengembalianTable();
-
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('tglPinjam').value = today;
-            
-            // Set current month and year automatically in form dropdowns
-            const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
-            const currentYear = String(new Date().getFullYear());
-            if(document.getElementById('noSuratBulan').querySelector(`option[value="${currentMonth}"]`)) {
-                document.getElementById('noSuratBulan').value = currentMonth;
-            }
-            if(document.getElementById('noSuratTahun').querySelector(`option[value="${currentYear}"]`)) {
-                document.getElementById('noSuratTahun').value = currentYear;
-            }
-			// --- SCRIPT PINDAH TAB OTOMATIS (DIJAMIN BERHASIL) ---
-            const urlParams = new URLSearchParams(window.location.search);
-            const activeTabId = urlParams.get('tab');
-            
-            if (activeTabId) {
-                // Gunakan setTimeout agar Bootstrap selesai melakukan setup awal (mengatasi timpa-menimpa class)
+            // === 5. PINDAH TAB OTOMATIS DENGAN API BOOTSTRAP ===
+            if (tabTarget) {
                 setTimeout(() => {
-                    // 1. Matikan semua tab di area navigasi
-                    document.querySelectorAll('#mainTab .nav-link').forEach(link => {
-                        link.classList.remove('active');
-                        link.setAttribute('aria-selected', 'false');
-                    });
-                    
-                    // 2. Sembunyikan semua isi (panel) tab
-                    document.querySelectorAll('.tab-content .tab-pane').forEach(pane => {
-                        pane.classList.remove('show', 'active');
-                    });
-                    
-                    // 3. Cari tombol tab yang diminta dari index.html
-                    const targetTabBtn = document.getElementById(activeTabId);
-                    if (targetTabBtn) {
-                        // Nyalakan tombol tab tersebut
-                        targetTabBtn.classList.add('active');
-                        targetTabBtn.setAttribute('aria-selected', 'true');
-                        
-                        // 4. Cari dan nyalakan isi (panel) tab yang sesuai
-                        const targetPaneId = targetTabBtn.getAttribute('data-bs-target');
-                        if (targetPaneId) {
-                            const targetPane = document.querySelector(targetPaneId);
-                            if (targetPane) {
-                                targetPane.classList.add('show', 'active');
-                            }
-                        }
+                    const btnTab = document.getElementById(tabTarget);
+                    if (btnTab) {
+                        // Perintah ini jauh lebih aman dan tidak akan merusak struktur HTML
+                        const tabInstance = new bootstrap.Tab(btnTab);
+                        tabInstance.show();
                     }
-                }, 100); // Penundaan 100 milidetik adalah kuncinya!
+                }, 100);
             }
         });
 
