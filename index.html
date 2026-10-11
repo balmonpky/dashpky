@@ -334,6 +334,19 @@
                 let countTersedia = 0; let countDipinjam = 0;
                 let condBaik = 0; let condRusakRingan = 0; let condRusakBerat = 0;
                 let stasiunCounts = {};
+				dataPerangkat.forEach(d => {
+                    // ... (Hitung Ketersediaan dan Kondisi tetap sama) ...
+
+                    // LOGIKA BARU: Hitung Stasiun yang lebih kebal error
+                    let st = (d.stasiun || '').toString().trim().toUpperCase();
+                    
+                    // Jika stasiun kosong atau hanya berisi tanda strip "-", kelompokkan ke "BELUM DISET"
+                    if (st === '' || st === '-') {
+                        st = 'BELUM DISET';
+                    }
+                    
+                    stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
+                });
 
                 dataPerangkat.forEach(d => {
                     // Hitung Ketersediaan
@@ -398,16 +411,32 @@
                 });
 
                 // ==== CHART 3: DISTRIBUSI STASIUN ====
-                const stasiunLabels = Object.keys(stasiunCounts);
+             	const stasiunLabels = Object.keys(stasiunCounts);
                 const stasiunData = Object.values(stasiunCounts);
+                
                 const ctxStasiun = document.getElementById('chartStasiun').getContext('2d');
                 chartStasiun = new Chart(ctxStasiun, {
                     type: 'bar',
-                    data: { labels: stasiunLabels.length > 0 ? stasiunLabels : ['Belum ada data'], datasets: [{ label: 'Jumlah Perangkat', data: stasiunData.length > 0 ? stasiunData : [0], backgroundColor: '#8b5cf6', borderRadius: 6, barPercentage: 0.6 }] },
-                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { grid: { display: false } } } }
+                    data: { 
+                        labels: stasiunLabels.length > 0 ? stasiunLabels : ['Belum ada data'], 
+                        datasets: [{ 
+                            label: 'Jumlah Perangkat', 
+                            data: stasiunData.length > 0 ? stasiunData : [0], 
+                            // Memberikan variasi warna pada bar chart
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'], 
+                            borderRadius: 6, 
+                            barPercentage: 0.5 
+                        }] 
+                    },
+                    options: { 
+                        responsive: true, 
+                        plugins: { legend: { display: false } }, 
+                        scales: { 
+                            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }, 
+                            x: { grid: { display: false } } 
+                        } 
+                    }
                 });
-            });
-        });
 	</script>
     // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
     function loopToHome(event) {
