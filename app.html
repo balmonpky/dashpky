@@ -490,7 +490,7 @@
                         <div class="col-md-8">
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted icn-search"></i></span>
-                                <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Cari Perangkat, Merk, NUP, Satker, atau Lokasi...">
+                                <input type="text" id="searchPerangkatInput" class="form-control" placeholder="Cari NUP, Nama Perangkat, atau Merk..." oninput="fungsiCariPerangkat()">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -2293,6 +2293,31 @@ function renderPerangkatRusakTable() {
             window.location.href = 'index.html';
         }
     }
+		// FUNGSI PENCARIAN DATABASE PERANGKAT
+        // ==========================================
+        function fungsiCariPerangkat() {
+            // 1. Ambil kata kunci dari kolom pencarian dan jadikan huruf kecil semua
+            const keyword = document.getElementById('searchPerangkatInput').value.toLowerCase();
+            
+            // 2. Saring (filter) dataPerangkat berdasarkan kata kunci
+            const dataHasilPencarian = dataPerangkat.filter(item => {
+                const nup = (item.nup || '').toLowerCase();
+                const nama = (item.nama_perangkat || '').toLowerCase();
+                const merk = (item.merk || '').toLowerCase();
+                const tipe = (item.type || '').toLowerCase();
+                const kondisi = (item.kondisi || '').toLowerCase();
+                
+                // Cek apakah kata kunci ada di NUP, Nama, Merk, Tipe, atau Kondisi
+                return nup.includes(keyword) || 
+                       nama.includes(keyword) || 
+                       merk.includes(keyword) || 
+                       tipe.includes(keyword) || 
+                       kondisi.includes(keyword);
+            });
+            
+            // 3. Render (gambar) ulang tabel TAPI hanya dengan data hasil pencarian
+            renderTableDatabase(dataHasilPencarian);
+        }
 </script>
 </body>
 </html>
