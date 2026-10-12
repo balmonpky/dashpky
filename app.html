@@ -2162,6 +2162,68 @@ function pilihPerangkatPeminjaman(nup) {
             );
             renderAvailableDevicesList(filtered);
         }
+		// ... (kode di dalam fungsi pencarian perangkat untuk EDIT peminjaman) ...
+
+            dataPerangkat.forEach((item, index) => {
+                
+                // 1. CEK KONDISI PERANGKAT
+                const statusKondisi = (item.kondisi || '').toUpperCase();
+                const isRusak = statusKondisi.includes('RUSAK');
+
+                // 2. LOGIKA TOMBOL BERDASARKAN STATUS
+                let tombolAksi = '';
+                
+                if (isRusak) {
+                    // KUNCI: Matikan jika perangkat rusak
+                    tombolAksi = `<button type="button" class="btn btn-danger btn-sm" disabled><i class="bi bi-x-circle me-1"></i>Rusak</button>`;
+                } 
+                else if (item.isBorrowed) {
+                    // KUNCI: Matikan jika sedang dipinjam oleh orang lain
+                    tombolAksi = `<button type="button" class="btn btn-warning btn-sm text-dark" disabled><i class="bi bi-hourglass-split me-1"></i>Dipinjam</button>`;
+                } 
+                else {
+                    // Tombol hidup jika perangkat tersedia & baik
+                    // Catatan: Ganti tulisan 'fungsiPilihUntukEdit' dengan nama fungsi asli yang ada di kode Anda sebelumnya!
+                    tombolAksi = `<button type="button" class="btn btn-success btn-sm fw-bold" onclick="fungsiPilihUntukEdit('${item.nup}')"><i class="bi bi-plus-circle me-1"></i>Tambah</button>`;
+                }
+
+                // 3. MASUKKAN KE TABEL HTML
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><img src="${getDeviceImage(item.foto)}" class="device-img-sm"></td>
+                    <td>${item.nup}</td>
+                    <td>${item.nama_perangkat}</td>
+                    <td><span class="badge ${isRusak ? 'bg-danger' : 'bg-primary'}">${item.kondisi}</span></td>
+                    <td>${tombolAksi}</td> <!-- Letak tombol -->
+                `;
+                tbody.appendChild(tr);
+            });
+		
+		function fungsiPilihUntukEdit(nup) {
+            // Cari data perangkat di database utama
+            const perangkat = dataPerangkat.find(d => d.nup === nup);
+            
+            if (perangkat) {
+                // --- AWAL KODE KEAMANAN TAMBAHAN (MODE EDIT) ---
+                const kondisi = (perangkat.kondisi || '').toUpperCase();
+                
+                // 1. Cek Kerusakan
+                if (kondisi.includes('RUSAK')) {
+                    alert('GAGAL: Anda tidak bisa menambahkan perangkat yang sedang RUSAK ke dalam daftar pinjaman!');
+                    return; // Membatalkan penambahan
+                }
+                
+                // 2. Cek Ketersediaan
+                if (perangkat.isBorrowed) {
+                    alert('GAGAL: Perangkat ini sudah dipinjam di transaksi lain!');
+                    return; // Membatalkan penambahan
+                }
+                // --- AKHIR KODE KEAMANAN TAMBAHAN ---
+
+                // ... (Lanjutan script asli Anda untuk memasukkan perangkat ke dalam tabel form edit) ...
+            }
+        }
 
         function selectDeviceToAddToLoan(devId) {
             const txId = document.getElementById('editLoanTxId').value;
