@@ -2681,6 +2681,153 @@ function renderPerangkatRusakTable() {
             bsModalEditLoan.hide();
             alert('Data peminjaman berhasil diperbarui!');
         }
+		// ========================================================================
+        // 1. MENGUBAH SEMUA ALERT BAWAAN BROWSER MENJADI SWEETALERT2 OTOMATIS
+        // ========================================================================
+        window.alert = function(message) {
+            let iconType = 'info';
+            let titleText = 'Informasi';
+            
+            // Program mendeteksi kata-kata di dalam pesan untuk menentukan warna icon
+            const msgLower = message.toLowerCase();
+            if (msgLower.includes('berhasil') || msgLower.includes('sukses')) {
+                iconType = 'success';
+                titleText = 'Berhasil!';
+            } else if (msgLower.includes('gagal') || msgLower.includes('error') || msgLower.includes('wajib')) {
+                iconType = 'error';
+                titleText = 'Peringatan!';
+            } else if (msgLower.includes('silakan') || msgLower.includes('belum ada') || msgLower.includes('minimal')) {
+                iconType = 'warning';
+                titleText = 'Perhatian';
+            }
+
+            Swal.fire({
+                title: titleText,
+                text: message,
+                icon: iconType,
+                confirmButtonColor: '#0f4c81'
+            });
+        };
+
+        // ========================================================================
+        // 2. MENGUBAH 5 FUNGSI HAPUS (DELETE) MENJADI POP-UP KONFIRMASI MODERN
+        // ========================================================================
+        
+        function deleteAllPerangkat() {
+            Swal.fire({
+                title: 'Kosongkan Database?',
+                text: "Seluruh data perangkat akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545', // Warna merah untuk hapus
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="bi bi-trash"></i> Ya, Hapus Semua!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dataPerangkat = [];
+                    saveDataToStorage();
+                    renderTableDatabase(dataPerangkat);
+                    Swal.fire('Terhapus!', 'Database perangkat berhasil dikosongkan.', 'success');
+                }
+            });
+        }
+
+        function deleteAllPegawai() {
+            Swal.fire({
+                title: 'Kosongkan Database Pegawai?',
+                text: "Seluruh data pegawai akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="bi bi-trash"></i> Ya, Hapus Semua!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dataPegawai = [];
+                    saveDataToStorage();
+                    renderPegawaiTable();
+                    Swal.fire('Terhapus!', 'Database pegawai berhasil dikosongkan.', 'success');
+                }
+            });
+        }
+
+        function deletePegawai(idx) {
+            Swal.fire({
+                title: 'Hapus Pegawai?',
+                text: `Apakah Anda yakin ingin menghapus "${dataPegawai[idx].NAMA}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dataPegawai.splice(idx, 1);
+                    saveDataToStorage();
+                    renderPegawaiTable();
+                    Swal.fire('Terhapus!', 'Data pegawai berhasil dihapus.', 'success');
+                }
+            });
+        }
+
+        function deleteDevice(devId) {
+            const dev = dataPerangkat.find(d => d.id == devId);
+            if (!dev) return;
+            
+            // Cegah jika perangkat sedang dipinjam
+            if (dev.isBorrowed) {
+                Swal.fire('Ditolak!', 'Perangkat sedang dipinjam dan tidak dapat dihapus.', 'error');
+                return;
+            }
+            
+            Swal.fire({
+                title: 'Hapus Perangkat?',
+                text: `Apakah Anda yakin menghapus "${dev.nama_perangkat}" (NUP: ${dev.nup})?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dataPerangkat = dataPerangkat.filter(d => d.id != devId);
+                    saveDataToStorage();
+                    renderTableDatabase(dataPerangkat);
+                    Swal.fire('Terhapus!', 'Perangkat berhasil dihapus.', 'success');
+                }
+            });
+        }
+
+        function deleteLoanLog(txId) {
+            Swal.fire({
+                title: 'Hapus Log Transaksi?',
+                text: `Apakah Anda yakin ingin menghapus peminjaman ID: ${txId}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const index = logPeminjaman.findIndex(l => l.id === txId);
+                    if (index !== -1) {
+                        const log = logPeminjaman[index];
+                        if (log.status === 'Dipinjam') {
+                            log.perangkatList.forEach(devRef => {
+                                const dev = dataPerangkat.find(d => d.id == devRef.id);
+                                if (dev) dev.isBorrowed = false;
+                            });
+                        }
+                        logPeminjaman.splice(index, 1);
+                        saveDataToStorage();
+                        renderTableDatabase(dataPerangkat);
+                        renderLogTable();
+                        renderPengembalianTable();
+                        Swal.fire('Terhapus!', 'Log transaksi berhasil dihapus.', 'success');
+                    }
+                }
+            });
+        }
 </script>
 </body>
 </html>
