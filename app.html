@@ -1549,18 +1549,70 @@
             `).join('');
         }
 
-        function addDeviceToFormSelection(devId) {
-            const dev = dataPerangkat.find(d => d.id == devId);
-            if (dev && !selectedFormDevices.some(s => s.id === dev.id)) {
-                selectedFormDevices.push({
-                    ...dev,
-                    kondisiAwal: dev.kondisi,
-                    kondisiAkhir: '-'
-                });
-                renderSelectedFormDevicesTable();
-                filterFormModalDevices();
+       // ... (kode di dalam fungsi render perangkat untuk form peminjaman) ...
+
+            dataPerangkat.forEach((item, index) => {
+                
+                // 1. CEK KONDISI PERANGKAT
+                const statusKondisi = (item.kondisi || '').toUpperCase();
+                const isRusak = statusKondisi.includes('RUSAK');
+
+                // 2. LOGIKA TOMBOL BERDASARKAN STATUS
+                let tombolAksi = '';
+                
+                if (isRusak) {
+                    // Jika rusak -> Tombol mati (disabled) berwarna merah
+                    tombolAksi = `<button type="button" class="btn btn-danger btn-sm" disabled><i class="bi bi-x-circle me-1"></i>Rusak</button>`;
+                } 
+                else if (item.isBorrowed) {
+                    // Jika sedang dipinjam -> Tombol mati (disabled) berwarna kuning
+                    tombolAksi = `<button type="button" class="btn btn-warning btn-sm text-dark" disabled><i class="bi bi-hourglass-split me-1"></i>Dipinjam</button>`;
+                } 
+                else {
+                    // Jika tersedia & baik -> Tombol hidup berwarna hijau
+                    // Catatan: sesuaikan nama fungsi onclick-nya dengan yang asli di script Anda, misalnya pilihPerangkat('${item.nup}')
+                    tombolAksi = `<button type="button" class="btn btn-success btn-sm fw-bold" onclick="pilihPerangkatPeminjaman('${item.nup}')"><i class="bi bi-check2-square me-1"></i>Pilih</button>`;
+                }
+
+                // 3. MASUKKAN TOMBOL KE DALAM TABEL HTML
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><img src="${getDeviceImage(item.foto)}" class="device-img-sm"></td>
+                    <td>${item.nup}</td>
+                    <td>${item.nama_perangkat}</td>
+                    <td><span class="badge ${isRusak ? 'bg-danger' : 'bg-primary'}">${item.kondisi}</span></td>
+                    <td>${tombolAksi}</td> <!-- Kolom tombol berada di sini -->
+                `;
+                tbody.appendChild(tr);
+            }); 
+		
+function pilihPerangkatPeminjaman(nup) {
+            // Cari data perangkat berdasarkan NUP
+            const perangkat = dataPerangkat.find(d => d.nup === nup);
+            
+            if (perangkat) {
+                // --- AWAL KODE KEAMANAN TAMBAHAN ---
+                const kondisi = (perangkat.kondisi || '').toUpperCase();
+                
+                // 1. Tolak jika rusak
+                if (kondisi.includes('RUSAK')) {
+                    alert('GAGAL: Perangkat ini dalam kondisi RUSAK dan tidak dapat dipinjamkan sebelum diperbaiki!');
+                    return; // Menghentikan proses
+                }
+                
+                // 2. Tolak jika sedang dipinjam
+                if (perangkat.isBorrowed) {
+                    alert('GAGAL: Perangkat ini sedang dipinjam oleh pihak lain!');
+                    return; // Menghentikan proses
+                }
+                // --- AKHIR KODE KEAMANAN TAMBAHAN ---
+
+                // ... (Lanjutan script asli Anda untuk memasukkan perangkat ke keranjang/form) ...
+                
             }
         }
+		
 
         function removeDeviceFromFormSelection(index) {
             selectedFormDevices.splice(index, 1);
