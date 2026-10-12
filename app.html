@@ -1004,6 +1004,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 	
     <script>
+		<!-- SweetAlert2 untuk Pop-up Modern -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
 		// --- TAMBAHKAN SCRIPT INI ---
         function getDeviceImage(fotoData) {
             // Jika kosong, gunakan gambar default
@@ -1688,20 +1691,27 @@
             renderLogTable();
             renderPengembalianTable();
 
-            alert(`Peminjaman Berhasil Dicatat! ID Transaksi: ${txId}`);
-			
-			// TAMBAHAN BARU: OTOMATIS PINDAH KE TAB LOG PEMINJAMAN
             // =========================================================
-            const pinjamTab = document.getElementById('pinjam-tab');
-            if (pinjamTab) {
-                // Pindah tampilan layar ke menu Log Peminjaman
-                const tabInstance = new bootstrap.Tab(pinjamTab);
-                tabInstance.show();
-                
-                // (Opsional) Memperbarui URL di browser agar jika di-refresh, tetap berada di Log
-                window.history.pushState({}, '', '?tab=pinjam-tab');
-            }
-        });
+            // POP-UP MODERN DENGAN SWEETALERT2
+            // =========================================================
+            Swal.fire({
+                title: 'Berhasil!',
+                html: `Peminjaman perangkat telah dicatat.<br><b>ID Transaksi: ${txId}</b>`,
+                icon: 'success',
+                confirmButtonColor: '#0f4c81', // Menyesuaikan dengan warna biru tema Anda
+                confirmButtonText: '<i class="bi bi-check-circle me-1"></i> OK, Lanjut ke Log',
+                allowOutsideClick: false
+            }).then((result) => {
+                // Kode ini akan berjalan HANYA SETELAH user menekan tombol OK
+                if (result.isConfirmed) {
+                    const pinjamTab = document.getElementById('pinjam-tab');
+                    if (pinjamTab) {
+                        const tabInstance = new bootstrap.Tab(pinjamTab);
+                        tabInstance.show();
+                        window.history.pushState({}, '', '?tab=pinjam-tab');
+                    }
+                }
+            });
 
         // ===================== DATABASE PERANGKAT =========================
         function openAddDeviceModal() {
