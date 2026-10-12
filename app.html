@@ -2828,6 +2828,31 @@ function renderPerangkatRusakTable() {
                 }
             });
         }
+		// ========================================================================
+        // FUNGSI BACKUP SELURUH DATABASE KE FILE JSON (Sebagai Exit Strategy)
+        // ========================================================================
+        function backupSeluruhDatabase() {
+            // Gabungkan semua data menjadi satu paket
+            const dataBackup = {
+                tanggal_backup: new Date().toLocaleString('id-ID'),
+                pegawai: dataPegawai,
+                perangkat: dataPerangkat,
+                logs: logPeminjaman
+            };
+
+            // Ubah menjadi format teks JSON
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataBackup, null, 2));
+            
+            // Buat tombol download otomatis
+            const tombolDownload = document.createElement('a');
+            tombolDownload.setAttribute("href", dataStr);
+            tombolDownload.setAttribute("download", "Backup_SMFR_" + new Date().toISOString().split('T')[0] + ".json");
+            document.body.appendChild(tombolDownload);
+            tombolDownload.click();
+            tombolDownload.remove();
+
+            Swal.fire('Berhasil!', 'Seluruh data telah di-backup ke komputer Anda dalam format JSON.', 'success');
+        }
 </script>
 </body>
 </html>
