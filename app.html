@@ -272,7 +272,7 @@
     <div class="container-fluid px-lg-4 mb-5">
         
         <!-- DASHBOARD STATISTIK -->
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-4" id="dashboardStatsRow">
             <div class="col-6 col-lg-3">
                 <div class="card stat-card p-3">
                     <div class="d-flex align-items-center">
@@ -1047,6 +1047,9 @@
                 if (tabDev && tabDev.parentElement) tabDev.parentElement.remove();
                 if (tabPeg && tabPeg.parentElement) tabPeg.parentElement.remove();
                 if (tabRusak && tabRusak.parentElement) tabRusak.parentElement.remove(); // <-- Tambahan
+
+				// Menyembunyikan deretan kartu statistik dari layar User
+                if (statsRow) statsRow.style.display = 'none'; // <-- Tambahan perintah sembunyi
 
                 // Jika user memaksa masuk ke link yang dilarang, lempar ke form peminjaman
                 if (tabTarget === 'database-tab' || tabTarget === 'pegawai-tab' || tabTarget === 'rusak-tab') {
