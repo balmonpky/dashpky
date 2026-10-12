@@ -2468,6 +2468,188 @@ function renderPerangkatRusakTable() {
             // 4. Gambar ulang tabel dengan data yang sudah disaring
             renderTableDatabase(dataHasilPencarian);
         }
+		// ========================================================================
+        // PERBAIKAN FITUR EDIT PEMINJAMAN (Hanya Simpan Saat Tombol Diklik)
+        // ========================================================================
+        
+        let tempEditPerangkatList = []; // Keranjang sementara untuk menampung perangkat saat diedit
+
+        function editLoanItems(txId) {
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            if (log.status === 'Dikembalikan') {
+                alert('Transaksi ini telah dikembalikan dan dikunci.');
+                return;
+            }
+
+            document.getElementById('editLoanTxId').value = log.id;
+            
+            // KLONING DATA: Salin daftar perangkat ke dalam array sementara agar tidak merusak data asli
+            tempEditPerangkatList = JSON.parse(JSON.stringify(log.perangkatList));
+            
+            // PARSING NOMOR SURAT TUGAS
+            let oldSurat = log.noSuratTugas || '';
+            let m = oldSurat.match(/Nomor\s*:\s*(.*?)\s*\/Balmon\.62\/KP\.01\.06\/(.*?)\/(.*)/);
+            if(m) {
+                document.getElementById('editNoSuratUrut').value = m[1].trim();
+                document.getElementById('editNoSuratBulan').value = m[2].trim();
+                document.getElementById('editNoSuratTahun').value = m[3].trim();
+            } else {
+                document.getElementById('editNoSuratUrut').value = '';
+                document.getElementById('editNoSuratBulan').value = '';
+                document.getElementById('editNoSuratTahun').value = '';
+            }
+
+            document.getElementById('editTglPinjam').value = log.tglPinjam || '';
+            document.getElementById('editTglKembali').value = log.tglKembali || '';
+            document.getElementById('editKegiatan').value = log.kegiatan || '';
+
+            const editPegSelect = document.getElementById('editPegawaiSelect');
+            editPegSelect.innerHTML = '';
+            dataPegawai.forEach((p, idx) => {
+                let opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${p.NAMA} - NIP. ${p.NIP}`;
+                if (log.pegawai && log.pegawai.NIP === p.NIP) opt.selected = true;
+                editPegSelect.appendChild(opt);
+            });
+
+            closeAvailableDevicesSelector();
+            renderEditLoanItemsContainer();
+            bsModalEditLoan.show();
+        }
+
+        // Fungsi menggambar tabel perangkat dari keranjang sementara (Bukan dari log asli)
+        function renderEditLoanItemsContainer() {
+            const container = document.getElementById('editLoanItemsContainer');
+            container.innerHTML = tempEditPerangkatList.map((d, idx) => `
+                <div class="d-flex align-items-center justify-content-between p-2 mb-2 bg-light border rounded">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${getDeviceImage(d.foto)}" class="device-img-sm" alt="Foto">
+                        <div>
+                            <strong class="text-primary">[NUP ${d.nup}] ${d.nama_perangkat}</strong><br>
+                            <small class="text-muted">${d.merk} ${d.type} - Kondisi: ${d.kondisiAwal || d.kondisi}</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeDeviceFromEditLoan(${idx})">
+                        <i class="bi bi-trash"></i> Hapus
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Fungsi saat menekan tombol Hapus di mode edit
+        function removeDeviceFromEditLoan(index) {
+            if (tempEditPerangkatList.length <= 1) {
+                alert('Peminjaman harus memiliki minimal 1 perangkat!');
+                return;
+            }
+            // HANYA Hapus dari keranjang sementara, JANGAN panggil saveDataToStorage()
+            tempEditPerangkatList.splice(index, 1);
+            renderEditLoanItemsContainer();
+            
+            // Jika daftar pencarian sedang terbuka, refresh daftarnya
+            if (!document.getElementById('addDeviceSelectorArea').classList.contains('d-none')) {
+                filterAvailableDevicesSelector();
+            }
+        }
+        
+        // Memfilter daftar pencarian perangkat agar perangkat yang sudah ada di keranjang sementara tidak muncul lagi
+        function filterAvailableDevicesSelector() {
+            const keyword = document.getElementById('searchAvailableDevInput').value.toLowerCase();
+            const filtered = dataPerangkat.filter(d => 
+                !tempEditPerangkatList.some(temp => temp.id === d.id) &&
+                (
+                    d.nama_perangkat.toLowerCase().includes(keyword) ||
+                    d.merk.toLowerCase().includes(keyword) ||
+                    d.type.toLowerCase().includes(keyword) ||
+                    d.nup.toString().includes(keyword)
+                )
+            );
+            renderAvailableDevicesList(filtered);
+        }
+
+        // Fungsi saat menekan tombol Tambah di mode edit
+        function selectDeviceToAddToLoan(devId) {
+            const selectedDev = dataPerangkat.find(d => d.id == devId);
+
+            if (selectedDev) {
+                const kondisi = (selectedDev.kondisi || '').toUpperCase();
+                if (kondisi.includes('RUSAK')) {
+                    alert('GAGAL: Perangkat dalam kondisi RUSAK tidak bisa dipinjamkan!');
+                    return;
+                }
+                if (selectedDev.isBorrowed) {
+                    alert('GAGAL: Perangkat saat ini sedang dipinjam oleh pihak lain!');
+                    return;
+                }
+
+                // Masukkan ke keranjang sementara
+                tempEditPerangkatList.push({
+                    ...selectedDev,
+                    kondisiAwal: selectedDev.kondisi,
+                    kondisiAkhir: '-'
+                });
+
+                renderEditLoanItemsContainer();
+                filterAvailableDevicesSelector(); // Hilangkan perangkat yang baru diklik dari daftar pilihan
+            }
+        }
+
+        // FUNGSI UTAMA: MENYIMPAN KE FIREBASE (Hanya dipanggil saat tombol Simpan Perubahan diklik)
+        function saveEditedLoanTransaction() {
+            const txId = document.getElementById('editLoanTxId').value;
+            const log = logPeminjaman.find(l => l.id === txId);
+            if (!log) return;
+
+            const pegIdx = document.getElementById('editPegawaiSelect').value;
+            const selectedPegawai = dataPegawai[pegIdx];
+            
+            const urut = document.getElementById('editNoSuratUrut').value.trim();
+            const bln = document.getElementById('editNoSuratBulan').value;
+            const thn = document.getElementById('editNoSuratTahun').value;
+            const noSuratTugasVal = `Nomor : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
+
+            const tglPinjamVal = document.getElementById('editTglPinjam').value;
+            const tglKembaliVal = document.getElementById('editTglKembali').value;
+            const kegiatanVal = document.getElementById('editKegiatan').value.trim();
+
+            if (!urut || !bln || !thn || !tglPinjamVal || !tglKembaliVal || !kegiatanVal) {
+                alert('Semua field wajib diisi!');
+                return;
+            }
+
+            // 1. Lepaskan status "Dipinjam" (isBorrowed = false) dari perangkat-perangkat versi lama
+            log.perangkatList.forEach(oldDev => {
+                const devInDb = dataPerangkat.find(d => d.id == oldDev.id);
+                if (devInDb) devInDb.isBorrowed = false;
+            });
+
+            // 2. Terapkan status "Dipinjam" (isBorrowed = true) pada perangkat-perangkat versi baru
+            tempEditPerangkatList.forEach(newDev => {
+                const devInDb = dataPerangkat.find(d => d.id == newDev.id);
+                if (devInDb) devInDb.isBorrowed = true;
+            });
+
+            // 3. Terapkan perubahan ke log utama
+            log.perangkatList = [...tempEditPerangkatList];
+            log.pegawai = selectedPegawai;
+            log.noSuratTugas = noSuratTugasVal;
+            log.tglPinjam = tglPinjamVal;
+            log.tglKembali = tglKembaliVal;
+            log.kegiatan = kegiatanVal;
+
+            // 4. KUNCI UTAMA: Simpan ke Firebase dilakukan DI SINI
+            saveDataToStorage();
+            
+            renderTableDatabase(dataPerangkat);
+            renderLogTable();
+            renderPengembalianTable();
+
+            bsModalEditLoan.hide();
+            alert('Data peminjaman berhasil diperbarui!');
+        }
 </script>
 </body>
 </html>
