@@ -374,10 +374,10 @@
                                     <h4 class="fw-bold text-primary mb-1"><i class="bi bi-card-checklist me-2 icn-form"></i>Formulir Peminjaman Perangkat</h4>
                                     <p class="text-muted small mb-0">Pilih pegawai, susun nomor surat tugas, dan tentukan perangkat.</p>
                                 </div>
-                                <button class="btn btn-outline-success btn-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#modalAddPegawai">
-                                    <i class="bi bi-person-plus me-1 icn-peg"></i>+ Input Pegawai Baru
-                                </button>
-                            </div>
+                                <button id="btnTambahPegawaiForm" class="btn btn-outline-success btn-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#modalAddPegawai">
+                					<i class="bi bi-person-plus me-1 icn-peg"></i>+ Input Pegawai Baru
+            					</button>
+        					</div>
 
                             <form id="loanForm">
                                 <!-- PEGAWAI SECTION -->
@@ -1043,6 +1043,7 @@
                 const tabPeg = document.getElementById('pegawai-tab');
                 const tabRusak = document.getElementById('rusak-tab'); // <-- Tambahan
 				const statsRow = document.getElementById('dashboardStatsRow'); // <-- Tambahan variabel
+				const btnInputPegawai = document.getElementById('btnTambahPegawaiForm');
                 
                 // Menghapus tombol menu dari layar User
                 if (tabDev && tabDev.parentElement) tabDev.parentElement.remove();
@@ -1051,6 +1052,9 @@
 
 				// Menyembunyikan deretan kartu statistik dari layar User
                 if (statsRow) statsRow.style.display = 'none'; // <-- Tambahan perintah sembunyi
+
+				// <-- Menyembunyikan Tombol Input Pegawai dari layar User -->
+                if (btnInputPegawai) btnInputPegawai.style.display = 'none';
 
                 // Jika user memaksa masuk ke link yang dilarang, lempar ke form peminjaman
                 if (tabTarget === 'database-tab' || tabTarget === 'pegawai-tab' || tabTarget === 'rusak-tab') {
