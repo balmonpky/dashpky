@@ -261,6 +261,10 @@
                 <span class="navbar-text text-white-50 d-none d-lg-inline small">
                     Sistem Informasi Inventaris, Peminjaman & Pengembalian Perangkat
                 </span>
+				<!-- TOMBOL BACKUP DATABASE (Tambahkan kode ini) -->
+                <button id="btnBackupDb" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="backupSeluruhDatabase()">
+                    <i class="bi bi-cloud-arrow-down-fill me-1"></i> Backup DB
+                </button>
                 <!-- Tambahan Tombol Home -->
                 <a href="index.html" class="btn btn-outline-light btn-sm fw-bold" onclick="loopToHome(event)">
                     <i class="bi bi-house-door-fill me-1"></i> Home
@@ -1047,6 +1051,7 @@
                 const tabRusak = document.getElementById('rusak-tab'); // <-- Tambahan
 				const statsRow = document.getElementById('dashboardStatsRow'); // <-- Tambahan variabel
 				const btnInputPegawai = document.getElementById('btnTambahPegawaiForm');
+				const btnBackup = document.getElementById('btnBackupDb');
                 
                 // Menghapus tombol menu dari layar User
                 if (tabDev && tabDev.parentElement) tabDev.parentElement.remove();
@@ -1055,6 +1060,9 @@
 
 				// Menyembunyikan deretan kartu statistik dari layar User
                 if (statsRow) statsRow.style.display = 'none'; // <-- Tambahan perintah sembunyi
+
+				// Menyembunyikan tombol khusus Admin dari layar User
+                if (btnInputPegawai) btnInputPegawai.style.display = 'none';
 
 				// <-- Menyembunyikan Tombol Input Pegawai dari layar User -->
                 if (btnInputPegawai) btnInputPegawai.style.display = 'none';
