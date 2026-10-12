@@ -1685,6 +1685,18 @@
             renderPengembalianTable();
 
             alert(`Peminjaman Berhasil Dicatat! ID Transaksi: ${txId}`);
+			
+			// TAMBAHAN BARU: OTOMATIS PINDAH KE TAB LOG PEMINJAMAN
+            // =========================================================
+            const pinjamTab = document.getElementById('pinjam-tab');
+            if (pinjamTab) {
+                // Pindah tampilan layar ke menu Log Peminjaman
+                const tabInstance = new bootstrap.Tab(pinjamTab);
+                tabInstance.show();
+                
+                // (Opsional) Memperbarui URL di browser agar jika di-refresh, tetap berada di Log
+                window.history.pushState({}, '', '?tab=pinjam-tab');
+            }
         });
 
         // ===================== DATABASE PERANGKAT =========================
