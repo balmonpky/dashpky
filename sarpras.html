@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MENU SARPRAS & LAYANAN - BALMON PALANGKARAYA</title>
+    
+    <!-- Ikon Tab Browser -->
+    <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #0f4c81;
+            --accent-blue: #1b75bc;
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(224, 242, 254, 0.8) 0, transparent 40%), 
+                radial-gradient(at 0% 100%, rgba(186, 230, 253, 0.6) 0, transparent 40%);
+            background-attachment: fixed;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER / NAVBAR */
+        .navbar-custom {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .logo-container {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .logo-container img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        /* AREA KONTEN TENGAH */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 0;
+        }
+
+        .header-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header-title h2 {
+            font-weight: 800;
+            color: var(--primary-blue);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+        .header-title p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        /* DESAIN KARTU SUB-MENU */
+        .sub-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sub-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(15, 76, 129, 0.15);
+            background: #ffffff;
+            border-color: #bae6fd;
+        }
+
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 1.25rem auto;
+            transition: transform 0.3s;
+        }
+        .sub-card:hover .icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Pewarnaan Icon Spesifik per Menu */
+        .card-smfr .icon-wrapper { background: #eff6ff; color: #3b82f6; } /* Biru */
+        .card-unar .icon-wrapper { background: #f0fdf4; color: #22c55e; } /* Hijau */
+        .card-mots .icon-wrapper { background: #fffbeb; color: #f59e0b; } /* Kuning */
+        .card-bhp .icon-wrapper { background: #fef2f2; color: #ef4444; } /* Merah */
+        .card-izin .icon-wrapper { background: #faf5ff; color: #a855f7; } /* Ungu */
+
+        .sub-card h5 {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        .sub-card p {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+        .footer-custom {
+            text-align: center;
+            padding: 1.5rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* RESPONSIVITAS */
+        @media (max-width: 768px) {
+            .header-title h2 { font-size: 1.5rem; }
+            .sub-card { padding: 1.5rem 1rem; }
+            .icon-wrapper { width: 55px; height: 55px; font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar navbar-dark navbar-custom sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
+                <div class="logo-container me-3">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                </div>
+                <div class="d-none d-sm-block">
+                    <span class="text-white d-block fs-6 tracking-wide">TIM KERJA SARANA PRASARANA & LAYANAN</span>
+                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">BALMON SFRID KELAS II PALANGKARAYA</small>
+                </div>
+            </a>
+            
+            <!-- Tombol Kembali ke Portal -->
+            <a href="portal.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
+                <i class="bi bi-arrow-left-circle me-1"></i> Portal Utama
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <div class="container main-container">
+        
+        <div class="header-title">
+            <h2>Layanan & Sub-Sistem</h2>
+            <p>Pilih sub-sistem yang ingin Anda kelola pada Tim Kerja Sarpras & Layanan.</p>
+        </div>
+
+        <!-- GRID MENU (Dibuat center agar 5 kotak tampil seimbang) -->
+        <div class="row g-4 justify-content-center">
+            
+            <!-- 1. SMFR -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Tautan ini mengarah ke aplikasi yang sudah Anda buat sebelumnya -->
+                <a href="index.html" class="sub-card card-smfr">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-hdd-network-fill"></i>
+                    </div>
+                    <h5>Aplikasi SMFR</h5>
+                    <p>Sistem Informasi & Database Perangkat Spektrum Frekuensi Radio.</p>
+                </a>
+            </div>
+
+            <!-- 2. UNAR -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Ubah href="#" ke link aplikasi UNAR Anda nanti -->
+                <a href="#" class="sub-card card-unar">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-person-vcard-fill"></i>
+                    </div>
+                    <h5>UNAR</h5>
+                    <p>Sistem Layanan & Administrasi Ujian Negara Amatir Radio.</p>
+                </a>
+            </div>
+
+            <!-- 3. MOTS -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Ubah href="#" ke link aplikasi MOTS Anda nanti -->
+                <a href="#" class="sub-card card-mots">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-truck-front-fill"></i>
+                    </div>
+                    <h5>MOTS</h5>
+                    <p>Sistem Operasional & Monitoring Stasiun Bergerak (Mobile).</p>
+                </a>
+            </div>
+
+            <!-- 4. BHP -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Ubah href="#" ke link aplikasi BHP Anda nanti -->
+                <a href="#" class="sub-card card-bhp">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+                    <h5>BHP</h5>
+                    <p>Sistem Pengelolaan & Pengecekan Biaya Hak Penggunaan Frekuensi.</p>
+                </a>
+            </div>
+
+            <!-- 5. PERIZINAN SRC/IKRAN -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Ubah href="#" ke link aplikasi SRC/IKRAN Anda nanti -->
+                <a href="#" class="sub-card card-izin">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+                    <h5>PERIZINAN SRC / IKRAN</h5>
+                    <p>Layanan Sertifikat Radio Operator & Izin Komunikasi Antar Penduduk.</p>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom">
+        <div class="container fw-medium">
+            &copy; <script>document.write(new Date().getFullYear())</script> Tim Kerja Sarpras & Layanan - Balmon Palangka Raya.
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
