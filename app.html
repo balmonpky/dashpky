@@ -2456,16 +2456,19 @@ function renderPerangkatRusakTable() {
     // FUNGSI UNTUK MEMAKSA TOMBOL HOME SELALU LOOPING (RELOAD) SAAT DIKLIK BERKALI-KALI
     function loopToHome(event) {
         event.preventDefault(); // Mencegah klik default
+
+		// 1. HANCURKAN SESI LOGIN (Kunci Keamanan)
+        sessionStorage.removeItem('smfr_role');
         
         // Dapatkan URL lengkap saat ini
         const currentUrl = window.location.href;
         
-        // Deteksi apakah saat ini kita sedang membuka index.html
+        // Deteksi apakah saat ini kita sedang membuka smfr.html
         if (currentUrl.includes('smfr.html') || currentUrl.endsWith('/')) {
             // Jika sudah di menu Home (index.html), paksa muat ulang halaman (looping)
             window.location.reload();
         } else {
-            // Jika sedang di app.html, arahkan kembali ke index.html
+            // Jika sedang di app.html, arahkan kembali ke smfr.html
             window.location.href = 'smfr.html';
         }
     }
