@@ -2461,12 +2461,12 @@ function renderPerangkatRusakTable() {
         const currentUrl = window.location.href;
         
         // Deteksi apakah saat ini kita sedang membuka index.html
-        if (currentUrl.includes('index.html') || currentUrl.endsWith('/')) {
+        if (currentUrl.includes('smfr.html') || currentUrl.endsWith('/')) {
             // Jika sudah di menu Home (index.html), paksa muat ulang halaman (looping)
             window.location.reload();
         } else {
             // Jika sedang di app.html, arahkan kembali ke index.html
-            window.location.href = 'index.html';
+            window.location.href = 'smfr.html';
         }
     }
 		// FUNGSI FILTER GABUNGAN (TEKS & STASIUN)
