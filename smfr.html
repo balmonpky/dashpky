@@ -530,19 +530,19 @@
 
             // --- LOGIKA LOGIN ADMIN ---
             // (Catatan: Ganti 'admin' dan 'admin123' dengan username & password asli Anda)
-            if (inputUser === 'admin' && inputPass === 'admin123') {
+            if (inputUser === 'admin' && inputPass === 'admin') {
                 sessionStorage.setItem('smfr_role', 'admin');
                 
                 // Pindah ke dashboard admin
-                window.location.href = 'app.html';
+                window.location.href = 'smfr.html';
             } 
             
             // --- LOGIKA LOGIN USER BIASA ---
-            else if (inputUser === 'user' && inputPass === 'user123') {
+            else if (inputUser === 'user' && inputPass === 'user') {
                 sessionStorage.setItem('smfr_role', 'user');
                 
                 // Pindah langsung ke form peminjaman
-                window.location.href = 'app.html?tab=form-tab';
+                window.location.href = 'smfr.html?tab=form-tab';
             } 
             
             // --- JIKA SALAH ---
