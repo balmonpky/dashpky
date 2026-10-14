@@ -187,19 +187,15 @@
                 <h5 class="fw-bold text-primary">Login Sistem SMFR</h5>
             </div>
             
-			<form onsubmit="prosesLogin(event)">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Username</label>
-                    <input type="text" class="form-control" id="loginUsername" required autocomplete="off">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" required>
-                </div>
-                <div class="alert alert-danger d-none py-2 small fw-bold text-center" id="loginError">Username atau Password salah!</div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold">Login Masuk</button>
-                <div class="mt-3 text-muted small text-center border-top pt-2">
-                    
+			<form id="loginForm">
+    
+    		<!-- Pastikan id-nya persis 'username' dan 'password' -->
+    		<input type="text" id="username" class="form-control" placeholder="Username" required>
+    		<input type="password" id="password" class="form-control" placeholder="Password" required>
+    
+    		<!-- Tombol harus murni type="submit" tanpa atribut tambahan -->
+    		<button type="submit" class="btn btn-primary w-100">Login Masuk</button>
+                <div class="mt-3 text-muted small text-center border-top pt-2">  
                 </div>
             </form>
         </div>
@@ -515,75 +511,47 @@
     }
 </script>
 <script>
-		// KEAMANAN: SELALU HAPUS SESI SAAT HALAMAN LOGIN DIBUKA
-    // ========================================================================
+    // 1. KUNCI KEAMANAN: Hapus sesi lama setiap kali halaman ini dibuka
     sessionStorage.removeItem('smfr_role');
-        // ==========================================
-        // SISTEM AUTENTIKASI LOGIN
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const loggedInRole = sessionStorage.getItem('smfr_role');
-            const loggedInUser = sessionStorage.getItem('smfr_user');
 
-            if (loggedInRole) {
-                // Jika sudah login, hilangkan layar login & tampilkan dashboard
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('userWelcome').innerHTML = `Halo, <strong>${loggedInUser}</strong>!`;
+    // 2. DETEKSI FORM LOGIN
+    const formLogin = document.getElementById('loginForm');
 
-                // Logika Hak Akses: Jika yang login adalah USER, sembunyikan menu Database
-                if (loggedInRole === 'user') {
-                    document.getElementById('menu-db-dev').style.display = 'none';
-                    document.getElementById('menu-db-peg').style.display = 'none';
-					// --- TAMBAHKAN BARIS INI UNTUK MENYEMBUNYIKAN MENU RUSAK ---
-                    const menuRusak = document.getElementById('menu-rusak');
-                    if (menuRusak) menuRusak.style.display = 'none';
-					// --- TAMBAHKAN BARIS INI UNTUK MENYEMBUNYIKAN TOMBOL BACKUP ---
-                    const btnBackup = document.getElementById('btnBackupDb');
-                    if (btnBackup) btnBackup.style.display = 'none';
-                }
-            } else {
-                // Jika belum login, pastikan layar login muncul
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('mainApp').style.display = 'none';
-            }
-        });
-		
-        // Proses Form Login
-        document.getElementById('loginForm').addEventListener('submit', function prosesLogin(event) {
-            e.preventDefault();
-			
-			// 1. TAMBAHKAN KODE INI SEBAGAI REM (Agar halaman tidak kosong/refresh)
-        if (event) {
+    // 3. JALANKAN PERINTAH INI SAAT TOMBOL LOGIN DITEKAN / ENTER
+    if (formLogin) {
+        formLogin.addEventListener('submit', function(event) {
+            
+            // REM DARURAT: Mencegah halaman me-refresh!
             event.preventDefault();
-        }
-            const user = document.getElementById('loginUsername').value;
-            const pass = document.getElementById('loginPassword').value;
-            const errorMsg = document.getElementById('loginError');
 
-            // Cek Username & Password
-            if (user === 'admin' && pass === 'admin') {
+            // AMBIL ISI KETIKAN
+            const inputUser = document.getElementById('username').value;
+            const inputPass = document.getElementById('password').value;
+
+            // --- LOGIKA LOGIN ADMIN ---
+            // (Catatan: Ganti 'admin' dan 'admin123' dengan username & password asli Anda)
+            if (inputUser === 'admin' && inputPass === 'admin123') {
                 sessionStorage.setItem('smfr_role', 'admin');
-                sessionStorage.setItem('smfr_user', 'Administrator');
-                window.location.reload();
-            } else if (user === 'sfrid' && pass === 'pfr') {
+                
+                // Pindah ke dashboard admin
+                window.location.href = 'app.html';
+            } 
+            
+            // --- LOGIKA LOGIN USER BIASA ---
+            else if (inputUser === 'user' && inputPass === 'user123') {
                 sessionStorage.setItem('smfr_role', 'user');
-                sessionStorage.setItem('smfr_user', 'Petugas User');
-                window.location.reload();
-            } else {
-                // Tampilkan pesan error
-                errorMsg.classList.remove('d-none');
+                
+                // Pindah langsung ke form peminjaman
+                window.location.href = 'app.html?tab=form-tab';
+            } 
+            
+            // --- JIKA SALAH ---
+            else {
+                alert('GAGAL: Username atau Password Anda salah!');
             }
-        });
 
-        // Proses Logout
-        function logoutApp() {
-            if (confirm("Apakah Anda yakin ingin keluar?")) {
-                sessionStorage.removeItem('smfr_role');
-                sessionStorage.removeItem('smfr_user');
-                window.location.reload();
-            }
-        }
+        });
+    }
 	// ========================================================================
         // FUNGSI BACKUP DATABASE LANGSUNG DARI FIREBASE (Hanya Admin)
         // ========================================================================
