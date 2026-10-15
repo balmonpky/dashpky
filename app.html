@@ -1176,46 +1176,48 @@
 		};
 
         // 2. INISIALISASI FIREBASE
-        firebase.initializeApp(firebaseConfig);
+        // 2. INISIALISASI FIREBASE
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const database = firebase.database();
-		const auth = firebase.auth(); // TAMBAHKAN INI
+		const auth = firebase.auth();
 
-        // 3. VARIABEL DATA (Dikosongkan dulu, akan diisi oleh Firebase)
+        // 3. VARIABEL DATA
         let dataPegawai = [];
         let dataPerangkat = [];
         let logPeminjaman = [];
 
-		// 2. Bungkus perintah penarik data dengan pengecekan User
-				auth.onAuthStateChanged((user) => {
-    			if (user) {
+		// 4. KUNCI KEAMANAN: Tunggu verifikasi login Firebase SEBELUM menarik data
+		auth.onAuthStateChanged((user) => {
+    		if (user) {
+                // JIKA LOGIN VALID, TARIK DATA DARI SERVER
+                database.ref('smfr_sistem_v1').on('value', (snapshot) => {
+                    const dataServer = snapshot.val();
+                    
+                    if (dataServer) {
+                        dataPegawai = dataServer.pegawai || [];
+                        dataPerangkat = dataServer.perangkat || [];
+                        logPeminjaman = dataServer.logs || [];
+                    } else {
+                        dataPegawai = initialPegawai;
+                        dataPerangkat = initialPerangkat;
+                        logPeminjaman = [];
+                        saveDataToStorage();
+                    }
 
-        // 4. LISTENER REAL-TIME (Menarik data otomatis setiap ada perubahan di server)
-        database.ref('smfr_sistem_v1').on('value', (snapshot) => {
-            const dataServer = snapshot.val();
-            
-            if (dataServer) {
-                // Jika database di server ada isinya, gunakan data dari server
-                dataPegawai = dataServer.pegawai || [];
-                dataPerangkat = dataServer.perangkat || [];
-                logPeminjaman = dataServer.logs || [];
+                    renderPegawaiTable();
+                    renderTableDatabase(dataPerangkat);
+                    renderSelectedFormDevicesTable();
+                    updateDashboardStats();
+                    renderLogTable();
+                    renderPengembalianTable();
+                    renderPerangkatRusakTable();
+                });
             } else {
-                // Jika database server KOSONG (baru pertama kali dibuat), 
-                // tarik data dari file database_pegawai.js & database_perangkat.js, lalu dorong ke Firebase
-                dataPegawai = initialPegawai;
-                dataPerangkat = initialPerangkat;
-                logPeminjaman = [];
-                saveDataToStorage(); // Memicu upload ke Firebase
+                // JIKA BELUM LOGIN / SESI HABIS, TENDANG KEMBALI KE HALAMAN LOGIN
+                window.location.href = 'smfr.html';
             }
-
-            // PERBARUI SELURUH TAMPILAN WEB SECARA OTOMATIS
-            renderPegawaiTable();
-            renderTableDatabase(dataPerangkat);
-            renderSelectedFormDevicesTable();
-            updateDashboardStats();
-            renderLogTable();
-            renderPengembalianTable();
-			renderPerangkatRusakTable();
-        });
 
         // 5. FUNGSI SAVE TERBARU (Mengirim data ke Firebase, bukan ke LocalStorage)
         function saveDataToStorage() {
