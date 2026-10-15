@@ -632,12 +632,21 @@
             const inputPass = document.getElementById('password').value.trim();
             const emailFormat = inputUser + '@balmon.com';
 
-            auth.signInWithEmailAndPassword(emailFormat, inputPass)
-                .then((userCredential) => {
-                    if(inputUser === 'user') {
-                        window.location.href = 'app.html?tab=form-tab';
-                    }
-                })
+            auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            
+            // Pisahkan hak akses berdasarkan email (contoh: jika mengandung 'admin')
+            if (user.email.toLowerCase().includes('admin')) {
+                sessionStorage.setItem('smfr_role', 'admin');
+                // Admin diarahkan normal (default tab)
+                window.location.href = 'app.html'; 
+            } else {
+                sessionStorage.setItem('smfr_role', 'user');
+                // User biasa LANGSUNG diarahkan ke parameter form peminjaman
+                window.location.href = 'app.html?tab=form-tab'; 
+            }
+        })
                 .catch((error) => {
                     // MEMUNCULKAN POP-UP SWEETALERT2
                     Swal.fire({
