@@ -186,7 +186,49 @@
                 </div>
                 <h5 class="fw-bold text-primary">Login Sistem SMFR</h5>
             </div>
-            
+			
+            <!-- CSS Khusus Form Login (bisa dibiarkan di sini agar langsung bekerja) -->
+<style>
+    .login-label {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.3px;
+    }
+    .login-input {
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        color: #1e293b;
+        background-color: #f8fafc;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .login-input:focus {
+        border-color: #3b82f6;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        outline: none;
+    }
+    .btn-login-custom {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        transition: all 0.3s ease;
+    }
+    .btn-login-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    }
+</style>
 			<form id="loginForm">
     
     <!-- Kolom Username -->
