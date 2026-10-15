@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASHBOARD UNAR 2026 - BALMON PALANGKARAYA</title>
+    
+    <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js & SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-navy: #0e306c;
+            --accent-blue: #3b82f6;
+            --bg-light: #e2f1fc;
+            --card-siaga: #f5bc3f;
+            --card-penggalang: #8162f6;
+            --card-penegak: #31be7d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* HEADER BANNER SAMA SEPERTI GAMBAR */
+        .header-banner {
+            background-color: var(--primary-navy);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* CARD STATISTIK ATAS */
+        .stat-card-top {
+            background: #a3e9d2;
+            border-radius: 12px;
+            padding: 12px 18px;
+            border-left: 6px solid #2563eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-card-top.lulus { border-left-color: #8b5cf6; }
+        .stat-card-top.gagal { border-left-color: #ef4444; }
+        .stat-card-top.peserta { border-left-color: #10b981; }
+
+        .stat-card-top .title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 2px;
+        }
+        .stat-card-top .value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-navy);
+            line-height: 1.1;
+        }
+
+        /* KARTU UTAMA LAYOUT */
+        .main-card-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        }
+
+        /* PANEL PELAKSANAAN KEGIATAN (KANAN) */
+        .side-panel {
+            background-color: var(--primary-navy);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .circle-badge {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e293b;
+            flex-shrink: 0;
+        }
+
+        .bg-siaga { background-color: var(--card-siaga); }
+        .bg-reguler { background-color: #f472b6; color: white !important; }
+        .bg-non-reguler { background-color: var(--card-penegak); color: white !important; }
+
+        /* TABLE STYLING */
+        .table-custom th {
+            background-color: var(--primary-navy);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR TOP ACCESS -->
+    <div class="container-fluid px-4 pt-3 d-flex justify-content-between align-items-center">
+        <a href="sarpras.html" class="btn btn-outline-dark btn-sm fw-bold shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
+        </a>
+        <button class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="openModalEditUnar()">
+            <i class="bi bi-pencil-square me-1"></i> Edit Data UNAR
+        </button>
+    </div>
+
+    <!-- HEADER TITLE BANNER -->
+    <div class="container-fluid px-4 my-2">
+        <div class="header-banner">
+            <h1 class="header-title">UJIAN NEGARA AMATIR RADIO (UNAR)</h1>
+            <p class="mb-0 text-white-50 small">Balai Monitor SFR Kelas II Palangkaraya - Jadwal & Rekapitulasi Tahun 2026</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT DASHBOARD -->
+    <div class="container-fluid px-4 my-4">
+        <div class="main-card-container">
+            
+            <!-- STATISTIK TOP CARDS -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card-top">
+                        <div class="title">Total Pendaftar</div>
+                        <div class="value" id="valTotalPendaftar">142</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card-top peserta">
+                        <div class="title">Jumlah Peserta Ujian</div>
+                        <div class="value" id="valPesertaUjian">136</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card-top gagal">
+                        <div class="title">Tidak Lulus / Tidak Ujian</div>
+                        <div class="value" id="valTidakLulus">9</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card-top lulus">
+                        <div class="title">Jumlah Peserta Lulus Ujian</div>
+                        <div class="value" id="valLulusUjian">133</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRAFIK DAN PANEL KANAN -->
+            <div class="row g-4 mb-4">
+                <!-- KIRI: GRAFIK TINGKATAN -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                        <h5 class="fw-bold mb-4 text-dark">Jumlah Peserta berdasarkan Ujian Tingkat</h5>
+                        <div style="height: 280px;">
+                            <canvas id="chartTingkat"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KANAN: PELAKSANAAN KEGIATAN -->
+                <div class="col-lg-4">
+                    <div class="side-panel h-100 d-flex flex-column justify-content-center">
+                        <h4 class="fw-bold border-bottom pb-3 mb-4">Pelaksanaan Kegiatan</h4>
+                        
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="circle-badge bg-siaga" id="valJmlKegiatan">9</div>
+                            <div class="fw-bold fs-5">Jumlah Kegiatan</div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="circle-badge bg-reguler" id="valUnarReguler">1</div>
+                            <div class="fw-bold fs-5">UNAR Reguler</div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="circle-badge bg-non-reguler" id="valUnarNonReguler">1</div>
+                            <div class="fw-bold fs-5">UNAR Non Reguler</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JADWAL BULANAN UNAR 2026 -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-calendar3 me-2 text-primary"></i>Jadwal Pelaksanaan UNAR Tiap Bulan (Tahun 2026)</h5>
+                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom align-middle">
+                        <thead>
+                            <tr class="text-center">
+                                <th>No</th>
+                                <th>Bulan</th>
+                                <th>Tanggal Ujian</th>
+                                <th>Kategori</th>
+                                <th>Lokasi Pelaksanaan</th>
+                                <th>Kuota Peserta</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblJadwalUnar">
+                            <!-- Data akan diisi otomatis melalui JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL EDIT DATA UNAR -->
+    <div class="modal fade" id="modalEditUnar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-navy text-white" style="background: var(--primary-navy);">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-pencil-square me-2"></i>Edit Rekapitulasi Data UNAR</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formUnar">
+                        <h6 class="fw-bold text-primary mb-3">1. Rekapitulasi Peserta</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Total Pendaftar</label>
+                                <input type="number" id="inpTotalPendaftar" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Peserta Ujian</label>
+                                <input type="number" id="inpPesertaUjian" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Tidak Lulus</label>
+                                <input type="number" id="inpTidakLulus" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Lulus Ujian</label>
+                                <input type="number" id="inpLulusUjian" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-primary mb-3">2. Peserta Berdasarkan Ujian Tingkat</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Tingkat Siaga</label>
+                                <input type="number" id="inpSiaga" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Tingkat Penggalang</label>
+                                <input type="number" id="inpPenggalang" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Tingkat Penegak</label>
+                                <input type="number" id="inpPenegak" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-primary mb-3">3. Pelaksanaan Kegiatan</h6>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Jumlah Kegiatan</label>
+                                <input type="number" id="inpJmlKegiatan" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">UNAR Reguler</label>
+                                <input type="number" id="inpUnarReguler" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">UNAR Non Reguler</label>
+                                <input type="number" id="inpUnarNonReguler" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-save me-1"></i>Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE & SCRIPT LOGIC -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+
+        // DEFAULT DATA 2026
+        let unarData = {
+            totalPendaftar: 142,
+            pesertaUjian: 136,
+            tidakLulus: 9,
+            lulusUjian: 133,
+            siaga: 85,
+            penggalang: 35,
+            penegak: 22,
+            jmlKegiatan: 9,
+            unarReguler: 1,
+            unarNonReguler: 1
+        };
+
+        const jadwal2026 = [
+            { no: 1, bulan: "Januari", tgl: "20 Januari 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 2, bulan: "Februari", tgl: "17 Februari 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 3, bulan: "Maret", tgl: "16 Maret 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 25, status: "Selesai" },
+            { no: 4, bulan: "April", tgl: "21 April 2026", kat: "CAT Non Reguler", lokasi: "Kotawaringin Timur", kuota: 50, status: "Selesai" },
+            { no: 5, bulan: "Mei", tgl: "19 Mei 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 6, bulan: "Juni", tgl: "16 Juni 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 7, bulan: "Juli", tgl: "21 Juli 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 8, bulan: "Agustus", tgl: "18 Agustus 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 9, bulan: "September", tgl: "15 September 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 10, bulan: "Oktober", tgl: "20 Oktober 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Selesai" },
+            { no: 11, bulan: "November", tgl: "17 November 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Mendatang" },
+            { no: 12, bulan: "Desember", tgl: "15 Desember 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon Palangkaraya", kuota: 30, status: "Mendatang" }
+        ];
+
+        let chartInstance = null;
+        let bsModalEdit = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bsModalEdit = new bootstrap.Modal(document.getElementById('modalEditUnar'));
+            renderJadwalTabel();
+            
+            // CONNECT FIREBASE REALTIME
+            database.ref('smfr_sistem_v1/unar').on('value', (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    unarData = val;
+                }
+                updateUI();
+            });
+        });
+
+        function updateUI() {
+            document.getElementById('valTotalPendaftar').textContent = unarData.totalPendaftar;
+            document.getElementById('valPesertaUjian').textContent = unarData.pesertaUjian;
+            document.getElementById('valTidakLulus').textContent = unarData.tidakLulus;
+            document.getElementById('valLulusUjian').textContent = unarData.lulusUjian;
+            document.getElementById('valJmlKegiatan').textContent = unarData.jmlKegiatan;
+            document.getElementById('valUnarReguler').textContent = unarData.unarReguler;
+            document.getElementById('valUnarNonReguler').textContent = unarData.unarNonReguler;
+
+            renderChart();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('chartTingkat').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Siaga', 'Penggalang', 'Penegak'],
+                    datasets: [{
+                        data: [unarData.siaga, unarData.penggalang, unarData.penegak],
+                        backgroundColor: ['#f5bc3f', '#8162f6', '#31be7d'],
+                        borderRadius: 8,
+                        barThickness: 80
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { stepSize: 20 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderJadwalTabel() {
+            const tbody = document.getElementById('tblJadwalUnar');
+            tbody.innerHTML = jadwal2026.map(j => `
+                <tr>
+                    <td class="text-center fw-bold">${j.no}</td>
+                    <td class="fw-bold text-primary">${j.bulan}</td>
+                    <td>${j.tgl}</td>
+                    <td><span class="badge bg-light text-dark border">${j.kat}</span></td>
+                    <td>${j.lokasi}</td>
+                    <td class="text-center fw-bold">${j.kuota}</td>
+                    <td class="text-center">
+                        <span class="badge ${j.status === 'Selesai' ? 'bg-success' : 'bg-warning text-dark'}">${j.status}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openModalEditUnar() {
+            document.getElementById('inpTotalPendaftar').value = unarData.totalPendaftar;
+            document.getElementById('inpPesertaUjian').value = unarData.pesertaUjian;
+            document.getElementById('inpTidakLulus').value = unarData.tidakLulus;
+            document.getElementById('inpLulusUjian').value = unarData.lulusUjian;
+            document.getElementById('inpSiaga').value = unarData.siaga;
+            document.getElementById('inpPenggalang').value = unarData.penggalang;
+            document.getElementById('inpPenegak').value = unarData.penegak;
+            document.getElementById('inpJmlKegiatan').value = unarData.jmlKegiatan;
+            document.getElementById('inpUnarReguler').value = unarData.unarReguler;
+            document.getElementById('inpUnarNonReguler').value = unarData.unarNonReguler;
+
+            bsModalEdit.show();
+        }
+
+        document.getElementById('formUnar').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const updatedData = {
+                totalPendaftar: parseInt(document.getElementById('inpTotalPendaftar').value),
+                pesertaUjian: parseInt(document.getElementById('inpPesertaUjian').value),
+                tidakLulus: parseInt(document.getElementById('inpTidakLulus').value),
+                lulusUjian: parseInt(document.getElementById('inpLulusUjian').value),
+                siaga: parseInt(document.getElementById('inpSiaga').value),
+                penggalang: parseInt(document.getElementById('inpPenggalang').value),
+                penegak: parseInt(document.getElementById('inpPenegak').value),
+                jmlKegiatan: parseInt(document.getElementById('inpJmlKegiatan').value),
+                unarReguler: parseInt(document.getElementById('inpUnarReguler').value),
+                unarNonReguler: parseInt(document.getElementById('inpUnarNonReguler').value)
+            };
+
+            database.ref('smfr_sistem_v1/unar').set(updatedData).then(() => {
+                bsModalEdit.hide();
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Data rekapitulasi UNAR berhasil diperbarui.',
+                    icon: 'success',
+                    confirmButtonColor: '#0e306c'
+                });
+            }).catch(err => {
+                Swal.fire('Gagal!', err.message, 'error');
+            });
+        });
+    </script>
+</body>
+</html>
