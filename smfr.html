@@ -632,38 +632,51 @@
             const inputPass = document.getElementById('password').value.trim();
             const emailFormat = inputUser + '@balmon.com';
 
-            auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
             
-            // Pisahkan hak akses berdasarkan email (contoh: jika mengandung 'admin')
-            if (user.email.toLowerCase().includes('admin')) {
-                sessionStorage.setItem('smfr_role', 'admin');
-                // Admin diarahkan normal (default tab)
-                window.location.href = 'app.html'; 
-            } else {
-                sessionStorage.setItem('smfr_role', 'user');
-                // User biasa LANGSUNG diarahkan ke parameter form peminjaman
-                window.location.href = 'app.html?tab=form-tab'; 
+            // Sesuaikan ID input dengan yang ada di HTML Anda
+            let email = document.getElementById('username').value.trim(); 
+            const password = document.getElementById('password').value;
+            const btnLogin = document.getElementById('btnLogin'); // Sesuaikan ID tombol
+
+            // 1. Ubah tombol menjadi loading
+            btnLogin.disabled = true;
+            btnLogin.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memeriksa...';
+
+            // 2. Akali jika user hanya mengetik "admin" agar menjadi format email yang sah di Firebase
+            if (!email.includes('@')) {
+                email = email + '@smfr.com'; // Pastikan akun admin@smfr.com sudah didaftarkan di Firebase Console
             }
-        })
-                .catch((error) => {
-                    // MEMUNCULKAN POP-UP SWEETALERT2
-                    Swal.fire({
-                        title: 'Akses Ditolak!',
-                        text: 'Username atau Password yang Anda masukkan salah.',
-                        icon: 'error',
-                        confirmButtonText: 'Coba Lagi',
-                        confirmButtonColor: '#d33'
-                    });
+
+            // 3. Proses Login Firebase
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
                     
-                    document.getElementById('password').value = '';
+                    if (user.email.toLowerCase().includes('admin')) {
+                        sessionStorage.setItem('smfr_role', 'admin');
+                        window.location.href = 'app.html';
+                    } else {
+                        sessionStorage.setItem('smfr_role', 'user');
+                        window.location.href = 'app.html?tab=form-tab';
+                    }
                 })
-                .finally(() => {
-                    btnSubmit.innerHTML = originalText;
-                    btnSubmit.disabled = false;
+                .catch((error) => {
+                    // 4. KUNCI PERBAIKAN: Kembalikan tombol ke keadaan semula jika login gagal
+                    btnLogin.disabled = false;
+                    btnLogin.textContent = 'Login'; // Sesuaikan teks awal tombol Anda
+                    
+                    // Tampilkan pesan error
+                    Swal.fire({
+                        title: 'Login Gagal!',
+                        text: 'Username atau Password salah.',
+                        icon: 'error',
+                        confirmButtonColor: '#0f4c81'
+                    });
+                    console.error("Error Firebase:", error.message);
                 });
-        }
+        });
 
         // CEK STATUS LOGIN (AUTO-LOGIN)
         auth.onAuthStateChanged((user) => {
