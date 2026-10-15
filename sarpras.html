@@ -303,6 +303,11 @@
     
     <!-- Header Dasbor Interaktif -->
     <div class="header-kinerja">
+        <!-- Tombol Admin (Baru ditambahkan) -->
+        <button class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
+            <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
+        </button>
+
         <div class="header-icon-box">
             <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
         </div>
@@ -596,6 +601,7 @@
 
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- 1. SCRIPT SDK FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
@@ -621,6 +627,161 @@
     // Deklarasi variabel database agar bisa digunakan oleh script pembaca data
     const database = firebase.database();
 </script>
-    
+    <script>
+    // FUNGSI VERIFIKASI PASSWORD ADMIN
+    function verifikasiAdmin() {
+        Swal.fire({
+            title: 'Akses Admin',
+            text: 'Masukkan Password untuk mengubah data Kinerja:',
+            input: 'password',
+            inputAttributes: { autocapitalize: 'off' },
+            showCancelButton: true,
+            confirmButtonText: 'Buka Pengaturan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#0f4c81'
+        }).then((result) => {
+            // GANTI 'admin123' SESUAI PASSWORD ANDA
+            if (result.value === 'admin123') {
+                
+                // Jika password benar, ambil data lama untuk mengisi kolom
+                const refKinerja = database.ref('kinerja_sarpras');
+                refKinerja.once('value').then((snap) => {
+                    const data = snap.val();
+                    if (data) {
+                        for (let i = 1; i <= 6; i++) {
+                            if (data['k' + i]) {
+                                document.getElementById('inp_t_' + i).value = data['k' + i].target;
+                                document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+                            }
+                        }
+                    }
+                    // Buka Modal
+                    var myModal = new bootstrap.Modal(document.getElementById('modalKinerja'));
+                    myModal.show();
+                });
+
+            } else if (result.value) {
+                Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
+            }
+        });
+    }
+
+    // FUNGSI SIMPAN PERUBAHAN KE FIREBASE
+    function simpanKinerja(e) {
+        e.preventDefault();
+        
+        const dataBaru = {
+            k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
+            k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
+            k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
+            k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
+            k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
+            k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
+        };
+
+        const refKinerja = database.ref('kinerja_sarpras');
+        refKinerja.set(dataBaru)
+            .then(() => {
+                // Tutup Modal
+                var modalEl = document.getElementById('modalKinerja');
+                var modalObj = bootstrap.Modal.getInstance(modalEl);
+                modalObj.hide();
+                
+                // Tampilkan notifikasi sukses (Tampilan di belakang akan otomatis berubah secara realtime!)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Data Kinerja berhasil diupdate.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            })
+            .catch((error) => {
+                Swal.fire('Gagal!', error.message, 'error');
+            });
+    }
+</script>
+    <!-- ================================================================= -->
+<!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
+<!-- ================================================================= -->
+<div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+      <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
+        <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Dasbor Kinerja Sarpras</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-light p-4">
+        <form id="formKinerja" onsubmit="simpanKinerja(event)">
+            <div class="row g-4">
+                <!-- K1 -->
+                <div class="col-md-6">
+                    <label class="fw-bold text-secondary small mb-1">1. Sertifikasi Operator Radio (%)</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white">Target</span>
+                        <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
+                        <span class="input-group-text bg-white">Capaian</span>
+                        <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <!-- K2 -->
+                <div class="col-md-6">
+                    <label class="fw-bold text-secondary small mb-1">2. Biaya BHP (%)</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white">Target</span>
+                        <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
+                        <span class="input-group-text bg-white">Capaian</span>
+                        <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <!-- K3 -->
+                <div class="col-md-6">
+                    <label class="fw-bold text-secondary small mb-1">3. Operasional Monitoring (%)</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white">Target</span>
+                        <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
+                        <span class="input-group-text bg-white">Capaian</span>
+                        <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <!-- K4 -->
+                <div class="col-md-6">
+                    <label class="fw-bold text-secondary small mb-1">4. Zona Integritas</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white">Target</span>
+                        <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
+                        <span class="input-group-text bg-white">Capaian</span>
+                        <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <!-- K5 -->
+                <div class="col-md-6">
+                    <label class="fw-bold text-secondary small mb-1">5. Indeks Kepuasan Masyarakat</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white">Target</span>
+                        <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
+                        <span class="input-group-text bg-white">Capaian</span>
+                        <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <!-- K6 -->
+                <div class="col-md-6">
+                    <label class="fw-bold text-secondary small mb-1">6. Indeks Integritas (IIPP)</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white">Target</span>
+                        <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
+                        <span class="input-group-text bg-white">Capaian</span>
+                        <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold" style="border-radius: 8px;">
+                <i class="bi bi-save me-1"></i> Simpan & Update Dasbor
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
