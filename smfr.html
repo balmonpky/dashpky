@@ -708,6 +708,29 @@
                 sessionStorage.removeItem('smfr_role');
             }
         });
+		// FUNGSI LOGOUT KELUAR SISTEM//
+		function logoutApp() {
+            Swal.fire({
+                title: 'Keluar Sistem?',
+                text: "Anda harus login kembali untuk masuk.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545', // warna merah
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Perintah Firebase untuk memutus sesi login
+                    auth.signOut().then(() => {
+                        sessionStorage.removeItem('smfr_role'); // Hapus kunci peran
+                        window.location.reload(); // Muat ulang halaman agar kembali ke layar login
+                    }).catch((error) => {
+                        console.error("Logout error:", error);
+                        Swal.fire('Gagal!', 'Terjadi kesalahan saat logout.', 'error');
+                    });
+                }
+            });
+        }
 
         // FUNGSI BACKUP
         function backupSeluruhDatabase() {
