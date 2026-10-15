@@ -488,37 +488,57 @@
         });
 
         // 3. FUNGSI UTAMA LOGIN
-        function masukSistem(event) {
-            if(event) event.preventDefault();
+        // =======================================================
+    // FUNGSI UTAMA LOGIN 
+    // =======================================================
+    function masukSistem(event) {
+        // Mencegah Halaman Kosong/Refresh
+        if(event) event.preventDefault();
 
-            const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
-            const originalText = btnSubmit.innerHTML;
-            btnSubmit.innerHTML = 'Memeriksa...';
-            btnSubmit.disabled = true;
+        // Ambil elemen tombol untuk efek loading
+        const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
+        const originalText = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = 'Memeriksa...';
+        btnSubmit.disabled = true;
 
-            const inputUser = document.getElementById('username').value.trim().toLowerCase();
-            const inputPass = document.getElementById('password').value.trim();
-            const emailFormat = inputUser + '@balmon.com';
+        // Ambil nilai input
+        const inputUser = document.getElementById('username').value.trim().toLowerCase();
+        const inputPass = document.getElementById('password').value.trim();
 
-            auth.signInWithEmailAndPassword(emailFormat, inputPass)
-                .then((userCredential) => {
-                    if(inputUser === 'user') {
-                        window.location.href = 'app.html?tab=form-tab';
+        // Ubah format menjadi email untuk Firebase
+        const emailFormat = inputUser + '@balmon.com';
+
+        // LOGIN RESMI KE FIREBASE
+        auth.signInWithEmailAndPassword(emailFormat, inputPass)
+            .then((userCredential) => {
+                // Jika sukses, arahkan sesuai peran (Admin otomatis diurus oleh onAuthStateChanged)
+                if(inputUser === 'user') {
+                    window.location.href = 'app.html?tab=form-tab';
+                }
+            })
+            .catch((error) => {
+                // POP-UP NOTIFIKASI JIKA USERNAME / PASSWORD SALAH
+                Swal.fire({
+                    title: 'Akses Ditolak!',
+                    text: 'Username atau Password yang Anda masukkan salah. Silakan periksa kembali!',
+                    icon: 'error',
+                    confirmButtonText: 'Coba Lagi',
+                    confirmButtonColor: '#d33', // Warna merah peringatan
+                    background: '#ffffff',
+                    showClass: {
+                        popup: 'animate__animated animate__shakeX' // Efek getar jika Anda memakai Animate.css (opsional)
                     }
-                })
-                .catch((error) => {
-                    Swal.fire({
-                        title: 'Gagal Login!',
-                        text: 'Pesan: ' + error.message,
-                        icon: 'error',
-                        confirmButtonColor: '#0f4c81'
-                    });
-                })
-                .finally(() => {
-                    btnSubmit.innerHTML = originalText;
-                    btnSubmit.disabled = false;
                 });
-        }
+                
+                // (Opsional) Mengosongkan kolom password setelah salah ketik
+                document.getElementById('password').value = '';
+            })
+            .finally(() => {
+                // Kembalikan tombol ke keadaan semula
+                btnSubmit.innerHTML = originalText;
+                btnSubmit.disabled = false;
+            });
+    }
 
         // 4. CEK STATUS LOGIN (AUTO-LOGIN)
         auth.onAuthStateChanged((user) => {
