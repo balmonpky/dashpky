@@ -620,36 +620,27 @@
         });
 
         // FUNGSI UTAMA LOGIN
-        function masukSistem(event) {
+       function masukSistem(event) {
             if(event) event.preventDefault(); // Mencegah halaman refresh
 
+            // Tangkap tombol submit dengan selektor, karena tidak ada ID btnLogin
             const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
             const originalText = btnSubmit.innerHTML;
+            
+            // 1. Ubah status tombol menjadi loading
             btnSubmit.innerHTML = 'Memeriksa...';
             btnSubmit.disabled = true;
 
-            const inputUser = document.getElementById('username').value.trim().toLowerCase();
-            const inputPass = document.getElementById('password').value.trim();
-            const emailFormat = inputUser + '@balmon.com';
-
-            document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Sesuaikan ID input dengan yang ada di HTML Anda
-            let email = document.getElementById('username').value.trim(); 
+            // 2. Ambil nilai input
+            let email = document.getElementById('username').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const btnLogin = document.getElementById('btnLogin'); // Sesuaikan ID tombol
 
-            // 1. Ubah tombol menjadi loading
-            btnLogin.disabled = true;
-            btnLogin.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memeriksa...';
-
-            // 2. Akali jika user hanya mengetik "admin" agar menjadi format email yang sah di Firebase
+            // 3. Konversi format email otomatis (Jika user ketik "admin", jadi "admin@smfr.com")
             if (!email.includes('@')) {
-                email = email + '@smfr.com'; // Pastikan akun admin@smfr.com sudah didaftarkan di Firebase Console
+                email = email + '@smfr.com';
             }
 
-            // 3. Proses Login Firebase
+            // 4. Proses Login ke Firebase
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
@@ -663,11 +654,10 @@
                     }
                 })
                 .catch((error) => {
-                    // 4. KUNCI PERBAIKAN: Kembalikan tombol ke keadaan semula jika login gagal
-                    btnLogin.disabled = false;
-                    btnLogin.textContent = 'Login'; // Sesuaikan teks awal tombol Anda
+                    // 5. KEMBALIKAN TOMBOL JIKA GAGAL
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = originalText;
                     
-                    // Tampilkan pesan error
                     Swal.fire({
                         title: 'Login Gagal!',
                         text: 'Username atau Password salah.',
@@ -676,7 +666,7 @@
                     });
                     console.error("Error Firebase:", error.message);
                 });
-        });
+        }
 
         // CEK STATUS LOGIN (AUTO-LOGIN)
         auth.onAuthStateChanged((user) => {
