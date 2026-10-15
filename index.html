@@ -310,11 +310,6 @@
         <div class="container fw-medium">
             &copy; <script>document.write(new Date().getFullYear())</script> Balai Monitor Spektrum Frekuensi Radio Kelas II Palangka Raya.
         </div>
-        <div class="text-center mt-5 mb-3">
-    <button class="btn btn-sm btn-outline-secondary" onclick="verifikasiAdmin()">
-        <i class="bi bi-gear-fill"></i> Pengaturan Capaian Kinerja (Admin)
-    </button>
-</div>
     </footer>
 
     <!-- SCRIPT SAPAAN OTOMATIS -->
@@ -329,78 +324,6 @@
         document.getElementById('greetingText').innerText = sapaan;
     </script>
 
-    <!-- Modal Pengaturan Kinerja -->
-<div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title fw-bold"><i class="bi bi-sliders"></i> Update Dasbor Kinerja Sarpras</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formKinerja" onsubmit="simpanKinerja(event)">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="fw-bold small">1. Sertifikasi Operator Radio (%)</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Target</span>
-                        <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
-                        <span class="input-group-text">Capaian</span>
-                        <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold small">2. Biaya BHP (%)</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Target</span>
-                        <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
-                        <span class="input-group-text">Capaian</span>
-                        <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold small">3. Operasional Monitoring (%)</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Target</span>
-                        <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
-                        <span class="input-group-text">Capaian</span>
-                        <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold small">4. Zona Integritas</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Target</span>
-                        <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
-                        <span class="input-group-text">Capaian</span>
-                        <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold small">5. Indeks Kepuasan Masyarakat</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Target</span>
-                        <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
-                        <span class="input-group-text">Capaian</span>
-                        <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold small">6. Indeks Integritas (IIPP)</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Target</span>
-                        <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
-                        <span class="input-group-text">Capaian</span>
-                        <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary w-100 mt-4"><i class="bi bi-save"></i> Simpan & Update Dasbor</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
             <!-- Pastikan SweetAlert2 dan Bootstrap JS terhubung -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
