@@ -266,10 +266,15 @@
                     Sistem Informasi Inventaris, Peminjaman & Pengembalian Perangkat
                 </span>
 				
-                <!-- Tambahan Tombol Home -->
+                <!-- Tombol Home -->
                 <a href="smfr.html" class="btn btn-outline-light btn-sm fw-bold ms-3" onclick="loopToHome(event)">
     				<i class="bi bi-house-door-fill me-1"></i> Home
 				</a>
+                
+                <!-- TAMBAHAN TOMBOL LOGOUT -->
+                <button class="btn btn-danger btn-sm fw-bold shadow-sm" onclick="logoutApp()">
+                    <i class="bi bi-box-arrow-right me-1"></i> Logout
+                </button>
             </div>
         </div>
     </nav>
@@ -2876,6 +2881,32 @@ function renderPerangkatRusakTable() {
             tombolDownload.remove();
 
             Swal.fire('Berhasil!', 'Seluruh data telah di-backup ke komputer Anda dalam format JSON.', 'success');
+        }
+		// ==========================================
+        // FUNGSI LOGOUT KELUAR SISTEM DARI APP.HTML
+        // ==========================================
+        function logoutApp() {
+            Swal.fire({
+                title: 'Keluar Sistem?',
+                text: "Anda akan mengakhiri sesi dan kembali ke layar login.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Putuskan sesi login Firebase
+                    auth.signOut().then(() => {
+                        sessionStorage.removeItem('smfr_role');
+                        // Arahkan kembali ke halaman login utama
+                        window.location.href = 'smfr.html';
+                    }).catch((error) => {
+                        console.error("Logout error:", error);
+                        Swal.fire('Gagal!', 'Terjadi kesalahan saat logout.', 'error');
+                    });
+                }
+            });
         }
 </script>
 </body>
