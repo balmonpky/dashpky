@@ -451,7 +451,6 @@
 
         // TAMPILKAN GRAFIK DASHBOARD
         document.addEventListener('DOMContentLoaded', function() {
-            // Cek apakah Chart.js tersedia sebelum dijalankan (mencegah error)
             if (typeof Chart !== 'undefined') {
                 Chart.defaults.font.family = "'Poppins', sans-serif";
                 Chart.defaults.color = "#64748b";
@@ -471,17 +470,100 @@
                 dataPerangkat = dataPerangkat.filter(d => d != null);
 
                 let countTersedia = 0; let countDipinjam = 0;
+                let condBaik = 0; let condRusakRingan = 0; let condRusakBerat = 0;
+                let stasiunCounts = {};
                 
                 dataPerangkat.forEach(d => {
+                    // Hitung Ketersediaan
                     if (d.isBorrowed) countDipinjam++; else countTersedia++;
+                    
+                    // Hitung Kondisi
+                    const kond = (d.kondisi || '').toString().trim().toUpperCase();
+                    if (kond.includes('RUSAK')) {
+                        if (kond.includes('BERAT') || kond.includes('TOTAL')) condRusakBerat++;
+                        else condRusakRingan++;
+                    } else {
+                        condBaik++;
+                    }
+
+                    // Hitung Distribusi Stasiun
+                    let st = (d.stasiun || '').toString().trim().toUpperCase();
+                    if (st === '' || st === '-') st = 'BELUM DISET';
+                    stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
                 });
 
+                // Update Angka di Kartu Atas
                 const elTotal = document.getElementById('idxTotal');
                 if (elTotal) elTotal.textContent = dataPerangkat.length;
                 const elTersedia = document.getElementById('idxTersedia');
                 if (elTersedia) elTersedia.textContent = countTersedia;
                 const elDipinjam = document.getElementById('idxDipinjam');
                 if (elDipinjam) elDipinjam.textContent = countDipinjam;
+
+                // ==========================================
+                // RENDER GRAFIK CHART.JS
+                // ==========================================
+                if (typeof Chart !== 'undefined') {
+                    // Hancurkan chart lama jika ada agar tidak tumpang tindih saat data diperbarui
+                    if (window.chartKet) window.chartKet.destroy();
+                    if (window.chartKon) window.chartKon.destroy();
+                    if (window.chartSta) window.chartSta.destroy();
+
+                    // 1. Chart Ketersediaan (Doughnut)
+                    const ctxKet = document.getElementById('chartKetersediaan');
+                    if (ctxKet) {
+                        window.chartKet = new Chart(ctxKet, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Tersedia', 'Sedang Dipinjam'],
+                                datasets: [{
+                                    data: [countTersedia, countDipinjam],
+                                    backgroundColor: ['#10b981', '#f59e0b'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: { cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                        });
+                    }
+
+                    // 2. Chart Kondisi (Pie)
+                    const ctxKon = document.getElementById('chartKondisi');
+                    if (ctxKon) {
+                        window.chartKon = new Chart(ctxKon, {
+                            type: 'pie',
+                            data: {
+                                labels: ['Baik', 'Rusak Ringan', 'Rusak Berat'],
+                                datasets: [{
+                                    data: [condBaik, condRusakRingan, condRusakBerat],
+                                    backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: { plugins: { legend: { position: 'bottom' } } }
+                        });
+                    }
+
+                    // 3. Chart Stasiun (Bar)
+                    const ctxSta = document.getElementById('chartStasiun');
+                    if (ctxSta) {
+                        window.chartSta = new Chart(ctxSta, {
+                            type: 'bar',
+                            data: {
+                                labels: Object.keys(stasiunCounts),
+                                datasets: [{
+                                    label: 'Jumlah Perangkat',
+                                    data: Object.values(stasiunCounts),
+                                    backgroundColor: '#0f4c81',
+                                    borderRadius: 6
+                                }]
+                            },
+                            options: {
+                                plugins: { legend: { display: false } },
+                                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                            }
+                        });
+                    }
+                }
             });
         });
 
