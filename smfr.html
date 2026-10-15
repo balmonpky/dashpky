@@ -620,73 +620,86 @@
         });
 
         // FUNGSI UTAMA LOGIN
-       function masukSistem(event) {
-            if(event) event.preventDefault(); // Mencegah halaman refresh
+       const loginForm = document.getElementById('loginForm');
+        
+        // Kita timpa paksa fungsi form bawaan browser dari sini
+        loginForm.onsubmit = function(e) {
+            e.preventDefault(); // KUNCI UTAMA: Tahan halaman agar TIDAK reload/refresh
 
-            // Tangkap tombol submit dengan selektor, karena tidak ada ID btnLogin
-            const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
+            const btnSubmit = loginForm.querySelector('button[type="submit"]');
             const originalText = btnSubmit.innerHTML;
             
-            // 1. Ubah status tombol menjadi loading
-            btnSubmit.innerHTML = 'Memeriksa...';
-            btnSubmit.disabled = true;
+            try {
+                // 1. Ubah status tombol jadi loading
+                btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memeriksa...';
+                btnSubmit.disabled = true;
 
-            // 2. Ambil nilai input
-            let email = document.getElementById('username').value.trim().toLowerCase();
-            const password = document.getElementById('password').value;
+                // 2. Ambil nilai input
+                let email = document.getElementById('username').value.trim().toLowerCase();
+                const password = document.getElementById('password').value.trim();
 
-            // 3. Konversi format email otomatis (Jika user ketik "admin", jadi "admin@smfr.com")
-            if (!email.includes('@')) {
-                email = email + '@smfr.com';
-            }
+                // 3. Konversi format email (Bantu user yang hanya mengetik username)
+                if (!email.includes('@')) {
+                    email = email + '@balmon.com'; 
+                }
 
-            // 4. Proses Login ke Firebase
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    
-                    if (user.email.toLowerCase().includes('admin')) {
-                        sessionStorage.setItem('smfr_role', 'admin');
-                        window.location.href = 'app.html';
-                    } else {
-                        sessionStorage.setItem('smfr_role', 'user');
-                        window.location.href = 'app.html?tab=form-tab';
-                    }
-                })
-                .catch((error) => {
-                    // 5. KEMBALIKAN TOMBOL JIKA GAGAL
-                    btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = originalText;
-                    
-                    Swal.fire({
-                        title: 'Login Gagal!',
-                        text: 'Username atau Password salah.',
-                        icon: 'error',
-                        confirmButtonColor: '#0f4c81'
+                // 4. Proses Login ke Firebase
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        if (user.email.toLowerCase().includes('admin')) {
+                            sessionStorage.setItem('smfr_role', 'admin');
+                            window.location.href = 'app.html';
+                        } else {
+                            sessionStorage.setItem('smfr_role', 'user');
+                            window.location.href = 'app.html?tab=form-tab';
+                        }
+                    })
+                    .catch((error) => {
+                        // 5. JIKA GAGAL: Kembalikan tombol seperti semula (Bukan kosongkan form)
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerHTML = originalText;
+                        
+                        let pesanError = 'Username atau Password salah.';
+                        if (error.code === 'auth/user-not-found') pesanError = 'Username tidak ditemukan di database.';
+                        if (error.code === 'auth/wrong-password') pesanError = 'Password yang Anda masukkan salah.';
+                        if (error.code === 'auth/too-many-requests') pesanError = 'Terlalu banyak percobaan gagal, tunggu sejenak.';
+
+                        // Tampilkan Notifikasi Error
+                        Swal.fire({
+                            title: 'Login Ditolak!',
+                            text: pesanError,
+                            icon: 'error',
+                            confirmButtonColor: '#0f4c81'
+                        });
                     });
-                    console.error("Error Firebase:", error.message);
-                });
-        }
 
+            } catch (err) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalText;
+                console.error("Error Logika JS:", err);
+            }
+        };
+
+        // ==========================================
         // CEK STATUS LOGIN (AUTO-LOGIN)
+        // ==========================================
         auth.onAuthStateChanged((user) => {
             if (user) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                
-                const welcomeText = document.getElementById('userWelcome');
-                if(welcomeText) {
-                    if(user.email.includes('admin')) {
-                        welcomeText.innerHTML = 'Halo, <b>Administrator!</b>';
-                        sessionStorage.setItem('smfr_role', 'admin');
-                    } else {
-                        welcomeText.innerHTML = 'Halo, <b>Petugas!</b>';
-                        sessionStorage.setItem('smfr_role', 'user');
-                    }
+                if (user.email.toLowerCase().includes('admin')) {
+                    sessionStorage.setItem('smfr_role', 'admin');
+                    window.location.href = 'app.html';
+                } else {
+                    sessionStorage.setItem('smfr_role', 'user');
+                    window.location.href = 'app.html?tab=form-tab';
                 }
             } else {
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('mainApp').style.display = 'none';
+                const loginScreen = document.getElementById('loginScreen');
+                const mainApp = document.getElementById('mainApp');
+                
+                if (loginScreen) loginScreen.style.display = 'flex';
+                if (mainApp) mainApp.style.display = 'none';
+                
                 sessionStorage.removeItem('smfr_role');
             }
         });
