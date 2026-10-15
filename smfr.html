@@ -649,7 +649,7 @@
                         const user = userCredential.user;
                         if (user.email.toLowerCase().includes('admin')) {
                             sessionStorage.setItem('smfr_role', 'admin');
-                            window.location.href = 'smfr.html';
+                            window.location.href = 'app.html';
                         } else {
                             sessionStorage.setItem('smfr_role', 'user');
                             window.location.href = 'app.html?tab=form-tab';
@@ -688,7 +688,7 @@
             if (user) {
                 if (user.email.toLowerCase().includes('admin')) {
                     sessionStorage.setItem('smfr_role', 'admin');
-                    window.location.href = 'smfr.html';
+                    window.location.href = 'app.html';
                 } else {
                     sessionStorage.setItem('smfr_role', 'user');
                     window.location.href = 'app.html?tab=form-tab';
