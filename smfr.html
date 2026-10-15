@@ -189,15 +189,25 @@
             
 			<form id="loginForm">
     
-    		<!-- Pastikan id-nya persis 'username' dan 'password' -->
-    		<input type="text" id="username" class="form-control" placeholder="Username" required>
-    		<input type="password" id="password" class="form-control" placeholder="Password" required>
+    <!-- Kolom Username -->
+    <div class="mb-4 text-start">
+        <label for="username" class="form-label fw-bold" style="color: #1e293b; font-size: 1.1rem;">Username</label>
+        <input type="text" id="username" class="form-control form-control-lg rounded-3" style="border: 1px solid #dee2e6;" required>
+    </div>
     
-    		<!-- Tombol harus murni type="submit" tanpa atribut tambahan -->
-    		<button type="submit" class="btn btn-primary w-100">Login Masuk</button>
-                <div class="mt-3 text-muted small text-center border-top pt-2">  
-                </div>
-            </form>
+    <!-- Kolom Password -->
+    <div class="mb-4 text-start">
+        <label for="password" class="form-label fw-bold" style="color: #1e293b; font-size: 1.1rem;">Password</label>
+        <input type="password" id="password" class="form-control form-control-lg rounded-3" style="border: 1px solid #dee2e6;" required>
+    </div>
+
+    <!-- Tombol Login -->
+    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold mb-4 rounded-3" style="background-color: #1a73e8; border: none; letter-spacing: 0.5px;">Login Masuk</button>
+    
+    <!-- Garis Pemisah Bawah -->
+    <div class="border-top pt-3"></div>
+
+</form>
         </div>
     </div>
     <!-- ================= END LAYAR LOGIN ================= -->
