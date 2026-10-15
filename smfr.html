@@ -515,10 +515,8 @@
         sessionStorage.removeItem('smfr_role');
 
         // 2. DETEKSI FORM LOGIN
-        const formLogin = document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('mainApp').style.display = 'none';
+        const formLogin = document.getElementById('loginForm');
 				
-
         // 3. JALANKAN PERINTAH INI SAAT TOMBOL LOGIN DITEKAN / ENTER
         if (formLogin) {
             formLogin.addEventListener('submit', function(event) {
