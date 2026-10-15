@@ -1200,8 +1200,8 @@
                         dataPerangkat = dataServer.perangkat || [];
                         logPeminjaman = dataServer.logs || [];
                     } else {
-                        dataPegawai = initialPegawai;
-                        dataPerangkat = initialPerangkat;
+                        dataPegawai = typeof initialPegawai !== 'undefined' ? initialPegawai : [];
+                        dataPerangkat = typeof initialPerangkat !== 'undefined' ? initialPerangkat : [];
                         logPeminjaman = [];
                         saveDataToStorage();
                     }
@@ -1218,8 +1218,9 @@
                 // JIKA BELUM LOGIN / SESI HABIS, TENDANG KEMBALI KE HALAMAN LOGIN
                 window.location.href = 'smfr.html';
             }
+        }); // <--- KURUNG PENUTUP ONATHSTATECHANGED YANG SEBELUMNYA KURANG
 
-        // 5. FUNGSI SAVE TERBARU (Mengirim data ke Firebase, bukan ke LocalStorage)
+        // 5. FUNGSI SAVE TERBARU (Diletakkan di luar agar bisa diakses global)
         function saveDataToStorage() {
             try {
                 // Kirim ke server Firebase
