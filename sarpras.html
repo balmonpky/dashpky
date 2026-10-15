@@ -180,6 +180,265 @@
         </div>
     </nav>
 
+    <!-- CSS Khusus Dasbor Kinerja -->
+<style>
+    .header-kinerja {
+        background: #0d276b;
+        color: white;
+        border: 4px solid #8b5cf6; /* Border ungu seperti di gambar */
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .kinerja-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: none;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+    .kinerja-icon {
+        width: 50px; height: 50px;
+        background: #eff6ff;
+        color: #3b82f6;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .kinerja-title {
+        font-size: 0.85rem; font-weight: 700; color: #1e293b;
+        text-transform: uppercase; margin-bottom: 1rem;
+        height: 35px;
+    }
+    .capaian-value {
+        font-size: 2.5rem; font-weight: 800;
+    }
+    .progress-label {
+        font-size: 0.75rem; font-weight: 600; color: #0d276b;
+    }
+    .progress-bar-target { background-color: #3b82f6; } /* Biru */
+    .progress-bar-capaian { background-color: #10b981; } /* Hijau */
+    .progress-bar-capaian.ungu { background-color: #a855f7; } /* Ungu untuk Zona Integritas */
+</style>
+
+<!-- KONTEN DASBOR -->
+<div class="container mt-4 mb-5">
+    
+    <!-- Header Dasbor -->
+    <div class="header-kinerja">
+        <i class="bi bi-clipboard-data" style="font-size: 3rem;"></i>
+        <div>
+            <h1 class="fw-bold mb-0" style="letter-spacing: 1px;">CAPAIAN PERJANJIAN KINERJA</h1>
+            <h5 class="mb-0">Sarana Prasarana Monitoring dan Layanan</h5>
+        </div>
+    </div>
+
+    <!-- Grid Kartu Indikator -->
+    <div class="row g-4" id="kinerjaContainer">
+        
+        <!-- Kartu 1: Sertifikasi -->
+        <div class="col-md-6 col-lg-4">
+            <div class="kinerja-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="kinerja-icon"><i class="bi bi-broadcast"></i></div>
+                    <div class="kinerja-title">Sertifikasi Operator Radio</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="capaian-value text-success" id="val_capaian_1">0%</div>
+                    <span class="badge bg-light text-success border border-success" id="status_1">Memuat...</span>
+                </div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Target</span> <span id="val_target_1">0%</span>
+                </div>
+                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_1" style="width: 0%"></div></div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Capaian</span> <span id="val_capaian_bar_1">0%</span>
+                </div>
+                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_1" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <!-- Kartu 2: Biaya BHP -->
+        <div class="col-md-6 col-lg-4">
+            <div class="kinerja-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="kinerja-icon"><i class="bi bi-coin"></i></div>
+                    <div class="kinerja-title">Biaya Hak Pengguna Frekuensi Radio</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="capaian-value text-primary" id="val_capaian_2">0%</div>
+                    <span class="badge bg-light text-primary border border-primary" id="status_2">Memuat...</span>
+                </div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Target</span> <span id="val_target_2">0%</span>
+                </div>
+                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_2" style="width: 0%"></div></div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Capaian</span> <span id="val_capaian_bar_2">0%</span>
+                </div>
+                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_2" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <!-- Kartu 3: Operasional -->
+        <div class="col-md-6 col-lg-4">
+            <div class="kinerja-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="kinerja-icon"><i class="bi bi-display"></i></div>
+                    <div class="kinerja-title">Operasional Dan Fungsi Monitoring</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="capaian-value text-success" id="val_capaian_3">0%</div>
+                    <span class="badge bg-light text-success border border-success" id="status_3">Memuat...</span>
+                </div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Target</span> <span id="val_target_3">0%</span>
+                </div>
+                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_3" style="width: 0%"></div></div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Capaian</span> <span id="val_capaian_bar_3">0%</span>
+                </div>
+                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_3" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <!-- Kartu 4: Zona Integritas -->
+        <div class="col-md-6 col-lg-4">
+            <div class="kinerja-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="kinerja-icon"><i class="bi bi-shield-check"></i></div>
+                    <div class="kinerja-title">Zona Integritas</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="capaian-value" style="color: #a855f7;" id="val_capaian_4">0</div>
+                    <span class="badge bg-light text-secondary border border-secondary" id="status_4">Memuat...</span>
+                </div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Target</span> <span id="val_target_4">0</span>
+                </div>
+                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_4" style="width: 0%"></div></div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Capaian</span> <span id="val_capaian_bar_4">0</span>
+                </div>
+                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian ungu" id="bar_capaian_4" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <!-- Kartu 5: IKM -->
+        <div class="col-md-6 col-lg-4">
+            <div class="kinerja-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="kinerja-icon"><i class="bi bi-people"></i></div>
+                    <div class="kinerja-title">Indeks Kepuasan Masyarakat (IKM)</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="capaian-value text-success" id="val_capaian_5">0</div>
+                    <span class="badge bg-light text-success border border-success" id="status_5">Memuat...</span>
+                </div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Target</span> <span id="val_target_5">0</span>
+                </div>
+                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_5" style="width: 0%"></div></div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Capaian</span> <span id="val_capaian_bar_5">0</span>
+                </div>
+                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_5" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <!-- Kartu 6: IIPP -->
+        <div class="col-md-6 col-lg-4">
+            <div class="kinerja-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="kinerja-icon"><i class="bi bi-award"></i></div>
+                    <div class="kinerja-title">Indeks Integritas Pelayanan Publik (IIPP)</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="capaian-value text-success" id="val_capaian_6">0</div>
+                    <span class="badge bg-light text-success border border-success" id="status_6">Memuat...</span>
+                </div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Target</span> <span id="val_target_6">0</span>
+                </div>
+                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_6" style="width: 0%"></div></div>
+                
+                <div class="d-flex justify-content-between progress-label mb-1">
+                    <span>Capaian</span> <span id="val_capaian_bar_6">0</span>
+                </div>
+                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_6" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SCRIPT UNTUK MEMBACA DATA DARI FIREBASE -->
+<script>
+    // Pastikan Firebase sudah diinisialisasi di sarpras.html sebelum script ini dipanggil
+    document.addEventListener('DOMContentLoaded', function() {
+        // Asumsi variabel 'database' sudah dideklarasikan di sarpras.html (firebase.database())
+        const refKinerja = database.ref('kinerja_sarpras');
+
+        refKinerja.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Loop 1 sampai 6 (karena ada 6 kartu)
+                for (let i = 1; i <= 6; i++) {
+                    if (data['k' + i]) {
+                        let t = parseFloat(data['k' + i].target);
+                        let c = parseFloat(data['k' + i].capaian);
+                        let suf = data['k' + i].suffix; // Misal "%" atau "" (kosong)
+
+                        // Update Teks Angka
+                        document.getElementById('val_target_' + i).innerText = t + suf;
+                        document.getElementById('val_capaian_' + i).innerText = c + suf;
+                        document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
+
+                        // Logika untuk Progress Bar (Maksimal 100% untuk lebar visual)
+                        let maxVal = Math.max(t, c);
+                        let wTarget = (t / maxVal) * 100;
+                        let wCapaian = (c / maxVal) * 100;
+
+                        document.getElementById('bar_target_' + i).style.width = wTarget + '%';
+                        document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
+
+                        // Logika Status (Naik / Turun / Sesuai)
+                        let statusEl = document.getElementById('status_' + i);
+                        let selisih = (c - t).toFixed(2).replace(/\.00$/, ''); // Hapus .00 jika pas bulat
+                        
+                        if (c > t) {
+                            statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
+                            statusEl.className = "badge bg-light text-success border border-success";
+                        } else if (c < t) {
+                            statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
+                            statusEl.className = "badge bg-light text-danger border border-danger";
+                        } else {
+                            statusEl.innerHTML = "Sesuai Target";
+                            statusEl.className = "badge bg-light text-primary border border-primary";
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
     <!-- KONTEN UTAMA -->
     <div class="container main-container">
         
@@ -263,5 +522,31 @@
 
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- 1. SCRIPT SDK FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+<!-- 2. INISIALISASI FIREBASE -->
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+        authDomain: "smfr-database.firebaseapp.com",
+        databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "smfr-database",
+        storageBucket: "smfr-database.firebasestorage.app",
+        messagingSenderId: "890374389163",
+        appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
+        measurementId: "G-S4YSHLR19V"
+    };
+    
+    // Inisialisasi Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    
+    // Deklarasi variabel database agar bisa digunakan oleh script pembaca data
+    const database = firebase.database();
+</script>
+    
 </body>
 </html>
