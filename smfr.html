@@ -500,14 +500,25 @@
                 const elDipinjam = document.getElementById('idxDipinjam');
                 if (elDipinjam) elDipinjam.textContent = countDipinjam;
 
-                // ==========================================
-                // RENDER GRAFIK CHART.JS
+               // ==========================================
+                // RENDER GRAFIK CHART.JS (DIPERMANIS & INTERAKTIF)
                 // ==========================================
                 if (typeof Chart !== 'undefined') {
-                    // Hancurkan chart lama jika ada agar tidak tumpang tindih saat data diperbarui
+                    // Hancurkan chart lama jika ada agar tidak tumpang tindih
                     if (window.chartKet) window.chartKet.destroy();
                     if (window.chartKon) window.chartKon.destroy();
                     if (window.chartSta) window.chartSta.destroy();
+
+                    // Pengaturan Tooltip Modern (Melayang saat di-hover)
+                    const tooltipOptions = {
+                        backgroundColor: 'rgba(15, 76, 129, 0.95)',
+                        titleFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' },
+                        bodyFont: { size: 13, family: "'Inter', sans-serif" },
+                        padding: 12,
+                        cornerRadius: 8,
+                        boxPadding: 6,
+                        usePointStyle: true
+                    };
 
                     // 1. Chart Ketersediaan (Doughnut)
                     const ctxKet = document.getElementById('chartKetersediaan');
@@ -518,11 +529,21 @@
                                 labels: ['Tersedia', 'Sedang Dipinjam'],
                                 datasets: [{
                                     data: [countTersedia, countDipinjam],
-                                    backgroundColor: ['#10b981', '#f59e0b'],
-                                    borderWidth: 0
+                                    backgroundColor: ['#10b981', '#f59e0b'], // Emerald & Amber
+                                    hoverBackgroundColor: ['#059669', '#d97706'],
+                                    borderWidth: 3,
+                                    borderColor: '#ffffff',
+                                    hoverOffset: 10 // Efek membesar (pop-out) saat disentuh
                                 }]
                             },
-                            options: { cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                            options: { 
+                                cutout: '72%', 
+                                plugins: { 
+                                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: {family: "'Inter', sans-serif"} } },
+                                    tooltip: tooltipOptions
+                                },
+                                animation: { animateScale: true, animateRotate: true, duration: 1200 }
+                            }
                         });
                     }
 
@@ -535,31 +556,62 @@
                                 labels: ['Baik', 'Rusak Ringan', 'Rusak Berat'],
                                 datasets: [{
                                     data: [condBaik, condRusakRingan, condRusakBerat],
-                                    backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444'],
-                                    borderWidth: 0
+                                    backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444'], // Blue, Amber, Red
+                                    hoverBackgroundColor: ['#2563eb', '#d97706', '#dc2626'],
+                                    borderWidth: 3,
+                                    borderColor: '#ffffff',
+                                    hoverOffset: 10 // Efek membesar (pop-out) saat disentuh
                                 }]
                             },
-                            options: { plugins: { legend: { position: 'bottom' } } }
+                            options: { 
+                                plugins: { 
+                                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: {family: "'Inter', sans-serif"} } },
+                                    tooltip: tooltipOptions
+                                },
+                                animation: { animateScale: true, animateRotate: true, duration: 1200 }
+                            }
                         });
                     }
 
-                    // 3. Chart Stasiun (Bar)
+                    // 3. Chart Stasiun (Bar dengan Warna Berbeda)
                     const ctxSta = document.getElementById('chartStasiun');
                     if (ctxSta) {
+                        // Palet Warna Modern untuk Tiap Balok
+                        const barColors = ['#0f4c81', '#8b5cf6', '#06b6d4', '#ec4899', '#14b8a6', '#f43f5e', '#84cc16'];
+                        const barHoverColors = ['#1e3a8a', '#7c3aed', '#0891b2', '#db2777', '#0d9488', '#e11d48', '#65a30d'];
+
                         window.chartSta = new Chart(ctxSta, {
                             type: 'bar',
                             data: {
                                 labels: Object.keys(stasiunCounts),
                                 datasets: [{
-                                    label: 'Jumlah Perangkat',
+                                    label: 'Total Perangkat',
                                     data: Object.values(stasiunCounts),
-                                    backgroundColor: '#0f4c81',
-                                    borderRadius: 6
+                                    backgroundColor: barColors, // Menggunakan array warna
+                                    hoverBackgroundColor: barHoverColors,
+                                    borderRadius: 8, // Ujung balok dibuat melengkung
+                                    borderSkipped: false,
+                                    barPercentage: 0.7 // Ketebalan balok yang proporsional
                                 }]
                             },
                             options: {
-                                plugins: { legend: { display: false } },
-                                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                                plugins: { 
+                                    legend: { display: false },
+                                    tooltip: tooltipOptions
+                                },
+                                scales: { 
+                                    y: { 
+                                        beginAtZero: true, 
+                                        ticks: { stepSize: 1, font: { family: "'Inter', sans-serif" } },
+                                        grid: { color: '#f1f5f9', drawBorder: false } // Garis panduan tipis
+                                    },
+                                    x: {
+                                        ticks: { font: { family: "'Inter', sans-serif", weight: '500' } },
+                                        grid: { display: false, drawBorder: false } // Hilangkan garis vertikal agar bersih
+                                    }
+                                },
+                                animation: { duration: 1500, easing: 'easeOutQuart' }, // Animasi naik yang mulus
+                                hover: { mode: 'index', intersect: false }
                             }
                         });
                     }
