@@ -627,27 +627,25 @@ auth.onAuthStateChanged((user) => {
             // LOGIN RESMI KE FIREBASE
             auth.signInWithEmailAndPassword(emailFormat, inputPass)
                 .then((userCredential) => {
-                    // Jika berhasil, auth.onAuthStateChanged di atas otomatis bekerja
-                    // Kita tinggal arahkan halaman untuk User biasa
+                    // Jika berhasil, untuk user biasa langsung pindah ke app.html
                     if(inputUser === 'user') {
                         window.location.href = 'app.html?tab=form-tab';
                     }
+                    // (Admin otomatis diproses oleh auth.onAuthStateChanged di atasnya)
                 })
                 .catch((error) => {
-                    // Jika gagal (Password salah)
+                    // TAMPILKAN ERROR ASLI DARI FIREBASE AGAR KITA TAHU PENYEBABNYA
                     Swal.fire({
-                        title: 'Akses Ditolak!',
-                        text: 'Username atau Password salah!',
+                        title: 'Gagal Login!',
+                        text: 'Pesan Sistem: ' + error.message, 
                         icon: 'error',
                         confirmButtonColor: '#0f4c81'
                     });
                 })
                 .finally(() => {
-                    // Kembalikan tombol ke kondisi semula
                     btnSubmit.innerHTML = originalText;
                     btnSubmit.disabled = false;
                 });
-        });
     }
 
     // =======================================================
