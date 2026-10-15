@@ -310,8 +310,175 @@
         <div class="container fw-medium">
             &copy; <script>document.write(new Date().getFullYear())</script> Balai Monitor Spektrum Frekuensi Radio Kelas II Palangka Raya.
         </div>
+        <div class="text-center mt-5 mb-3">
+    <button class="btn btn-sm btn-outline-secondary" onclick="verifikasiAdmin()">
+        <i class="bi bi-gear-fill"></i> Pengaturan Capaian Kinerja (Admin)
+    </button>
+</div>
     </footer>
 
     <!-- SCRIPT SAPAAN OTOMATIS -->
     <script>
         document.
+
+    <!-- Modal Pengaturan Kinerja -->
+<div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-bold"><i class="bi bi-sliders"></i> Update Dasbor Kinerja Sarpras</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formKinerja" onsubmit="simpanKinerja(event)">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="fw-bold small">1. Sertifikasi Operator Radio (%)</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Target</span>
+                        <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
+                        <span class="input-group-text">Capaian</span>
+                        <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold small">2. Biaya BHP (%)</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Target</span>
+                        <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
+                        <span class="input-group-text">Capaian</span>
+                        <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold small">3. Operasional Monitoring (%)</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Target</span>
+                        <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
+                        <span class="input-group-text">Capaian</span>
+                        <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold small">4. Zona Integritas</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Target</span>
+                        <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
+                        <span class="input-group-text">Capaian</span>
+                        <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold small">5. Indeks Kepuasan Masyarakat</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Target</span>
+                        <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
+                        <span class="input-group-text">Capaian</span>
+                        <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold small">6. Indeks Integritas (IIPP)</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Target</span>
+                        <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
+                        <span class="input-group-text">Capaian</span>
+                        <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-4"><i class="bi bi-save"></i> Simpan & Update Dasbor</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+            <!-- Pastikan SweetAlert2 dan Bootstrap JS terhubung -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SDK Firebase (Jika di index.html belum ada) -->
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+<script>
+    // 1. INISIALISASI FIREBASE
+    const firebaseConfigIndex = {
+        apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+        authDomain: "smfr-database.firebaseapp.com",
+        databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "smfr-database",
+        storageBucket: "smfr-database.firebasestorage.app",
+        messagingSenderId: "890374389163",
+        appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+    };
+    
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfigIndex);
+    }
+    const dbIndex = firebase.database();
+    const refKinerja = dbIndex.ref('kinerja_sarpras');
+
+    // 2. FUNGSI VERIFIKASI PASSWORD
+    function verifikasiAdmin() {
+        Swal.fire({
+            title: 'Akses Admin',
+            text: 'Masukkan Password untuk mengubah data Kinerja:',
+            input: 'password',
+            inputAttributes: { autocapitalize: 'off' },
+            showCancelButton: true,
+            confirmButtonText: 'Buka Pengaturan',
+            confirmButtonColor: '#0f4c81'
+        }).then((result) => {
+            // GANTI 'admin123' DENGAN PASSWORD RAHASIA ANDA
+            if (result.value === 'admin123') {
+                
+                // Jika password benar, ambil data lama dari Firebase lalu buka modal
+                refKinerja.once('value').then((snap) => {
+                    const data = snap.val();
+                    if (data) {
+                        for (let i = 1; i <= 6; i++) {
+                            if (data['k' + i]) {
+                                document.getElementById('inp_t_' + i).value = data['k' + i].target;
+                                document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+                            }
+                        }
+                    }
+                    // Buka Modal Bootstrap
+                    var myModal = new bootstrap.Modal(document.getElementById('modalKinerja'));
+                    myModal.show();
+                });
+
+            } else if (result.value) {
+                Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
+            }
+        });
+    }
+
+    // 3. FUNGSI SIMPAN PERUBAHAN
+    function simpanKinerja(e) {
+        e.preventDefault();
+        
+        const dataBaru = {
+            k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
+            k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
+            k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
+            k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
+            k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
+            k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
+        };
+
+        refKinerja.set(dataBaru)
+            .then(() => {
+                // Tutup Modal
+                var modalEl = document.getElementById('modalKinerja');
+                var modalObj = bootstrap.Modal.getInstance(modalEl);
+                modalObj.hide();
+                
+                Swal.fire('Berhasil!', 'Data Kinerja berhasil diupdate ke semua perangkat.', 'success');
+            })
+            .catch((error) => {
+                Swal.fire('Gagal!', error.message, 'error');
+            });
+    }
+</script>
