@@ -421,6 +421,8 @@
     <!-- SCRIPT UNTUK MENGAMBIL DATA & MEMBUAT GRAFIK -->
    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+		<!-- 1. TAMBAHAN BARU: SCRIPT FIREBASE AUTH -->
+	<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
     <script>
         // 1. PASTIKAN PASTE KODE ASLI FIREBASE ANDA DI SINI
@@ -434,6 +436,11 @@
   			appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
   			measurementId: "G-S4YSHLR19V"
         };
+		if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const database = firebase.database();
+    const auth = firebase.auth(); // Variabel Auth baru
         
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -572,60 +579,86 @@
 <script>
         // 1. KUNCI KEAMANAN: Hapus sesi lama setiap kali halaman ini dibuka / di-refresh
         sessionStorage.removeItem('smfr_role');
-
-        // 2. DETEKSI FORM LOGIN
-        const formLogin = document.getElementById('loginForm');
-				
-        // 3. JALANKAN PERINTAH INI SAAT TOMBOL LOGIN DITEKAN / ENTER
-        if (formLogin) {
-            formLogin.addEventListener('submit', function(event) {
-                
-                // REM DARURAT: Mencegah halaman me-refresh!
-                event.preventDefault();
-
-                // AMBIL ISI KETIKAN
-                const inputUser = document.getElementById('username').value.trim();
-                const inputPass = document.getElementById('password').value.trim();
-
-                // --- LOGIKA LOGIN ADMIN ---
-                if (inputUser === 'admin' && inputPass === 'admin') {
-                    // Set sesi login
+auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Jika ada user login di Firebase, langsung tampilkan aplikasi
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            // Atur sapaan berdasarkan email
+            const welcomeText = document.getElementById('userWelcome');
+            if(welcomeText) {
+                if(user.email.includes('admin')) {
+                    welcomeText.innerHTML = 'Halo, <b>Administrator!</b>';
                     sessionStorage.setItem('smfr_role', 'admin');
-                    
-                    // BUKA DASHBOARD TANPA RELOAD (Tutup layar login, tampilkan aplikasi)
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('mainApp').style.display = 'block';
-                    
-                    // Sapaan Admin di sudut kanan atas
-                    const welcomeText = document.getElementById('userWelcome');
-                    if(welcomeText) welcomeText.innerHTML = 'Halo, <b>Administrator!</b>';
-                } 
-                
-                // --- LOGIKA LOGIN USER BIASA ---
-                else if (inputUser === 'user' && inputPass === 'user') {
-                    // Set sesi login
+                } else {
+                    welcomeText.innerHTML = 'Halo, <b>Petugas!</b>';
                     sessionStorage.setItem('smfr_role', 'user');
-                    
-                    // Catatan: Pindah ke app.html karena menu Formulir ada di file app.html
-                    window.location.href = 'app.html?tab=form-tab';
-                } 
-                
-                // --- JIKA SALAH ---
-                else {
-                    alert('GAGAL: Username atau Password Anda salah!');
                 }
-
-            });
-        }
-
-        // ========================================================================
-        // FUNGSI LOGOUT (Untuk Tombol Logout di sudut kanan atas Dashboard)
-        // ========================================================================
-        function logoutApp() {
+            }
+        } else {
+            // Jika tidak ada, tampilkan form login
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
             sessionStorage.removeItem('smfr_role');
-            // Muat ulang halaman untuk kembali menampilkan layar login
-            window.location.reload();
         }
+    });
+
+    // =======================================================
+    // PROSES FORM LOGIN
+    // =======================================================
+    const formLogin = document.getElementById('loginForm');
+    if (formLogin) {
+        formLogin.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Ubah loading state tombol
+            const btnSubmit = formLogin.querySelector('button[type="submit"]');
+            const originalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = 'Memeriksa Keamanan...';
+            btnSubmit.disabled = true;
+
+            const inputUser = document.getElementById('username').value.trim().toLowerCase();
+            const inputPass = document.getElementById('password').value.trim();
+
+            // Trik rahasia: Mengubah ketikan 'admin' menjadi 'admin@balmon.com' di belakang layar
+            const emailFormat = inputUser + '@balmon.com'; 
+
+            // LOGIN RESMI KE FIREBASE
+            auth.signInWithEmailAndPassword(emailFormat, inputPass)
+                .then((userCredential) => {
+                    // Jika berhasil, auth.onAuthStateChanged di atas otomatis bekerja
+                    // Kita tinggal arahkan halaman untuk User biasa
+                    if(inputUser === 'user') {
+                        window.location.href = 'app.html?tab=form-tab';
+                    }
+                })
+                .catch((error) => {
+                    // Jika gagal (Password salah)
+                    Swal.fire({
+                        title: 'Akses Ditolak!',
+                        text: 'Username atau Password salah!',
+                        icon: 'error',
+                        confirmButtonColor: '#0f4c81'
+                    });
+                })
+                .finally(() => {
+                    // Kembalikan tombol ke kondisi semula
+                    btnSubmit.innerHTML = originalText;
+                    btnSubmit.disabled = false;
+                });
+        });
+    }
+
+    // =======================================================
+    // FUNGSI LOGOUT (DI DASHBOARD)
+    // =======================================================
+    function logoutApp() {
+        auth.signOut().then(() => {
+            sessionStorage.removeItem('smfr_role');
+            window.location.reload();
+        });
+    }
 	// ========================================================================
         // FUNGSI BACKUP DATABASE LANGSUNG DARI FIREBASE (Hanya Admin)
         // ========================================================================
