@@ -230,6 +230,15 @@
     }
 </style>
 			<form id="loginForm">
+				<!-- Tambahkan onsubmit="masukSistem(event)" -->
+<form id="loginForm" onsubmit="masukSistem(event)">
+    
+    <!-- (Kode input username & password Anda tetap sama di sini) -->
+    
+    <button type="submit" class="btn btn-primary w-100 text-white btn-login-custom mb-4">
+        Login Masuk
+    </button>
+</form>
     
     <!-- Kolom Username -->
     <div class="mb-3 text-start">
@@ -695,5 +704,80 @@ auth.onAuthStateChanged((user) => {
             });
         }
     </script>
+		<script>
+    // Pastikan variabel auth dan database sudah dideklarasikan sebelumnya
+    // const auth = firebase.auth(); 
+    // const database = firebase.database();
+
+    // =======================================================
+    // FUNGSI UTAMA LOGIN (DIPANGGIL DARI ONSUBMIT HTML)
+    // =======================================================
+    function masukSistem(event) {
+        // 1. REM DARURAT (Mencegah Halaman Kosong/Refresh)
+        if(event) event.preventDefault();
+
+        // Ambil elemen tombol untuk efek loading
+        const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
+        const originalText = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = 'Memeriksa...';
+        btnSubmit.disabled = true;
+
+        // Ambil nilai input
+        const inputUser = document.getElementById('username').value.trim().toLowerCase();
+        const inputPass = document.getElementById('password').value.trim();
+
+        // Ubah format menjadi email untuk Firebase
+        const emailFormat = inputUser + '@balmon.com';
+
+        // LOGIN RESMI KE FIREBASE
+        auth.signInWithEmailAndPassword(emailFormat, inputPass)
+            .then((userCredential) => {
+                // Jika sukses, arahkan sesuai peran
+                if(inputUser === 'user') {
+                    window.location.href = 'app.html?tab=form-tab';
+                }
+                // (Admin otomatis diurus oleh onAuthStateChanged)
+            })
+            .catch((error) => {
+                // Tampilkan pesan error ASLI dari Firebase
+                Swal.fire({
+                    title: 'Gagal Login!',
+                    text: 'Pesan: ' + error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#0f4c81'
+                });
+            })
+            .finally(() => {
+                // Kembalikan tombol ke keadaan semula
+                btnSubmit.innerHTML = originalText;
+                btnSubmit.disabled = false;
+            });
+    }
+
+    // =======================================================
+    // CEK STATUS LOGIN (AUTO-LOGIN ADMIN)
+    // =======================================================
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            const welcomeText = document.getElementById('userWelcome');
+            if(welcomeText) {
+                if(user.email.includes('admin')) {
+                    welcomeText.innerHTML = 'Halo, <b>Administrator!</b>';
+                    sessionStorage.setItem('smfr_role', 'admin');
+                } else {
+                    welcomeText.innerHTML = 'Halo, <b>Petugas!</b>';
+                    sessionStorage.setItem('smfr_role', 'user');
+                }
+            }
+        } else {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+            sessionStorage.removeItem('smfr_role');
+        }
+    });
+</script>
 </body>
 </html>
