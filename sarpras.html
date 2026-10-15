@@ -603,12 +603,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- 1. SCRIPT SDK FIREBASE -->
+    <!-- SCRIPT SDK FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
-    <!-- 2. INISIALISASI FIREBASE & LOGIKA UTAMA -->
+    <!-- INISIALISASI & LOGIKA UTAMA -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
@@ -626,22 +626,19 @@
         }
         
         const database = firebase.database();
-        let modalKinerjaInstance = null;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi Modal Bootstrap dengan aman setelah halaman termuat
-            const modalEl = document.getElementById('modalKinerja');
-            if (modalEl) {
-                modalKinerjaInstance = new bootstrap.Modal(modalEl);
-            }
+            loadDataKinerjaRealtime();
+        });
 
-            // PENGAMBILAN DATA KINERJA REALTIME DARI FIREBASE
+        // 1. FUNGSI LOAD DATA KINERJA
+        function loadDataKinerjaRealtime() {
             const refKinerja = database.ref('kinerja_sarpras');
 
             refKinerja.on('value', (snapshot) => {
                 const data = snapshot.val();
                 
-                // Jika database kosong, buatkan data awal (default) otomatis agar tidak 0%
+                // Jika database kosong, buatkan data default otomatis
                 if (!data) {
                     const defaultData = {
                         k1: { target: 100, capaian: 95, suffix: '%' },
@@ -655,34 +652,24 @@
                     return;
                 }
 
-                // Loop 1 sampai 6 untuk mengisi kartu dasbor
+                // Loop mengisi kartu 1 sampai 6
                 for (let i = 1; i <= 6; i++) {
                     if (data['k' + i]) {
                         let t = parseFloat(data['k' + i].target) || 0;
                         let c = parseFloat(data['k' + i].capaian) || 0;
                         let suf = data['k' + i].suffix || ''; 
 
-                        // Update Teks Angka
-                        const elTarget = document.getElementById('val_target_' + i);
-                        const elCapaian = document.getElementById('val_capaian_' + i);
-                        const elCapaianBar = document.getElementById('val_capaian_bar_' + i);
+                        document.getElementById('val_target_' + i).innerText = t + suf;
+                        document.getElementById('val_capaian_' + i).innerText = c + suf;
+                        document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
 
-                        if (elTarget) elTarget.innerText = t + suf;
-                        if (elCapaian) elCapaian.innerText = c + suf;
-                        if (elCapaianBar) elCapaianBar.innerText = c + suf;
-
-                        // Kalkulasi Progress Bar
                         let maxVal = Math.max(t, c, 1);
                         let wTarget = (t / maxVal) * 100;
                         let wCapaian = (c / maxVal) * 100;
 
-                        const barTarget = document.getElementById('bar_target_' + i);
-                        const barCapaian = document.getElementById('bar_capaian_' + i);
+                        document.getElementById('bar_target_' + i).style.width = wTarget + '%';
+                        document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
 
-                        if (barTarget) barTarget.style.width = wTarget + '%';
-                        if (barCapaian) barCapaian.style.width = wCapaian + '%';
-
-                        // Indikator Status Naik / Turun
                         let statusEl = document.getElementById('status_' + i);
                         if (statusEl) {
                             let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
@@ -700,9 +687,9 @@
                     }
                 }
             });
-        });
+        }
 
-        // FUNGSI VERIFIKASI ADMIN UNTUK MEMBUKA MODAL EDIT
+        // 2. FUNGSI VERIFIKASI ADMIN (MEMBUKA MODAL EDIT)
         function verifikasiAdmin() {
             Swal.fire({
                 title: 'Akses Admin',
@@ -714,7 +701,6 @@
                 cancelButtonText: 'Batal',
                 confirmButtonColor: '#0f4c81'
             }).then((result) => {
-                // Ganti 'admin123' dengan password admin yang Anda inginkan
                 if (result.value === 'admin123') {
                     
                     database.ref('kinerja_sarpras').once('value').then((snap) => {
@@ -722,14 +708,21 @@
                         if (data) {
                             for (let i = 1; i <= 6; i++) {
                                 if (data['k' + i]) {
-                                    document.getElementById('inp_t_' + i).value = data['k' + i].target;
-                                    document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+                                    const inputTarget = document.getElementById('inp_t_' + i);
+                                    const inputCapaian = document.getElementById('inp_c_' + i);
+                                    if (inputTarget) inputTarget.value = data['k' + i].target;
+                                    if (inputCapaian) inputCapaian.value = data['k' + i].capaian;
                                 }
                             }
                         }
-                        // Tampilkan modal menggunakan instance yang sudah diinisialisasi
-                        if (modalKinerjaInstance) {
-                            modalKinerjaInstance.show();
+                        
+                        // PANGGIL MODAL BOOTSTRAP SECARA LANGSUNG DENGAN AMAN
+                        const modalElement = document.getElementById('modalKinerja');
+                        if (modalElement) {
+                            const myModal = new bootstrap.Modal(modalElement);
+                            myModal.show();
+                        } else {
+                            console.error("Elemen modalKinerja tidak ditemukan di HTML!");
                         }
                     });
 
@@ -739,7 +732,7 @@
             });
         }
 
-        // FUNGSI MENYIMPAN PERUBAHAN KE FIREBASE
+        // 3. FUNGSI SIMPAN PERUBAHAN KE FIREBASE
         function simpanKinerja(e) {
             e.preventDefault();
             
@@ -754,8 +747,11 @@
 
             database.ref('kinerja_sarpras').set(dataBaru)
                 .then(() => {
-                    if (modalKinerjaInstance) {
-                        modalKinerjaInstance.hide();
+                    // Tutup modal secara aman
+                    const modalElement = document.getElementById('modalKinerja');
+                    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    if (modalInstance) {
+                        modalInstance.hide();
                     }
                     
                     Swal.fire({
@@ -770,8 +766,9 @@
                     Swal.fire('Gagal!', error.message, 'error');
                 });
         }
-    </script>    <!-- ================================================================= -->
-<!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
+    </script>
+    
+   <!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
 <!-- ================================================================= -->
 <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
