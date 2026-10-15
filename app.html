@@ -1044,42 +1044,35 @@
         let bsModalDevice, bsModalPegawai, bsModalProsesReturn, bsModalEditLoan, bsModalSelectFormDev, bsModalSelectFormPeg;
 
         document.addEventListener('DOMContentLoaded', () => {
-		// === SCRIPT PEMBATASAN AKSES (REVISI LEBIH AMAN) ===
-       const userRole = sessionStorage.getItem('smfr_role');
+            const userRole = sessionStorage.getItem('smfr_role');
             
             if (!userRole) {
-                window.location.href = 'index.html';
-                return; // Hentikan script jika belum login
+                window.location.href = 'smfr.html';
+                return; // Hentikan jika belum login
             }
 
-            // === 2. BACA URL UNTUK PINDAH TAB (Dideklarasikan 1x saja agar tidak crash) ===
             const paramURL = new URLSearchParams(window.location.search);
             const tabTarget = paramURL.get('tab');
 
-            // === 3. PEMBATASAN HAK AKSES KHUSUS 'USER' ===
+            // PEMBATASAN HAK AKSES KHUSUS 'USER' (Hanya sisakan 3 menu)
             if (userRole === 'user') {
+                // 1. Definisikan elemen yang dilarang
                 const tabDev = document.getElementById('database-tab');
                 const tabPeg = document.getElementById('pegawai-tab');
-                const tabRusak = document.getElementById('rusak-tab'); // <-- Tambahan
-				const statsRow = document.getElementById('dashboardStatsRow'); // <-- Tambahan variabel
-				const btnInputPegawai = document.getElementById('btnTambahPegawaiForm');
-				const btnBackup = document.getElementById('btnBackupDb');
+                const tabRusak = document.getElementById('rusak-tab');
+                const statsRow = document.getElementById('dashboardStatsRow');
+                const btnInputPegawai = document.getElementById('btnTambahPegawaiForm');
                 
-                // Menghapus tombol menu dari layar User
+                // 2. HAPUS SECARA PERMANEN DARI HTML (Supaya tidak terlihat sama sekali)
                 if (tabDev && tabDev.parentElement) tabDev.parentElement.remove();
                 if (tabPeg && tabPeg.parentElement) tabPeg.parentElement.remove();
-                if (tabRusak && tabRusak.parentElement) tabRusak.parentElement.remove(); // <-- Tambahan
-
-				// Menyembunyikan deretan kartu statistik dari layar User
-                if (statsRow) statsRow.style.display = 'none'; // <-- Tambahan perintah sembunyi
-
-				// Menyembunyikan tombol khusus Admin dari layar User
+                if (tabRusak && tabRusak.parentElement) tabRusak.parentElement.remove();
+                
+                // 3. Sembunyikan Statistik & Tombol Input Pegawai
+                if (statsRow) statsRow.style.display = 'none';
                 if (btnInputPegawai) btnInputPegawai.style.display = 'none';
 
-				// <-- Menyembunyikan Tombol Input Pegawai dari layar User -->
-                if (btnInputPegawai) btnInputPegawai.style.display = 'none';
-
-                // Jika user memaksa masuk ke link yang dilarang, lempar ke form peminjaman
+                // 4. Pengaman Ekstra: Jika user memaksa ketik link ke tab database di browser
                 if (tabTarget === 'database-tab' || tabTarget === 'pegawai-tab' || tabTarget === 'rusak-tab') {
                     window.location.href = 'app.html?tab=form-tab';
                     return;
