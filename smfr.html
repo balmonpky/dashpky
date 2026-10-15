@@ -232,24 +232,31 @@
 			<form id="loginForm">
     
     <!-- Kolom Username -->
-    <div class="mb-4 text-start">
-        <label for="username" class="form-label fw-bold" style="color: #1e293b; font-size: 1.1rem;">Username</label>
-        <input type="text" id="username" class="form-control form-control-lg rounded-3" style="border: 1px solid #dee2e6;" required>
+    <div class="mb-3 text-start">
+        <label for="username" class="login-label">Username</label>
+        <input type="text" id="username" class="form-control login-input" autocomplete="off" required>
     </div>
     
     <!-- Kolom Password -->
     <div class="mb-4 text-start">
-        <label for="password" class="form-label fw-bold" style="color: #1e293b; font-size: 1.1rem;">Password</label>
-        <input type="password" id="password" class="form-control form-control-lg rounded-3" style="border: 1px solid #dee2e6;" required>
+        <label for="password" class="login-label">Password</label>
+        <input type="password" id="password" class="form-control login-input" required>
     </div>
 
     <!-- Tombol Login -->
-    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold mb-4 rounded-3" style="background-color: #1a73e8; border: none; letter-spacing: 0.5px;">Login Masuk</button>
+    <button type="submit" class="btn btn-primary w-100 text-white btn-login-custom mb-4">
+        Login Masuk
+    </button>
     
-    <!-- Garis Pemisah Bawah -->
-    <div class="border-top pt-3"></div>
+    <!-- Garis Pemisah Bawah dengan Footer Mini -->
+    <div class="border-top pt-3 text-center">
+        <small class="text-muted fw-medium" style="font-size: 0.75rem;">
+            &copy; 2026 Balmon SFR Kelas II Palangkaraya
+        </small>
+    </div>
 
 </form>
+			
         </div>
     </div>
     <!-- ================= END LAYAR LOGIN ================= -->
