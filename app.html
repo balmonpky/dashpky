@@ -442,7 +442,7 @@
                                             <option value="2030">2030</option>
                                         </select>
                                     </div>
-                                    <small class="text-muted mt-1 d-block">Format otomatis disusun menjadi: <code>Nomor : [Isian] /Balmon.62/KP.01.06/[Bulan]/[Tahun]</code></small>
+                                    <small class="text-muted mt-1 d-block">Format otomatis disusun menjadi: <code>Nomor surat tugas : [Isian] /Balmon.62/KP.01.06/[Bulan]/[Tahun]</code></small>
                                 </div>
 
                                 <!-- PERANGKAT MULTI-ITEM -->
@@ -809,7 +809,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Nomor Surat Tugas <span class="text-danger">*</span></label>
                         <div class="input-group shadow-sm border border-warning rounded">
-                            <span class="input-group-text bg-white fw-bold text-dark border-0 border-end">Nomor :</span>
+                            <span class="input-group-text bg-white fw-bold text-dark border-0 border-end">Nomor Surat Tugas :</span>
                             <input type="text" class="form-control border-0" id="editNoSuratUrut" placeholder="Contoh: 15" required style="max-width: 120px;">
                             <span class="input-group-text bg-warning-subtle text-dark border-0 fw-bold border-start border-end">/Balmon.62/KP.01.06/</span>
                             <select class="form-select border-0" id="editNoSuratBulan" required style="max-width: 90px;">
@@ -1680,7 +1680,7 @@
             const urut = document.getElementById('noSuratUrut').value.trim();
             const bln = document.getElementById('noSuratBulan').value;
             const thn = document.getElementById('noSuratTahun').value;
-            const noSuratTugasFinal = `Nomor : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
+            const noSuratTugasFinal = `Nomor Surat Tugas : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
 
             selectedFormDevices.forEach(d => {
                 const devInDb = dataPerangkat.find(item => item.id === d.id);
@@ -2073,7 +2073,7 @@
             
             // PARSING NOMOR SURAT TUGAS
             let oldSurat = log.noSuratTugas || '';
-            let m = oldSurat.match(/Nomor\s*:\s*(.*?)\s*\/Balmon\.62\/KP\.01\.06\/(.*?)\/(.*)/);
+            let m = oldSurat.match(/Nomor Surat Tugas\s*:\s*(.*?)\s*\/Balmon\.62\/KP\.01\.06\/(.*?)\/(.*)/);
             if(m) {
                 document.getElementById('editNoSuratUrut').value = m[1].trim();
                 document.getElementById('editNoSuratBulan').value = m[2].trim();
@@ -2268,7 +2268,7 @@
             const urut = document.getElementById('editNoSuratUrut').value.trim();
             const bln = document.getElementById('editNoSuratBulan').value;
             const thn = document.getElementById('editNoSuratTahun').value;
-            const noSuratTugasVal = `Nomor : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
+            const noSuratTugasVal = `Nomor Surat Tugas : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
 
             const tglPinjamVal = document.getElementById('editTglPinjam').value;
             const tglKembaliVal = document.getElementById('editTglKembali').value;
@@ -2407,7 +2407,7 @@ function renderPerangkatRusakTable() {
             if (!log) return;
 
             document.getElementById('printTxId').textContent = `Nomor Transaksi: ${log.id}`;
-            document.getElementById('printNoSuratTugas').textContent = log.noSuratTugas || 'Nomor : -';
+            document.getElementById('printNoSuratTugas').textContent = log.noSuratTugas || 'Nomor Surat Tugas : -';
             document.getElementById('printNama').textContent = log.pegawai.NAMA;
             document.getElementById('printNip').textContent = log.pegawai.NIP;
             document.getElementById('printJabatan').textContent = log.pegawai.JABATAN;
@@ -2543,7 +2543,7 @@ function renderPerangkatRusakTable() {
             
             // PARSING NOMOR SURAT TUGAS
             let oldSurat = log.noSuratTugas || '';
-            let m = oldSurat.match(/Nomor\s*:\s*(.*?)\s*\/Balmon\.62\/KP\.01\.06\/(.*?)\/(.*)/);
+            let m = oldSurat.match(/Nomor Surat Tugas\s*:\s*(.*?)\s*\/Balmon\.62\/KP\.01\.06\/(.*?)\/(.*)/);
             if(m) {
                 document.getElementById('editNoSuratUrut').value = m[1].trim();
                 document.getElementById('editNoSuratBulan').value = m[2].trim();
@@ -2662,7 +2662,7 @@ function renderPerangkatRusakTable() {
             const urut = document.getElementById('editNoSuratUrut').value.trim();
             const bln = document.getElementById('editNoSuratBulan').value;
             const thn = document.getElementById('editNoSuratTahun').value;
-            const noSuratTugasVal = `Nomor : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
+            const noSuratTugasVal = `Nomor Surat Tugas : ${urut} /Balmon.62/KP.01.06/${bln}/${thn}`;
 
             const tglPinjamVal = document.getElementById('editTglPinjam').value;
             const tglKembaliVal = document.getElementById('editTglKembali').value;
