@@ -602,107 +602,175 @@
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- 1. SCRIPT SDK FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    
+    <!-- 1. SCRIPT SDK FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
-<!-- 2. INISIALISASI FIREBASE -->
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
-        authDomain: "smfr-database.firebaseapp.com",
-        databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "smfr-database",
-        storageBucket: "smfr-database.firebasestorage.app",
-        messagingSenderId: "890374389163",
-        appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
-        measurementId: "G-S4YSHLR19V"
-    };
-    
-    // Inisialisasi Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    
-    // Deklarasi variabel database agar bisa digunakan oleh script pembaca data
-    const database = firebase.database();
-</script>
+    <!-- 2. INISIALISASI FIREBASE & LOGIKA UTAMA -->
     <script>
-    // FUNGSI VERIFIKASI PASSWORD ADMIN
-    function verifikasiAdmin() {
-        Swal.fire({
-            title: 'Akses Admin',
-            text: 'Masukkan Password untuk mengubah data Kinerja:',
-            input: 'password',
-            inputAttributes: { autocapitalize: 'off' },
-            showCancelButton: true,
-            confirmButtonText: 'Buka Pengaturan',
-            cancelButtonText: 'Batal',
-            confirmButtonColor: '#0f4c81'
-        }).then((result) => {
-            // GANTI 'admin123' SESUAI PASSWORD ANDA
-            if (result.value === 'admin123') {
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
+            measurementId: "G-S4YSHLR19V"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const database = firebase.database();
+        let modalKinerjaInstance = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi Modal Bootstrap dengan aman setelah halaman termuat
+            const modalEl = document.getElementById('modalKinerja');
+            if (modalEl) {
+                modalKinerjaInstance = new bootstrap.Modal(modalEl);
+            }
+
+            // PENGAMBILAN DATA KINERJA REALTIME DARI FIREBASE
+            const refKinerja = database.ref('kinerja_sarpras');
+
+            refKinerja.on('value', (snapshot) => {
+                const data = snapshot.val();
                 
-                // Jika password benar, ambil data lama untuk mengisi kolom
-                const refKinerja = database.ref('kinerja_sarpras');
-                refKinerja.once('value').then((snap) => {
-                    const data = snap.val();
-                    if (data) {
-                        for (let i = 1; i <= 6; i++) {
-                            if (data['k' + i]) {
-                                document.getElementById('inp_t_' + i).value = data['k' + i].target;
-                                document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+                // Jika database kosong, buatkan data awal (default) otomatis agar tidak 0%
+                if (!data) {
+                    const defaultData = {
+                        k1: { target: 100, capaian: 95, suffix: '%' },
+                        k2: { target: 100, capaian: 90, suffix: '%' },
+                        k3: { target: 100, capaian: 98, suffix: '%' },
+                        k4: { target: 100, capaian: 85, suffix: '' },
+                        k5: { target: 85, capaian: 88, suffix: '' },
+                        k6: { target: 90, capaian: 92, suffix: '' }
+                    };
+                    refKinerja.set(defaultData);
+                    return;
+                }
+
+                // Loop 1 sampai 6 untuk mengisi kartu dasbor
+                for (let i = 1; i <= 6; i++) {
+                    if (data['k' + i]) {
+                        let t = parseFloat(data['k' + i].target) || 0;
+                        let c = parseFloat(data['k' + i].capaian) || 0;
+                        let suf = data['k' + i].suffix || ''; 
+
+                        // Update Teks Angka
+                        const elTarget = document.getElementById('val_target_' + i);
+                        const elCapaian = document.getElementById('val_capaian_' + i);
+                        const elCapaianBar = document.getElementById('val_capaian_bar_' + i);
+
+                        if (elTarget) elTarget.innerText = t + suf;
+                        if (elCapaian) elCapaian.innerText = c + suf;
+                        if (elCapaianBar) elCapaianBar.innerText = c + suf;
+
+                        // Kalkulasi Progress Bar
+                        let maxVal = Math.max(t, c, 1);
+                        let wTarget = (t / maxVal) * 100;
+                        let wCapaian = (c / maxVal) * 100;
+
+                        const barTarget = document.getElementById('bar_target_' + i);
+                        const barCapaian = document.getElementById('bar_capaian_' + i);
+
+                        if (barTarget) barTarget.style.width = wTarget + '%';
+                        if (barCapaian) barCapaian.style.width = wCapaian + '%';
+
+                        // Indikator Status Naik / Turun
+                        let statusEl = document.getElementById('status_' + i);
+                        if (statusEl) {
+                            let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
+                            if (c > t) {
+                                statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
+                                statusEl.className = "badge bg-light text-success border border-success";
+                            } else if (c < t) {
+                                statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
+                                statusEl.className = "badge bg-light text-danger border border-danger";
+                            } else {
+                                statusEl.innerHTML = "Sesuai Target";
+                                statusEl.className = "badge bg-light text-primary border border-primary";
                             }
                         }
                     }
-                    // Buka Modal
-                    var myModal = new bootstrap.Modal(document.getElementById('modalKinerja'));
-                    myModal.show();
-                });
-
-            } else if (result.value) {
-                Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
-            }
-        });
-    }
-
-    // FUNGSI SIMPAN PERUBAHAN KE FIREBASE
-    function simpanKinerja(e) {
-        e.preventDefault();
-        
-        const dataBaru = {
-            k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
-            k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
-            k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
-            k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
-            k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
-            k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
-        };
-
-        const refKinerja = database.ref('kinerja_sarpras');
-        refKinerja.set(dataBaru)
-            .then(() => {
-                // Tutup Modal
-                var modalEl = document.getElementById('modalKinerja');
-                var modalObj = bootstrap.Modal.getInstance(modalEl);
-                modalObj.hide();
-                
-                // Tampilkan notifikasi sukses (Tampilan di belakang akan otomatis berubah secara realtime!)
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Data Kinerja berhasil diupdate.',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            })
-            .catch((error) => {
-                Swal.fire('Gagal!', error.message, 'error');
+                }
             });
-    }
-</script>
-    <!-- ================================================================= -->
+        });
+
+        // FUNGSI VERIFIKASI ADMIN UNTUK MEMBUKA MODAL EDIT
+        function verifikasiAdmin() {
+            Swal.fire({
+                title: 'Akses Admin',
+                text: 'Masukkan Password untuk mengubah data Kinerja:',
+                input: 'password',
+                inputAttributes: { autocapitalize: 'off' },
+                showCancelButton: true,
+                confirmButtonText: 'Buka Pengaturan',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#0f4c81'
+            }).then((result) => {
+                // Ganti 'admin123' dengan password admin yang Anda inginkan
+                if (result.value === 'admin123') {
+                    
+                    database.ref('kinerja_sarpras').once('value').then((snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            for (let i = 1; i <= 6; i++) {
+                                if (data['k' + i]) {
+                                    document.getElementById('inp_t_' + i).value = data['k' + i].target;
+                                    document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+                                }
+                            }
+                        }
+                        // Tampilkan modal menggunakan instance yang sudah diinisialisasi
+                        if (modalKinerjaInstance) {
+                            modalKinerjaInstance.show();
+                        }
+                    });
+
+                } else if (result.value) {
+                    Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
+                }
+            });
+        }
+
+        // FUNGSI MENYIMPAN PERUBAHAN KE FIREBASE
+        function simpanKinerja(e) {
+            e.preventDefault();
+            
+            const dataBaru = {
+                k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
+                k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
+                k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
+                k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
+                k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
+                k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
+            };
+
+            database.ref('kinerja_sarpras').set(dataBaru)
+                .then(() => {
+                    if (modalKinerjaInstance) {
+                        modalKinerjaInstance.hide();
+                    }
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Data Kinerja berhasil diupdate.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                })
+                .catch((error) => {
+                    Swal.fire('Gagal!', error.message, 'error');
+                });
+        }
+    </script>    <!-- ================================================================= -->
 <!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
 <!-- ================================================================= -->
 <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
