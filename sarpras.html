@@ -180,208 +180,282 @@
         </div>
     </nav>
 
-    <!-- CSS Khusus Dasbor Kinerja -->
+  <!-- =================================================================================== -->
+<!-- KODE CSS & HTML DASBOR KINERJA BARU (LETAKKAN DI BAWAH NAVBAR sarpras.html)         -->
+<!-- =================================================================================== -->
+
 <style>
+    /* Header Dasbor */
     .header-kinerja {
-        background: #0d276b;
+        background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
         color: white;
-        border: 4px solid #8b5cf6; /* Border ungu seperti di gambar */
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
+        border-radius: 24px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2.5rem;
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 25px;
+        box-shadow: 0 15px 35px rgba(15, 76, 129, 0.2);
+        position: relative;
+        overflow: hidden;
     }
-    .kinerja-card {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        border: none;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        height: 100%;
-    }
-    .kinerja-icon {
-        width: 50px; height: 50px;
-        background: #eff6ff;
-        color: #3b82f6;
+    .header-kinerja::after {
+        content: ''; position: absolute; top: -50%; right: -5%;
+        width: 300px; height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
         border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
     }
+    .header-icon-box {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    /* Kartu Dasbor */
+    .kinerja-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 1.8rem;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .kinerja-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        border-color: #e2e8f0;
+    }
+
+    /* Garis Warna Aksen di Atas Kartu */
+    .accent-1 { border-top: 5px solid #3b82f6; } /* Biru */
+    .accent-2 { border-top: 5px solid #6366f1; } /* Indigo */
+    .accent-3 { border-top: 5px solid #10b981; } /* Hijau */
+    .accent-4 { border-top: 5px solid #8b5cf6; } /* Ungu */
+    .accent-5 { border-top: 5px solid #f59e0b; } /* Kuning/Amber */
+    .accent-6 { border-top: 5px solid #0ea5e9; } /* Cyan */
+
+    /* Desain Ikon Kartu */
+    .kinerja-icon {
+        width: 55px; height: 55px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem;
+        color: white;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+    .bg-icon-1 { background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%); }
+    .bg-icon-2 { background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%); }
+    .bg-icon-3 { background: linear-gradient(135deg, #34d399 0%, #059669 100%); }
+    .bg-icon-4 { background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); }
+    .bg-icon-5 { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
+    .bg-icon-6 { background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); }
+
+    /* Teks Judul & Angka */
     .kinerja-title {
-        font-size: 0.85rem; font-weight: 700; color: #1e293b;
-        text-transform: uppercase; margin-bottom: 1rem;
-        height: 35px;
+        font-size: 0.85rem; font-weight: 700; color: #475569;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        line-height: 1.4;
     }
     .capaian-value {
-        font-size: 2.5rem; font-weight: 800;
+        font-size: 2.8rem; font-weight: 800;
+        letter-spacing: -1px;
     }
+
+    /* Progress Bar yang Mewah */
     .progress-label {
-        font-size: 0.75rem; font-weight: 600; color: #0d276b;
+        font-size: 0.75rem; font-weight: 700; color: #64748b;
+        text-transform: uppercase; margin-bottom: 4px;
     }
-    .progress-bar-target { background-color: #3b82f6; } /* Biru */
-    .progress-bar-capaian { background-color: #10b981; } /* Hijau */
-    .progress-bar-capaian.ungu { background-color: #a855f7; } /* Ungu untuk Zona Integritas */
+    .progress {
+        height: 12px;
+        border-radius: 10px;
+        background-color: #f1f5f9;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+    }
+    .progress-bar {
+        border-radius: 10px;
+        transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .pb-target { background: #94a3b8; } /* Abu-abu netral untuk target */
+    
+    /* Gradasi Bar Capaian Menyesuaikan Ikon */
+    .pb-cap-1 { background: linear-gradient(90deg, #60a5fa, #2563eb); }
+    .pb-cap-2 { background: linear-gradient(90deg, #818cf8, #4f46e5); }
+    .pb-cap-3 { background: linear-gradient(90deg, #34d399, #059669); }
+    .pb-cap-4 { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+    .pb-cap-5 { background: linear-gradient(90deg, #fbbf24, #d97706); }
+    .pb-cap-6 { background: linear-gradient(90deg, #38bdf8, #0284c7); }
+
+    /* Badge Status */
+    .badge-status {
+        font-size: 0.75rem; padding: 0.4rem 0.6rem;
+        border-radius: 8px; font-weight: 700;
+    }
 </style>
 
-<!-- KONTEN DASBOR -->
 <div class="container mt-4 mb-5">
     
-    <!-- Header Dasbor -->
+    <!-- Header Dasbor Interaktif -->
     <div class="header-kinerja">
-        <i class="bi bi-clipboard-data" style="font-size: 3rem;"></i>
-        <div>
-            <h1 class="fw-bold mb-0" style="letter-spacing: 1px;">CAPAIAN PERJANJIAN KINERJA</h1>
-            <h5 class="mb-0">Sarana Prasarana Monitoring dan Layanan</h5>
+        <div class="header-icon-box">
+            <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
+        </div>
+        <div style="z-index: 1;">
+            <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2.2rem;">CAPAIAN KINERJA</h1>
+            <h5 class="mb-0 fw-light" style="color: #cbd5e1;">Tim Kerja Sarana Prasarana Monitoring dan Layanan</h5>
         </div>
     </div>
 
-    <!-- Grid Kartu Indikator -->
+    <!-- Grid Kartu Kinerja -->
     <div class="row g-4" id="kinerjaContainer">
         
         <!-- Kartu 1: Sertifikasi -->
         <div class="col-md-6 col-lg-4">
-            <div class="kinerja-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="kinerja-icon"><i class="bi bi-broadcast"></i></div>
+            <div class="kinerja-card accent-1">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="kinerja-icon bg-icon-1"><i class="bi bi-broadcast"></i></div>
                     <div class="kinerja-title">Sertifikasi Operator Radio</div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end mb-3">
-                    <div class="capaian-value text-success" id="val_capaian_1">0%</div>
-                    <span class="badge bg-light text-success border border-success" id="status_1">Memuat...</span>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="capaian-value text-primary" id="val_capaian_1">0%</div>
+                    <span class="badge badge-status" id="status_1">Memuat...</span>
                 </div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
+                <div class="d-flex justify-content-between progress-label">
                     <span>Target</span> <span id="val_target_1">0%</span>
                 </div>
-                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_1" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar pb-target" id="bar_target_1" style="width: 0%"></div></div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
-                    <span>Capaian</span> <span id="val_capaian_bar_1">0%</span>
+                <div class="d-flex justify-content-between progress-label">
+                    <span class="text-primary">Capaian</span> <span id="val_capaian_bar_1" class="text-primary">0%</span>
                 </div>
-                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_1" style="width: 0%"></div></div>
+                <div class="progress mb-0"><div class="progress-bar pb-cap-1" id="bar_capaian_1" style="width: 0%"></div></div>
             </div>
         </div>
 
         <!-- Kartu 2: Biaya BHP -->
         <div class="col-md-6 col-lg-4">
-            <div class="kinerja-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="kinerja-icon"><i class="bi bi-coin"></i></div>
-                    <div class="kinerja-title">Biaya Hak Pengguna Frekuensi Radio</div>
+            <div class="kinerja-card accent-2">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="kinerja-icon bg-icon-2"><i class="bi bi-cash-coin"></i></div>
+                    <div class="kinerja-title">Biaya Hak Pengguna Frekuensi</div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end mb-3">
-                    <div class="capaian-value text-primary" id="val_capaian_2">0%</div>
-                    <span class="badge bg-light text-primary border border-primary" id="status_2">Memuat...</span>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="capaian-value text-indigo" style="color:#4f46e5;" id="val_capaian_2">0%</div>
+                    <span class="badge badge-status" id="status_2">Memuat...</span>
                 </div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
+                <div class="d-flex justify-content-between progress-label">
                     <span>Target</span> <span id="val_target_2">0%</span>
                 </div>
-                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_2" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar pb-target" id="bar_target_2" style="width: 0%"></div></div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
-                    <span>Capaian</span> <span id="val_capaian_bar_2">0%</span>
+                <div class="d-flex justify-content-between progress-label">
+                    <span style="color:#4f46e5;">Capaian</span> <span id="val_capaian_bar_2" style="color:#4f46e5;">0%</span>
                 </div>
-                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_2" style="width: 0%"></div></div>
+                <div class="progress mb-0"><div class="progress-bar pb-cap-2" id="bar_capaian_2" style="width: 0%"></div></div>
             </div>
         </div>
 
         <!-- Kartu 3: Operasional -->
         <div class="col-md-6 col-lg-4">
-            <div class="kinerja-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="kinerja-icon"><i class="bi bi-display"></i></div>
-                    <div class="kinerja-title">Operasional Dan Fungsi Monitoring</div>
+            <div class="kinerja-card accent-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="kinerja-icon bg-icon-3"><i class="bi bi-display"></i></div>
+                    <div class="kinerja-title">Operasional & Fungsi Monitoring</div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="capaian-value text-success" id="val_capaian_3">0%</div>
-                    <span class="badge bg-light text-success border border-success" id="status_3">Memuat...</span>
+                    <span class="badge badge-status" id="status_3">Memuat...</span>
                 </div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
+                <div class="d-flex justify-content-between progress-label">
                     <span>Target</span> <span id="val_target_3">0%</span>
                 </div>
-                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_3" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar pb-target" id="bar_target_3" style="width: 0%"></div></div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
-                    <span>Capaian</span> <span id="val_capaian_bar_3">0%</span>
+                <div class="d-flex justify-content-between progress-label">
+                    <span class="text-success">Capaian</span> <span id="val_capaian_bar_3" class="text-success">0%</span>
                 </div>
-                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_3" style="width: 0%"></div></div>
+                <div class="progress mb-0"><div class="progress-bar pb-cap-3" id="bar_capaian_3" style="width: 0%"></div></div>
             </div>
         </div>
 
         <!-- Kartu 4: Zona Integritas -->
         <div class="col-md-6 col-lg-4">
-            <div class="kinerja-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="kinerja-icon"><i class="bi bi-shield-check"></i></div>
-                    <div class="kinerja-title">Zona Integritas</div>
+            <div class="kinerja-card accent-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="kinerja-icon bg-icon-4"><i class="bi bi-shield-check"></i></div>
+                    <div class="kinerja-title">Zona Integritas<br>(ZI)</div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end mb-3">
-                    <div class="capaian-value" style="color: #a855f7;" id="val_capaian_4">0</div>
-                    <span class="badge bg-light text-secondary border border-secondary" id="status_4">Memuat...</span>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="capaian-value" style="color: #7c3aed;" id="val_capaian_4">0</div>
+                    <span class="badge badge-status" id="status_4">Memuat...</span>
                 </div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
+                <div class="d-flex justify-content-between progress-label">
                     <span>Target</span> <span id="val_target_4">0</span>
                 </div>
-                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_4" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar pb-target" id="bar_target_4" style="width: 0%"></div></div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
-                    <span>Capaian</span> <span id="val_capaian_bar_4">0</span>
+                <div class="d-flex justify-content-between progress-label">
+                    <span style="color:#7c3aed;">Capaian</span> <span id="val_capaian_bar_4" style="color:#7c3aed;">0</span>
                 </div>
-                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian ungu" id="bar_capaian_4" style="width: 0%"></div></div>
+                <div class="progress mb-0"><div class="progress-bar pb-cap-4" id="bar_capaian_4" style="width: 0%"></div></div>
             </div>
         </div>
 
         <!-- Kartu 5: IKM -->
         <div class="col-md-6 col-lg-4">
-            <div class="kinerja-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="kinerja-icon"><i class="bi bi-people"></i></div>
+            <div class="kinerja-card accent-5">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="kinerja-icon bg-icon-5"><i class="bi bi-people-fill"></i></div>
                     <div class="kinerja-title">Indeks Kepuasan Masyarakat (IKM)</div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end mb-3">
-                    <div class="capaian-value text-success" id="val_capaian_5">0</div>
-                    <span class="badge bg-light text-success border border-success" id="status_5">Memuat...</span>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="capaian-value text-warning" id="val_capaian_5">0</div>
+                    <span class="badge badge-status" id="status_5">Memuat...</span>
                 </div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
+                <div class="d-flex justify-content-between progress-label">
                     <span>Target</span> <span id="val_target_5">0</span>
                 </div>
-                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_5" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar pb-target" id="bar_target_5" style="width: 0%"></div></div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
-                    <span>Capaian</span> <span id="val_capaian_bar_5">0</span>
+                <div class="d-flex justify-content-between progress-label">
+                    <span class="text-warning">Capaian</span> <span id="val_capaian_bar_5" class="text-warning">0</span>
                 </div>
-                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_5" style="width: 0%"></div></div>
+                <div class="progress mb-0"><div class="progress-bar pb-cap-5" id="bar_capaian_5" style="width: 0%"></div></div>
             </div>
         </div>
 
         <!-- Kartu 6: IIPP -->
         <div class="col-md-6 col-lg-4">
-            <div class="kinerja-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="kinerja-icon"><i class="bi bi-award"></i></div>
-                    <div class="kinerja-title">Indeks Integritas Pelayanan Publik (IIPP)</div>
+            <div class="kinerja-card accent-6">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="kinerja-icon bg-icon-6"><i class="bi bi-award-fill"></i></div>
+                    <div class="kinerja-title">Indeks Integritas Pelayanan Publik</div>
                 </div>
-                <div class="d-flex justify-content-between align-items-end mb-3">
-                    <div class="capaian-value text-success" id="val_capaian_6">0</div>
-                    <span class="badge bg-light text-success border border-success" id="status_6">Memuat...</span>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="capaian-value text-info" id="val_capaian_6">0</div>
+                    <span class="badge badge-status" id="status_6">Memuat...</span>
                 </div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
+                <div class="d-flex justify-content-between progress-label">
                     <span>Target</span> <span id="val_target_6">0</span>
                 </div>
-                <div class="progress mb-2" style="height: 12px;"><div class="progress-bar progress-bar-target" id="bar_target_6" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar pb-target" id="bar_target_6" style="width: 0%"></div></div>
                 
-                <div class="d-flex justify-content-between progress-label mb-1">
-                    <span>Capaian</span> <span id="val_capaian_bar_6">0</span>
+                <div class="d-flex justify-content-between progress-label">
+                    <span class="text-info">Capaian</span> <span id="val_capaian_bar_6" class="text-info">0</span>
                 </div>
-                <div class="progress" style="height: 12px;"><div class="progress-bar progress-bar-capaian" id="bar_capaian_6" style="width: 0%"></div></div>
+                <div class="progress mb-0"><div class="progress-bar pb-cap-6" id="bar_capaian_6" style="width: 0%"></div></div>
             </div>
         </div>
 
