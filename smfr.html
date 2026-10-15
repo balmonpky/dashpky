@@ -449,6 +449,15 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
+		// 2. Ubah tipe sesi menjadi Session-Only (Otomatis hilang saat berpindah web/tab tertutup)
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    .then(() => {
+        console.log("Sesi diatur ke mode sementara (Session Storage).");
+    })
+    .catch((error) => {
+        console.error("Gagal mengatur persistence:", error.code, error.message);
+    });
+
         // TAMPILKAN GRAFIK DASHBOARD
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof Chart !== 'undefined') {
