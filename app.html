@@ -1056,6 +1056,33 @@
                 return; // Hentikan jika belum login
             }
 
+			// TARIK DATA DARI FIREBASE SECARA INSTAN BEGITU HALAMAN DIBUKA
+            // ==========================================================
+            database.ref('smfr_sistem_v1').on('value', (snapshot) => {
+                const dataServer = snapshot.val();
+                
+                if (dataServer) {
+                    dataPegawai = dataServer.pegawai || [];
+                    dataPerangkat = dataServer.perangkat || [];
+                    logPeminjaman = dataServer.logs || [];
+                } else {
+                    dataPegawai = typeof initialPegawai !== 'undefined' ? initialPegawai : [];
+                    dataPerangkat = typeof initialPerangkat !== 'undefined' ? initialPerangkat : [];
+                    logPeminjaman = [];
+                    saveDataToStorage();
+                }
+
+                // Render semua komponen tabel secara serentak
+                renderPegawaiTable();
+                renderTableDatabase(dataPerangkat);
+                renderSelectedFormDevicesTable();
+                updateDashboardStats();
+                renderLogTable();
+                renderPengembalianTable();
+                renderPerangkatRusakTable();
+            });
+            // ==========================================================
+
             const paramURL = new URLSearchParams(window.location.search);
             const tabTarget = paramURL.get('tab');
 
@@ -1174,7 +1201,6 @@
 		};
 
         // 2. INISIALISASI FIREBASE
-        // 2. INISIALISASI FIREBASE
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -1185,38 +1211,6 @@
         let dataPegawai = [];
         let dataPerangkat = [];
         let logPeminjaman = [];
-
-		// 4. KUNCI KEAMANAN: Tunggu verifikasi login Firebase SEBELUM menarik data
-		auth.onAuthStateChanged((user) => {
-    		if (user) {
-                // JIKA LOGIN VALID, TARIK DATA DARI SERVER
-                database.ref('smfr_sistem_v1').on('value', (snapshot) => {
-                    const dataServer = snapshot.val();
-                    
-                    if (dataServer) {
-                        dataPegawai = dataServer.pegawai || [];
-                        dataPerangkat = dataServer.perangkat || [];
-                        logPeminjaman = dataServer.logs || [];
-                    } else {
-                        dataPegawai = typeof initialPegawai !== 'undefined' ? initialPegawai : [];
-                        dataPerangkat = typeof initialPerangkat !== 'undefined' ? initialPerangkat : [];
-                        logPeminjaman = [];
-                        saveDataToStorage();
-                    }
-
-                    renderPegawaiTable();
-                    renderTableDatabase(dataPerangkat);
-                    renderSelectedFormDevicesTable();
-                    updateDashboardStats();
-                    renderLogTable();
-                    renderPengembalianTable();
-                    renderPerangkatRusakTable();
-                });
-            } else {
-                // JIKA BELUM LOGIN / SESI HABIS, TENDANG KEMBALI KE HALAMAN LOGIN
-                window.location.href = 'smfr.html';
-            }
-        }); // <--- KURUNG PENUTUP ONATHSTATECHANGED YANG SEBELUMNYA KURANG
 
         // 5. FUNGSI SAVE TERBARU (Diletakkan di luar agar bisa diakses global)
         function saveDataToStorage() {
