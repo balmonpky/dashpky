@@ -1178,11 +1178,16 @@
         // 2. INISIALISASI FIREBASE
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+		const auth = firebase.auth(); // TAMBAHKAN INI
 
         // 3. VARIABEL DATA (Dikosongkan dulu, akan diisi oleh Firebase)
         let dataPegawai = [];
         let dataPerangkat = [];
         let logPeminjaman = [];
+
+		// 2. Bungkus perintah penarik data dengan pengecekan User
+				auth.onAuthStateChanged((user) => {
+    			if (user) {
 
         // 4. LISTENER REAL-TIME (Menarik data otomatis setiap ada perubahan di server)
         database.ref('smfr_sistem_v1').on('value', (snapshot) => {
