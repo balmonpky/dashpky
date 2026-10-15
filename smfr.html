@@ -417,16 +417,21 @@
             </div>
         </div>
     </div>
-		
-	<!-- 1. Library Pop-up SweetAlert2 -->
+	<!-- ======================================================= -->
+    <!-- SEMUA SCRIPT & LIBRARY (PASTIKAN SEMUANYA TERSALIN)     -->
+    <!-- ======================================================= -->
+    
+    <!-- 1. Library Pop-up SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- SCRIPT FIREBASE -->
+
+    <!-- 2. Script Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
+    <!-- 3. Script Logika Aplikasi Anda -->
     <script>
-        // 1. INISIALISASI FIREBASE (Cukup 1 kali saja)
+        // INISIALISASI FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
             authDomain: "smfr-database.firebaseapp.com",
@@ -444,10 +449,13 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // 2. TAMPILKAN GRAFIK DASHBOARD ADMIN (Diambil dari kode lama Anda)
+        // TAMPILKAN GRAFIK DASHBOARD
         document.addEventListener('DOMContentLoaded', function() {
-            Chart.defaults.font.family = "'Poppins', sans-serif";
-            Chart.defaults.color = "#64748b";
+            // Cek apakah Chart.js tersedia sebelum dijalankan (mencegah error)
+            if (typeof Chart !== 'undefined') {
+                Chart.defaults.font.family = "'Poppins', sans-serif";
+                Chart.defaults.color = "#64748b";
+            }
 
             database.ref('smfr_sistem_v1').on('value', (snapshot) => {
                 const dataServer = snapshot.val();
@@ -463,20 +471,9 @@
                 dataPerangkat = dataPerangkat.filter(d => d != null);
 
                 let countTersedia = 0; let countDipinjam = 0;
-                let condBaik = 0; let condRusakRingan = 0; let condRusakBerat = 0;
-                let stasiunCounts = {};
-
+                
                 dataPerangkat.forEach(d => {
                     if (d.isBorrowed) countDipinjam++; else countTersedia++;
-                    const kond = (d.kondisi || '').toString().trim().toUpperCase();
-                    if (kond.includes('RUSAK')) {
-                        if (kond.includes('BERAT') || kond.includes('TOTAL')) condRusakBerat++;
-                        else condRusakRingan++;
-                    } else condBaik++;
-
-                    let st = (d.stasiun || '').toString().trim().toUpperCase();
-                    if (st === '' || st === '-') st = 'BELUM DISET';
-                    stasiunCounts[st] = (stasiunCounts[st] || 0) + 1;
                 });
 
                 const elTotal = document.getElementById('idxTotal');
@@ -485,66 +482,47 @@
                 if (elTersedia) elTersedia.textContent = countTersedia;
                 const elDipinjam = document.getElementById('idxDipinjam');
                 if (elDipinjam) elDipinjam.textContent = countDipinjam;
-
-                // (Kode pembuatan Chart.js bisa ditambahkan kembali di sini jika diperlukan, 
-                // saya singkat agar fokus pada perbaikan sistem Login)
             });
         });
 
-        // 3. FUNGSI UTAMA LOGIN
-        // =======================================================
-    // FUNGSI UTAMA LOGIN 
-    // =======================================================
-    function masukSistem(event) {
-        // Mencegah Halaman Kosong/Refresh
-        if(event) event.preventDefault();
+        // FUNGSI UTAMA LOGIN
+        function masukSistem(event) {
+            if(event) event.preventDefault(); // Mencegah halaman refresh
 
-        // Ambil elemen tombol untuk efek loading
-        const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
-        const originalText = btnSubmit.innerHTML;
-        btnSubmit.innerHTML = 'Memeriksa...';
-        btnSubmit.disabled = true;
+            const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
+            const originalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = 'Memeriksa...';
+            btnSubmit.disabled = true;
 
-        // Ambil nilai input
-        const inputUser = document.getElementById('username').value.trim().toLowerCase();
-        const inputPass = document.getElementById('password').value.trim();
+            const inputUser = document.getElementById('username').value.trim().toLowerCase();
+            const inputPass = document.getElementById('password').value.trim();
+            const emailFormat = inputUser + '@balmon.com';
 
-        // Ubah format menjadi email untuk Firebase
-        const emailFormat = inputUser + '@balmon.com';
-
-        // LOGIN RESMI KE FIREBASE
-        auth.signInWithEmailAndPassword(emailFormat, inputPass)
-            .then((userCredential) => {
-                // Jika sukses, arahkan sesuai peran (Admin otomatis diurus oleh onAuthStateChanged)
-                if(inputUser === 'user') {
-                    window.location.href = 'app.html?tab=form-tab';
-                }
-            })
-            .catch((error) => {
-                // POP-UP NOTIFIKASI JIKA USERNAME / PASSWORD SALAH
-                Swal.fire({
-                    title: 'Akses Ditolak!',
-                    text: 'Username atau Password yang Anda masukkan salah. Silakan periksa kembali!',
-                    icon: 'error',
-                    confirmButtonText: 'Coba Lagi',
-                    confirmButtonColor: '#d33', // Warna merah peringatan
-                    background: '#ffffff',
-                    showClass: {
-                        popup: 'animate__animated animate__shakeX' // Efek getar jika Anda memakai Animate.css (opsional)
+            auth.signInWithEmailAndPassword(emailFormat, inputPass)
+                .then((userCredential) => {
+                    if(inputUser === 'user') {
+                        window.location.href = 'app.html?tab=form-tab';
                     }
+                })
+                .catch((error) => {
+                    // MEMUNCULKAN POP-UP SWEETALERT2
+                    Swal.fire({
+                        title: 'Akses Ditolak!',
+                        text: 'Username atau Password yang Anda masukkan salah.',
+                        icon: 'error',
+                        confirmButtonText: 'Coba Lagi',
+                        confirmButtonColor: '#d33'
+                    });
+                    
+                    document.getElementById('password').value = '';
+                })
+                .finally(() => {
+                    btnSubmit.innerHTML = originalText;
+                    btnSubmit.disabled = false;
                 });
-                
-                // (Opsional) Mengosongkan kolom password setelah salah ketik
-                document.getElementById('password').value = '';
-            })
-            .finally(() => {
-                // Kembalikan tombol ke keadaan semula
-                btnSubmit.innerHTML = originalText;
-                btnSubmit.disabled = false;
-            });
-    }
+        }
 
-        // 4. CEK STATUS LOGIN (AUTO-LOGIN)
+        // CEK STATUS LOGIN (AUTO-LOGIN)
         auth.onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('loginScreen').style.display = 'none';
@@ -567,7 +545,7 @@
             }
         });
 
-        // 5. FUNGSI LOGOUT & BACKUP
+        // FUNGSI LOGOUT
         function logoutApp() {
             auth.signOut().then(() => {
                 sessionStorage.removeItem('smfr_role');
@@ -575,6 +553,7 @@
             });
         }
 
+        // FUNGSI BACKUP
         function backupSeluruhDatabase() {
             database.ref('smfr_sistem_v1').once('value').then((snapshot) => {
                 const dataServer = snapshot.val();
@@ -592,9 +571,10 @@
                 document.body.appendChild(tombolDownload);
                 tombolDownload.click();
                 tombolDownload.remove();
-                alert('Berhasil! Database telah di-backup.');
+                
+                Swal.fire('Berhasil!', 'Database telah di-backup.', 'success');
             });
         }
     </script>
-</body>
+</body>	
 </html>
