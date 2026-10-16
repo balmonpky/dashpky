@@ -737,14 +737,26 @@ function bukaModalAdmin() {
 function prosesLoginFirebase(event) {
     event.preventDefault();
     
-    const email = document.getElementById('loginEmail').value;
+    // Ambil input dari form dan hapus spasi berlebih
+    let emailInput = document.getElementById('loginEmail').value.trim();
+    
+    // TENTUKAN DOMAIN DEFAULT DI SINI (Sesuaikan dengan email di Firebase Auth kamu)
+    const domainDefault = "@kemkominfo.go.id"; // atau "@balmon.go.id", dsb.
+
+    // Cek apakah user mengetikkan '@' atau tidak
+    // Jika tidak ada '@', otomatis tambahkan domain default
+    if (!emailInput.includes('@')) {
+        emailInput = emailInput + domainDefault;
+    }
+
     const password = document.getElementById('loginPassword').value;
     const btnSubmit = document.getElementById('btnLoginSubmit');
 
     btnSubmit.disabled = true;
     btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`;
 
-    auth.signInWithEmailAndPassword(email, password)
+    // Gunakan 'emailInput' yang sudah diformat untuk login Firebase
+    auth.signInWithEmailAndPassword(emailInput, password)
         .then((userCredential) => {
             // Tutup Modal Login
             const modalLoginEl = document.getElementById('modalLoginAdmin');
@@ -766,11 +778,11 @@ function prosesLoginFirebase(event) {
             });
         })
         .catch((error) => {
-            let pesanError = "Gagal login. Periksa email dan password Anda.";
+            let pesanError = "Gagal login. Periksa username dan password Anda.";
             if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                pesanError = "Email atau password salah!";
+                pesanError = "Username atau password salah!";
             } else if (error.code === 'auth/invalid-email') {
-                pesanError = "Format email tidak valid!";
+                pesanError = "Format username/email tidak valid!";
             }
             Swal.fire('Login Gagal', pesanError, 'error');
         })
@@ -1006,8 +1018,9 @@ function simpanKinerja(event) {
             <div class="modal-body">
                 <form id="formLoginFirebase" onsubmit="prosesLoginFirebase(event)">
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Email Admin</label>
-                        <input type="email" id="loginEmail" class="form-control" placeholder="admin@domain.com" required>
+                        <label class="form-label font-weight-bold">Username Admin</label>
+                        <input type="text" id="loginEmail" class="form-control" placeholder="Contoh: admin.sarpras" required>
+                        <div class="form-text text-muted small">Anda tidak perlu mengetikkan @domain lengkap.</div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Password</label>
