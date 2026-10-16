@@ -398,7 +398,7 @@
             updateUI();
 
             // SINKRONISASI KE FIREBASE
-            database.ref('smfr_sistem_v1/unar').on('value', (snapshot) => {
+            database.ref('kinerja_sarpras/unar').on('value', (snapshot) => {
                 const val = snapshot.val();
                 if (val) {
                     unarData = val;
@@ -534,7 +534,7 @@
             updateUI();
 
             // KIRIM KE FIREBASE
-            database.ref('smfr_sistem_v1/unar').set(updatedData).then(() => {
+            database.ref('kinerja_sarpras/unar').set(updatedData).then(() => {
                 bsModalEdit.hide();
                 Swal.fire({
                     title: 'Berhasil!',
