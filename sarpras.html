@@ -718,17 +718,18 @@
     </div>
 </div>
 
-    <!-- Bootstrap Bundle -->
+       <!-- Bootstrap & SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-        <!-- SCRIPT SDK FIREBASE (KONSISTEN v10.4.0) -->
+    
+    <!-- SDK FIREBASE (KONSISTEN VERSI 10.4.0) -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
+    <!-- LOGIKA UTAMA APLIKASI -->
     <script>
-        // 1. Config & Inisialisasi Firebase
+        // 1. Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
             authDomain: "smfr-database.firebaseapp.com",
@@ -739,7 +740,7 @@
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
             measurementId: "G-S4YSHLR19V"
         };
-
+        
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -747,16 +748,14 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // 2. Load Data Saat Halaman Dimuat
+        // 2. Jalankan Pemuatan Data Setelah Halaman Siap
         document.addEventListener('DOMContentLoaded', function() {
             loadDataKinerjaRealtime();
         });
 
-        // 3. Load Data Dasbor Realtime
+        // 3. Load Data Dasbor secara Realtime
         function loadDataKinerjaRealtime() {
-            const refKinerja = database.ref('kinerja_sarpras');
-
-            refKinerja.on('value', (snapshot) => {
+            database.ref('kinerja_sarpras').on('value', (snapshot) => {
                 const data = snapshot.val();
                 
                 if (!data) {
@@ -768,7 +767,7 @@
                         k5: { target: 85, capaian: 88, suffix: '' },
                         k6: { target: 90, capaian: 92, suffix: '' }
                     };
-                    refKinerja.set(defaultData);
+                    database.ref('kinerja_sarpras').set(defaultData);
                     return;
                 }
 
@@ -815,25 +814,25 @@
             });
         }
 
-        // 4. Buka Modal Sesuai Sesi Admin (FIXED: ID modalKinerja)
-        function bukaModalAdmin() {
+        // 4. Fungsi Verifikasi Admin (Dipanggil oleh Tombol Edit Data)
+        function verifikasiAdmin() {
             const user = auth.currentUser;
+            
             if (user) {
+                // Jika sudah login, muat data lalu tampilkan modal edit kinerja
                 loadExistingDataToModal();
-                // Menggunakan ID modalKinerja yang sesuai dengan HTML
-                const modalAdmin = new bootstrap.Modal(document.getElementById('modalKinerja'));
-                modalAdmin.show();
+                const modalKinerjaEl = document.getElementById('modalKinerja');
+                const modalKinerja = bootstrap.Modal.getOrCreateInstance(modalKinerjaEl);
+                modalKinerja.show();
             } else {
-                const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginAdmin'));
+                // Jika belum login, tampilkan modal login admin
+                const modalLoginEl = document.getElementById('modalLoginAdmin');
+                const modalLogin = bootstrap.Modal.getOrCreateInstance(modalLoginEl);
                 modalLogin.show();
             }
         }
 
-        function verifikasiAdmin() {
-            bukaModalAdmin();
-        }
-
-        // 5. Proses Login Firebase Auth
+        // 5. Proses Login Firebase
         function prosesLoginFirebase(event) {
             event.preventDefault();
             
@@ -865,7 +864,7 @@
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
-                        bukaModalAdmin();
+                        verifikasiAdmin(); // Buka modal edit setelah login berhasil
                     });
                 })
                 .catch((error) => {
@@ -883,7 +882,7 @@
                 });
         }
 
-        // 6. Listener Status Sesi Admin
+        // 6. Listener Status Login
         auth.onAuthStateChanged((user) => {
             const btnAdmin = document.getElementById('btnAdminMain');
             if (user) {
@@ -901,7 +900,7 @@
             }
         });
 
-        // 7. Load Data Ke Form Modal Edit
+        // 7. Load Data Eksisting ke Form Modal Edit
         function loadExistingDataToModal() {
             database.ref('kinerja_sarpras').once('value', (snapshot) => {
                 const data = snapshot.val();
