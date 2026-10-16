@@ -731,12 +731,17 @@
 
 <!-- SCRIPT UNTUK MEMBACA DATA DARI FIREBASE -->
     <script>
-    // 1. Pastikan Firebase sudah diinisialisasi di sarpras.html sebelum script ini dipanggil
+    // 1. INISIALISASI VARIABEL FIREBASE UTAMA (PENTING!)
+    // Pastikan firebaseConfig sudah dipanggil di atas script ini
+    const database = firebase.database();
+    const auth = firebase.auth();
+
+    // 2. FUNGSI JALAN SAAT HALAMAN SELESAI DIMUAT
     document.addEventListener('DOMContentLoaded', function() {
         loadDataKinerjaRealtime();
     });
 
-    // 2. FUNGSI LOAD DATA KINERJA KE DASBOR
+    // 3. FUNGSI LOAD DATA KINERJA KE DASBOR
     function loadDataKinerjaRealtime() {
         const refKinerja = database.ref('kinerja_sarpras');
 
@@ -757,36 +762,39 @@
                 return;
             }
 
-            // Loop mengisi kartu 1 sampai 6
+            // Loop mengisi kartu 1 sampai 6 di Dasbor
             for (let i = 1; i <= 6; i++) {
                 if (data['k' + i]) {
                     let t = parseFloat(data['k' + i].target) || 0;
                     let c = parseFloat(data['k' + i].capaian) || 0;
                     let suf = data['k' + i].suffix || ''; 
 
-                    document.getElementById('val_target_' + i).innerText = t + suf;
-                    document.getElementById('val_capaian_' + i).innerText = c + suf;
-                    document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
+                    // Pastikan elemen HTML-nya ada sebelum diupdate
+                    if (document.getElementById('val_target_' + i)) {
+                        document.getElementById('val_target_' + i).innerText = t + suf;
+                        document.getElementById('val_capaian_' + i).innerText = c + suf;
+                        document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
 
-                    let maxVal = Math.max(t, c, 1);
-                    let wTarget = (t / maxVal) * 100;
-                    let wCapaian = (c / maxVal) * 100;
+                        let maxVal = Math.max(t, c, 1);
+                        let wTarget = (t / maxVal) * 100;
+                        let wCapaian = (c / maxVal) * 100;
 
-                    document.getElementById('bar_target_' + i).style.width = wTarget + '%';
-                    document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
+                        document.getElementById('bar_target_' + i).style.width = wTarget + '%';
+                        document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
 
-                    let statusEl = document.getElementById('status_' + i);
-                    if (statusEl) {
-                        let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
-                        if (c > t) {
-                            statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
-                            statusEl.className = "badge bg-light text-success border border-success";
-                        } else if (c < t) {
-                            statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
-                            statusEl.className = "badge bg-light text-danger border border-danger";
-                        } else {
-                            statusEl.innerHTML = "Sesuai Target";
-                            statusEl.className = "badge bg-light text-primary border border-primary";
+                        let statusEl = document.getElementById('status_' + i);
+                        if (statusEl) {
+                            let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
+                            if (c > t) {
+                                statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
+                                statusEl.className = "badge bg-light text-success border border-success";
+                            } else if (c < t) {
+                                statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
+                                statusEl.className = "badge bg-light text-danger border border-danger";
+                            } else {
+                                statusEl.innerHTML = "Sesuai Target";
+                                statusEl.className = "badge bg-light text-primary border border-primary";
+                            }
                         }
                     }
                 }
@@ -794,14 +802,11 @@
         });
     }
 
-    // 3. INISIALISASI FIREBASE AUTHENTICATION
-    const auth = firebase.auth();
-
     // 4. FUNGSI MEMBUKA MODAL (LOGIN ATAU ADMIN)
     function bukaModalAdmin() {
         const user = auth.currentUser;
         if (user) {
-            // Jika sudah login, langsung buka Modal Edit Admin Central
+            // Jika sudah login, load data dan buka Modal Edit Kinerja
             loadExistingDataToModal();
             const modalAdmin = new bootstrap.Modal(document.getElementById('modalKinerja'));
             modalAdmin.show();
@@ -812,9 +817,9 @@
         }
     }
 
-    // 5. FUNGSI VERIFIKASI ADMIN (DIPANGGIL OLEH TOMBOL EDIT DATA)
+    // 5. FUNGSI VERIFIKASI ADMIN (DIPANGGIL TOMBOL EDIT DATA DI HTML)
     function verifikasiAdmin() {
-        bukaModalAdmin(); // Panggil fungsi di atas
+        bukaModalAdmin(); 
     }
 
     // 6. FUNGSI PROSES LOGIN FIREBASE
@@ -838,7 +843,7 @@
             .then((userCredential) => {
                 const modalLoginEl = document.getElementById('modalLoginAdmin');
                 const modalLogin = bootstrap.Modal.getInstance(modalLoginEl);
-                modalLogin.hide();
+                if (modalLogin) modalLogin.hide();
 
                 document.getElementById('formLoginFirebase').reset();
 
@@ -885,7 +890,7 @@
         }
     });
 
-    // 8. FUNGSI LOGOUT (OPSIONAL JIKA BUTUH TOMBOL KELUAR)
+    // 8. FUNGSI LOGOUT (OPSIONAL)
     function logoutAdmin() {
         auth.signOut().then(() => {
             Swal.fire('Logout Berhasil', 'Anda telah keluar dari sesi admin.', 'info');
@@ -894,7 +899,7 @@
 
     // 9. FUNGSI LOAD DATA FIREBASE KE DALAM FORM MODAL EDIT
     function loadExistingDataToModal() {
-        firebase.database().ref('kinerja_sarpras').once('value', (snapshot) => {
+        database.ref('kinerja_sarpras').once('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 // Load Tab 1 (Dasbor)
@@ -908,9 +913,13 @@
                 }
                 // Load Tab 2 (Detail UNAR)
                 if (data.unar_detail) {
-                    document.getElementById('inp_unar_peserta').value = data.unar_detail.peserta || '';
-                    document.getElementById('inp_unar_lulus').value = data.unar_detail.lulus || '';
-                    document.getElementById('inp_unar_gagal').value = data.unar_detail.tidak_lulus || '';
+                    const elPeserta = document.getElementById('inp_unar_peserta');
+                    const elLulus = document.getElementById('inp_unar_lulus');
+                    const elGagal = document.getElementById('inp_unar_gagal');
+                    
+                    if(elPeserta) elPeserta.value = data.unar_detail.peserta || '';
+                    if(elLulus) elLulus.value = data.unar_detail.lulus || '';
+                    if(elGagal) elGagal.value = data.unar_detail.tidak_lulus || '';
                 }
             }
         });
@@ -944,7 +953,7 @@
             didOpen: () => { Swal.showLoading(); }
         });
 
-        firebase.database().ref('kinerja_sarpras').update(dataUpdate)
+        database.ref('kinerja_sarpras').update(dataUpdate)
             .then(() => {
                 const modalEl = document.getElementById('modalKinerja');
                 const modalInstance = bootstrap.Modal.getInstance(modalEl);
