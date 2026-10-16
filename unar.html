@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <style>
         :root {
             --primary-navy: #0e306c;
@@ -329,14 +329,14 @@
         </div>
     </div>
 
-    <!-- FIREBASE SDK (URUTAN YANG BENAR) -->
+    <!-- SDK FIREBASE COMPAT LIBRARIES -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // 1. FIREBASE CONFIGURATION
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
             authDomain: "smfr-database.firebaseapp.com",
@@ -353,7 +353,7 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // 2. DATA DEFAULTS & GLOBAL VARIABLES
+        // DATA DEFAULT
         let unarData = {
             totalPendaftar: 142,
             pesertaUjian: 136,
@@ -385,24 +385,30 @@
         let chartInstance = null;
         let bsModalEdit = null;
 
-        Chart.register(ChartDataLabels);
+        // DAFTARKAN PLUGIN DATALABELS PADA CHART.JS
+        if (typeof ChartDataLabels !== 'undefined') {
+            Chart.register(ChartDataLabels);
+        }
 
-        // 3. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
             bsModalEdit = new bootstrap.Modal(document.getElementById('modalEditUnar'));
             renderJadwalTabel();
             
-            // CONNECT FIREBASE REALTIME
+            // TAMPILKAN UI DENGAN DATA DEFAULT TERLEBIH DAHULU
+            updateUI();
+
+            // SINKRONISASI KE FIREBASE
             database.ref('smfr_sistem_v1/unar').on('value', (snapshot) => {
                 const val = snapshot.val();
                 if (val) {
                     unarData = val;
+                    updateUI();
                 }
-                updateUI();
+            }, (error) => {
+                console.warn("Gagal terhubung Firebase (Gunakan data default lokal):", error.message);
             });
         });
 
-        // 4. FUNCTIONS
         function updateUI() {
             document.getElementById('valTotalPendaftar').textContent = unarData.totalPendaftar;
             document.getElementById('valPesertaUjian').textContent = unarData.pesertaUjian;
@@ -420,7 +426,9 @@
         }
 
         function renderChart() {
-            const ctx = document.getElementById('chartTingkat').getContext('2d');
+            const canvasEl = document.getElementById('chartTingkat');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             
             if (chartInstance) {
                 chartInstance.destroy();
@@ -474,6 +482,7 @@
 
         function renderJadwalTabel() {
             const tbody = document.getElementById('tblJadwalUnar');
+            if (!tbody) return;
             tbody.innerHTML = jadwal2026.map(j => `
                 <tr>
                     <td class="text-center fw-bold">${j.no}</td>
@@ -504,7 +513,6 @@
             bsModalEdit.show();
         }
 
-        // 5. FORM SUBMIT EVENT
         document.getElementById('formUnar').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -521,6 +529,11 @@
                 unarNonReguler: parseInt(document.getElementById('inpUnarNonReguler').value) || 0
             };
 
+            // UPDATE DATA SECARA LOKAL
+            unarData = updatedData;
+            updateUI();
+
+            // KIRIM KE FIREBASE
             database.ref('smfr_sistem_v1/unar').set(updatedData).then(() => {
                 bsModalEdit.hide();
                 Swal.fire({
@@ -530,7 +543,13 @@
                     confirmButtonColor: '#0e306c'
                 });
             }).catch(err => {
-                Swal.fire('Gagal!', err.message, 'error');
+                bsModalEdit.hide();
+                Swal.fire({
+                    title: 'Peringatan Firebase Rules',
+                    text: 'Data berhasil diperbarui di layar, namun belum tersimpan permanen di Firebase karena akun belum diizinkan (PERMISSION_DENIED). Pastikan Rules Firebase diubah ke true.',
+                    icon: 'warning',
+                    confirmButtonColor: '#0e306c'
+                });
             });
         });
     </script>
