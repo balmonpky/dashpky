@@ -372,6 +372,27 @@
             });
         });
 
+        const refUnarDetail = firebase.database().ref('kinerja_sarpras/unar_detail');
+    
+    refUnarDetail.on('value', (snapshot) => {
+        const detail = snapshot.val();
+        
+        if (detail) {
+            // Tampilkan ke elemen HTML di unar.html
+            // (Pastikan ID HTML-nya sesuai dengan yang ada di desain unar.html kamu)
+            
+            if(document.getElementById('tampil_peserta')) {
+                document.getElementById('tampil_peserta').innerText = detail.peserta;
+            }
+            if(document.getElementById('tampil_lulus')) {
+                document.getElementById('tampil_lulus').innerText = detail.lulus;
+            }
+            if(document.getElementById('tampil_gagal')) {
+                document.getElementById('tampil_gagal').innerText = detail.tidak_lulus;
+            }
+        }
+    });
+        
         // VERIFIKASI PASSWORD SEBELUM MEMBUKA MODAL EDIT
         function promptPasswordEdit() {
             Swal.fire({
