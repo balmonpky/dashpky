@@ -306,9 +306,9 @@
     <!-- Header Dasbor Interaktif -->
     <div class="header-kinerja">
         <!-- Tombol Admin (Baru ditambahkan) -->
-        <button class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
-            <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
-        </button>
+        <button id="btnAdminMain" class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
+    <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
+</button>
 
         <div class="header-icon-box">
             <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
@@ -722,14 +722,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <!-- SCRIPT SDK FIREBASE (VERSI 10.4.0 KONSISTEN) -->
+        <!-- SCRIPT SDK FIREBASE (KONSISTEN v10.4.0) -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
-    <!-- INISIALISASI & LOGIKA UTAMA SCRIPT -->
     <script>
-        // 1. Konfigurasi Firebase
+        // 1. Config & Inisialisasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
             authDomain: "smfr-database.firebaseapp.com",
@@ -741,26 +740,25 @@
             measurementId: "G-S4YSHLR19V"
         };
 
-        // 2. Inisialisasi Firebase App, Database, dan Auth
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+        
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // 3. Jalankan pemanggilan data saat dokumen selesai dimuat
+        // 2. Load Data Saat Halaman Dimuat
         document.addEventListener('DOMContentLoaded', function() {
             loadDataKinerjaRealtime();
         });
 
-        // 4. Fungsi memuat data Dasbor dari Firebase secara Realtime
+        // 3. Load Data Dasbor Realtime
         function loadDataKinerjaRealtime() {
             const refKinerja = database.ref('kinerja_sarpras');
 
             refKinerja.on('value', (snapshot) => {
                 const data = snapshot.val();
                 
-                // Jika database kosong, isi data default otomatis
                 if (!data) {
                     const defaultData = {
                         k1: { target: 100, capaian: 95, suffix: '%' },
@@ -774,7 +772,6 @@
                     return;
                 }
 
-                // Render ke kartu 1 sampai 6
                 for (let i = 1; i <= 6; i++) {
                     if (data['k' + i]) {
                         let t = parseFloat(data['k' + i].target) || 0;
@@ -818,11 +815,12 @@
             });
         }
 
-        // 5. Fungsi Buka Modal Login atau Modal Edit
+        // 4. Buka Modal Sesuai Sesi Admin (FIXED: ID modalKinerja)
         function bukaModalAdmin() {
             const user = auth.currentUser;
             if (user) {
                 loadExistingDataToModal();
+                // Menggunakan ID modalKinerja yang sesuai dengan HTML
                 const modalAdmin = new bootstrap.Modal(document.getElementById('modalKinerja'));
                 modalAdmin.show();
             } else {
@@ -831,12 +829,11 @@
             }
         }
 
-        // 6. Fungsi Tombol "Edit Data"
         function verifikasiAdmin() {
             bukaModalAdmin();
         }
 
-        // 7. Fungsi Login Admin
+        // 5. Proses Login Firebase Auth
         function prosesLoginFirebase(event) {
             event.preventDefault();
             
@@ -886,25 +883,25 @@
                 });
         }
 
-        // 8. Listener Status Login Sesi
+        // 6. Listener Status Sesi Admin
         auth.onAuthStateChanged((user) => {
             const btnAdmin = document.getElementById('btnAdminMain');
             if (user) {
-                console.log("Admin Aktif:", user.email);
                 if (btnAdmin) {
-                    btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Admin Central (${user.email.split('@')[0]})`;
-                    btnAdmin.classList.replace('btn-warning', 'btn-success');
+                    btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Edit Data (${user.email.split('@')[0]})`;
+                    btnAdmin.classList.replace('btn-light', 'btn-success');
+                    btnAdmin.classList.add('text-white');
                 }
             } else {
-                console.log("Status: Unauthenticated");
                 if (btnAdmin) {
-                    btnAdmin.innerHTML = `<i class="bi bi-shield-lock-fill me-1"></i> Panel Admin Pusat`;
-                    btnAdmin.classList.replace('btn-success', 'btn-warning');
+                    btnAdmin.innerHTML = `<i class="bi bi-gear-fill text-primary me-1"></i> Edit Data`;
+                    btnAdmin.classList.replace('btn-success', 'btn-light');
+                    btnAdmin.classList.remove('text-white');
                 }
             }
         });
 
-        // 9. Load Data Eksisting ke Form Edit Modal
+        // 7. Load Data Ke Form Modal Edit
         function loadExistingDataToModal() {
             database.ref('kinerja_sarpras').once('value', (snapshot) => {
                 const data = snapshot.val();
@@ -930,7 +927,7 @@
             });
         }
 
-        // 10. Simpan Data Edit ke Firebase
+        // 8. Simpan Perubahan Data ke Firebase
         function simpanKinerja(event) {
             event.preventDefault(); 
 
