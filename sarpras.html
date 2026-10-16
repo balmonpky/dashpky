@@ -887,13 +887,26 @@ function simpanKinerja(event) {
     // Simpan ke node kinerja_sarpras di Firebase
     firebase.database().ref('kinerja_sarpras').update(dataUpdate)
         .then(() => {
-            // Tutup modal pengaturan
+            // 1. Tutup modal pengaturan
             const modalEl = document.getElementById('modalKinerja');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
             
-            // Tampilkan notifikasi sukses
-            Swal.fire('Berhasil!', 'Data Kinerja Dasbor berhasil diupdate.', 'success');
+            // 2. Tampilkan notifikasi sukses dan info logout
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Update!',
+                text: 'Data kinerja berhasil disimpan. Sesi admin akan otomatis diakhiri demi keamanan.',
+                timer: 3000, // Notifikasi tampil selama 3 detik
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // 3. Proses hapus sesi (Logout Otomatis) setelah alert ditutup
+                auth.signOut().then(() => {
+                    console.log("Sesi admin telah dihapus secara otomatis.");
+                    // Tombol edit data akan otomatis berubah karena kita sudah punya listener auth.onAuthStateChanged
+                });
+            });
         })
         .catch((error) => {
             Swal.fire('Gagal!', 'Terjadi kesalahan: ' + error.message, 'error');
