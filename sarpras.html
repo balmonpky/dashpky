@@ -257,6 +257,12 @@
             font-size: 0.9rem;
         }
 
+        /* Gaya Tabel Modal UNAR */
+        .table-unar-edit input, .table-unar-edit select {
+            font-size: 0.82rem;
+            padding: 0.3rem 0.4rem;
+        }
+
         @media (max-width: 768px) {
             .header-title h2 { font-size: 1.5rem; }
             .sub-card { padding: 1.5rem 1rem; }
@@ -509,12 +515,12 @@
         </div>
     </footer>
 
-    <!-- MODAL PENGATURAN KINERJA (ADMIN) -->
+    <!-- MODAL PENGATURAN KINERJA (ADMIN CENTRAL) -->
     <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Dasbor Kinerja Sarpras</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Dasbor Kinerja Sarpras & Tabel UNAR</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
@@ -525,12 +531,12 @@
                                 <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data UNAR</button>
+                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data Tabel UNAR 2026</button>
                             </li>
                         </ul>
 
                         <div class="tab-content" id="adminTabContent">
-                            <!-- TAB 1: DASBOR -->
+                            <!-- TAB 1: DASBOR KINERJA -->
                             <div class="tab-pane fade show active" id="tab-dasbor" role="tabpanel">
                                 <div class="row g-4">
                                     <div class="col-md-6">
@@ -590,31 +596,43 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 2: UNAR DETAIL -->
+                            <!-- TAB 2: TABEL EDIT SELURUH DATA UNAR 2026 -->
                             <div class="tab-pane fade" id="tab-unar" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-12">
-                                        <label class="fw-bold text-secondary small mb-1">Total Peserta UNAR</label>
-                                        <input type="number" id="inp_unar_peserta" class="form-control shadow-sm" placeholder="Contoh: 150">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-success small mb-1">Jumlah Lulus</label>
-                                        <input type="number" id="inp_unar_lulus" class="form-control shadow-sm" placeholder="Contoh: 140">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-danger small mb-1">Jumlah Tidak Lulus</label>
-                                        <input type="number" id="inp_unar_gagal" class="form-control shadow-sm" placeholder="Contoh: 10">
-                                    </div>
+                                <div class="table-responsive shadow-sm rounded border bg-white table-unar-edit" style="max-height: 480px; overflow-y: auto;">
+                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
+                                        <thead class="table-dark sticky-top">
+                                            <tr class="small text-nowrap">
+                                                <th style="width: 100px;">Bulan</th>
+                                                <th style="min-width: 130px;">Tanggal Ujian</th>
+                                                <th style="min-width: 140px;">Kategori</th>
+                                                <th style="min-width: 170px;">Lokasi Pelaksanaan</th>
+                                                <th style="width: 75px;">Siaga</th>
+                                                <th style="width: 85px;">Penggalang</th>
+                                                <th style="width: 75px;">Penegak</th>
+                                                <th style="width: 85px;">Tidak Lulus</th>
+                                                <th style="min-width: 120px;">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyUnarEdit" class="small">
+                                            <!-- Baris 12 Bulan di-generate otomatis via JS -->
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="alert alert-info mt-3 small">
-                                    <i class="bi bi-info-circle me-1"></i> Data detail ini akan langsung terhubung ke halaman <b>UNAR</b>.
+                                <div class="alert alert-info mt-3 small mb-0 d-flex align-items-center gap-2">
+                                    <i class="bi bi-info-circle-fill fs-5"></i>
+                                    <div>
+                                        Data tabel ini secara otomatis akan dikalkulasi total peserta & kelulusannya untuk memperbarui ringkasan di halaman <b>UNAR</b>.
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold" style="border-radius: 8px;">
-                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Simpan & Update Semua Data
-                        </button>
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Simpan Semua Perubahan
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -677,10 +695,63 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
+        // Data Default 12 Bulan Sesuai Gambar
+        const defaultUnarMonths = [
+            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, status: "Selesai" },
+            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, status: "Selesai" },
+            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, status: "Selesai" },
+            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, status: "Selesai" },
+            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, status: "Selesai" },
+            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, status: "Selesai" },
+            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, status: "Selesai" },
+            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, status: "Selesai" },
+            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, status: "Selesai" },
+            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, status: "Mendatang" },
+            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, status: "Mendatang" },
+            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, status: "Mendatang" }
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
+            renderUnarEditTableRows();
             loadDataKinerjaRealtime();
         });
 
+        // Fungsi Render Struktur Baris Tabel UNAR
+        function renderUnarEditTableRows() {
+            const tbody = document.getElementById('tbodyUnarEdit');
+            if(!tbody) return;
+
+            let html = '';
+            defaultUnarMonths.forEach((m, idx) => {
+                let i = idx + 1;
+                html += `
+                <tr>
+                    <td class="fw-bold text-primary" id="unar_bln_${i}">${m.bulan}</td>
+                    <td><input type="text" id="unar_tgl_${i}" class="form-control form-control-sm text-center" value="${m.tgl}"></td>
+                    <td>
+                        <select id="unar_kat_${i}" class="form-select form-select-sm">
+                            <option value="CAT Reguler" ${m.kategori === 'CAT Reguler' ? 'selected' : ''}>CAT Reguler</option>
+                            <option value="CAT Non Reg" ${m.kategori === 'CAT Non Reg' ? 'selected' : ''}>CAT Non Reg</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="unar_lok_${i}" class="form-control form-control-sm" value="${m.lokasi}"></td>
+                    <td><input type="number" id="unar_sia_${i}" class="form-control form-control-sm text-center" value="${m.siaga}"></td>
+                    <td><input type="number" id="unar_peng_${i}" class="form-control form-control-sm text-center" value="${m.penggalang}"></td>
+                    <td><input type="number" id="unar_pen_${i}" class="form-control form-control-sm text-center" value="${m.penegak}"></td>
+                    <td><input type="number" id="unar_tl_${i}" class="form-control form-control-sm text-center text-danger fw-bold" value="${m.tidak_lulus}"></td>
+                    <td>
+                        <select id="unar_st_${i}" class="form-select form-select-sm fw-bold">
+                            <option value="Selesai" ${m.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                            <option value="Mendatang" ${m.status === 'Mendatang' ? 'selected' : ''}>Mendatang</option>
+                            <option value="Dibatalkan" ${m.status === 'Dibatalkan' ? 'selected' : ''}>Dibatalkan</option>
+                        </select>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // Load Data Dasbor Realtime
         function loadDataKinerjaRealtime() {
             database.ref('kinerja_sarpras').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -743,7 +814,6 @@
 
         function verifikasiAdmin() {
             const user = auth.currentUser;
-            
             if (user) {
                 loadExistingDataToModal();
                 const modalKinerjaEl = document.getElementById('modalKinerja');
@@ -822,10 +892,12 @@
             }
         });
 
+        // Load Data Eksisting ke Form Dasbor & Tabel UNAR Modal
         function loadExistingDataToModal() {
             database.ref('kinerja_sarpras').once('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
+                    // Load Kinerja Dasbor
                     for (let i = 1; i <= 6; i++) {
                         if (data['k' + i]) {
                             const elTarget = document.getElementById('inp_t_' + i);
@@ -834,21 +906,63 @@
                             if (elCapaian) elCapaian.value = data['k' + i].capaian;
                         }
                     }
-                    if (data.unar_detail) {
-                        const elPeserta = document.getElementById('inp_unar_peserta');
-                        const elLulus = document.getElementById('inp_unar_lulus');
-                        const elGagal = document.getElementById('inp_unar_gagal');
-                        
-                        if (elPeserta) elPeserta.value = data.unar_detail.peserta || '';
-                        if (elLulus) elLulus.value = data.unar_detail.lulus || '';
-                        if (elGagal) elGagal.value = data.unar_detail.tidak_lulus || '';
+                    // Load Tabel UNAR 12 Bulan
+                    if (data.unar_detail && data.unar_detail.months) {
+                        const months = data.unar_detail.months;
+                        months.forEach((m, idx) => {
+                            let i = idx + 1;
+                            if (document.getElementById(`unar_tgl_${i}`)) document.getElementById(`unar_tgl_${i}`).value = m.tgl || '';
+                            if (document.getElementById(`unar_kat_${i}`)) document.getElementById(`unar_kat_${i}`).value = m.kategori || 'CAT Reguler';
+                            if (document.getElementById(`unar_lok_${i}`)) document.getElementById(`unar_lok_${i}`).value = m.lokasi || '';
+                            if (document.getElementById(`unar_sia_${i}`)) document.getElementById(`unar_sia_${i}`).value = m.siaga || 0;
+                            if (document.getElementById(`unar_peng_${i}`)) document.getElementById(`unar_peng_${i}`).value = m.penggalang || 0;
+                            if (document.getElementById(`unar_pen_${i}`)) document.getElementById(`unar_pen_${i}`).value = m.penegak || 0;
+                            if (document.getElementById(`unar_tl_${i}`)) document.getElementById(`unar_tl_${i}`).value = m.tidak_lulus || 0;
+                            if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
+                        });
                     }
                 }
             });
         }
 
+        // Simpan Perubahan Data Dasbor & Seluruh Data Tabel UNAR 2026
         function simpanKinerja(event) {
             event.preventDefault(); 
+
+            // Ambil Data 12 Bulan & Kalkulasi Otomatis Ringkasan
+            const updatedMonths = [];
+            let totalPesertaAcc = 0;
+            let totalTidakLulusAcc = 0;
+
+            for (let i = 1; i <= 12; i++) {
+                const bulan = document.getElementById(`unar_bln_${i}`).innerText;
+                const tgl = document.getElementById(`unar_tgl_${i}`).value.trim();
+                const kategori = document.getElementById(`unar_kat_${i}`).value;
+                const lokasi = document.getElementById(`unar_lok_${i}`).value.trim();
+                const siaga = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
+                const penggalang = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
+                const penegak = parseInt(document.getElementById(`unar_pen_${i}`).value) || 0;
+                const tidak_lulus = parseInt(document.getElementById(`unar_tl_${i}`).value) || 0;
+                const status = document.getElementById(`unar_st_${i}`).value;
+
+                totalPesertaAcc += (siaga + penggalang + penegak);
+                totalTidakLulusAcc += tidak_lulus;
+
+                updatedMonths.push({
+                    id: i,
+                    bulan: bulan,
+                    tgl: tgl,
+                    kategori: kategori,
+                    lokasi: lokasi,
+                    siaga: siaga,
+                    penggalang: penggalang,
+                    penegak: penegak,
+                    tidak_lulus: tidak_lulus,
+                    status: status
+                });
+            }
+
+            const totalLulusAcc = Math.max(0, totalPesertaAcc - totalTidakLulusAcc);
 
             const dataUpdate = {
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
@@ -859,15 +973,17 @@
                 k6: { target: parseFloat(document.getElementById('inp_t_6').value), capaian: parseFloat(document.getElementById('inp_c_6').value), suffix: '' },
                 
                 unar_detail: {
-                    peserta: parseInt(document.getElementById('inp_unar_peserta').value) || 0,
-                    lulus: parseInt(document.getElementById('inp_unar_lulus').value) || 0,
-                    tidak_lulus: parseInt(document.getElementById('inp_unar_gagal').value) || 0,
-                    terakhir_update: new Date().toLocaleDateString('id-ID')
+                    peserta: totalPesertaAcc,
+                    lulus: totalLulusAcc,
+                    tidak_lulus: totalTidakLulusAcc,
+                    terakhir_update: new Date().toLocaleDateString('id-ID'),
+                    months: updatedMonths
                 }
             };
 
             Swal.fire({
                 title: 'Menyimpan...',
+                text: 'Memperbarui Dasbor & Data Tabel UNAR 2026',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
@@ -881,7 +997,7 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Data Tersimpan!',
-                        text: 'Dasbor & Data Detail UNAR berhasil diperbarui.',
+                        text: 'Dasbor & Tabel UNAR 2026 berhasil diperbarui.',
                         timer: 2500,
                         showConfirmButton: false
                     }).then(() => {
