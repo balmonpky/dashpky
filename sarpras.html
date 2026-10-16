@@ -233,4 +233,665 @@
             margin-bottom: 1rem;
         }
         .progress-bar {
-            border-radius:
+            border-radius: 10px;
+            transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .pb-target { background: #94a3b8; }
+        
+        .pb-cap-1 { background: linear-gradient(90deg, #60a5fa, #2563eb); }
+        .pb-cap-2 { background: linear-gradient(90deg, #818cf8, #4f46e5); }
+        .pb-cap-3 { background: linear-gradient(90deg, #34d399, #059669); }
+        .pb-cap-4 { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+        .pb-cap-5 { background: linear-gradient(90deg, #fbbf24, #d97706); }
+        .pb-cap-6 { background: linear-gradient(90deg, #38bdf8, #0284c7); }
+
+        .badge-status {
+            font-size: 0.75rem; padding: 0.4rem 0.6rem;
+            border-radius: 8px; font-weight: 700;
+        }
+
+        .footer-custom {
+            text-align: center;
+            padding: 1.5rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-title h2 { font-size: 1.5rem; }
+            .sub-card { padding: 1.5rem 1rem; }
+            .icon-wrapper { width: 55px; height: 55px; font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar navbar-dark navbar-custom sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
+                <div class="logo-container me-3">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                </div>
+                <div class="d-none d-sm-block">
+                    <span class="text-white d-block fs-6 tracking-wide">TIM KERJA SARANA PRASARANA & LAYANAN</span>
+                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">BALMON SFRID KELAS II PALANGKARAYA</small>
+                </div>
+            </a>
+            
+            <a href="index.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
+                <i class="bi bi-arrow-left-circle me-1"></i> Portal Utama
+            </a>
+        </div>
+    </nav>
+
+    <!-- AREA DASBOR KINERJA -->
+    <div class="container mt-4 mb-5">
+        <div class="header-kinerja">
+            <button id="btnAdminMain" class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
+                <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
+            </button>
+
+            <div class="header-icon-box">
+                <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
+            </div>
+            <div style="z-index: 1;">
+                <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2.2rem;">CAPAIAN KINERJA</h1>
+                <h5 class="mb-0 fw-light" style="color: #cbd5e1;">Tim Kerja Sarana Prasarana Monitoring dan Layanan</h5>
+            </div>
+        </div>
+
+        <div class="row g-4" id="kinerjaContainer">
+            <!-- Kartu 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="kinerja-card accent-1">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="kinerja-icon bg-icon-1"><i class="bi bi-broadcast"></i></div>
+                        <div class="kinerja-title">Sertifikasi Operator Radio</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="capaian-value text-primary" id="val_capaian_1">0%</div>
+                        <span class="badge badge-status" id="status_1">Memuat...</span>
+                    </div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span>Target</span> <span id="val_target_1">0%</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_1" style="width: 0%"></div></div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span class="text-primary">Capaian</span> <span id="val_capaian_bar_1" class="text-primary">0%</span>
+                    </div>
+                    <div class="progress mb-0"><div class="progress-bar pb-cap-1" id="bar_capaian_1" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <!-- Kartu 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="kinerja-card accent-2">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="kinerja-icon bg-icon-2"><i class="bi bi-cash-coin"></i></div>
+                        <div class="kinerja-title">Biaya Hak Pengguna Frekuensi</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="capaian-value text-indigo" style="color:#4f46e5;" id="val_capaian_2">0%</div>
+                        <span class="badge badge-status" id="status_2">Memuat...</span>
+                    </div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span>Target</span> <span id="val_target_2">0%</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_2" style="width: 0%"></div></div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span style="color:#4f46e5;">Capaian</span> <span id="val_capaian_bar_2" style="color:#4f46e5;">0%</span>
+                    </div>
+                    <div class="progress mb-0"><div class="progress-bar pb-cap-2" id="bar_capaian_2" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <!-- Kartu 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="kinerja-card accent-3">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="kinerja-icon bg-icon-3"><i class="bi bi-display"></i></div>
+                        <div class="kinerja-title">Operasional & Fungsi Monitoring</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="capaian-value text-success" id="val_capaian_3">0%</div>
+                        <span class="badge badge-status" id="status_3">Memuat...</span>
+                    </div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span>Target</span> <span id="val_target_3">0%</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_3" style="width: 0%"></div></div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span class="text-success">Capaian</span> <span id="val_capaian_bar_3" class="text-success">0%</span>
+                    </div>
+                    <div class="progress mb-0"><div class="progress-bar pb-cap-3" id="bar_capaian_3" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <!-- Kartu 4 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="kinerja-card accent-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="kinerja-icon bg-icon-4"><i class="bi bi-shield-check"></i></div>
+                        <div class="kinerja-title">Zona Integritas<br>(ZI)</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="capaian-value" style="color: #7c3aed;" id="val_capaian_4">0</div>
+                        <span class="badge badge-status" id="status_4">Memuat...</span>
+                    </div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span>Target</span> <span id="val_target_4">0</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_4" style="width: 0%"></div></div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span style="color:#7c3aed;">Capaian</span> <span id="val_capaian_bar_4" style="color:#7c3aed;">0</span>
+                    </div>
+                    <div class="progress mb-0"><div class="progress-bar pb-cap-4" id="bar_capaian_4" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <!-- Kartu 5 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="kinerja-card accent-5">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="kinerja-icon bg-icon-5"><i class="bi bi-people-fill"></i></div>
+                        <div class="kinerja-title">Indeks Kepuasan Masyarakat (IKM)</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="capaian-value text-warning" id="val_capaian_5">0</div>
+                        <span class="badge badge-status" id="status_5">Memuat...</span>
+                    </div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span>Target</span> <span id="val_target_5">0</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_5" style="width: 0%"></div></div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span class="text-warning">Capaian</span> <span id="val_capaian_bar_5" class="text-warning">0</span>
+                    </div>
+                    <div class="progress mb-0"><div class="progress-bar pb-cap-5" id="bar_capaian_5" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <!-- Kartu 6 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="kinerja-card accent-6">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="kinerja-icon bg-icon-6"><i class="bi bi-award-fill"></i></div>
+                        <div class="kinerja-title">Indeks Integritas Pelayanan Publik</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="capaian-value text-info" id="val_capaian_6">0</div>
+                        <span class="badge badge-status" id="status_6">Memuat...</span>
+                    </div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span>Target</span> <span id="val_target_6">0</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_6" style="width: 0%"></div></div>
+                    <div class="d-flex justify-content-between progress-label">
+                        <span class="text-info">Capaian</span> <span id="val_capaian_bar_6" class="text-info">0</span>
+                    </div>
+                    <div class="progress mb-0"><div class="progress-bar pb-cap-6" id="bar_capaian_6" style="width: 0%"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA SUB-MENU -->
+    <div class="container main-container">
+        <div class="header-title">
+            <h2>Layanan & Program Kerja</h2>
+            <p>Pilih Layanan & Program Kerja yang ingin Anda kelola pada Tim Kerja Sarpras & Layanan.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="smfr.html" class="sub-card card-smfr">
+                    <div class="icon-wrapper"><i class="bi bi-hdd-network-fill"></i></div>
+                    <h5>Aplikasi SMFR</h5>
+                    <p>Sistem Informasi & Database Perangkat Spektrum Frekuensi Radio.</p>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="unar.html" class="sub-card card-unar">
+                    <div class="icon-wrapper"><i class="bi bi-person-vcard-fill"></i></div>
+                    <h5>UNAR</h5>
+                    <p>Sistem Layanan & Administrasi Ujian Negara Amatir Radio.</p>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="#" class="sub-card card-mots">
+                    <div class="icon-wrapper"><i class="bi bi-truck-front-fill"></i></div>
+                    <h5>MOTS</h5>
+                    <p>Sistem Operasional & Monitoring Stasiun Bergerak (Mobile).</p>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="#" class="sub-card card-bhp">
+                    <div class="icon-wrapper"><i class="bi bi-receipt"></i></div>
+                    <h5>BHP</h5>
+                    <p>Sistem Pengelolaan & Pengecekan Biaya Hak Penggunaan Frekuensi.</p>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="#" class="sub-card card-izin">
+                    <div class="icon-wrapper"><i class="bi bi-award-fill"></i></div>
+                    <h5>PERIZINAN SRC / IKRAN</h5>
+                    <p>Layanan Sertifikat Radio Operator & Izin Komunikasi Antar Penduduk.</p>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="realisasi_anggaran.html" class="sub-card card-anggaran">
+                    <div class="icon-wrapper"><i class="bi bi-cash-stack"></i></div>
+                    <h5>REALISASI ANGGARAN</h5>
+                    <p>Monitoring & Penyerapan Realisasi Anggaran Sarpras.</p>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="capaian_sla.html" class="sub-card card-monitoring">
+                    <div class="icon-wrapper"><i class="bi bi-display"></i></div>
+                    <h5>OPERASIONAL & FUNGSI MONITORING</h5>
+                    <p>Capaian Service Level Agreement Perangkat Monitoring.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom">
+        <div class="container fw-medium">
+            &copy; <script>document.write(new Date().getFullYear())</script> Tim Kerja Sarpras & Layanan - Balmon Palangka Raya.
+        </div>
+    </footer>
+
+    <!-- MODAL PENGATURAN KINERJA (ADMIN) -->
+    <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Dasbor Kinerja Sarpras</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-light p-4">
+                    <form id="formKinerja" onsubmit="simpanKinerja(event)">
+                        
+                        <ul class="nav nav-tabs mb-4" id="adminTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data UNAR</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="adminTabContent">
+                            <!-- TAB 1: DASBOR -->
+                            <div class="tab-pane fade show active" id="tab-dasbor" role="tabpanel">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-secondary small mb-1">1. Sertifikasi Operator Radio (%)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white">Target</span>
+                                            <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
+                                            <span class="input-group-text bg-white">Capaian</span>
+                                            <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-secondary small mb-1">2. Biaya BHP (%)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white">Target</span>
+                                            <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
+                                            <span class="input-group-text bg-white">Capaian</span>
+                                            <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-secondary small mb-1">3. Operasional Monitoring (%)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white">Target</span>
+                                            <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
+                                            <span class="input-group-text bg-white">Capaian</span>
+                                            <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-secondary small mb-1">4. Zona Integritas</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white">Target</span>
+                                            <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
+                                            <span class="input-group-text bg-white">Capaian</span>
+                                            <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-secondary small mb-1">5. Indeks Kepuasan Masyarakat</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white">Target</span>
+                                            <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
+                                            <span class="input-group-text bg-white">Capaian</span>
+                                            <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-secondary small mb-1">6. Indeks Integritas (IIPP)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white">Target</span>
+                                            <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
+                                            <span class="input-group-text bg-white">Capaian</span>
+                                            <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 2: UNAR DETAIL -->
+                            <div class="tab-pane fade" id="tab-unar" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label class="fw-bold text-secondary small mb-1">Total Peserta UNAR</label>
+                                        <input type="number" id="inp_unar_peserta" class="form-control shadow-sm" placeholder="Contoh: 150">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-success small mb-1">Jumlah Lulus</label>
+                                        <input type="number" id="inp_unar_lulus" class="form-control shadow-sm" placeholder="Contoh: 140">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold text-danger small mb-1">Jumlah Tidak Lulus</label>
+                                        <input type="number" id="inp_unar_gagal" class="form-control shadow-sm" placeholder="Contoh: 10">
+                                    </div>
+                                </div>
+                                <div class="alert alert-info mt-3 small">
+                                    <i class="bi bi-info-circle me-1"></i> Data detail ini akan langsung terhubung ke halaman <b>UNAR</b>.
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold" style="border-radius: 8px;">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Simpan & Update Semua Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN ADMIN -->
+    <div class="modal fade" id="modalLoginAdmin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="bi bi-shield-lock me-2"></i>Login Admin Sarpras</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formLoginFirebase" onsubmit="prosesLoginFirebase(event)">
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Username Admin</label>
+                            <input type="text" id="loginEmail" class="form-control" placeholder="Contoh: admin.sarpras" required>
+                            <div class="form-text text-muted small">Anda tidak perlu mengetikkan domain lengkap.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Password</label>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" id="btnLoginSubmit" class="btn btn-primary w-100">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Masuk
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIBRARY & SDK SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+
+    <!-- LOGIKA UTAMA SCRIPT APLIKASI -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
+            measurementId: "G-S4YSHLR19V"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDataKinerjaRealtime();
+        });
+
+        function loadDataKinerjaRealtime() {
+            database.ref('kinerja_sarpras').on('value', (snapshot) => {
+                const data = snapshot.val();
+                
+                if (!data) {
+                    const defaultData = {
+                        k1: { target: 100, capaian: 95, suffix: '%' },
+                        k2: { target: 100, capaian: 90, suffix: '%' },
+                        k3: { target: 100, capaian: 98, suffix: '%' },
+                        k4: { target: 100, capaian: 85, suffix: '' },
+                        k5: { target: 85, capaian: 88, suffix: '' },
+                        k6: { target: 90, capaian: 92, suffix: '' }
+                    };
+                    database.ref('kinerja_sarpras').set(defaultData);
+                    return;
+                }
+
+                for (let i = 1; i <= 6; i++) {
+                    if (data['k' + i]) {
+                        let t = parseFloat(data['k' + i].target) || 0;
+                        let c = parseFloat(data['k' + i].capaian) || 0;
+                        let suf = data['k' + i].suffix || ''; 
+
+                        const elTarget = document.getElementById('val_target_' + i);
+                        const elCapaian = document.getElementById('val_capaian_' + i);
+                        const elCapBar = document.getElementById('val_capaian_bar_' + i);
+
+                        if (elTarget) elTarget.innerText = t + suf;
+                        if (elCapaian) elCapaian.innerText = c + suf;
+                        if (elCapBar) elCapBar.innerText = c + suf;
+
+                        let maxVal = Math.max(t, c, 1);
+                        let wTarget = (t / maxVal) * 100;
+                        let wCapaian = (c / maxVal) * 100;
+
+                        const barTarget = document.getElementById('bar_target_' + i);
+                        const barCapaian = document.getElementById('bar_capaian_' + i);
+
+                        if (barTarget) barTarget.style.width = wTarget + '%';
+                        if (barCapaian) barCapaian.style.width = wCapaian + '%';
+
+                        let statusEl = document.getElementById('status_' + i);
+                        if (statusEl) {
+                            let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
+                            if (c > t) {
+                                statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
+                                statusEl.className = "badge bg-light text-success border border-success";
+                            } else if (c < t) {
+                                statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
+                                statusEl.className = "badge bg-light text-danger border border-danger";
+                            } else {
+                                statusEl.innerHTML = "Sesuai Target";
+                                statusEl.className = "badge bg-light text-primary border border-primary";
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function verifikasiAdmin() {
+            const user = auth.currentUser;
+            
+            if (user) {
+                loadExistingDataToModal();
+                const modalKinerjaEl = document.getElementById('modalKinerja');
+                const modalKinerja = bootstrap.Modal.getOrCreateInstance(modalKinerjaEl);
+                modalKinerja.show();
+            } else {
+                const modalLoginEl = document.getElementById('modalLoginAdmin');
+                const modalLogin = bootstrap.Modal.getOrCreateInstance(modalLoginEl);
+                modalLogin.show();
+            }
+        }
+
+        function prosesLoginFirebase(event) {
+            event.preventDefault();
+            
+            let emailInput = document.getElementById('loginEmail').value.trim();
+            const domainDefault = "@balmon.com"; 
+
+            if (!emailInput.includes('@')) {
+                emailInput = emailInput + domainDefault;
+            }
+
+            const password = document.getElementById('loginPassword').value;
+            const btnSubmit = document.getElementById('btnLoginSubmit');
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`;
+
+            auth.signInWithEmailAndPassword(emailInput, password)
+                .then((userCredential) => {
+                    const modalLoginEl = document.getElementById('modalLoginAdmin');
+                    const modalLogin = bootstrap.Modal.getOrCreateInstance(modalLoginEl);
+                    modalLogin.hide();
+
+                    document.getElementById('formLoginFirebase').reset();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Berhasil',
+                        text: `Selamat datang, ${userCredential.user.email}`,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        verifikasiAdmin();
+                    });
+                })
+                .catch((error) => {
+                    let pesanError = "Gagal login. Periksa username dan password Anda.";
+                    if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                        pesanError = "Username atau password salah!";
+                    } else if (error.code === 'auth/invalid-email') {
+                        pesanError = "Format username/email tidak valid!";
+                    }
+                    Swal.fire('Login Gagal', pesanError, 'error');
+                })
+                .finally(() => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk`;
+                });
+        }
+
+        auth.onAuthStateChanged((user) => {
+            const btnAdmin = document.getElementById('btnAdminMain');
+            if (user) {
+                if (btnAdmin) {
+                    btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Edit Data (${user.email.split('@')[0]})`;
+                    btnAdmin.classList.replace('btn-light', 'btn-success');
+                    btnAdmin.classList.add('text-white');
+                }
+            } else {
+                if (btnAdmin) {
+                    btnAdmin.innerHTML = `<i class="bi bi-gear-fill text-primary me-1"></i> Edit Data`;
+                    btnAdmin.classList.replace('btn-success', 'btn-light');
+                    btnAdmin.classList.remove('text-white');
+                }
+            }
+        });
+
+        function loadExistingDataToModal() {
+            database.ref('kinerja_sarpras').once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    for (let i = 1; i <= 6; i++) {
+                        if (data['k' + i]) {
+                            const elTarget = document.getElementById('inp_t_' + i);
+                            const elCapaian = document.getElementById('inp_c_' + i);
+                            if (elTarget) elTarget.value = data['k' + i].target;
+                            if (elCapaian) elCapaian.value = data['k' + i].capaian;
+                        }
+                    }
+                    if (data.unar_detail) {
+                        const elPeserta = document.getElementById('inp_unar_peserta');
+                        const elLulus = document.getElementById('inp_unar_lulus');
+                        const elGagal = document.getElementById('inp_unar_gagal');
+                        
+                        if (elPeserta) elPeserta.value = data.unar_detail.peserta || '';
+                        if (elLulus) elLulus.value = data.unar_detail.lulus || '';
+                        if (elGagal) elGagal.value = data.unar_detail.tidak_lulus || '';
+                    }
+                }
+            });
+        }
+
+        function simpanKinerja(event) {
+            event.preventDefault(); 
+
+            const dataUpdate = {
+                k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
+                k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
+                k3: { target: parseFloat(document.getElementById('inp_t_3').value), capaian: parseFloat(document.getElementById('inp_c_3').value), suffix: '%' },
+                k4: { target: parseFloat(document.getElementById('inp_t_4').value), capaian: parseFloat(document.getElementById('inp_c_4').value), suffix: '' },
+                k5: { target: parseFloat(document.getElementById('inp_t_5').value), capaian: parseFloat(document.getElementById('inp_c_5').value), suffix: '' },
+                k6: { target: parseFloat(document.getElementById('inp_t_6').value), capaian: parseFloat(document.getElementById('inp_c_6').value), suffix: '' },
+                
+                unar_detail: {
+                    peserta: parseInt(document.getElementById('inp_unar_peserta').value) || 0,
+                    lulus: parseInt(document.getElementById('inp_unar_lulus').value) || 0,
+                    tidak_lulus: parseInt(document.getElementById('inp_unar_gagal').value) || 0,
+                    terakhir_update: new Date().toLocaleDateString('id-ID')
+                }
+            };
+
+            Swal.fire({
+                title: 'Menyimpan...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            database.ref('kinerja_sarpras').update(dataUpdate)
+                .then(() => {
+                    const modalEl = document.getElementById('modalKinerja');
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    if (modalInstance) modalInstance.hide();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data Tersimpan!',
+                        text: 'Dasbor & Data Detail UNAR berhasil diperbarui.',
+                        timer: 2500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        auth.signOut();
+                    });
+                })
+                .catch((error) => {
+                    Swal.fire('Gagal!', 'Terjadi kesalahan: ' + error.message, 'error');
+                });
+        }
+    </script>
+</body>
+</html>
