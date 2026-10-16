@@ -15,8 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-
     
     <style>
         :root {
@@ -107,7 +105,6 @@
         .bg-reguler { background-color: #f472b6; color: white !important; }
         .bg-non-reguler { background-color: var(--color-penegak); color: white !important; }
 
-        /* LEGEND CUSTOM UNTUK GRAFIK */
         .chart-legend-box {
             display: flex;
             justify-content: center;
@@ -188,24 +185,20 @@
 
             <!-- GRAFIK TINGKATAN & PANEL KANAN -->
             <div class="row g-4 mb-4">
-                <!-- KIRI: GRAFIK TINGKATAN PESERTA -->
                 <div class="col-lg-8">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
                         <h5 class="fw-bold mb-3 text-dark">Jumlah Peserta berdasarkan Ujian Tingkat</h5>
                         
-                        <!-- LEGENDA ATAS -->
                         <div class="chart-legend-box mb-2">
                             <div class="legend-item"><span class="legend-dot" style="background: var(--color-siaga);"></span> Siaga</div>
                             <div class="legend-item"><span class="legend-dot" style="background: var(--color-penggalang);"></span> Penggalang</div>
                             <div class="legend-item"><span class="legend-dot" style="background: var(--color-penegak);"></span> Penegak</div>
                         </div>
 
-                        <!-- CANVAS GRAFIK -->
                         <div style="height: 280px; position: relative;">
                             <canvas id="chartTingkat"></canvas>
                         </div>
 
-                        <!-- LEGENDA BAWAH BESERTA ANGKA -->
                         <div class="chart-legend-box mt-3 pt-2 border-top">
                             <div class="legend-item" style="color: #1e293b;"><span class="legend-dot" style="background: var(--color-siaga);"></span> Siaga <span id="lblSiaga" class="ms-1">85</span></div>
                             <div class="legend-item" style="color: #1e293b;"><span class="legend-dot" style="background: var(--color-penggalang);"></span> Penggalang <span id="lblPenggalang" class="ms-1">35</span></div>
@@ -214,7 +207,6 @@
                     </div>
                 </div>
 
-                <!-- KANAN: PELAKSANAAN KEGIATAN -->
                 <div class="col-lg-4">
                     <div class="side-panel h-100 d-flex flex-column justify-content-center">
                         <h4 class="fw-bold border-bottom pb-3 mb-4">Pelaksanaan Kegiatan</h4>
@@ -257,9 +249,7 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="tblJadwalUnar">
-                            <!-- Data otomatis diisi JS -->
-                        </tbody>
+                        <tbody id="tblJadwalUnar"></tbody>
                     </table>
                 </div>
             </div>
@@ -339,14 +329,14 @@
         </div>
     </div>
 
-    <!-- FIREBASE & SCRIPT LOGIC -->
+    <!-- FIREBASE SDK (URUTAN YANG BENAR) -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // FIREBASE CONFIGURATION
+        // 1. FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
             authDomain: "smfr-database.firebaseapp.com",
@@ -357,48 +347,13 @@
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
         };
 
-        const auth = firebase.auth();
-    document.getElementById('formUnar').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const user = auth.currentUser;
-    if (!user) {
-        Swal.fire('Akses Ditolak!', 'Anda harus login terlebih dahulu untuk mengubah data.', 'warning');
-        return;
-    }
-
-    const updatedData = {
-        totalPendaftar: parseInt(document.getElementById('inpTotalPendaftar').value) || 0,
-        pesertaUjian: parseInt(document.getElementById('inpPesertaUjian').value) || 0,
-        tidakLulus: parseInt(document.getElementById('inpTidakLulus').value) || 0,
-        lulusUjian: parseInt(document.getElementById('inpLulusUjian').value) || 0,
-        siaga: parseInt(document.getElementById('inpSiaga').value) || 0,
-        penggalang: parseInt(document.getElementById('inpPenggalang').value) || 0,
-        penegak: parseInt(document.getElementById('inpPenegak').value) || 0,
-        jmlKegiatan: parseInt(document.getElementById('inpJmlKegiatan').value) || 0,
-        unarReguler: parseInt(document.getElementById('inpUnarReguler').value) || 0,
-        unarNonReguler: parseInt(document.getElementById('inpUnarNonReguler').value) || 0
-    };
-
-    database.ref('smfr_sistem_v1/unar').set(updatedData).then(() => {
-        bsModalEdit.hide();
-        Swal.fire({
-            title: 'Berhasil!',
-            text: 'Data statistik UNAR berhasil diperbarui.',
-            icon: 'success',
-            confirmButtonColor: '#0e306c'
-        });
-    }).catch(err => {
-        Swal.fire('Gagal!', err.message, 'error');
-    });
-});
-
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const database = firebase.database();
+        const auth = firebase.auth();
 
-        // DEFAULT DATA
+        // 2. DATA DEFAULTS & GLOBAL VARIABLES
         let unarData = {
             totalPendaftar: 142,
             pesertaUjian: 136,
@@ -430,9 +385,9 @@
         let chartInstance = null;
         let bsModalEdit = null;
 
-        // REGISTER CHART DATALABELS PLUGIN
         Chart.register(ChartDataLabels);
 
+        // 3. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
             bsModalEdit = new bootstrap.Modal(document.getElementById('modalEditUnar'));
             renderJadwalTabel();
@@ -447,6 +402,7 @@
             });
         });
 
+        // 4. FUNCTIONS
         function updateUI() {
             document.getElementById('valTotalPendaftar').textContent = unarData.totalPendaftar;
             document.getElementById('valPesertaUjian').textContent = unarData.pesertaUjian;
@@ -470,7 +426,6 @@
                 chartInstance.destroy();
             }
 
-            // HITUNG Y MAX SECARA DINAMIS
             const maxVal = Math.max(unarData.siaga, unarData.penggalang, unarData.penegak);
             const yMax = Math.ceil((maxVal + 20) / 20) * 20;
 
@@ -497,33 +452,20 @@
                             anchor: 'center',
                             align: 'center',
                             color: '#1e293b',
-                            font: {
-                                weight: 'bold',
-                                size: 14
-                            },
-                            formatter: function(value) {
-                                return value;
-                            }
+                            font: { weight: 'bold', size: 14 },
+                            formatter: function(value) { return value; }
                         }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: {
-                                font: { weight: 'bold', size: 13 },
-                                color: '#0e306c'
-                            }
+                            ticks: { font: { weight: 'bold', size: 13 }, color: '#0e306c' }
                         },
                         y: {
                             beginAtZero: true,
                             max: yMax,
-                            ticks: {
-                                stepSize: 20,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                color: '#e2e8f0'
-                            }
+                            ticks: { stepSize: 20, font: { weight: '600' } },
+                            grid: { color: '#e2e8f0' }
                         }
                     }
                 }
@@ -562,6 +504,7 @@
             bsModalEdit.show();
         }
 
+        // 5. FORM SUBMIT EVENT
         document.getElementById('formUnar').addEventListener('submit', (e) => {
             e.preventDefault();
 
