@@ -837,6 +837,7 @@ function loadDataKeForm() {
     firebase.database().ref('kinerja_sarpras').once('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
+            // Load Data Tab 1 (Dasbor)
             for (let i = 1; i <= 6; i++) {
                 if (data['k' + i]) {
                     const elTarget = document.getElementById('inp_t_' + i);
@@ -846,78 +847,59 @@ function loadDataKeForm() {
                     if (elCapaian) elCapaian.value = data['k' + i].capaian;
                 }
             }
+            
+            // Load Data Tab 2 (Detail UNAR)
+            if (data.unar_detail) {
+                document.getElementById('inp_unar_peserta').value = data.unar_detail.peserta || '';
+                document.getElementById('inp_unar_lulus').value = data.unar_detail.lulus || '';
+                document.getElementById('inp_unar_gagal').value = data.unar_detail.tidak_lulus || '';
+            }
         }
     });
 }
-        // Fungsi untuk menyimpan data dari form modal ke Firebase
-function simpanKinerja(event) {
-    event.preventDefault(); // Mencegah reload halaman
 
-    // Ambil nilai dari masing-masing input form
+// Fungsi menyimpan seluruh data (Dasbor + Detail UNAR) ke Firebase
+function simpanKinerja(event) {
+    event.preventDefault(); 
+
     const dataUpdate = {
-        k1: { 
-            target: parseFloat(document.getElementById('inp_t_1').value), 
-            capaian: parseFloat(document.getElementById('inp_c_1').value), 
-            suffix: '%' 
-        },
-        k2: { 
-            target: parseFloat(document.getElementById('inp_t_2').value), 
-            capaian: parseFloat(document.getElementById('inp_c_2').value), 
-            suffix: '%' 
-        },
-        k3: { 
-            target: parseFloat(document.getElementById('inp_t_3').value), 
-            capaian: parseFloat(document.getElementById('inp_c_3').value), 
-            suffix: '%' 
-        },
-        k4: { 
-            target: parseFloat(document.getElementById('inp_t_4').value), 
-            capaian: parseFloat(document.getElementById('inp_c_4').value), 
-            suffix: '' 
-        },
-        k5: { 
-            target: parseFloat(document.getElementById('inp_t_5').value), 
-            capaian: parseFloat(document.getElementById('inp_c_5').value), 
-            suffix: '' 
-        },
-        k6: { 
-            target: parseFloat(document.getElementById('inp_t_6').value), 
-            capaian: parseFloat(document.getElementById('inp_c_6').value), 
-            suffix: '' 
+        // Tab 1: Dasbor Kinerja
+        k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
+        k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
+        k3: { target: parseFloat(document.getElementById('inp_t_3').value), capaian: parseFloat(document.getElementById('inp_c_3').value), suffix: '%' },
+        k4: { target: parseFloat(document.getElementById('inp_t_4').value), capaian: parseFloat(document.getElementById('inp_c_4').value), suffix: '' },
+        k5: { target: parseFloat(document.getElementById('inp_t_5').value), capaian: parseFloat(document.getElementById('inp_c_5').value), suffix: '' },
+        k6: { target: parseFloat(document.getElementById('inp_t_6').value), capaian: parseFloat(document.getElementById('inp_c_6').value), suffix: '' },
+        
+        // Tab 2: Detail UNAR
+        unar_detail: {
+            peserta: parseInt(document.getElementById('inp_unar_peserta').value) || 0,
+            lulus: parseInt(document.getElementById('inp_unar_lulus').value) || 0,
+            tidak_lulus: parseInt(document.getElementById('inp_unar_gagal').value) || 0,
+            terakhir_update: new Date().toLocaleDateString('id-ID')
         }
     };
 
-    // Tampilkan loading SweetAlert
     Swal.fire({
         title: 'Menyimpan...',
         allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
+        didOpen: () => { Swal.showLoading(); }
     });
 
-    // Simpan ke node kinerja_sarpras di Firebase
     firebase.database().ref('kinerja_sarpras').update(dataUpdate)
         .then(() => {
-            // 1. Tutup modal pengaturan
             const modalEl = document.getElementById('modalKinerja');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
             
-            // 2. Tampilkan notifikasi sukses dan info logout
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil Update!',
-                text: 'Data kinerja berhasil disimpan. Sesi admin akan otomatis diakhiri demi keamanan.',
-                timer: 3000, // Notifikasi tampil selama 3 detik
-                showConfirmButton: true,
-                confirmButtonText: 'OK'
+                title: 'Data Tersimpan!',
+                text: 'Dasbor & Data Detail UNAR berhasil diperbarui.',
+                timer: 2500,
+                showConfirmButton: false
             }).then(() => {
-                // 3. Proses hapus sesi (Logout Otomatis) setelah alert ditutup
-                auth.signOut().then(() => {
-                    console.log("Sesi admin telah dihapus secara otomatis.");
-                    // Tombol edit data akan otomatis berubah karena kita sudah punya listener auth.onAuthStateChanged
-                });
+                auth.signOut(); // Logout otomatis
             });
         })
         .catch((error) => {
@@ -937,76 +919,114 @@ function simpanKinerja(event) {
       </div>
       <div class="modal-body bg-light p-4">
         <form id="formKinerja" onsubmit="simpanKinerja(event)">
-            <div class="row g-4">
-                <!-- K1 -->
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary small mb-1">1. Sertifikasi Operator Radio (%)</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white">Target</span>
-                        <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
-                        <span class="input-group-text bg-white">Capaian</span>
-                        <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
+            
+            <!-- NAV TABS (Pilihan Menu Atas) -->
+            <ul class="nav nav-tabs mb-4" id="adminTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data UNAR</button>
+                </li>
+            </ul>
+
+            <!-- ISI TAB KONTEN -->
+            <div class="tab-content" id="adminTabContent">
+                
+                <!-- TAB 1: CAPAIAN DASBOR (K1 - K6) -->
+                <div class="tab-pane fade show active" id="tab-dasbor" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- K1 -->
+                        <div class="col-md-6">
+                            <label class="fw-bold text-secondary small mb-1">1. Sertifikasi Operator Radio (%)</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-white">Target</span>
+                                <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
+                                <span class="input-group-text bg-white">Capaian</span>
+                                <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                        <!-- K2 -->
+                        <div class="col-md-6">
+                            <label class="fw-bold text-secondary small mb-1">2. Biaya BHP (%)</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-white">Target</span>
+                                <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
+                                <span class="input-group-text bg-white">Capaian</span>
+                                <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                        <!-- K3 -->
+                        <div class="col-md-6">
+                            <label class="fw-bold text-secondary small mb-1">3. Operasional Monitoring (%)</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-white">Target</span>
+                                <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
+                                <span class="input-group-text bg-white">Capaian</span>
+                                <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                        <!-- K4 -->
+                        <div class="col-md-6">
+                            <label class="fw-bold text-secondary small mb-1">4. Zona Integritas</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-white">Target</span>
+                                <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
+                                <span class="input-group-text bg-white">Capaian</span>
+                                <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                        <!-- K5 -->
+                        <div class="col-md-6">
+                            <label class="fw-bold text-secondary small mb-1">5. Indeks Kepuasan Masyarakat</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-white">Target</span>
+                                <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
+                                <span class="input-group-text bg-white">Capaian</span>
+                                <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                        <!-- K6 -->
+                        <div class="col-md-6">
+                            <label class="fw-bold text-secondary small mb-1">6. Indeks Integritas (IIPP)</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-white">Target</span>
+                                <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
+                                <span class="input-group-text bg-white">Capaian</span>
+                                <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- K2 -->
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary small mb-1">2. Biaya BHP (%)</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white">Target</span>
-                        <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
-                        <span class="input-group-text bg-white">Capaian</span>
-                        <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
+
+                <!-- TAB 2: DETAIL DATA UNAR -->
+                <div class="tab-pane fade" id="tab-unar" role="tabpanel">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="fw-bold text-secondary small mb-1">Total Peserta UNAR</label>
+                            <input type="number" id="inp_unar_peserta" class="form-control shadow-sm" placeholder="Contoh: 150">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold text-success small mb-1">Jumlah Lulus</label>
+                            <input type="number" id="inp_unar_lulus" class="form-control shadow-sm" placeholder="Contoh: 140">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold text-danger small mb-1">Jumlah Tidak Lulus</label>
+                            <input type="number" id="inp_unar_gagal" class="form-control shadow-sm" placeholder="Contoh: 10">
+                        </div>
+                    </div>
+                    <div class="alert alert-info mt-3 small">
+                        <i class="bi bi-info-circle me-1"></i> Data detail ini akan langsung terhubung ke halaman <b>UNAR</b>.
                     </div>
                 </div>
-                <!-- K3 -->
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary small mb-1">3. Operasional Monitoring (%)</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white">Target</span>
-                        <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
-                        <span class="input-group-text bg-white">Capaian</span>
-                        <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <!-- K4 -->
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary small mb-1">4. Zona Integritas</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white">Target</span>
-                        <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
-                        <span class="input-group-text bg-white">Capaian</span>
-                        <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <!-- K5 -->
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary small mb-1">5. Indeks Kepuasan Masyarakat</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white">Target</span>
-                        <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
-                        <span class="input-group-text bg-white">Capaian</span>
-                        <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-                <!-- K6 -->
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary small mb-1">6. Indeks Integritas (IIPP)</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white">Target</span>
-                        <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
-                        <span class="input-group-text bg-white">Capaian</span>
-                        <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-            </div>
+
+            </div> <!-- End of Tab Content -->
+
             <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold" style="border-radius: 8px;">
-                <i class="bi bi-save me-1"></i> Simpan & Update Dasbor
+                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Simpan & Update Semua Data
             </button>
         </form>
       </div>
-    </div>
-  </div>
-</div>
     <!-- Modal Login Admin Firebase -->
 <div class="modal fade" id="modalLoginAdmin" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
