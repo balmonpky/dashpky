@@ -143,6 +143,7 @@
         <a href="sarpras.html" class="btn btn-outline-dark btn-sm fw-bold shadow-sm">
             <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
         </a>
+        <!-- TUNGGAL TOMBOL EDIT DATA DENGAN PASSWORD -->
         <button class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="promptPasswordEdit()">
             <i class="bi bi-pencil-square me-1"></i> Edit Data Tabel UNAR
         </button>
@@ -269,34 +270,36 @@
 
     <!-- MODAL EDIT SELURUH DATA TABEL JADWAL UNAR -->
     <div class="modal fade" id="modalEditAllJadwal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header text-white" style="background: var(--primary-navy);">
                     <h5 class="modal-title fw-bold text-white"><i class="bi bi-pencil-square me-2"></i>Edit Seluruh Data Tabel UNAR 2026</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-3">
+                <div class="modal-body p-4">
                     <form id="formAllJadwalUnar">
                         <div class="table-responsive">
                             <table class="table table-bordered align-middle text-center small">
                                 <thead class="table-dark">
                                     <tr>
                                         <th style="width: 100px;">Bulan</th>
-                                        <th style="width: 150px;">Tanggal Ujian</th>
-                                        <th style="width: 150px;">Kategori</th>
-                                        <th style="width: 200px;">Lokasi Pelaksanaan</th>
+                                        <th style="width: 140px;">Tanggal Ujian</th>
+                                        <th style="width: 140px;">Kategori</th>
+                                        <th style="width: 180px;">Lokasi Pelaksanaan</th>
                                         <th style="width: 80px;">Siaga</th>
                                         <th style="width: 80px;">Penggalang</th>
                                         <th style="width: 80px;">Penegak</th>
                                         <th style="width: 80px;">Tidak Lulus</th>
-                                        <th style="width: 120px;">Status</th>
+                                        <th style="width: 110px;">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbodyModalEdit"></tbody>
+                                <tbody id="tbodyModalEdit">
+                                    <!-- Diisi secara dinamis oleh JavaScript -->
+                                </tbody>
                             </table>
                         </div>
 
-                        <div class="text-end mt-3">
+                        <div class="text-end mt-4">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary fw-bold px-4"><i class="bi bi-save me-1"></i>Simpan Semua Perubahan</button>
                         </div>
@@ -313,6 +316,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // PASSWORD AKSES EDIT
         const EDIT_PASSWORD = "admin123";
 
         const firebaseConfig = {
@@ -355,21 +359,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             bsModalEditAll = new bootstrap.Modal(document.getElementById('modalEditAllJadwal'));
 
-            // LISTEN FIREBASE: AMBIL DARI PATH BARU, JIKA KOSONG AMBIL FALLBACK DARI DATA LAMA
-            database.ref('kinerja_sarpras/unar').on('value', (snapshot) => {
+            // SINKRONISASI DENGAN NODE FIREBASE KINERJA_SARPRAS/UNAR/JADWAL
+            database.ref('kinerja_sarpras/unar/jadwal').on('value', (snapshot) => {
                 const val = snapshot.val();
-                if (val) {
-                    if (val.jadwal && Array.isArray(val.jadwal)) {
-                        jadwal2026 = val.jadwal;
-                    } else if (typeof val === 'object') {
-                        // MERGE DENGAN DATA TOTAL LAMA JIKA JADWAL BELUM DIBUAT DI FIREBASE
-                        if (val.siaga !== undefined) {
-                            jadwal2026[0].siaga = val.siaga || 0;
-                            jadwal2026[0].penggalang = val.penggalang || 0;
-                            jadwal2026[0].penegak = val.penegak || 0;
-                            jadwal2026[0].tidakLulus = val.tidakLulus || 0;
-                        }
-                    }
+                if (val && Array.isArray(val)) {
+                    jadwal2026 = val;
                 }
                 recalculateAndRender();
             }, (err) => {
@@ -378,12 +372,16 @@
             });
         });
 
+        // VERIFIKASI PASSWORD SEBELUM MEMBUKA MODAL EDIT
         function promptPasswordEdit() {
             Swal.fire({
                 title: 'Akses Terkunci',
                 text: 'Masukkan password admin untuk mengedit data tabel:',
                 input: 'password',
-                inputAttributes: { autocapitalize: 'off', autocorrect: 'off' },
+                inputAttributes: {
+                    autocapitalize: 'off',
+                    autocorrect: 'off'
+                },
                 showCancelButton: true,
                 confirmButtonText: 'Verifikasi',
                 cancelButtonText: 'Batal',
@@ -400,30 +398,34 @@
         }
 
         function openModalEditAll() {
-            const tbody = document.getElementById('tbodyModalEdit');
-            tbody.innerHTML = jadwal2026.map((j, idx) => `
-                <tr>
-                    <td class="fw-bold text-primary">${j.bulan}</td>
-                    <td><input type="text" class="form-control form-control-sm tgl-edit" data-idx="${idx}" value="${j.tgl || ''}"></td>
-                    <td>
-                        <select class="form-select form-select-sm kat-edit" data-idx="${idx}">
-                            <option value="CAT Reguler" ${j.kat === 'CAT Reguler' ? 'selected' : ''}>CAT Reguler</option>
-                            <option value="CAT Non Reguler" ${j.kat === 'CAT Non Reguler' ? 'selected' : ''}>CAT Non Reguler</option>
-                        </select>
-                    </td>
-                    <td><input type="text" class="form-control form-control-sm lokasi-edit" data-idx="${idx}" value="${j.lokasi || ''}"></td>
-                    <td><input type="number" min="0" class="form-control form-control-sm siaga-edit" data-idx="${idx}" value="${j.siaga || 0}"></td>
-                    <td><input type="number" min="0" class="form-control form-control-sm penggalang-edit" data-idx="${idx}" value="${j.penggalang || 0}"></td>
-                    <td><input type="number" min="0" class="form-control form-control-sm penegak-edit" data-idx="${idx}" value="${j.penegak || 0}"></td>
-                    <td><input type="number" min="0" class="form-control form-control-sm tl-edit" data-idx="${idx}" value="${j.tidakLulus || 0}"></td>
-                    <td>
-                        <select class="form-select form-select-sm status-edit" data-idx="${idx}">
-                            <option value="Selesai" ${j.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
-                            <option value="Mendatang" ${j.status === 'Mendatang' ? 'selected' : ''}>Mendatang</option>
-                        </select>
-                    </td>
-                </tr>
-            `).join('');
+    const tbody = document.getElementById('tbodyModalEdit');
+    tbody.innerHTML = jadwal2026.map((j, idx) => `
+        <tr>
+            <td class="fw-bold text-primary align-middle">${j.bulan}</td>
+            <td>
+                <input type="text" class="form-control form-control-sm tgl-edit" data-idx="${idx}" value="${j.tgl || ''}">
+            </td>
+            <td>
+                <select class="form-select form-select-sm kat-edit" data-idx="${idx}">
+                    <option value="CAT Reguler" ${j.kat === 'CAT Reguler' ? 'selected' : ''}>CAT Reguler</option>
+                    <option value="CAT Non Reguler" ${j.kat === 'CAT Non Reguler' ? 'selected' : ''}>CAT Non Reguler</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm lokasi-edit" data-idx="${idx}" value="${j.lokasi || ''}">
+            </td>
+            <td><input type="number" min="0" class="form-control form-control-sm siaga-edit" data-idx="${idx}" value="${j.siaga || 0}"></td>
+            <td><input type="number" min="0" class="form-control form-control-sm penggalang-edit" data-idx="${idx}" value="${j.penggalang || 0}"></td>
+            <td><input type="number" min="0" class="form-control form-control-sm penegak-edit" data-idx="${idx}" value="${j.penegak || 0}"></td>
+            <td><input type="number" min="0" class="form-control form-control-sm tl-edit" data-idx="${idx}" value="${j.tidakLulus || 0}"></td>
+            <td>
+                <select class="form-select form-select-sm status-edit" data-idx="${idx}">
+                    <option value="Selesai" ${j.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                    <option value="Mendatang" ${j.status === 'Mendatang' ? 'selected' : ''}>Mendatang</option>
+                </select>
+            </td>
+        </tr>
+    `).join('');
 
             bsModalEditAll.show();
         }
@@ -451,7 +453,7 @@
 
                 if (j.status === 'Selesai') {
                     jmlKegiatan++;
-                    if (j.kat && j.kat.includes('Non Reguler')) unarNonReguler++;
+                    if (j.kat.includes('Non Reguler')) unarNonReguler++;
                     else unarReguler++;
                 }
             });
@@ -545,9 +547,69 @@
                     <tr>
                         <td class="fw-bold">${j.no}</td>
                         <td class="fw-bold text-primary">${j.bulan}</td>
-                        <td>${j.tgl || '-'}</td>
-                        <td><span class="badge bg-light text-dark border">${j.kat || '-'}</span></td>
-                        <td class="text-start">${j.lokasi || '-'}</td>
+                        <td>${j.tgl}</td>
+                        <td><span class="badge bg-light text-dark border">${j.kat}</span></td>
+                        <td class="text-start">${j.lokasi}</td>
                         <td class="fw-bold text-dark">${j.status === 'Selesai' ? jml : '-'}</td>
                         <td class="fw-bold text-warning">${j.status === 'Selesai' ? s : '-'}</td>
-                        <td class="fw-bold text-primary">${j.status ===
+                        <td class="fw-bold text-primary">${j.status === 'Selesai' ? pg : '-'}</td>
+                        <td class="fw-bold text-success">${j.status === 'Selesai' ? pn : '-'}</td>
+                        <td class="fw-bold text-success">${j.status === 'Selesai' ? lulus : '-'}</td>
+                        <td class="fw-bold text-danger">${j.status === 'Selesai' ? tl : '-'}</td>
+                        <td>
+                            <span class="badge ${j.status === 'Selesai' ? 'bg-success' : 'bg-warning text-dark'}">${j.status}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('formAllJadwalUnar').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            for (let i = 0; i < jadwal2026.length; i++) {
+        // AMBIL ELEMEN INPUT
+        const tglEl = document.querySelector(`.tgl-edit[data-idx="${i}"]`);
+        const katEl = document.querySelector(`.kat-edit[data-idx="${i}"]`);
+        const lokasiEl = document.querySelector(`.lokasi-edit[data-idx="${i}"]`);
+        const siagaEl = document.querySelector(`.siaga-edit[data-idx="${i}"]`);
+        const pgEl = document.querySelector(`.penggalang-edit[data-idx="${i}"]`);
+        const pnEl = document.querySelector(`.penegak-edit[data-idx="${i}"]`);
+        const tlEl = document.querySelector(`.tl-edit[data-idx="${i}"]`);
+        const statusEl = document.querySelector(`.status-edit[data-idx="${i}"]`);
+
+        // SIMPAN DATA KE ARRAY
+        if (tglEl) jadwal2026[i].tgl = tglEl.value;
+        if (katEl) jadwal2026[i].kat = katEl.value;
+        if (lokasiEl) jadwal2026[i].lokasi = lokasiEl.value;
+        if (siagaEl) jadwal2026[i].siaga = parseInt(siagaEl.value) || 0;
+        if (pgEl) jadwal2026[i].penggalang = parseInt(pgEl.value) || 0;
+        if (pnEl) jadwal2026[i].penegak = parseInt(pnEl.value) || 0;
+        if (tlEl) jadwal2026[i].tidakLulus = parseInt(tlEl.value) || 0;
+        if (statusEl) jadwal2026[i].status = statusEl.value;
+    }
+
+            recalculateAndRender();
+
+            // UPDATE KE FIREBASE REALTIME DATABASE (kinerja_sarpras/unar/jadwal)
+            database.ref('kinerja_sarpras/unar/jadwal').set(jadwal2026).then(() => {
+                bsModalEditAll.hide();
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Seluruh data tabel UNAR 2026 berhasil diperbarui.',
+                    icon: 'success',
+                    confirmButtonColor: '#0e306c'
+                });
+            }).catch(err => {
+                bsModalEditAll.hide();
+                Swal.fire({
+                    title: 'Disimpan Lokal',
+                    text: 'Tampilan diperbarui di layar. Jika ingin tersimpan permanen di Firebase, pastikan Firebase Rules diizinkan.',
+                    icon: 'info',
+                    confirmButtonColor: '#0e306c'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
