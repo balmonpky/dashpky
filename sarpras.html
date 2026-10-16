@@ -8,9 +8,8 @@
     <!-- Ikon Tab Browser -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
     
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap 5 CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -257,7 +256,7 @@
             font-size: 0.9rem;
         }
 
-        /* Gaya Tabel Modal UNAR */
+        /* Gaya Tabel & Input Modal */
         .table-unar-edit input, .table-unar-edit select {
             font-size: 0.82rem;
             padding: 0.3rem 0.4rem;
@@ -520,18 +519,22 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Dasbor Kinerja Sarpras & Tabel UNAR</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR & Realisasi Anggaran</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
                     <form id="formKinerja" onsubmit="simpanKinerja(event)">
                         
+                        <!-- TAB NAVIGASI -->
                         <ul class="nav nav-tabs mb-4" id="adminTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data Tabel UNAR 2026</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran</button>
                             </li>
                         </ul>
 
@@ -598,7 +601,7 @@
 
                             <!-- TAB 2: TABEL EDIT SELURUH DATA UNAR 2026 -->
                             <div class="tab-pane fade" id="tab-unar" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-unar-edit" style="max-height: 480px; overflow-y: auto;">
+                                <div class="table-responsive shadow-sm rounded border bg-white table-unar-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
                                         <thead class="table-dark sticky-top">
                                             <tr class="small text-nowrap">
@@ -622,6 +625,19 @@
                                     <i class="bi bi-info-circle-fill fs-5"></i>
                                     <div>
                                         Data tabel ini secara otomatis akan dikalkulasi total peserta & kelulusannya untuk memperbarui ringkasan di halaman <b>UNAR</b>.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 3: REALISASI ANGGARAN -->
+                            <div class="tab-pane fade" id="tab-anggaran" role="tabpanel">
+                                <div id="containerAnggaranEdit" class="d-flex flex-column gap-3" style="max-height: 420px; overflow-y: auto;">
+                                    <!-- Baris Edit Anggaran 5 Mata Anggaran di-generate via JS -->
+                                </div>
+                                <div class="alert alert-info mt-3 small mb-0 d-flex align-items-center gap-2">
+                                    <i class="bi bi-info-circle-fill fs-5"></i>
+                                    <div>
+                                        Perubahan angka Pagu dan Realisasi ini akan langsung memperbarui diagram dan tabel di halaman <b>Realisasi Anggaran</b>.
                                     </div>
                                 </div>
                             </div>
@@ -695,7 +711,7 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // Data Default 12 Bulan Sesuai Gambar
+        // Data Default 12 Bulan UNAR
         const defaultUnarMonths = [
             { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, status: "Selesai" },
             { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, status: "Selesai" },
@@ -711,12 +727,22 @@
             { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, status: "Mendatang" }
         ];
 
+        // Data Default 5 Mata Anggaran
+        const defaultAnggaranList = [
+            { id: "unar", nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", pagu: 150000000, realisasi: 112500000 },
+            { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000 },
+            { id: "transportable", nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000 },
+            { id: "bimtek", nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000 },
+            { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000 }
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
             renderUnarEditTableRows();
+            renderAnggaranEditRows();
             loadDataKinerjaRealtime();
         });
 
-        // Fungsi Render Struktur Baris Tabel UNAR
+        // Render Tabel Edit UNAR 12 Bulan
         function renderUnarEditTableRows() {
             const tbody = document.getElementById('tbodyUnarEdit');
             if(!tbody) return;
@@ -749,6 +775,33 @@
                 </tr>`;
             });
             tbody.innerHTML = html;
+        }
+
+        // Render Form Edit Anggaran 5 Program
+        function renderAnggaranEditRows() {
+            const container = document.getElementById('containerAnggaranEdit');
+            if(!container) return;
+
+            let html = '';
+            defaultAnggaranList.forEach((item, idx) => {
+                let i = idx + 1;
+                html += `
+                <div class="card p-3 border-0 shadow-sm rounded-3">
+                    <h6 class="fw-bold text-primary mb-2">${i}. <span id="anggaran_nama_${i}">${item.nama}</span></h6>
+                    <input type="hidden" id="anggaran_id_${i}" value="${item.id}">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary mb-1">Pagu Anggaran (Rp)</label>
+                            <input type="number" id="anggaran_pagu_${i}" class="form-control form-control-sm" value="${item.pagu}" min="0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary mb-1">Realisasi (Rp)</label>
+                            <input type="number" id="anggaran_realisasi_${i}" class="form-control form-control-sm" value="${item.realisasi}" min="0" required>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
         }
 
         // Load Data Dasbor Realtime
@@ -892,7 +945,7 @@
             }
         });
 
-        // Load Data Eksisting ke Form Dasbor & Tabel UNAR Modal
+        // Load Data Eksisting ke Form Modal Edit
         function loadExistingDataToModal() {
             database.ref('kinerja_sarpras').once('value', (snapshot) => {
                 const data = snapshot.val();
@@ -921,15 +974,24 @@
                             if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
                         });
                     }
+                    // Load Realisasi Anggaran 5 Program
+                    if (data.realisasi_anggaran) {
+                        const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
+                        listAngg.forEach((item, idx) => {
+                            let i = idx + 1;
+                            if (document.getElementById(`anggaran_pagu_${i}`)) document.getElementById(`anggaran_pagu_${i}`).value = item.pagu || 0;
+                            if (document.getElementById(`anggaran_realisasi_${i}`)) document.getElementById(`anggaran_realisasi_${i}`).value = item.realisasi || 0;
+                        });
+                    }
                 }
             });
         }
 
-        // Simpan Perubahan Data Dasbor & Seluruh Data Tabel UNAR 2026
+        // Simpan Perubahan Data Dasbor, Seluruh Data Tabel UNAR 2026, & Realisasi Anggaran
         function simpanKinerja(event) {
             event.preventDefault(); 
 
-            // Ambil Data 12 Bulan & Kalkulasi Otomatis Ringkasan
+            // 1. Ambil Data UNAR 12 Bulan & Kalkulasi Ringkasan
             const updatedMonths = [];
             let totalPesertaAcc = 0;
             let totalTidakLulusAcc = 0;
@@ -964,6 +1026,23 @@
 
             const totalLulusAcc = Math.max(0, totalPesertaAcc - totalTidakLulusAcc);
 
+            // 2. Ambil Data Realisasi Anggaran 5 Program
+            const updatedAnggaran = [];
+            for (let i = 1; i <= 5; i++) {
+                const id = document.getElementById(`anggaran_id_${i}`).value;
+                const nama = document.getElementById(`anggaran_nama_${i}`).innerText;
+                const pagu = parseFloat(document.getElementById(`anggaran_pagu_${i}`).value) || 0;
+                const realisasi = parseFloat(document.getElementById(`anggaran_realisasi_${i}`).value) || 0;
+
+                updatedAnggaran.push({
+                    id: id,
+                    nama: nama,
+                    pagu: pagu,
+                    realisasi: realisasi
+                });
+            }
+
+            // 3. Gabungkan Semua Objek Update
             const dataUpdate = {
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
                 k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
@@ -978,12 +1057,14 @@
                     tidak_lulus: totalTidakLulusAcc,
                     terakhir_update: new Date().toLocaleDateString('id-ID'),
                     months: updatedMonths
-                }
+                },
+
+                realisasi_anggaran: updatedAnggaran
             };
 
             Swal.fire({
                 title: 'Menyimpan...',
-                text: 'Memperbarui Dasbor & Data Tabel UNAR 2026',
+                text: 'Memperbarui Dasbor, UNAR, & Realisasi Anggaran',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
@@ -997,7 +1078,7 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Data Tersimpan!',
-                        text: 'Dasbor & Tabel UNAR 2026 berhasil diperbarui.',
+                        text: 'Dasbor, UNAR, & Realisasi Anggaran berhasil diperbarui.',
                         timer: 2500,
                         showConfirmButton: false
                     }).then(() => {
