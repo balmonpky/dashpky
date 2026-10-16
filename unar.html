@@ -18,6 +18,40 @@
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 
         const auth = firebase.auth();
+    document.getElementById('formUnar').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const user = auth.currentUser;
+    if (!user) {
+        Swal.fire('Akses Ditolak!', 'Anda harus login terlebih dahulu untuk mengubah data.', 'warning');
+        return;
+    }
+
+    const updatedData = {
+        totalPendaftar: parseInt(document.getElementById('inpTotalPendaftar').value) || 0,
+        pesertaUjian: parseInt(document.getElementById('inpPesertaUjian').value) || 0,
+        tidakLulus: parseInt(document.getElementById('inpTidakLulus').value) || 0,
+        lulusUjian: parseInt(document.getElementById('inpLulusUjian').value) || 0,
+        siaga: parseInt(document.getElementById('inpSiaga').value) || 0,
+        penggalang: parseInt(document.getElementById('inpPenggalang').value) || 0,
+        penegak: parseInt(document.getElementById('inpPenegak').value) || 0,
+        jmlKegiatan: parseInt(document.getElementById('inpJmlKegiatan').value) || 0,
+        unarReguler: parseInt(document.getElementById('inpUnarReguler').value) || 0,
+        unarNonReguler: parseInt(document.getElementById('inpUnarNonReguler').value) || 0
+    };
+
+    database.ref('smfr_sistem_v1/unar').set(updatedData).then(() => {
+        bsModalEdit.hide();
+        Swal.fire({
+            title: 'Berhasil!',
+            text: 'Data statistik UNAR berhasil diperbarui.',
+            icon: 'success',
+            confirmButtonColor: '#0e306c'
+        });
+    }).catch(err => {
+        Swal.fire('Gagal!', err.message, 'error');
+    });
+});
     
     <style>
         :root {
