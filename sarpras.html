@@ -629,6 +629,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <!-- Firebase Authentication (TAMBAHKAN BARIS INI) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
     <!-- INISIALISASI & LOGIKA UTAMA -->
     <script>
@@ -712,82 +714,97 @@
         }
 
         // 2. FUNGSI VERIFIKASI ADMIN (MEMBUKA MODAL EDIT)
-        function verifikasiAdmin() {
+        // Inisialisasi Firebase Auth
+const auth = firebase.auth();
+
+// 1. Fungsi Membuka Modal Login atau Modal Admin
+function bukaModalAdmin() {
+    const user = auth.currentUser;
+    
+    if (user) {
+        // Jika sudah login, langsung buka Modal Edit Admin Central
+        loadExistingDataToModal();
+        const modalAdmin = new bootstrap.Modal(document.getElementById('modalAdminCentral'));
+        modalAdmin.show();
+    } else {
+        // Jika belum login, tampilkan modal login
+        const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginAdmin'));
+        modalLogin.show();
+    }
+}
+
+// 2. Fungsi Proses Login ke Firebase Auth
+function prosesLoginFirebase(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const btnSubmit = document.getElementById('btnLoginSubmit');
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Tutup Modal Login
+            const modalLoginEl = document.getElementById('modalLoginAdmin');
+            const modalLogin = bootstrap.Modal.getInstance(modalLoginEl);
+            modalLogin.hide();
+
+            // Reset form
+            document.getElementById('formLoginFirebase').reset();
+
             Swal.fire({
-                title: 'Akses Admin',
-                text: 'Masukkan Password untuk mengubah data Kinerja:',
-                input: 'password',
-                inputAttributes: { autocapitalize: 'off' },
-                showCancelButton: true,
-                confirmButtonText: 'Buka Pengaturan',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#0f4c81'
-            }).then((result) => {
-                if (result.value === 'admin123') {
-                    
-                    database.ref('kinerja_sarpras').once('value').then((snap) => {
-                        const data = snap.val();
-                        if (data) {
-                            for (let i = 1; i <= 6; i++) {
-                                if (data['k' + i]) {
-                                    const inputTarget = document.getElementById('inp_t_' + i);
-                                    const inputCapaian = document.getElementById('inp_c_' + i);
-                                    if (inputTarget) inputTarget.value = data['k' + i].target;
-                                    if (inputCapaian) inputCapaian.value = data['k' + i].capaian;
-                                }
-                            }
-                        }
-                        
-                        // PANGGIL MODAL BOOTSTRAP SECARA LANGSUNG DENGAN AMAN
-                        const modalElement = document.getElementById('modalKinerja');
-                        if (modalElement) {
-                            const myModal = new bootstrap.Modal(modalElement);
-                            myModal.show();
-                        } else {
-                            console.error("Elemen modalKinerja tidak ditemukan di HTML!");
-                        }
-                    });
-
-                } else if (result.value) {
-                    Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
-                }
+                icon: 'success',
+                title: 'Login Berhasil',
+                text: `Selamat datang, ${userCredential.user.email}`,
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                // Buka modal admin central
+                bukaModalAdmin();
             });
-        }
+        })
+        .catch((error) => {
+            let pesanError = "Gagal login. Periksa email dan password Anda.";
+            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                pesanError = "Email atau password salah!";
+            } else if (error.code === 'auth/invalid-email') {
+                pesanError = "Format email tidak valid!";
+            }
+            Swal.fire('Login Gagal', pesanError, 'error');
+        })
+        .finally(() => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk`;
+        });
+}
 
-        // 3. FUNGSI SIMPAN PERUBAHAN KE FIREBASE
-        function simpanKinerja(e) {
-            e.preventDefault();
-            
-            const dataBaru = {
-                k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
-                k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
-                k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
-                k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
-                k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
-                k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
-            };
-
-            database.ref('kinerja_sarpras').set(dataBaru)
-                .then(() => {
-                    // Tutup modal secara aman
-                    const modalElement = document.getElementById('modalKinerja');
-                    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                    if (modalInstance) {
-                        modalInstance.hide();
-                    }
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Data Kinerja berhasil diupdate.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                })
-                .catch((error) => {
-                    Swal.fire('Gagal!', error.message, 'error');
-                });
+// 3. Listener Status Autentikasi (Otomatis Deteksi Login/Logout)
+auth.onAuthStateChanged((user) => {
+    const btnAdmin = document.getElementById('btnAdminMain'); // ID tombol Admin di navbar/header
+    
+    if (user) {
+        console.log("Admin Aktif:", user.email);
+        if (btnAdmin) {
+            btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Admin Central (${user.email.split('@')[0]})`;
+            btnAdmin.classList.replace('btn-warning', 'btn-success');
         }
+    } else {
+        console.log("Status: Unauthenticated");
+        if (btnAdmin) {
+            btnAdmin.innerHTML = `<i class="bi bi-shield-lock-fill me-1"></i> Panel Admin Pusat`;
+            btnAdmin.classList.replace('btn-success', 'btn-warning');
+        }
+    }
+});
+
+// 4. Fungsi Logout
+function logoutAdmin() {
+    auth.signOut().then(() => {
+        Swal.fire('Logout Berhasil', 'Anda telah keluar dari sesi admin.', 'info');
+    });
+}
     </script>
     
    <!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
@@ -870,6 +887,32 @@
       </div>
     </div>
   </div>
+</div>
+    <!-- Modal Login Admin Firebase -->
+<div class="modal fade" id="modalLoginAdmin" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><i class="bi bi-shield-lock me-2"></i>Login Admin Sarpras</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formLoginFirebase" onsubmit="prosesLoginFirebase(event)">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Email Admin</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="admin@domain.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" id="btnLoginSubmit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Masuk
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
