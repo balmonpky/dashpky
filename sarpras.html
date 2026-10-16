@@ -805,6 +805,100 @@ function logoutAdmin() {
         Swal.fire('Logout Berhasil', 'Anda telah keluar dari sesi admin.', 'info');
     });
 }
+        // Fungsi yang dipanggil saat tombol Edit Data diklik
+function verifikasiAdmin() {
+    const user = auth.currentUser;
+    if (user) {
+        // Jika admin sudah login, isi data eksisting ke form dan buka modal pengaturan kinerja
+        loadDataKeForm();
+        const modalKinerja = new bootstrap.Modal(document.getElementById('modalKinerja'));
+        modalKinerja.show();
+    } else {
+        // Jika belum login, buka Modal Login Admin
+        const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginAdmin'));
+        modalLogin.show();
+    }
+}
+
+// Fungsi bantu untuk memuat data dari Firebase ke Input Form Modal
+function loadDataKeForm() {
+    firebase.database().ref('kinerja_sarpras').once('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            for (let i = 1; i <= 6; i++) {
+                if (data['k' + i]) {
+                    const elTarget = document.getElementById('inp_t_' + i);
+                    const elCapaian = document.getElementById('inp_c_' + i);
+                    
+                    if (elTarget) elTarget.value = data['k' + i].target;
+                    if (elCapaian) elCapaian.value = data['k' + i].capaian;
+                }
+            }
+        }
+    });
+}
+        // Fungsi untuk menyimpan data dari form modal ke Firebase
+function simpanKinerja(event) {
+    event.preventDefault(); // Mencegah reload halaman
+
+    // Ambil nilai dari masing-masing input form
+    const dataUpdate = {
+        k1: { 
+            target: parseFloat(document.getElementById('inp_t_1').value), 
+            capaian: parseFloat(document.getElementById('inp_c_1').value), 
+            suffix: '%' 
+        },
+        k2: { 
+            target: parseFloat(document.getElementById('inp_t_2').value), 
+            capaian: parseFloat(document.getElementById('inp_c_2').value), 
+            suffix: '%' 
+        },
+        k3: { 
+            target: parseFloat(document.getElementById('inp_t_3').value), 
+            capaian: parseFloat(document.getElementById('inp_c_3').value), 
+            suffix: '%' 
+        },
+        k4: { 
+            target: parseFloat(document.getElementById('inp_t_4').value), 
+            capaian: parseFloat(document.getElementById('inp_c_4').value), 
+            suffix: '' 
+        },
+        k5: { 
+            target: parseFloat(document.getElementById('inp_t_5').value), 
+            capaian: parseFloat(document.getElementById('inp_c_5').value), 
+            suffix: '' 
+        },
+        k6: { 
+            target: parseFloat(document.getElementById('inp_t_6').value), 
+            capaian: parseFloat(document.getElementById('inp_c_6').value), 
+            suffix: '' 
+        }
+    };
+
+    // Tampilkan loading SweetAlert
+    Swal.fire({
+        title: 'Menyimpan...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Simpan ke node kinerja_sarpras di Firebase
+    firebase.database().ref('kinerja_sarpras').update(dataUpdate)
+        .then(() => {
+            // Tutup modal pengaturan
+            const modalEl = document.getElementById('modalKinerja');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+            
+            // Tampilkan notifikasi sukses
+            Swal.fire('Berhasil!', 'Data Kinerja Dasbor berhasil diupdate.', 'success');
+        })
+        .catch((error) => {
+            Swal.fire('Gagal!', 'Terjadi kesalahan: ' + error.message, 'error');
+        });
+}
     </script>
     
    <!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
