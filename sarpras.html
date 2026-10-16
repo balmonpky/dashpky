@@ -469,58 +469,7 @@
     </div>
 </div>
 
-<!-- SCRIPT UNTUK MEMBACA DATA DARI FIREBASE -->
-<script>
-    // Pastikan Firebase sudah diinisialisasi di sarpras.html sebelum script ini dipanggil
-    document.addEventListener('DOMContentLoaded', function() {
-        // Asumsi variabel 'database' sudah dideklarasikan di sarpras.html (firebase.database())
-        const refKinerja = database.ref('kinerja_sarpras');
-
-        refKinerja.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                // Loop 1 sampai 6 (karena ada 6 kartu)
-                for (let i = 1; i <= 6; i++) {
-                    if (data['k' + i]) {
-                        let t = parseFloat(data['k' + i].target);
-                        let c = parseFloat(data['k' + i].capaian);
-                        let suf = data['k' + i].suffix; // Misal "%" atau "" (kosong)
-
-                        // Update Teks Angka
-                        document.getElementById('val_target_' + i).innerText = t + suf;
-                        document.getElementById('val_capaian_' + i).innerText = c + suf;
-                        document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
-
-                        // Logika untuk Progress Bar (Maksimal 100% untuk lebar visual)
-                        let maxVal = Math.max(t, c);
-                        let wTarget = (t / maxVal) * 100;
-                        let wCapaian = (c / maxVal) * 100;
-
-                        document.getElementById('bar_target_' + i).style.width = wTarget + '%';
-                        document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
-
-                        // Logika Status (Naik / Turun / Sesuai)
-                        let statusEl = document.getElementById('status_' + i);
-                        let selisih = (c - t).toFixed(2).replace(/\.00$/, ''); // Hapus .00 jika pas bulat
-                        
-                        if (c > t) {
-                            statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
-                            statusEl.className = "badge bg-light text-success border border-success";
-                        } else if (c < t) {
-                            statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
-                            statusEl.className = "badge bg-light text-danger border border-danger";
-                        } else {
-                            statusEl.innerHTML = "Sesuai Target";
-                            statusEl.className = "badge bg-light text-primary border border-primary";
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
-
-    <!-- KONTEN UTAMA -->
+        <!-- KONTEN UTAMA -->
     <div class="container main-container">
         
         <div class="header-title">
@@ -621,294 +570,7 @@
         </div>
     </footer>
 
-    <!-- Bootstrap Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <!-- SCRIPT SDK FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-    <!-- Firebase Authentication (TAMBAHKAN BARIS INI) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-    <!-- INISIALISASI & LOGIKA UTAMA -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
-            authDomain: "smfr-database.firebaseapp.com",
-            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "smfr-database",
-            storageBucket: "smfr-database.firebasestorage.app",
-            messagingSenderId: "890374389163",
-            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
-            measurementId: "G-S4YSHLR19V"
-        };
-        
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        
-        const database = firebase.database();
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadDataKinerjaRealtime();
-        });
-
-        // 1. FUNGSI LOAD DATA KINERJA
-        function loadDataKinerjaRealtime() {
-            const refKinerja = database.ref('kinerja_sarpras');
-
-            refKinerja.on('value', (snapshot) => {
-                const data = snapshot.val();
-                
-                // Jika database kosong, buatkan data default otomatis
-                if (!data) {
-                    const defaultData = {
-                        k1: { target: 100, capaian: 95, suffix: '%' },
-                        k2: { target: 100, capaian: 90, suffix: '%' },
-                        k3: { target: 100, capaian: 98, suffix: '%' },
-                        k4: { target: 100, capaian: 85, suffix: '' },
-                        k5: { target: 85, capaian: 88, suffix: '' },
-                        k6: { target: 90, capaian: 92, suffix: '' }
-                    };
-                    refKinerja.set(defaultData);
-                    return;
-                }
-
-                // Loop mengisi kartu 1 sampai 6
-                for (let i = 1; i <= 6; i++) {
-                    if (data['k' + i]) {
-                        let t = parseFloat(data['k' + i].target) || 0;
-                        let c = parseFloat(data['k' + i].capaian) || 0;
-                        let suf = data['k' + i].suffix || ''; 
-
-                        document.getElementById('val_target_' + i).innerText = t + suf;
-                        document.getElementById('val_capaian_' + i).innerText = c + suf;
-                        document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
-
-                        let maxVal = Math.max(t, c, 1);
-                        let wTarget = (t / maxVal) * 100;
-                        let wCapaian = (c / maxVal) * 100;
-
-                        document.getElementById('bar_target_' + i).style.width = wTarget + '%';
-                        document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
-
-                        let statusEl = document.getElementById('status_' + i);
-                        if (statusEl) {
-                            let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
-                            if (c > t) {
-                                statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
-                                statusEl.className = "badge bg-light text-success border border-success";
-                            } else if (c < t) {
-                                statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
-                                statusEl.className = "badge bg-light text-danger border border-danger";
-                            } else {
-                                statusEl.innerHTML = "Sesuai Target";
-                                statusEl.className = "badge bg-light text-primary border border-primary";
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 2. FUNGSI VERIFIKASI ADMIN (MEMBUKA MODAL EDIT)
-        // Inisialisasi Firebase Auth
-const auth = firebase.auth();
-
-// 1. Fungsi Membuka Modal Login atau Modal Admin
-function bukaModalAdmin() {
-    const user = auth.currentUser;
-    
-    if (user) {
-        // Jika sudah login, langsung buka Modal Edit Admin Central
-        loadExistingDataToModal();
-        const modalAdmin = new bootstrap.Modal(document.getElementById('modalAdminCentral'));
-        modalAdmin.show();
-    } else {
-        // Jika belum login, tampilkan modal login
-        const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginAdmin'));
-        modalLogin.show();
-    }
-}
-
-// 2. Fungsi Proses Login ke Firebase Auth
-function prosesLoginFirebase(event) {
-    event.preventDefault();
-    
-    // Ambil input dari form dan hapus spasi berlebih
-    let emailInput = document.getElementById('loginEmail').value.trim();
-    
-    // TENTUKAN DOMAIN DEFAULT DI SINI (Sesuaikan dengan email di Firebase Auth kamu)
-    const domainDefault = "@balmon.com"; // atau "@balmon.go.id", dsb.
-
-    // Cek apakah user mengetikkan '@' atau tidak
-    // Jika tidak ada '@', otomatis tambahkan domain default
-    if (!emailInput.includes('@')) {
-        emailInput = emailInput + domainDefault;
-    }
-
-    const password = document.getElementById('loginPassword').value;
-    const btnSubmit = document.getElementById('btnLoginSubmit');
-
-    btnSubmit.disabled = true;
-    btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`;
-
-    // Gunakan 'emailInput' yang sudah diformat untuk login Firebase
-    auth.signInWithEmailAndPassword(emailInput, password)
-        .then((userCredential) => {
-            // Tutup Modal Login
-            const modalLoginEl = document.getElementById('modalLoginAdmin');
-            const modalLogin = bootstrap.Modal.getInstance(modalLoginEl);
-            modalLogin.hide();
-
-            // Reset form
-            document.getElementById('formLoginFirebase').reset();
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Berhasil',
-                text: `Selamat datang, ${userCredential.user.email}`,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                // Buka modal admin central
-                bukaModalAdmin();
-            });
-        })
-        .catch((error) => {
-            let pesanError = "Gagal login. Periksa username dan password Anda.";
-            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                pesanError = "Username atau password salah!";
-            } else if (error.code === 'auth/invalid-email') {
-                pesanError = "Format username/email tidak valid!";
-            }
-            Swal.fire('Login Gagal', pesanError, 'error');
-        })
-        .finally(() => {
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk`;
-        });
-}
-
-// 3. Listener Status Autentikasi (Otomatis Deteksi Login/Logout)
-auth.onAuthStateChanged((user) => {
-    const btnAdmin = document.getElementById('btnAdminMain'); // ID tombol Admin di navbar/header
-    
-    if (user) {
-        console.log("Admin Aktif:", user.email);
-        if (btnAdmin) {
-            btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Admin Central (${user.email.split('@')[0]})`;
-            btnAdmin.classList.replace('btn-warning', 'btn-success');
-        }
-    } else {
-        console.log("Status: Unauthenticated");
-        if (btnAdmin) {
-            btnAdmin.innerHTML = `<i class="bi bi-shield-lock-fill me-1"></i> Panel Admin Pusat`;
-            btnAdmin.classList.replace('btn-success', 'btn-warning');
-        }
-    }
-});
-
-// 4. Fungsi Logout
-function logoutAdmin() {
-    auth.signOut().then(() => {
-        Swal.fire('Logout Berhasil', 'Anda telah keluar dari sesi admin.', 'info');
-    });
-}
-        // Fungsi yang dipanggil saat tombol Edit Data diklik
-function verifikasiAdmin() {
-    const user = auth.currentUser;
-    if (user) {
-        // Jika admin sudah login, isi data eksisting ke form dan buka modal pengaturan kinerja
-        loadDataKeForm();
-        const modalKinerja = new bootstrap.Modal(document.getElementById('modalKinerja'));
-        modalKinerja.show();
-    } else {
-        // Jika belum login, buka Modal Login Admin
-        const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginAdmin'));
-        modalLogin.show();
-    }
-}
-
-// Fungsi bantu untuk memuat data dari Firebase ke Input Form Modal
-function loadDataKeForm() {
-    firebase.database().ref('kinerja_sarpras').once('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            // Load Data Tab 1 (Dasbor)
-            for (let i = 1; i <= 6; i++) {
-                if (data['k' + i]) {
-                    const elTarget = document.getElementById('inp_t_' + i);
-                    const elCapaian = document.getElementById('inp_c_' + i);
-                    
-                    if (elTarget) elTarget.value = data['k' + i].target;
-                    if (elCapaian) elCapaian.value = data['k' + i].capaian;
-                }
-            }
-            
-            // Load Data Tab 2 (Detail UNAR)
-            if (data.unar_detail) {
-                document.getElementById('inp_unar_peserta').value = data.unar_detail.peserta || '';
-                document.getElementById('inp_unar_lulus').value = data.unar_detail.lulus || '';
-                document.getElementById('inp_unar_gagal').value = data.unar_detail.tidak_lulus || '';
-            }
-        }
-    });
-}
-
-// Fungsi menyimpan seluruh data (Dasbor + Detail UNAR) ke Firebase
-function simpanKinerja(event) {
-    event.preventDefault(); 
-
-    const dataUpdate = {
-        // Tab 1: Dasbor Kinerja
-        k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
-        k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
-        k3: { target: parseFloat(document.getElementById('inp_t_3').value), capaian: parseFloat(document.getElementById('inp_c_3').value), suffix: '%' },
-        k4: { target: parseFloat(document.getElementById('inp_t_4').value), capaian: parseFloat(document.getElementById('inp_c_4').value), suffix: '' },
-        k5: { target: parseFloat(document.getElementById('inp_t_5').value), capaian: parseFloat(document.getElementById('inp_c_5').value), suffix: '' },
-        k6: { target: parseFloat(document.getElementById('inp_t_6').value), capaian: parseFloat(document.getElementById('inp_c_6').value), suffix: '' },
-        
-        // Tab 2: Detail UNAR
-        unar_detail: {
-            peserta: parseInt(document.getElementById('inp_unar_peserta').value) || 0,
-            lulus: parseInt(document.getElementById('inp_unar_lulus').value) || 0,
-            tidak_lulus: parseInt(document.getElementById('inp_unar_gagal').value) || 0,
-            terakhir_update: new Date().toLocaleDateString('id-ID')
-        }
-    };
-
-    Swal.fire({
-        title: 'Menyimpan...',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
-
-    firebase.database().ref('kinerja_sarpras').update(dataUpdate)
-        .then(() => {
-            const modalEl = document.getElementById('modalKinerja');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'Data Tersimpan!',
-                text: 'Dasbor & Data Detail UNAR berhasil diperbarui.',
-                timer: 2500,
-                showConfirmButton: false
-            }).then(() => {
-                auth.signOut(); // Logout otomatis
-            });
-        })
-        .catch((error) => {
-            Swal.fire('Gagal!', 'Terjadi kesalahan: ' + error.message, 'error');
-        });
-}
-    </script>
-    
-   <!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
+       <!-- MODAL PENGATURAN KINERJA (ADMIN)                                  -->
 <!-- ================================================================= -->
 <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -1055,5 +717,253 @@ function simpanKinerja(event) {
         </div>
     </div>
 </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- SCRIPT SDK FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <!-- Firebase Authentication (TAMBAHKAN BARIS INI) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<!-- SCRIPT UNTUK MEMBACA DATA DARI FIREBASE -->
+    <script>
+    // 1. Pastikan Firebase sudah diinisialisasi di sarpras.html sebelum script ini dipanggil
+    document.addEventListener('DOMContentLoaded', function() {
+        loadDataKinerjaRealtime();
+    });
+
+    // 2. FUNGSI LOAD DATA KINERJA KE DASBOR
+    function loadDataKinerjaRealtime() {
+        const refKinerja = database.ref('kinerja_sarpras');
+
+        refKinerja.on('value', (snapshot) => {
+            const data = snapshot.val();
+            
+            // Jika database kosong, buatkan data default otomatis
+            if (!data) {
+                const defaultData = {
+                    k1: { target: 100, capaian: 95, suffix: '%' },
+                    k2: { target: 100, capaian: 90, suffix: '%' },
+                    k3: { target: 100, capaian: 98, suffix: '%' },
+                    k4: { target: 100, capaian: 85, suffix: '' },
+                    k5: { target: 85, capaian: 88, suffix: '' },
+                    k6: { target: 90, capaian: 92, suffix: '' }
+                };
+                refKinerja.set(defaultData);
+                return;
+            }
+
+            // Loop mengisi kartu 1 sampai 6
+            for (let i = 1; i <= 6; i++) {
+                if (data['k' + i]) {
+                    let t = parseFloat(data['k' + i].target) || 0;
+                    let c = parseFloat(data['k' + i].capaian) || 0;
+                    let suf = data['k' + i].suffix || ''; 
+
+                    document.getElementById('val_target_' + i).innerText = t + suf;
+                    document.getElementById('val_capaian_' + i).innerText = c + suf;
+                    document.getElementById('val_capaian_bar_' + i).innerText = c + suf;
+
+                    let maxVal = Math.max(t, c, 1);
+                    let wTarget = (t / maxVal) * 100;
+                    let wCapaian = (c / maxVal) * 100;
+
+                    document.getElementById('bar_target_' + i).style.width = wTarget + '%';
+                    document.getElementById('bar_capaian_' + i).style.width = wCapaian + '%';
+
+                    let statusEl = document.getElementById('status_' + i);
+                    if (statusEl) {
+                        let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
+                        if (c > t) {
+                            statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
+                            statusEl.className = "badge bg-light text-success border border-success";
+                        } else if (c < t) {
+                            statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
+                            statusEl.className = "badge bg-light text-danger border border-danger";
+                        } else {
+                            statusEl.innerHTML = "Sesuai Target";
+                            statusEl.className = "badge bg-light text-primary border border-primary";
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. INISIALISASI FIREBASE AUTHENTICATION
+    const auth = firebase.auth();
+
+    // 4. FUNGSI MEMBUKA MODAL (LOGIN ATAU ADMIN)
+    function bukaModalAdmin() {
+        const user = auth.currentUser;
+        if (user) {
+            // Jika sudah login, langsung buka Modal Edit Admin Central
+            loadExistingDataToModal();
+            const modalAdmin = new bootstrap.Modal(document.getElementById('modalKinerja'));
+            modalAdmin.show();
+        } else {
+            // Jika belum login, tampilkan modal login
+            const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginAdmin'));
+            modalLogin.show();
+        }
+    }
+
+    // 5. FUNGSI VERIFIKASI ADMIN (DIPANGGIL OLEH TOMBOL EDIT DATA)
+    function verifikasiAdmin() {
+        bukaModalAdmin(); // Panggil fungsi di atas
+    }
+
+    // 6. FUNGSI PROSES LOGIN FIREBASE
+    function prosesLoginFirebase(event) {
+        event.preventDefault();
+        
+        let emailInput = document.getElementById('loginEmail').value.trim();
+        const domainDefault = "@balmon.com"; 
+
+        if (!emailInput.includes('@')) {
+            emailInput = emailInput + domainDefault;
+        }
+
+        const password = document.getElementById('loginPassword').value;
+        const btnSubmit = document.getElementById('btnLoginSubmit');
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`;
+
+        auth.signInWithEmailAndPassword(emailInput, password)
+            .then((userCredential) => {
+                const modalLoginEl = document.getElementById('modalLoginAdmin');
+                const modalLogin = bootstrap.Modal.getInstance(modalLoginEl);
+                modalLogin.hide();
+
+                document.getElementById('formLoginFirebase').reset();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Berhasil',
+                    text: `Selamat datang, ${userCredential.user.email}`,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    bukaModalAdmin();
+                });
+            })
+            .catch((error) => {
+                let pesanError = "Gagal login. Periksa username dan password Anda.";
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    pesanError = "Username atau password salah!";
+                } else if (error.code === 'auth/invalid-email') {
+                    pesanError = "Format username/email tidak valid!";
+                }
+                Swal.fire('Login Gagal', pesanError, 'error');
+            })
+            .finally(() => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk`;
+            });
+    }
+
+    // 7. LISTENER STATUS LOGIN OTOMATIS
+    auth.onAuthStateChanged((user) => {
+        const btnAdmin = document.getElementById('btnAdminMain'); 
+        if (user) {
+            console.log("Admin Aktif:", user.email);
+            if (btnAdmin) {
+                btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Admin Central (${user.email.split('@')[0]})`;
+                btnAdmin.classList.replace('btn-warning', 'btn-success');
+            }
+        } else {
+            console.log("Status: Unauthenticated");
+            if (btnAdmin) {
+                btnAdmin.innerHTML = `<i class="bi bi-shield-lock-fill me-1"></i> Panel Admin Pusat`;
+                btnAdmin.classList.replace('btn-success', 'btn-warning');
+            }
+        }
+    });
+
+    // 8. FUNGSI LOGOUT (OPSIONAL JIKA BUTUH TOMBOL KELUAR)
+    function logoutAdmin() {
+        auth.signOut().then(() => {
+            Swal.fire('Logout Berhasil', 'Anda telah keluar dari sesi admin.', 'info');
+        });
+    }
+
+    // 9. FUNGSI LOAD DATA FIREBASE KE DALAM FORM MODAL EDIT
+    function loadExistingDataToModal() {
+        firebase.database().ref('kinerja_sarpras').once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Load Tab 1 (Dasbor)
+                for (let i = 1; i <= 6; i++) {
+                    if (data['k' + i]) {
+                        const elTarget = document.getElementById('inp_t_' + i);
+                        const elCapaian = document.getElementById('inp_c_' + i);
+                        if (elTarget) elTarget.value = data['k' + i].target;
+                        if (elCapaian) elCapaian.value = data['k' + i].capaian;
+                    }
+                }
+                // Load Tab 2 (Detail UNAR)
+                if (data.unar_detail) {
+                    document.getElementById('inp_unar_peserta').value = data.unar_detail.peserta || '';
+                    document.getElementById('inp_unar_lulus').value = data.unar_detail.lulus || '';
+                    document.getElementById('inp_unar_gagal').value = data.unar_detail.tidak_lulus || '';
+                }
+            }
+        });
+    }
+
+    // 10. FUNGSI SIMPAN PERUBAHAN DATA KINERJA & DETAIL UNAR
+    function simpanKinerja(event) {
+        event.preventDefault(); 
+
+        const dataUpdate = {
+            // Data Dasbor
+            k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
+            k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
+            k3: { target: parseFloat(document.getElementById('inp_t_3').value), capaian: parseFloat(document.getElementById('inp_c_3').value), suffix: '%' },
+            k4: { target: parseFloat(document.getElementById('inp_t_4').value), capaian: parseFloat(document.getElementById('inp_c_4').value), suffix: '' },
+            k5: { target: parseFloat(document.getElementById('inp_t_5').value), capaian: parseFloat(document.getElementById('inp_c_5').value), suffix: '' },
+            k6: { target: parseFloat(document.getElementById('inp_t_6').value), capaian: parseFloat(document.getElementById('inp_c_6').value), suffix: '' },
+            
+            // Data Detail UNAR
+            unar_detail: {
+                peserta: parseInt(document.getElementById('inp_unar_peserta').value) || 0,
+                lulus: parseInt(document.getElementById('inp_unar_lulus').value) || 0,
+                tidak_lulus: parseInt(document.getElementById('inp_unar_gagal').value) || 0,
+                terakhir_update: new Date().toLocaleDateString('id-ID')
+            }
+        };
+
+        Swal.fire({
+            title: 'Menyimpan...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        firebase.database().ref('kinerja_sarpras').update(dataUpdate)
+            .then(() => {
+                const modalEl = document.getElementById('modalKinerja');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Tersimpan!',
+                    text: 'Dasbor & Data Detail UNAR berhasil diperbarui.',
+                    timer: 2500,
+                    showConfirmButton: false
+                }).then(() => {
+                    auth.signOut(); // Logout otomatis
+                });
+            })
+            .catch((error) => {
+                Swal.fire('Gagal!', 'Terjadi kesalahan: ' + error.message, 'error');
+            });
+    }
+</script>
 </body>
 </html>
