@@ -236,3 +236,318 @@
 
             <!-- JADWAL UNAR 2026 METRICS & DETAIL TABLE -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-calendar3 me-2 text-primary"></i>Jadwal & Rekapitulasi Pelaksanaan UNAR (Tahun 2026)</h5>
+                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Bulan</th>
+                                <th>Tanggal Ujian</th>
+                                <th>Kategori</th>
+                                <th>Lokasi Pelaksanaan</th>
+                                <th>Jumlah Peserta</th>
+                                <th style="background-color: #d97706;">Siaga</th>
+                                <th style="background-color: #6d28d9;">Penggalang</th>
+                                <th style="background-color: #059669;">Penegak</th>
+                                <th style="background-color: #16a34a;">Peserta Lulus</th>
+                                <th style="background-color: #dc2626;">Peserta Tidak Lulus</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblJadwalUnar"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL EDIT SELURUH DATA TABEL JADWAL UNAR -->
+    <div class="modal fade" id="modalEditAllJadwal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background: var(--primary-navy);">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-pencil-square me-2"></i>Edit Seluruh Data Tabel UNAR 2026</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form id="formAllJadwalUnar">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle text-center small">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 100px;">Bulan</th>
+                                        <th style="width: 150px;">Tanggal Ujian</th>
+                                        <th style="width: 150px;">Kategori</th>
+                                        <th style="width: 200px;">Lokasi Pelaksanaan</th>
+                                        <th style="width: 80px;">Siaga</th>
+                                        <th style="width: 80px;">Penggalang</th>
+                                        <th style="width: 80px;">Penegak</th>
+                                        <th style="width: 80px;">Tidak Lulus</th>
+                                        <th style="width: 120px;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyModalEdit"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary fw-bold px-4"><i class="bi bi-save me-1"></i>Simpan Semua Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SDK FIREBASE COMPAT LIBRARIES -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const EDIT_PASSWORD = "admin123";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+
+        let jadwal2026 = [
+            { no: 1, bulan: "Januari", tgl: "20 Jan 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidakLulus: 0, status: "Selesai" },
+            { no: 2, bulan: "Februari", tgl: "17 Feb 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidakLulus: 1, status: "Selesai" },
+            { no: 3, bulan: "Maret", tgl: "16 Mar 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 11, penggalang: 5, penegak: 2, tidakLulus: 1, status: "Selesai" },
+            { no: 4, bulan: "April", tgl: "21 Apr 2026", kat: "CAT Non Reguler", lokasi: "Kotawaringin Timur", siaga: 30, penggalang: 12, penegak: 8, tidakLulus: 4, status: "Selesai" },
+            { no: 5, bulan: "Mei", tgl: "19 Mei 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 9, penggalang: 3, penegak: 2, tidakLulus: 1, status: "Selesai" },
+            { no: 6, bulan: "Juni", tgl: "16 Jun 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 7, penggalang: 3, penegak: 1, tidakLulus: 0, status: "Selesai" },
+            { no: 7, bulan: "Juli", tgl: "21 Jul 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 4, penegak: 2, tidakLulus: 1, status: "Selesai" },
+            { no: 8, bulan: "Agustus", tgl: "18 Agu 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidakLulus: 1, status: "Selesai" },
+            { no: 9, bulan: "September", tgl: "15 Sep 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidakLulus: 0, status: "Selesai" },
+            { no: 10, bulan: "Oktober", tgl: "20 Okt 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidakLulus: 0, status: "Mendatang" },
+            { no: 11, bulan: "November", tgl: "17 Nov 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidakLulus: 0, status: "Mendatang" },
+            { no: 12, bulan: "Desember", tgl: "15 Des 2026", kat: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidakLulus: 0, status: "Mendatang" }
+        ];
+
+        let chartInstance = null;
+        let bsModalEditAll = null;
+
+        if (typeof ChartDataLabels !== 'undefined') {
+            Chart.register(ChartDataLabels);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bsModalEditAll = new bootstrap.Modal(document.getElementById('modalEditAllJadwal'));
+
+            // LISTEN FIREBASE: AMBIL DARI PATH BARU, JIKA KOSONG AMBIL FALLBACK DARI DATA LAMA
+            database.ref('kinerja_sarpras/unar').on('value', (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    if (val.jadwal && Array.isArray(val.jadwal)) {
+                        jadwal2026 = val.jadwal;
+                    } else if (typeof val === 'object') {
+                        // MERGE DENGAN DATA TOTAL LAMA JIKA JADWAL BELUM DIBUAT DI FIREBASE
+                        if (val.siaga !== undefined) {
+                            jadwal2026[0].siaga = val.siaga || 0;
+                            jadwal2026[0].penggalang = val.penggalang || 0;
+                            jadwal2026[0].penegak = val.penegak || 0;
+                            jadwal2026[0].tidakLulus = val.tidakLulus || 0;
+                        }
+                    }
+                }
+                recalculateAndRender();
+            }, (err) => {
+                console.warn("Menggunakan data lokal:", err.message);
+                recalculateAndRender();
+            });
+        });
+
+        function promptPasswordEdit() {
+            Swal.fire({
+                title: 'Akses Terkunci',
+                text: 'Masukkan password admin untuk mengedit data tabel:',
+                input: 'password',
+                inputAttributes: { autocapitalize: 'off', autocorrect: 'off' },
+                showCancelButton: true,
+                confirmButtonText: 'Verifikasi',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#0e306c'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value === EDIT_PASSWORD) {
+                        openModalEditAll();
+                    } else {
+                        Swal.fire('Akses Ditolak!', 'Password yang Anda masukkan salah.', 'error');
+                    }
+                }
+            });
+        }
+
+        function openModalEditAll() {
+            const tbody = document.getElementById('tbodyModalEdit');
+            tbody.innerHTML = jadwal2026.map((j, idx) => `
+                <tr>
+                    <td class="fw-bold text-primary">${j.bulan}</td>
+                    <td><input type="text" class="form-control form-control-sm tgl-edit" data-idx="${idx}" value="${j.tgl || ''}"></td>
+                    <td>
+                        <select class="form-select form-select-sm kat-edit" data-idx="${idx}">
+                            <option value="CAT Reguler" ${j.kat === 'CAT Reguler' ? 'selected' : ''}>CAT Reguler</option>
+                            <option value="CAT Non Reguler" ${j.kat === 'CAT Non Reguler' ? 'selected' : ''}>CAT Non Reguler</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control form-control-sm lokasi-edit" data-idx="${idx}" value="${j.lokasi || ''}"></td>
+                    <td><input type="number" min="0" class="form-control form-control-sm siaga-edit" data-idx="${idx}" value="${j.siaga || 0}"></td>
+                    <td><input type="number" min="0" class="form-control form-control-sm penggalang-edit" data-idx="${idx}" value="${j.penggalang || 0}"></td>
+                    <td><input type="number" min="0" class="form-control form-control-sm penegak-edit" data-idx="${idx}" value="${j.penegak || 0}"></td>
+                    <td><input type="number" min="0" class="form-control form-control-sm tl-edit" data-idx="${idx}" value="${j.tidakLulus || 0}"></td>
+                    <td>
+                        <select class="form-select form-select-sm status-edit" data-idx="${idx}">
+                            <option value="Selesai" ${j.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                            <option value="Mendatang" ${j.status === 'Mendatang' ? 'selected' : ''}>Mendatang</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+
+            bsModalEditAll.show();
+        }
+
+        function recalculateAndRender() {
+            let totSiaga = 0, totPenggalang = 0, totPenegak = 0;
+            let totTidakLulus = 0, totLulus = 0, totPeserta = 0;
+            let jmlKegiatan = 0, unarReguler = 0, unarNonReguler = 0;
+
+            jadwal2026.forEach(j => {
+                const s = parseInt(j.siaga) || 0;
+                const pg = parseInt(j.penggalang) || 0;
+                const pn = parseInt(j.penegak) || 0;
+                const tl = parseInt(j.tidakLulus) || 0;
+
+                const jml = s + pg + pn;
+                const lulus = Math.max(0, jml - tl);
+
+                totSiaga += s;
+                totPenggalang += pg;
+                totPenegak += pn;
+                totTidakLulus += tl;
+                totLulus += lulus;
+                totPeserta += jml;
+
+                if (j.status === 'Selesai') {
+                    jmlKegiatan++;
+                    if (j.kat && j.kat.includes('Non Reguler')) unarNonReguler++;
+                    else unarReguler++;
+                }
+            });
+
+            const totalPendaftar = totPeserta + totTidakLulus;
+
+            document.getElementById('valTotalPendaftar').textContent = totalPendaftar;
+            document.getElementById('valPesertaUjian').textContent = totPeserta;
+            document.getElementById('valTidakLulus').textContent = totTidakLulus;
+            document.getElementById('valLulusUjian').textContent = totLulus;
+            document.getElementById('valJmlKegiatan').textContent = jmlKegiatan;
+            document.getElementById('valUnarReguler').textContent = unarReguler;
+            document.getElementById('valUnarNonReguler').textContent = unarNonReguler;
+
+            document.getElementById('lblSiaga').textContent = totSiaga;
+            document.getElementById('lblPenggalang').textContent = totPenggalang;
+            document.getElementById('lblPenegak').textContent = totPenegak;
+
+            renderChart(totSiaga, totPenggalang, totPenegak);
+            renderJadwalTabel();
+        }
+
+        function renderChart(siaga, penggalang, penegak) {
+            const canvasEl = document.getElementById('chartTingkat');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const maxVal = Math.max(siaga, penggalang, penegak);
+            const yMax = Math.ceil((maxVal + 20) / 20) * 20;
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Siaga', 'Penggalang', 'Penegak'],
+                    datasets: [{
+                        data: [siaga, penggalang, penegak],
+                        backgroundColor: ['#f5bc3f', '#8162f6', '#31be7d'],
+                        borderRadius: 12,
+                        borderSkipped: false,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true },
+                        datalabels: {
+                            anchor: 'center',
+                            align: 'center',
+                            color: '#1e293b',
+                            font: { weight: 'bold', size: 14 },
+                            formatter: function(value) { return value; }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { weight: 'bold', size: 13 }, color: '#0e306c' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: yMax,
+                            ticks: { stepSize: 20, font: { weight: '600' } },
+                            grid: { color: '#e2e8f0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderJadwalTabel() {
+            const tbody = document.getElementById('tblJadwalUnar');
+            if (!tbody) return;
+
+            tbody.innerHTML = jadwal2026.map((j) => {
+                const s = parseInt(j.siaga) || 0;
+                const pg = parseInt(j.penggalang) || 0;
+                const pn = parseInt(j.penegak) || 0;
+                const tl = parseInt(j.tidakLulus) || 0;
+                const jml = s + pg + pn;
+                const lulus = Math.max(0, jml - tl);
+
+                return `
+                    <tr>
+                        <td class="fw-bold">${j.no}</td>
+                        <td class="fw-bold text-primary">${j.bulan}</td>
+                        <td>${j.tgl || '-'}</td>
+                        <td><span class="badge bg-light text-dark border">${j.kat || '-'}</span></td>
+                        <td class="text-start">${j.lokasi || '-'}</td>
+                        <td class="fw-bold text-dark">${j.status === 'Selesai' ? jml : '-'}</td>
+                        <td class="fw-bold text-warning">${j.status === 'Selesai' ? s : '-'}</td>
+                        <td class="fw-bold text-primary">${j.status ===
