@@ -613,7 +613,7 @@
                                                 <th style="min-width: 100px;">Kategori</th>
                                                 <th style="min-width: 120px;">Lokasi</th>
                                                 <th style="width: 70px;" class="bg-info text-white">Jml<br>Pendaftar</th>
-                                                <th style="width: 75px;" class="bg-primary text-white">Jml<br>Peserta</th>
+                                                <th style="width: 75px;" class="bg-primary text-white">Jml Peserta<br>(Auto)</th>
                                                 <th style="width: 55px;">Siaga</th>
                                                 <th style="width: 65px;">Penggalang</th>
                                                 <th style="width: 55px;">Penegak</th>
@@ -807,7 +807,7 @@
             loadDataKinerjaRealtime();
         });
 
-        // 1. Render Tabel Edit UNAR 12 Bulan (Jml Lulus Ujian Auto = Pendaftar - Tidak Lulus)
+        // 1. Render Tabel Edit UNAR 12 Bulan (Jumlah Peserta Readonly Auto = Siaga + Penggalang + Penegak)
         function renderUnarEditTableRows() {
             const tbody = document.getElementById('tbodyUnarEdit');
             if(!tbody) return;
@@ -817,6 +817,7 @@
                 let i = idx + 1;
                 let pendVal = parseInt(m.pendaftar) || 0;
                 let tlVal = parseInt(m.tidak_lulus) || 0;
+                let autoPeserta = (parseInt(m.siaga) || 0) + (parseInt(m.penggalang) || 0) + (parseInt(m.penegak) || 0);
                 let autoLulus = Math.max(0, pendVal - tlVal);
 
                 html += `
@@ -831,10 +832,10 @@
                     </td>
                     <td><input type="text" id="unar_lok_${i}" class="form-control form-control-sm" value="${m.lokasi}"></td>
                     <td><input type="number" id="unar_pend_${i}" class="form-control form-control-sm text-center text-info fw-bold" value="${m.pendaftar}" oninput="hitungAutoLulusModal(${i})"></td>
-                    <td><input type="number" id="unar_pes_${i}" class="form-control form-control-sm text-center text-primary fw-bold" value="${m.peserta !== undefined ? m.peserta : autoLulus}"></td>
-                    <td><input type="number" id="unar_sia_${i}" class="form-control form-control-sm text-center" value="${m.siaga}"></td>
-                    <td><input type="number" id="unar_peng_${i}" class="form-control form-control-sm text-center" value="${m.penggalang}"></td>
-                    <td><input type="number" id="unar_pen_${i}" class="form-control form-control-sm text-center" value="${m.penegak}"></td>
+                    <td><input type="number" id="unar_pes_${i}" class="form-control form-control-sm text-center text-primary fw-bold bg-light" value="${autoPeserta}" readonly></td>
+                    <td><input type="number" id="unar_sia_${i}" class="form-control form-control-sm text-center" value="${m.siaga}" oninput="hitungAutoPesertaModal(${i})"></td>
+                    <td><input type="number" id="unar_peng_${i}" class="form-control form-control-sm text-center" value="${m.penggalang}" oninput="hitungAutoPesertaModal(${i})"></td>
+                    <td><input type="number" id="unar_pen_${i}" class="form-control form-control-sm text-center" value="${m.penegak}" oninput="hitungAutoPesertaModal(${i})"></td>
                     <td><input type="number" id="unar_lul_${i}" class="form-control form-control-sm text-center text-success fw-bold bg-light" value="${autoLulus}" readonly></td>
                     <td><input type="number" id="unar_tl_${i}" class="form-control form-control-sm text-center text-danger fw-bold" value="${m.tidak_lulus}" oninput="hitungAutoLulusModal(${i})"></td>
                     <td><input type="number" id="unar_tladm_${i}" class="form-control form-control-sm text-center text-warning fw-bold" value="${m.tidak_lulus_adm}"></td>
@@ -850,7 +851,15 @@
             tbody.innerHTML = html;
         }
 
-        // AUTO CALCULATE JUMLAH LULUS UJIAN DI MODAL: Pendaftar - Tidak Lulus
+        // AUTO CALCULATE JUMLAH PESERTA: Siaga + Penggalang + Penegak
+        function hitungAutoPesertaModal(i) {
+            const sia = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
+            const peng = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
+            const pen = parseInt(document.getElementById(`unar_pen_${i}`).value) || 0;
+            document.getElementById(`unar_pes_${i}`).value = sia + peng + pen;
+        }
+
+        // AUTO CALCULATE JUMLAH LULUS UJIAN: Pendaftar - Tidak Lulus
         function hitungAutoLulusModal(i) {
             const pend = parseInt(document.getElementById(`unar_pend_${i}`).value) || 0;
             const tl = parseInt(document.getElementById(`unar_tl_${i}`).value) || 0;
@@ -1112,7 +1121,7 @@
                             if (elCapaian) elCapaian.value = data['k' + i].capaian;
                         }
                     }
-                    // 2. Load Tabel UNAR 12 Bulan (Otomatis Menghitung Lulus = Pendaftar - Tidak Lulus)
+                    // 2. Load Tabel UNAR 12 Bulan (Peserta = Siaga + Penggalang + Penegak, Lulus = Pendaftar - Tidak Lulus)
                     if (data.unar_detail && data.unar_detail.months) {
                         const months = data.unar_detail.months;
                         months.forEach((m, idx) => {
@@ -1129,10 +1138,10 @@
                             let pengVal = m.penggalang || 0;
                             let penVal = m.penegak || 0;
 
-                            if (document.getElementById(`unar_pes_${i}`)) document.getElementById(`unar_pes_${i}`).value = (m.peserta !== undefined ? m.peserta : (siaVal + pengVal + penVal));
                             if (document.getElementById(`unar_sia_${i}`)) document.getElementById(`unar_sia_${i}`).value = siaVal;
                             if (document.getElementById(`unar_peng_${i}`)) document.getElementById(`unar_peng_${i}`).value = pengVal;
                             if (document.getElementById(`unar_pen_${i}`)) document.getElementById(`unar_pen_${i}`).value = penVal;
+                            if (document.getElementById(`unar_pes_${i}`)) document.getElementById(`unar_pes_${i}`).value = (siaVal + pengVal + penVal);
                             if (document.getElementById(`unar_lul_${i}`)) document.getElementById(`unar_lul_${i}`).value = Math.max(0, pendVal - tlVal);
 
                             if (document.getElementById(`unar_tl_${i}`)) document.getElementById(`unar_tl_${i}`).value = tlVal;
@@ -1186,7 +1195,7 @@
         function simpanKinerja(event) {
             event.preventDefault(); 
 
-            // 1. Data UNAR 12 Bulan (Lulus = Pendaftar - Tidak Lulus)
+            // 1. Data UNAR 12 Bulan (Peserta = Siaga + Penggalang + Penegak, Lulus = Pendaftar - Tidak Lulus)
             const updatedUnarMonths = [];
             let totalPendaftarAcc = 0;
             let totalPesertaAcc = 0;
@@ -1199,7 +1208,6 @@
                 const kategori = document.getElementById(`unar_kat_${i}`).value;
                 const lokasi = document.getElementById(`unar_lok_${i}`).value.trim();
                 const pendaftar = parseInt(document.getElementById(`unar_pend_${i}`).value) || 0;
-                const peserta = parseInt(document.getElementById(`unar_pes_${i}`).value) || 0;
                 const siaga = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
                 const penggalang = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
                 const penegak = parseInt(document.getElementById(`unar_pen_${i}`).value) || 0;
@@ -1207,7 +1215,7 @@
                 const tidak_lulus_adm = parseInt(document.getElementById(`unar_tladm_${i}`).value) || 0;
                 const status = document.getElementById(`unar_st_${i}`).value;
 
-                // RUMUS PERBAIKAN SIMPAN: Lulus = Pendaftar - Tidak Lulus
+                const peserta = siaga + penggalang + penegak;
                 const lulus = Math.max(0, pendaftar - tidak_lulus);
 
                 totalPendaftarAcc += pendaftar;
