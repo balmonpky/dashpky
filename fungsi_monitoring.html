@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASHBOARD CAPAIAN SLA MONITORING 2026 - BALMON PALANGKARAYA</title>
+
+    <!-- Favicon & Fonts -->
+    <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-navy: #0f4c81;
+            --accent-blue: #0284c7;
+            --bg-light: #f1f5f9;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR HEADER */
+        .navbar-custom {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .logo-container {
+            width: 48px;
+            height: 48px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .logo-container img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 1.8rem 2.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* CARD SLA STYLES (MATCHING SCREENSHOT) */
+        .sla-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sla-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(15, 76, 129, 0.12);
+        }
+
+        .calendar-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .badge-terkunci {
+            background-color: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* BOX ASET */
+        .asset-box {
+            background-color: #fafafa;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-top: 0.85rem;
+            margin-bottom: 0.85rem;
+        }
+        .asset-title {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .asset-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        /* BOX SLA TOTAL */
+        .sla-total-box {
+            background-color: #edf5ff;
+            border-radius: 12px;
+            padding: 1.25rem 0.75rem;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        .sla-total-val {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #2563eb;
+            line-height: 1.1;
+        }
+        .sla-sub-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #2563eb;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* SUB BOX SLA TETAP & BERGERAK */
+        .sub-sla-box {
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+        }
+        .sub-sla-val {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .sub-sla-lbl {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* BUTTONS */
+        .btn-lihat-detail {
+            background-color: #0284c7;
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 8px;
+            padding: 0.55rem;
+            border: none;
+        }
+        .btn-lihat-detail:hover {
+            background-color: #0369a1;
+            color: white;
+        }
+
+        .btn-detail-stasiun {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+            font-size: 0.78rem;
+            border-radius: 8px;
+            padding: 0.55rem;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+        }
+        .btn-detail-stasiun:hover {
+            background-color: #e2e8f0;
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar navbar-dark navbar-custom sticky-top">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="sarpras.html">
+                <div class="logo-container me-3">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                </div>
+                <div>
+                    <span class="text-white d-block fs-6">CAPAIAN SLA PERANGKAT MONITORING</span>
+                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
+                </div>
+            </a>
+            
+            <div class="d-flex gap-2 align-items-center">
+                <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
+                </a>
+                <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
+                    <i class="bi bi-broadcast me-1"></i> Terhubung Realtime dengan Admin Sarpras
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <div class="container-fluid px-4 my-4">
+        
+        <!-- HEADER BANNER -->
+        <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING SERVICE LEVEL AGREEMENT (SLA) 2026</h2>
+                <p class="mb-0 text-white-50">Capaian Kinerja & Ketersediaan Perangkat Stasiun Monitoring Spektrum Frekuensi Radio</p>
+            </div>
+            <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
+                <i class="bi bi-calendar-check me-1"></i> Tahun 2026
+            </div>
+        </div>
+
+        <!-- GRID CARDS SLA BULANAN -->
+        <div class="row g-4" id="slaCardContainer">
+            <!-- 12 Kartu Bulanan di-render secara otomatis via JS dari Firebase -->
+        </div>
+
+    </div>
+
+    <!-- SDK FIREBASE COMPAT LIBRARIES -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+
+        // Data Default 12 Bulan (Tampilan Awal Persis Sesuai Gambar)
+        let slaMonths = [
+            { id: 1, bulan: "January 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+            { id: 2, bulan: "February 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+            { id: 3, bulan: "March 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+            { id: 4, bulan: "April 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+            { id: 5, bulan: "May 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 6, bulan: "June 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 7, bulan: "July 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 8, bulan: "August 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 9, bulan: "September 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 10, bulan: "October 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 11, bulan: "November 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+            { id: 12, bulan: "December 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSlaDataRealtime();
+        });
+
+        // FUNGSI MEMBACA DATA REALTIME DARI FIREBASE (node: kinerja_sarpras/sla_monitoring)
+        function loadSlaDataRealtime() {
+            const refSla = database.ref('kinerja_sarpras/sla_monitoring');
+
+            refSla.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.months && Array.isArray(data.months)) {
+                    slaMonths = data.months;
+                }
+                renderSlaCards();
+            }, (err) => {
+                console.warn("Menggunakan data default lokal:", err.message);
+                renderSlaCards();
+            });
+        }
+
+        // RENDER KARTU SLA SESUAI DESAIN GAMBAR
+        function renderSlaCards() {
+            const container = document.getElementById('slaCardContainer');
+            if(!container) return;
+
+            container.innerHTML = slaMonths.map((m) => {
+                return `
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="sla-card">
+                        <div>
+                            <!-- Header Kartu -->
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="calendar-icon-box">
+                                        <i class="bi bi-calendar-event"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">${m.bulan}</h6>
+                                        <small class="text-muted" style="font-size: 0.72rem;">Snapshot Penilaian SLA</small>
+                                    </div>
+                                </div>
+                                <span class="badge-terkunci">
+                                    <i class="bi bi-lock-fill me-1"></i>${m.status_kunci || 'TERKUNCI'}
+                                </span>
+                            </div>
+
+                            <!-- Box Total Aset -->
+                            <div class="asset-box text-center">
+                                <div class="row g-0">
+                                    <div class="col-4 border-end">
+                                        <div class="asset-title">Total Aset</div>
+                                        <div class="asset-num text-dark">${m.total_aset || 0}</div>
+                                    </div>
+                                    <div class="col-4 border-end">
+                                        <div class="asset-title text-success">Baik</div>
+                                        <div class="asset-num text-success">${m.baik || 0}</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="asset-title text-danger">Rusak</div>
+                                        <div class="asset-num text-danger">${m.rusak || 0}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Box Performa SLA -->
+                            <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                                <span class="fw-bold text-dark small">Performa SLA</span>
+                                <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 0.68rem; font-weight: 600;">Detail tersedia</span>
+                            </div>
+
+                            <div class="sla-total-box">
+                                <div class="sla-total-val">${m.sla_total || '0.00%'}</div>
+                                <div class="sla-sub-label">SLA TOTAL</div>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <div class="sub-sla-box">
+                                        <div class="sub-sla-val">${m.sla_tetap || '0.00%'}</div>
+                                        <div class="sub-sla-lbl">SLA TETAP</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="sub-sla-box">
+                                        <div class="sub-sla-val">${m.sla_bergerak || '0.00%'}</div>
+                                        <div class="sub-sla-lbl">SLA BERGERAK</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tombol Bawah -->
+                        <div class="d-flex flex-column gap-2 mt-2">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-lihat-detail flex-grow-1 d-flex align-items-center justify-content-center gap-1">
+                                    <i class="bi bi-eye-fill"></i> LIHAT DETAIL
+                                </button>
+                                <button class="btn btn-light border px-2 text-muted" title="Buka Kunci"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-light border px-2 text-muted" title="Hapus"><i class="bi bi-trash"></i></button>
+                            </div>
+                            <button class="btn btn-detail-stasiun d-flex align-items-center justify-content-center gap-1">
+                                <i class="bi bi-bar-chart-line"></i> DETAIL SLA STASIUN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
