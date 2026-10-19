@@ -534,7 +534,7 @@
                                 <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data Tabel UNAR 2026</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran (Bulanan)</button>
+                                <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran (Nominal Rp & Auto % Capaian)</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold text-info" id="sla-tab" data-bs-toggle="tab" data-bs-target="#tab-sla" type="button" role="tab">4. SLA Monitoring (12 Bulan)</button>
@@ -626,7 +626,7 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 3: REALISASI ANGGARAN (PAGU & CAPAIAN BULANAN) -->
+                            <!-- TAB 3: REALISASI ANGGARAN (NOMINAL SERAPAN RP & AUTO CALCULATED % CAPAIAN) -->
                             <div class="tab-pane fade" id="tab-anggaran" role="tabpanel">
                                 <div class="card p-3 mb-3 border-0 shadow-sm bg-white">
                                     <h6 class="fw-bold text-primary mb-2"><i class="bi bi-wallet2 me-1"></i> Pagu Anggaran 5 Program (Rp)</h6>
@@ -636,21 +636,24 @@
                                 </div>
 
                                 <div class="card p-3 border-0 shadow-sm bg-white">
-                                    <h6 class="fw-bold text-primary mb-2"><i class="bi bi-graph-up-arrow me-1"></i> Progres Penyerapan Anggaran Bulanan (%)</h6>
-                                    <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 320px; overflow-y: auto;">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold text-primary m-0"><i class="bi bi-graph-up-arrow me-1"></i> Progres Penyerapan Anggaran Bulanan (Nominal Serapan Rp)</h6>
+                                        <span class="badge bg-light text-primary border"><i class="bi bi-calculator me-1"></i>% Capaian terhitung otomatis dari Pagu</span>
+                                    </div>
+                                    <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 330px; overflow-y: auto;">
                                         <table class="table table-bordered table-striped align-middle text-center mb-0">
                                             <thead class="table-dark sticky-top">
                                                 <tr class="small text-nowrap">
                                                     <th style="width: 100px;">Bulan</th>
-                                                    <th>UNAR (%)</th>
-                                                    <th>BHP (%)</th>
-                                                    <th>Transportable (%)</th>
-                                                    <th>Bimtek (%)</th>
-                                                    <th>Maritim (%)</th>
+                                                    <th>UNAR (Rp / %)</th>
+                                                    <th>BHP (Rp / %)</th>
+                                                    <th>Transportable (Rp / %)</th>
+                                                    <th>Bimtek (Rp / %)</th>
+                                                    <th>Maritim (Rp / %)</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tbodyAnggaranBulanEdit" class="small">
-                                                <!-- Baris 12 Bulan Progres Anggaran Generated via JS -->
+                                                <!-- Baris 12 Bulan Progres Serapan Nominal Generated via JS -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -750,6 +753,7 @@
         const auth = firebase.auth();
 
         const bulanList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
 
         // Data Default UNAR 12 Bulan
         const defaultUnarMonths = [
@@ -767,13 +771,13 @@
             { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, status: "Mendatang" }
         ];
 
-        // Data Default 5 Mata Anggaran beserta Capaian Progres Bulanan
+        // Data Default 5 Mata Anggaran beserta Capaian Progres Nominal Serapan Rp
         const defaultAnggaranList = [
-            { id: "unar", nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", pagu: 150000000, realisasi: 112500000, monthlyProgress: [10, 20, 32, 45, 55, 62, 70, 75, 75, 75, 75, 75] },
-            { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyProgress: [8, 18, 30, 42, 58, 68, 78, 87.5, 87.5, 87.5, 87.5, 87.5] },
-            { id: "transportable", nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000, monthlyProgress: [5, 12, 22, 35, 48, 60, 68, 75, 75, 75, 75, 75] },
-            { id: "bimtek", nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000, monthlyProgress: [10, 25, 40, 52, 65, 72, 80, 80, 80, 80, 80, 80] },
-            { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyProgress: [8, 15, 28, 40, 55, 68, 75, 80, 80, 80, 80, 80] }
+            { id: "unar", nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
+            { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
+            { id: "transportable", nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000, monthlyNominal: [9000000, 21600000, 39600000, 63000000, 86400000, 108000000, 122400000, 135000000, 135000000, 135000000, 135000000, 135000000] },
+            { id: "bimtek", nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000, monthlyNominal: [12000000, 30000000, 48000000, 62400000, 78000000, 86400000, 96000000, 96000000, 96000000, 96000000, 96000000, 96000000] },
+            { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyNominal: [12800000, 24000000, 44800000, 64000000, 88000000, 108800000, 120000000, 128000000, 128000000, 128000000, 128000000, 128000000] }
         ];
 
         // Data Default SLA Monitoring 12 Bulan
@@ -834,13 +838,13 @@
             tbody.innerHTML = html;
         }
 
-        // 2. Render Form Edit Pagu & Tabel Progres Anggaran Bulanan
+        // 2. Render Form Edit Pagu & Tabel Serapan Nominal Rp Bulanan (dengan Auto Kalkulasi % Capaian)
         function renderAnggaranEditRows() {
             const containerPagu = document.getElementById('containerPaguAnggaran');
             const tbodyBulan = document.getElementById('tbodyAnggaranBulanEdit');
             if(!containerPagu || !tbodyBulan) return;
 
-            // Render Input Pagu
+            // Render Inputs Pagu Rp
             let htmlPagu = '';
             defaultAnggaranList.forEach((item, idx) => {
                 let i = idx + 1;
@@ -851,27 +855,64 @@
                     <input type="hidden" id="anggaran_nama_${i}" value="${item.nama}">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light">Rp</span>
-                        <input type="number" id="anggaran_pagu_${i}" class="form-control" value="${item.pagu}" min="0" required>
+                        <input type="number" id="anggaran_pagu_${i}" class="form-control" value="${item.pagu}" min="0" required oninput="hitungkanPersentaseAnggaran()">
                     </div>
                 </div>`;
             });
             containerPagu.innerHTML = htmlPagu;
 
-            // Render Tabel Progres 12 Bulan
+            // Render Tabel Serapan Rp 12 Bulan beserta badge % terhitung otomatis
             let htmlBulan = '';
             bulanList.forEach((bln, idx) => {
                 let m = idx + 1;
                 htmlBulan += `
                 <tr>
                     <td class="fw-bold text-primary" id="anggaran_bln_lbl_${m}">${bln}</td>
-                    <td><input type="number" step="0.1" id="anggaran_m_${m}_unar" class="form-control form-control-sm text-center" value="${defaultAnggaranList[0].monthlyProgress[idx]}"></td>
-                    <td><input type="number" step="0.1" id="anggaran_m_${m}_bhp" class="form-control form-control-sm text-center" value="${defaultAnggaranList[1].monthlyProgress[idx]}"></td>
-                    <td><input type="number" step="0.1" id="anggaran_m_${m}_transportable" class="form-control form-control-sm text-center" value="${defaultAnggaranList[2].monthlyProgress[idx]}"></td>
-                    <td><input type="number" step="0.1" id="anggaran_m_${m}_bimtek" class="form-control form-control-sm text-center" value="${defaultAnggaranList[3].monthlyProgress[idx]}"></td>
-                    <td><input type="number" step="0.1" id="anggaran_m_${m}_maritim" class="form-control form-control-sm text-center" value="${defaultAnggaranList[4].monthlyProgress[idx]}"></td>
+                    <td>
+                        <input type="number" id="anggaran_rp_m_${m}_unar" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[0].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                        <span id="calc_pct_m_${m}_unar" class="badge bg-light text-primary border mt-1">0.0%</span>
+                    </td>
+                    <td>
+                        <input type="number" id="anggaran_rp_m_${m}_bhp" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[1].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                        <span id="calc_pct_m_${m}_bhp" class="badge bg-light text-success border mt-1">0.0%</span>
+                    </td>
+                    <td>
+                        <input type="number" id="anggaran_rp_m_${m}_transportable" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[2].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                        <span id="calc_pct_m_${m}_transportable" class="badge bg-light text-warning border mt-1">0.0%</span>
+                    </td>
+                    <td>
+                        <input type="number" id="anggaran_rp_m_${m}_bimtek" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[3].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                        <span id="calc_pct_m_${m}_bimtek" class="badge bg-light text-purple border mt-1" style="color: #8b5cf6;">0.0%</span>
+                    </td>
+                    <td>
+                        <input type="number" id="anggaran_rp_m_${m}_maritim" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[4].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                        <span id="calc_pct_m_${m}_maritim" class="badge bg-light text-info border mt-1">0.0%</span>
+                    </td>
                 </tr>`;
             });
             tbodyBulan.innerHTML = htmlBulan;
+
+            // Hitung kalkulasi % persentase pertama kali
+            hitungkanPersentaseAnggaran();
+        }
+
+        // FUNGSI UTAMA AUTOMATIC PERCENTAGE CALCULATION (LIVE)
+        function hitungkanPersentaseAnggaran() {
+            programIds.forEach((pId, pIdx) => {
+                const paguEl = document.getElementById(`anggaran_pagu_${pIdx + 1}`);
+                const paguVal = parseFloat(paguEl ? paguEl.value : 0) || 0;
+
+                for (let m = 1; m <= 12; m++) {
+                    const inputRp = document.getElementById(`anggaran_rp_m_${m}_${pId}`);
+                    const badgePct = document.getElementById(`calc_pct_m_${m}_${pId}`);
+                    const serapanVal = parseFloat(inputRp ? inputRp.value : 0) || 0;
+
+                    const pct = paguVal > 0 ? ((serapanVal / paguVal) * 100).toFixed(1) : '0.0';
+                    if (badgePct) {
+                        badgePct.innerText = `${pct}%`;
+                    }
+                }
+            });
         }
 
         // 3. Render Tabel Edit SLA Monitoring 12 Bulan
@@ -1072,22 +1113,29 @@
                             if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
                         });
                     }
-                    // 3. Load Realisasi Anggaran 5 Program (Pagu & Monthly Progress)
+                    // 3. Load Realisasi Anggaran 5 Program (Pagu & Monthly Nominal / Progress)
                     if (data.realisasi_anggaran) {
                         const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
                         listAngg.forEach((item, idx) => {
                             let i = idx + 1;
-                            if (document.getElementById(`anggaran_pagu_${i}`)) {
-                                document.getElementById(`anggaran_pagu_${i}`).value = item.pagu || 0;
-                            }
-                            if (item.monthlyProgress && Array.isArray(item.monthlyProgress)) {
-                                item.monthlyProgress.forEach((val, mIdx) => {
-                                    let m = mIdx + 1;
-                                    let inputEl = document.getElementById(`anggaran_m_${m}_${item.id}`);
-                                    if (inputEl) inputEl.value = val;
-                                });
+                            const paguEl = document.getElementById(`anggaran_pagu_${i}`);
+                            if (paguEl) paguEl.value = item.pagu || 0;
+
+                            let paguVal = item.pagu || 0;
+
+                            for (let m = 1; m <= 12; m++) {
+                                let inputRp = document.getElementById(`anggaran_rp_m_${m}_${item.id}`);
+                                if (inputRp) {
+                                    if (item.monthlyNominal && Array.isArray(item.monthlyNominal) && item.monthlyNominal[m-1] !== undefined) {
+                                        inputRp.value = item.monthlyNominal[m-1];
+                                    } else if (item.monthlyProgress && Array.isArray(item.monthlyProgress) && item.monthlyProgress[m-1] !== undefined) {
+                                        let pct = parseFloat(item.monthlyProgress[m-1]) || 0;
+                                        inputRp.value = Math.round((pct / 100) * paguVal);
+                                    }
+                                }
                             }
                         });
+                        hitungkanPersentaseAnggaran();
                     }
                     // 4. Load SLA Monitoring 12 Bulan
                     if (data.sla_monitoring && data.sla_monitoring.months) {
@@ -1136,9 +1184,8 @@
             }
             const totalLulusAcc = Math.max(0, totalPesertaAcc - totalTidakLulusAcc);
 
-            // 2. Data Realisasi Anggaran 5 Program (Membaca Pagu & Progres 12 Bulan)
+            // 2. Data Realisasi Anggaran 5 Program (Membaca Nominal Serapan Rp & Otomatis Mengonsolidasi % Capaian)
             const updatedAnggaran = [];
-            const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
 
             programIds.forEach((pId, idx) => {
                 let i = idx + 1;
@@ -1146,21 +1193,26 @@
                 const nama = document.getElementById(`anggaran_nama_${i}`).value;
                 const pagu = parseFloat(document.getElementById(`anggaran_pagu_${i}`).value) || 0;
                 
+                const monthlyNominal = [];
                 const monthlyProgress = [];
+
                 for (let m = 1; m <= 12; m++) {
-                    const val = parseFloat(document.getElementById(`anggaran_m_${m}_${pId}`).value) || 0;
-                    monthlyProgress.push(val);
+                    const serapanRp = parseFloat(document.getElementById(`anggaran_rp_m_${m}_${pId}`).value) || 0;
+                    monthlyNominal.push(serapanRp);
+
+                    const pct = pagu > 0 ? parseFloat(((serapanRp / pagu) * 100).toFixed(1)) : 0;
+                    monthlyProgress.push(pct);
                 }
 
-                // Total realisasi dihitung dari persentase bulan terbaru / terakhir x pagu
-                const lastPercent = monthlyProgress[11] || 0;
-                const realisasi = Math.round((lastPercent / 100) * pagu);
+                // Total realisasi dihitung dari nominal serapan bulan terakhir/terbaru
+                const realisasi = monthlyNominal[11] || 0;
 
                 updatedAnggaran.push({
                     id: id,
                     nama: nama,
                     pagu: pagu,
                     realisasi: realisasi,
+                    monthlyNominal: monthlyNominal,
                     monthlyProgress: monthlyProgress
                 });
             });
