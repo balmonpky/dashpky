@@ -269,8 +269,10 @@
                 const tidakLulus = parseInt(m.tidak_lulus) || 0;
                 const tidakLulusAdm = parseInt(m.tidak_lulus_adm) || 0;
 
-                const lulusBulanIni = siaga + penggalang + penegak;
-                const peserta = m.peserta !== undefined ? (parseInt(m.peserta) || lulusBulanIni) : lulusBulanIni;
+                const peserta = m.peserta !== undefined ? (parseInt(m.peserta) || (siaga + penggalang + penegak)) : (siaga + penggalang + penegak);
+                
+                // RUMUS PERBAIKAN: Jumlah Lulus Ujian = Jumlah Pendaftar - Tidak Lulus
+                const lulusBulanIni = Math.max(0, pendaftar - tidakLulus);
 
                 totalPendaftar += pendaftar;
                 totalPeserta += peserta;
