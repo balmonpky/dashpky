@@ -63,6 +63,37 @@
             box-shadow: var(--card-shadow);
         }
 
+        /* CHART CONTAINER STYLES */
+        .chart-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-filter-chart {
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 0.35rem 0.85rem;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            transition: all 0.25s ease;
+        }
+        .btn-filter-chart:hover {
+            background-color: #e2e8f0;
+            color: #0f172a;
+        }
+        .btn-filter-chart.active {
+            background-color: #0f4c81;
+            color: #ffffff;
+            border-color: #0f4c81;
+            box-shadow: 0 4px 10px rgba(15, 76, 129, 0.2);
+        }
+
         /* CARD SLA STYLES */
         .sla-card {
             background: #ffffff;
@@ -238,15 +269,28 @@
             </div>
         </div>
 
-        <!-- GRAFIK REKAPITULASI LINE CHART (TREN SLA BULANAN) -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark m-0">
-                    <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Rekapitulasi Tren SLA Total (Tahun 2026)
-                </h5>
-                <span class="badge bg-light text-primary border px-3 py-2 fw-semibold">12 Bulan</span>
+        <!-- GRAFIK REKAPITULASI LINE CHART (TREN SLA BULANAN INTERAKTIF) -->
+        <div class="chart-card mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2 border-bottom">
+                <div>
+                    <h5 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-graph-up-arrow text-primary"></i>
+                        Grafik Rekapitulasi Tren SLA Bulanan (Tahun 2026)
+                    </h5>
+                    <small class="text-muted">Perbandingan capaian SLA Total, SLA Tetap, dan SLA Bergerak</small>
+                </div>
+
+                <!-- FILTER DATO KONTROL GRAFIK -->
+                <div class="d-flex gap-1" id="filterChartControls">
+                    <button class="btn btn-filter-chart active" onclick="switchChartDataset('all')">Semua Data</button>
+                    <button class="btn btn-filter-chart" onclick="switchChartDataset('total')">SLA Total</button>
+                    <button class="btn btn-filter-chart" onclick="switchChartDataset('tetap')">SLA Tetap</button>
+                    <button class="btn btn-filter-chart" onclick="switchChartDataset('bergerak')">SLA Bergerak</button>
+                </div>
             </div>
-            <div style="height: 280px; position: relative;">
+
+            <!-- AREA CANVAS GRAFIK -->
+            <div style="height: 310px; position: relative;">
                 <canvas id="chartSlaTrend"></canvas>
             </div>
         </div>
@@ -280,6 +324,7 @@
         const database = firebase.database();
 
         let slaChartInstance = null;
+        let currentFilter = 'all';
 
         if (typeof ChartDataLabels !== 'undefined') {
             Chart.register(ChartDataLabels);
@@ -323,60 +368,153 @@
             });
         }
 
-        // RENDER GRAFIK LINE CHART SLA
+        // FUNGSI ALIH FILTER DATASET GRAFIK
+        function switchChartDataset(type) {
+            currentFilter = type;
+            const buttons = document.querySelectorAll('.btn-filter-chart');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            const activeMap = { 'all': 0, 'total': 1, 'tetap': 2, 'bergerak': 3 };
+            if (buttons[activeMap[type]]) {
+                buttons[activeMap[type]].classList.add('active');
+            }
+
+            renderSlaChart();
+        }
+
+        // RENDER GRAFIK LINE CHART INTERAKTIF DENGAN ANIMASI
         function renderSlaChart() {
             const canvasEl = document.getElementById('chartSlaTrend');
             if (!canvasEl) return;
             const ctx = canvasEl.getContext('2d');
 
             const labels = slaMonths.map(m => m.bulan.replace(' 2026', ''));
-            const dataValues = slaMonths.map(m => parseFloat((m.sla_total || '0').toString().replace('%', '')) || 0);
+            const dataTotal = slaMonths.map(m => parseFloat((m.sla_total || '0').toString().replace('%', '')) || 0);
+            const dataTetap = slaMonths.map(m => parseFloat((m.sla_tetap || '0').toString().replace('%', '')) || 0);
+            const dataBergerak = slaMonths.map(m => parseFloat((m.sla_bergerak || '0').toString().replace('%', '')) || 0);
 
             if (slaChartInstance) {
                 slaChartInstance.destroy();
             }
 
-            // Gradient Fill bawah garis
-            const gradient = ctx.createLinearGradient(0, 0, 0, 280);
-            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
-            gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+            // Membikin Gradasi Warna di Bawah Garis (SLA Total)
+            const gradTotal = ctx.createLinearGradient(0, 0, 0, 300);
+            gradTotal.addColorStop(0, 'rgba(37, 99, 235, 0.25)');
+            gradTotal.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+            const gradTetap = ctx.createLinearGradient(0, 0, 0, 300);
+            gradTetap.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+            gradTetap.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            const gradBergerak = ctx.createLinearGradient(0, 0, 0, 300);
+            gradBergerak.addColorStop(0, 'rgba(245, 158, 11, 0.25)');
+            gradBergerak.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
+
+            const allDatasets = [
+                {
+                    id: 'total',
+                    label: 'SLA Total (%)',
+                    data: dataTotal,
+                    borderColor: '#2563eb',
+                    backgroundColor: gradTotal,
+                    borderWidth: 3,
+                    fill: currentFilter === 'total' || currentFilter === 'all',
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#2563eb',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 3
+                },
+                {
+                    id: 'tetap',
+                    label: 'SLA Tetap (%)',
+                    data: dataTetap,
+                    borderColor: '#10b981',
+                    backgroundColor: gradTetap,
+                    borderWidth: 3,
+                    fill: currentFilter === 'tetap',
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#10b981',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 3
+                },
+                {
+                    id: 'bergerak',
+                    label: 'SLA Bergerak (%)',
+                    data: dataBergerak,
+                    borderColor: '#f59e0b',
+                    backgroundColor: gradBergerak,
+                    borderWidth: 3,
+                    fill: currentFilter === 'bergerak',
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#f59e0b',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 3
+                }
+            ];
+
+            // Filter Dataset berdasarkan tombol yang aktif
+            const activeDatasets = currentFilter === 'all' 
+                ? allDatasets 
+                : allDatasets.filter(ds => ds.id === currentFilter);
 
             slaChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'SLA Total (%)',
-                        data: dataValues,
-                        borderColor: '#2563eb',
-                        backgroundColor: gradient,
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.35,
-                        pointBackgroundColor: '#2563eb',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
-                        pointHoverRadius: 7
-                    }]
+                    datasets: activeDatasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeInOutQuart'
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
-                        legend: { display: false },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: { family: 'Inter', size: 12, weight: '700' },
+                                padding: 15
+                            }
+                        },
                         tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            padding: 12,
+                            cornerRadius: 10,
                             callbacks: {
                                 label: function(context) {
-                                    return ` SLA Total: ${context.raw.toFixed(2)}%`;
+                                    return ` ${context.dataset.label}: ${context.raw.toFixed(2)}%`;
                                 }
                             }
                         },
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            color: '#0f172a',
-                            font: { weight: 'bold', size: 10 },
+                            offset: 4,
+                            color: function(context) {
+                                return context.dataset.borderColor;
+                            },
+                            font: { family: 'Inter', weight: 'bold', size: 10 },
                             formatter: function(value) {
                                 return value > 0 ? value.toFixed(1) + '%' : '';
                             }
@@ -389,7 +527,7 @@
                         },
                         y: {
                             min: 80,
-                            max: 100,
+                            max: 102,
                             ticks: {
                                 stepSize: 5,
                                 font: { family: 'Inter', weight: '500' },
