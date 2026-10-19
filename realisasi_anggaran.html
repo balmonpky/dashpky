@@ -284,10 +284,10 @@
             <!-- 5 Kartu Grafik Diberikan Secara Dinamis via JS -->
         </div>
 
-        <!-- TABEL RINCIAN REALISASI ANGGARAN -->
+        <!-- TABEL CAPAIAN BULANAN SERTA PENGATURAN KINERJA -->
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mt-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Rincian Penyerapan Anggaran</h5>
+                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Capaian Penyerapan Anggaran Per Bulan (2026)</h5>
                 <span class="badge bg-primary px-3 py-2">Tahun Anggaran 2026</span>
             </div>
             <div class="table-responsive">
@@ -295,11 +295,13 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">No</th>
-                            <th>Uraian Kegiatan / Program Anggaran</th>
-                            <th>Pagu (Rp)</th>
-                            <th>Realisasi (Rp)</th>
-                            <th>Sisa Anggaran (Rp)</th>
-                            <th style="width: 180px;">Capaian (%)</th>
+                            <th style="min-width: 130px;">Bulan (2026)</th>
+                            <th>UNAR (%)</th>
+                            <th>BHP (%)</th>
+                            <th>Transportable (%)</th>
+                            <th>Bimtek (%)</th>
+                            <th>Maritim (%)</th>
+                            <th style="width: 220px;">Rata-rata Capaian Kumulatif (%)</th>
                         </tr>
                     </thead>
                     <tbody id="tblBodyAnggaran"></tbody>
@@ -331,6 +333,10 @@
         const database = firebase.database();
 
         const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        const bulanFullNames = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
 
         // Color Palette per Program Anggaran
         const programColors = {
@@ -508,21 +514,35 @@
                 setTimeout(() => {
                     renderSingleDoughnutChart(item.id || idx, pagu, realisasi, sisa);
                 }, 50);
+            });
 
-                // GENERATE BARIS TABEL
+            // GENERATE TABEL CAPAIAN BULANAN (12 BULAN)
+            bulanFullNames.forEach((bln, mIdx) => {
+                let sumPersen = 0;
+                let progCellsHTML = '';
+
+                listAnggaran.forEach((prog) => {
+                    let val = parseFloat(prog.monthlyProgress[mIdx]) || 0;
+                    sumPersen += val;
+                    
+                    let colorClass = val >= 80 ? 'text-success' : (val >= 50 ? 'text-warning' : 'text-primary');
+                    progCellsHTML += `<td class="fw-bold ${colorClass}">${val.toFixed(1)}%</td>`;
+                });
+
+                let avgPersen = (sumPersen / listAnggaran.length).toFixed(2);
+                let badgeClass = avgPersen >= 80 ? 'bg-success' : (avgPersen >= 50 ? 'bg-warning text-dark' : 'bg-primary');
+
                 tbody.innerHTML += `
                     <tr>
-                        <td class="fw-bold">${idx + 1}</td>
-                        <td class="text-start fw-semibold text-dark">${item.nama}</td>
-                        <td class="text-end fw-bold text-primary">${formatRupiah(pagu)}</td>
-                        <td class="text-end fw-bold text-success">${formatRupiah(realisasi)}</td>
-                        <td class="text-end fw-bold text-warning">${formatRupiah(sisa)}</td>
+                        <td class="fw-bold">${mIdx + 1}</td>
+                        <td class="text-start fw-bold text-dark">${bln} 2026</td>
+                        ${progCellsHTML}
                         <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="progress flex-grow-1 progress-custom">
-                                    <div class="progress-bar progress-bar-custom" style="width: ${Math.min(100, persen)}%"></div>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <div class="progress flex-grow-1 progress-custom" style="height: 8px;">
+                                    <div class="progress-bar progress-bar-custom" style="width: ${Math.min(100, avgPersen)}%"></div>
                                 </div>
-                                <span class="fw-bold small ${persen >= 80 ? 'text-success' : 'text-warning'}">${persen}%</span>
+                                <span class="badge ${badgeClass}">${avgPersen}%</span>
                             </div>
                         </td>
                     </tr>
