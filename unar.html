@@ -179,6 +179,7 @@
                             <th>Kategori</th>
                             <th>Lokasi Pelaksanaan</th>
                             <th class="bg-info text-white">Jumlah Pendaftar</th>
+                            <th class="bg-primary text-white">Jumlah Peserta</th>
                             <th>Siaga</th>
                             <th>Penggalang</th>
                             <th>Penegak</th>
@@ -216,18 +217,18 @@
         const database = firebase.database();
 
         let unarMonths = [
-            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 20, siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", pendaftar: 55, siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 10, siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 18, siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 14, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
-            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
-            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
+            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, peserta: 15, siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, peserta: 13, siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 20, peserta: 19, siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", pendaftar: 55, peserta: 54, siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, peserta: 15, siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 10, peserta: 10, siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 18, peserta: 17, siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 14, peserta: 14, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, peserta: 13, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, peserta: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, peserta: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, peserta: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -258,6 +259,7 @@
 
             unarMonths.forEach((m, idx) => {
                 const pendaftar = parseInt(m.pendaftar) || 0;
+                const peserta = parseInt(m.peserta) || 0;
                 const siaga = parseInt(m.siaga) || 0;
                 const penggalang = parseInt(m.penggalang) || 0;
                 const penegak = parseInt(m.penegak) || 0;
@@ -265,10 +267,9 @@
                 const tidakLulusAdm = parseInt(m.tidak_lulus_adm) || 0;
 
                 const lulusBulanIni = siaga + penggalang + penegak;
-                const pesertaUjianBulanIni = lulusBulanIni + tidakLulus;
 
                 totalPendaftar += pendaftar;
-                totalPeserta += pesertaUjianBulanIni;
+                totalPeserta += peserta;
                 totalLulus += lulusBulanIni;
                 totalTidakLulus += tidakLulus;
 
@@ -284,6 +285,7 @@
                         <td><span class="badge bg-light text-dark border">${m.kategori || 'CAT Reguler'}</span></td>
                         <td>${m.lokasi || '-'}</td>
                         <td class="fw-bold text-info bg-light">${pendaftar}</td>
+                        <td class="fw-bold text-primary bg-light">${peserta}</td>
                         <td class="text-success fw-semibold">${siaga}</td>
                         <td class="text-success fw-semibold">${penggalang}</td>
                         <td class="text-success fw-semibold">${penegak}</td>
