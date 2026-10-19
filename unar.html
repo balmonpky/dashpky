@@ -71,7 +71,7 @@
             transform: translateY(-4px);
         }
         .stat-card .title {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
@@ -138,30 +138,36 @@
             </div>
         </div>
 
-        <!-- REKAP TOP CARDS STATISTIK -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
+        <!-- REKAP TOP CARDS STATISTIK (5 KARTU SEJAJAR) -->
+        <div class="row row-cols-1 row-cols-md-5 g-3 mb-4">
+            <div class="col">
                 <div class="stat-card" style="border-left: 5px solid #0284c7;">
                     <div class="title text-info"><i class="bi bi-journal-text me-1"></i> Total Pendaftar</div>
                     <div class="value text-info" id="lblTotalPendaftar">0</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div class="stat-card" style="border-left: 5px solid #2563eb;">
                     <div class="title text-primary"><i class="bi bi-people me-1"></i> Total Peserta Ujian</div>
                     <div class="value text-primary" id="lblTotalPeserta">0</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div class="stat-card" style="border-left: 5px solid #10b981;">
                     <div class="title text-success"><i class="bi bi-check-circle me-1"></i> Total Lulus Ujian</div>
                     <div class="value text-success" id="lblTotalLulus">0</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div class="stat-card" style="border-left: 5px solid #ef4444;">
                     <div class="title text-danger"><i class="bi bi-x-circle me-1"></i> Total Tidak Lulus Ujian</div>
                     <div class="value text-danger" id="lblTotalTidakLulus">0</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-card" style="border-left: 5px solid #f59e0b;">
+                    <div class="title text-warning"><i class="bi bi-exclamation-triangle me-1"></i> Total Tidak Lulus Administrasi</div>
+                    <div class="value text-warning" id="lblTotalTidakLulusAdm">0</div>
                 </div>
             </div>
         </div>
@@ -257,6 +263,7 @@
             let totalPeserta = 0;
             let totalLulus = 0;
             let totalTidakLulus = 0;
+            let totalTidakLulusAdm = 0;
 
             const tbody = document.getElementById('tblBodyUnar');
             tbody.innerHTML = '';
@@ -271,13 +278,13 @@
 
                 const peserta = m.peserta !== undefined ? (parseInt(m.peserta) || (siaga + penggalang + penegak)) : (siaga + penggalang + penegak);
                 
-                // RUMUS PERBAIKAN: Jumlah Lulus Ujian = Jumlah Pendaftar - Tidak Lulus
                 const lulusBulanIni = Math.max(0, pendaftar - tidakLulus);
 
                 totalPendaftar += pendaftar;
                 totalPeserta += peserta;
                 totalLulus += lulusBulanIni;
                 totalTidakLulus += tidakLulus;
+                totalTidakLulusAdm += tidakLulusAdm;
 
                 let badgeStatus = m.status === 'Selesai' 
                     ? '<span class="badge bg-success">Selesai</span>' 
@@ -307,6 +314,7 @@
             document.getElementById('lblTotalPeserta').textContent = totalPeserta;
             document.getElementById('lblTotalLulus').textContent = totalLulus;
             document.getElementById('lblTotalTidakLulus').textContent = totalTidakLulus;
+            document.getElementById('lblTotalTidakLulusAdm').textContent = totalTidakLulusAdm;
         }
     </script>
 </body>
