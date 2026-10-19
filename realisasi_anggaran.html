@@ -106,6 +106,37 @@
             margin-top: 4px;
         }
 
+        /* CHART CONTAINER STYLES */
+        .main-chart-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-filter-chart {
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 0.35rem 0.85rem;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            transition: all 0.25s ease;
+        }
+        .btn-filter-chart:hover {
+            background-color: #e2e8f0;
+            color: #0f172a;
+        }
+        .btn-filter-chart.active {
+            background-color: #0f4c81;
+            color: #ffffff;
+            border-color: #0f4c81;
+            box-shadow: 0 4px 10px rgba(15, 76, 129, 0.2);
+        }
+
         .chart-card {
             background: #ffffff;
             border-radius: 20px;
@@ -220,7 +251,35 @@
             </div>
         </div>
 
-        <!-- GRID 5 GRAFIK ITEM ANGGARAN -->
+        <!-- GRAFIK REKAPITULASI LINE CHART (PROGRES REALISASI BULANAN INTERAKTIF) -->
+        <div class="main-chart-card mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2 border-bottom">
+                <div>
+                    <h5 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-graph-up-arrow text-primary"></i>
+                        Grafik Progres Realisasi Anggaran Bulanan (Tahun 2026)
+                    </h5>
+                    <small class="text-muted">Tren persentase penyerapan anggaran per Uraian Kegiatan/Program</small>
+                </div>
+
+                <!-- FILTER KONTROL GRAFIK -->
+                <div class="d-flex flex-wrap gap-1" id="filterChartControls">
+                    <button class="btn btn-filter-chart active" onclick="switchAnggaranChartFilter('all')">Semua Program</button>
+                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('unar')">UNAR</button>
+                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('bhp')">BHP</button>
+                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('transportable')">Transportable</button>
+                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('bimtek')">Bimtek</button>
+                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('maritim')">Maritim</button>
+                </div>
+            </div>
+
+            <!-- AREA CANVAS GRAFIK -->
+            <div style="height: 320px; position: relative;">
+                <canvas id="chartAnggaranTrend"></canvas>
+            </div>
+        </div>
+
+        <!-- GRID 5 GRAFIK ITEM ANGGARAN (DOUGHNUT) -->
         <div class="row g-4 mb-4" id="gridChartsContainer">
             <!-- 5 Kartu Grafik Diberikan Secara Dinamis via JS -->
         </div>
@@ -271,16 +330,59 @@
         }
         const database = firebase.database();
 
-        // 5 MATA ANGGARAN DEFAULT
+        const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+        // Color Palette per Program Anggaran
+        const programColors = {
+            unar: "#2563eb",
+            bhp: "#10b981",
+            transportable: "#f59e0b",
+            bimtek: "#8b5cf6",
+            maritim: "#06b6d4"
+        };
+
+        // 5 MATA ANGGARAN DEFAULT DENGAN TREN PROGRES BULANAN (12 BULAN)
         let listAnggaran = [
-            { id: "unar", nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", pagu: 150000000, realisasi: 112500000 },
-            { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000 },
-            { id: "transportable", nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000 },
-            { id: "bimtek", nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000 },
-            { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000 }
+            { 
+                id: "unar", 
+                nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", 
+                pagu: 150000000, 
+                realisasi: 112500000,
+                monthlyProgress: [10, 20, 32, 45, 55, 62, 70, 75, 75, 75, 75, 75] 
+            },
+            { 
+                id: "bhp", 
+                nama: "Realisasi Anggaran BHP", 
+                pagu: 200000000, 
+                realisasi: 175000000,
+                monthlyProgress: [8, 18, 30, 42, 58, 68, 78, 87.5, 87.5, 87.5, 87.5, 87.5] 
+            },
+            { 
+                id: "transportable", 
+                nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", 
+                pagu: 180000000, 
+                realisasi: 135000000,
+                monthlyProgress: [5, 12, 22, 35, 48, 60, 68, 75, 75, 75, 75, 75] 
+            },
+            { 
+                id: "bimtek", 
+                nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", 
+                pagu: 120000000, 
+                realisasi: 96000000,
+                monthlyProgress: [10, 25, 40, 52, 65, 72, 80, 80, 80, 80, 80, 80] 
+            },
+            { 
+                id: "maritim", 
+                nama: "Realisasi Anggaran Perizinan Maritim On the Spot", 
+                pagu: 160000000, 
+                realisasi: 128000000,
+                monthlyProgress: [8, 15, 28, 40, 55, 68, 75, 80, 80, 80, 80, 80] 
+            }
         ];
 
-        let chartInstances = {};
+        let doughnutChartInstances = {};
+        let lineChartInstance = null;
+        let currentChartFilter = 'all';
 
         if (typeof ChartDataLabels !== 'undefined') {
             Chart.register(ChartDataLabels);
@@ -300,15 +402,60 @@
             refAnggaran.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data && Array.isArray(data)) {
-                    listAnggaran = data;
+                    updateLocalDataWithFirebase(data);
                 } else if (data && typeof data === 'object') {
-                    listAnggaran = Object.values(data);
+                    updateLocalDataWithFirebase(Object.values(data));
                 }
                 renderDashboard();
             }, (err) => {
                 console.warn("Menggunakan data default lokal:", err.message);
                 renderDashboard();
             });
+        }
+
+        function updateLocalDataWithFirebase(firebaseData) {
+            firebaseData.forEach((fbItem, idx) => {
+                let target = listAnggaran.find(item => item.id === fbItem.id) || listAnggaran[idx];
+                if (target) {
+                    target.pagu = parseFloat(fbItem.pagu) || 0;
+                    target.realisasi = parseFloat(fbItem.realisasi) || 0;
+                    if (fbItem.nama) target.nama = fbItem.nama;
+
+                    // Apabila terdapat custom monthly data dari firebase, perbarui, jika tidak maka kalkulasi proporsional
+                    if (fbItem.monthlyProgress && Array.isArray(fbItem.monthlyProgress)) {
+                        target.monthlyProgress = fbItem.monthlyProgress;
+                    } else {
+                        let finalPersen = target.pagu > 0 ? (target.realisasi / target.pagu) * 100 : 0;
+                        target.monthlyProgress = [
+                            (finalPersen * 0.1).toFixed(1),
+                            (finalPersen * 0.22).toFixed(1),
+                            (finalPersen * 0.38).toFixed(1),
+                            (finalPersen * 0.52).toFixed(1),
+                            (finalPersen * 0.68).toFixed(1),
+                            (finalPersen * 0.82).toFixed(1),
+                            (finalPersen * 0.92).toFixed(1),
+                            finalPersen.toFixed(1),
+                            finalPersen.toFixed(1),
+                            finalPersen.toFixed(1),
+                            finalPersen.toFixed(1),
+                            finalPersen.toFixed(1)
+                        ];
+                    }
+                }
+            });
+        }
+
+        function switchAnggaranChartFilter(type) {
+            currentChartFilter = type;
+            const buttons = document.querySelectorAll('.btn-filter-chart');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            const filterMap = { 'all': 0, 'unar': 1, 'bhp': 2, 'transportable': 3, 'bimtek': 4, 'maritim': 5 };
+            if (buttons[filterMap[type]]) {
+                buttons[filterMap[type]].classList.add('active');
+            }
+
+            renderLineChart();
         }
 
         function renderDashboard() {
@@ -330,7 +477,7 @@
                 totalPagu += pagu;
                 totalRealisasi += realisasi;
 
-                // GENERATE KARTU & GRAFIK
+                // GENERATE KARTU & GRAFIK DOUGHNUT
                 const col = document.createElement('div');
                 col.className = 'col-lg-4 col-md-6';
                 col.innerHTML = `
@@ -357,9 +504,9 @@
                 `;
                 gridContainer.appendChild(col);
 
-                // Render Chart Donut/Doughnut per item
+                // Render Chart Donut per item
                 setTimeout(() => {
-                    renderSingleChart(item.id || idx, pagu, realisasi, sisa);
+                    renderSingleDoughnutChart(item.id || idx, pagu, realisasi, sisa);
                 }, 50);
 
                 // GENERATE BARIS TABEL
@@ -390,18 +537,138 @@
             document.getElementById('lblTotalRealisasi').textContent = formatRupiah(totalRealisasi);
             document.getElementById('lblTotalSisa').textContent = formatRupiah(totalSisa);
             document.getElementById('lblTotalCapaianPersen').textContent = `${totalPersen}%`;
+
+            // RENDER LINE CHART TREN BULANAN
+            renderLineChart();
         }
 
-        function renderSingleChart(chartId, pagu, realisasi, sisa) {
+        // RENDER GRAFIK TREN LINE CHART ANGGARAN
+        function renderLineChart() {
+            const canvasEl = document.getElementById('chartAnggaranTrend');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
+
+            if (lineChartInstance) {
+                lineChartInstance.destroy();
+            }
+
+            const allDatasets = listAnggaran.map(item => {
+                const color = programColors[item.id] || '#3b82f6';
+
+                // Buat gradasi background
+                const grad = ctx.createLinearGradient(0, 0, 0, 300);
+                grad.addColorStop(0, color + '33'); 
+                grad.addColorStop(1, color + '00');
+
+                const dataArray = item.monthlyProgress.map(v => parseFloat(v) || 0);
+
+                return {
+                    id: item.id,
+                    label: item.nama.replace("Realisasi Anggaran ", ""),
+                    data: dataArray,
+                    borderColor: color,
+                    backgroundColor: grad,
+                    borderWidth: 3,
+                    fill: currentChartFilter === item.id,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: color,
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 3
+                };
+            });
+
+            // Filter Dataset berdasarkan pilihan
+            const activeDatasets = currentChartFilter === 'all' 
+                ? allDatasets 
+                : allDatasets.filter(ds => ds.id === currentChartFilter);
+
+            lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: bulanLabels,
+                    datasets: activeDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeInOutQuart'
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: { family: 'Inter', size: 11, weight: '700' },
+                                padding: 12
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            padding: 12,
+                            cornerRadius: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw.toFixed(2)}%`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            offset: 4,
+                            color: function(context) {
+                                return context.dataset.borderColor;
+                            },
+                            font: { family: 'Inter', weight: 'bold', size: 9 },
+                            formatter: function(value) {
+                                return value > 0 ? value.toFixed(0) + '%' : '';
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', weight: '600' }, color: '#475569' }
+                        },
+                        y: {
+                            min: 0,
+                            max: 105,
+                            ticks: {
+                                stepSize: 20,
+                                font: { family: 'Inter', weight: '500' },
+                                callback: function(value) { return value + '%'; }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSingleDoughnutChart(chartId, pagu, realisasi, sisa) {
             const canvas = document.getElementById(`chart_${chartId}`);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            if (chartInstances[chartId]) {
-                chartInstances[chartId].destroy();
+            if (doughnutChartInstances[chartId]) {
+                doughnutChartInstances[chartId].destroy();
             }
 
-            chartInstances[chartId] = new Chart(ctx, {
+            doughnutChartInstances[chartId] = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Realisasi', 'Sisa Anggaran'],
