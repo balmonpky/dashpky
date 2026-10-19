@@ -608,17 +608,18 @@
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
                                         <thead class="table-dark sticky-top">
                                             <tr class="small text-nowrap">
-                                                <th style="width: 90px;">Bulan</th>
-                                                <th style="min-width: 120px;">Tanggal Ujian</th>
-                                                <th style="min-width: 120px;">Kategori</th>
-                                                <th style="min-width: 150px;">Lokasi Pelaksanaan</th>
-                                                <th style="width: 85px;" class="bg-info text-white">Jml Pendaftar</th>
-                                                <th style="width: 65px;">Siaga</th>
-                                                <th style="width: 75px;">Penggalang</th>
-                                                <th style="width: 65px;">Penegak</th>
-                                                <th style="width: 75px;">Tidak Lulus</th>
-                                                <th style="width: 95px;" class="bg-warning text-dark">Tidak Lulus Adm</th>
-                                                <th style="min-width: 110px;">Status</th>
+                                                <th style="width: 80px;">Bulan</th>
+                                                <th style="min-width: 110px;">Tanggal Ujian</th>
+                                                <th style="min-width: 110px;">Kategori</th>
+                                                <th style="min-width: 140px;">Lokasi Pelaksanaan</th>
+                                                <th style="width: 80px;" class="bg-info text-white">Jml Pendaftar</th>
+                                                <th style="width: 80px;" class="bg-primary text-white">Jml Peserta</th>
+                                                <th style="width: 60px;">Siaga</th>
+                                                <th style="width: 70px;">Penggalang</th>
+                                                <th style="width: 60px;">Penegak</th>
+                                                <th style="width: 70px;">Tidak Lulus</th>
+                                                <th style="width: 90px;" class="bg-warning text-dark">Tidak Lulus Adm</th>
+                                                <th style="min-width: 100px;">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbodyUnarEdit" class="small">
@@ -757,20 +758,20 @@
         const bulanList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
 
-        // Data Default UNAR 12 Bulan (Termasuk Pendaftar & Tidak Lulus Adm)
+        // Data Default UNAR 12 Bulan (Termasuk Pendaftar, Peserta & Tidak Lulus Adm)
         const defaultUnarMonths = [
-            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 20, siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", pendaftar: 55, siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 10, siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 18, siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 14, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
-            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
-            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
+            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, peserta: 15, siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, peserta: 13, siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 20, peserta: 19, siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", pendaftar: 55, peserta: 54, siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 15, peserta: 15, siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 10, peserta: 10, siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 18, peserta: 17, siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 14, peserta: 14, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 13, peserta: 13, siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, peserta: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, peserta: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", pendaftar: 0, peserta: 0, siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
         ];
 
         // Data Default 5 Mata Anggaran
@@ -805,7 +806,7 @@
             loadDataKinerjaRealtime();
         });
 
-        // 1. Render Tabel Edit UNAR 12 Bulan (Dengan Jml Pendaftar & Tidak Lulus Adm)
+        // 1. Render Tabel Edit UNAR 12 Bulan (Menampilkan Jml Pendaftar & Jml Peserta)
         function renderUnarEditTableRows() {
             const tbody = document.getElementById('tbodyUnarEdit');
             if(!tbody) return;
@@ -825,6 +826,7 @@
                     </td>
                     <td><input type="text" id="unar_lok_${i}" class="form-control form-control-sm" value="${m.lokasi}"></td>
                     <td><input type="number" id="unar_pend_${i}" class="form-control form-control-sm text-center text-info fw-bold" value="${m.pendaftar}"></td>
+                    <td><input type="number" id="unar_pes_${i}" class="form-control form-control-sm text-center text-primary fw-bold" value="${m.peserta}"></td>
                     <td><input type="number" id="unar_sia_${i}" class="form-control form-control-sm text-center" value="${m.siaga}"></td>
                     <td><input type="number" id="unar_peng_${i}" class="form-control form-control-sm text-center" value="${m.penggalang}"></td>
                     <td><input type="number" id="unar_pen_${i}" class="form-control form-control-sm text-center" value="${m.penegak}"></td>
@@ -1097,7 +1099,7 @@
                             if (elCapaian) elCapaian.value = data['k' + i].capaian;
                         }
                     }
-                    // 2. Load Tabel UNAR 12 Bulan (Termasuk Pendaftar & Tidak Lulus Adm)
+                    // 2. Load Tabel UNAR 12 Bulan (Membaca Pendaftar, Peserta, & Tidak Lulus Adm)
                     if (data.unar_detail && data.unar_detail.months) {
                         const months = data.unar_detail.months;
                         months.forEach((m, idx) => {
@@ -1106,6 +1108,7 @@
                             if (document.getElementById(`unar_kat_${i}`)) document.getElementById(`unar_kat_${i}`).value = m.kategori || 'CAT Reguler';
                             if (document.getElementById(`unar_lok_${i}`)) document.getElementById(`unar_lok_${i}`).value = m.lokasi || '';
                             if (document.getElementById(`unar_pend_${i}`)) document.getElementById(`unar_pend_${i}`).value = m.pendaftar || 0;
+                            if (document.getElementById(`unar_pes_${i}`)) document.getElementById(`unar_pes_${i}`).value = m.peserta || 0;
                             if (document.getElementById(`unar_sia_${i}`)) document.getElementById(`unar_sia_${i}`).value = m.siaga || 0;
                             if (document.getElementById(`unar_peng_${i}`)) document.getElementById(`unar_peng_${i}`).value = m.penggalang || 0;
                             if (document.getElementById(`unar_pen_${i}`)) document.getElementById(`unar_pen_${i}`).value = m.penegak || 0;
@@ -1160,7 +1163,7 @@
         function simpanKinerja(event) {
             event.preventDefault(); 
 
-            // 1. Data UNAR 12 Bulan (Membaca Pendaftar & Tidak Lulus Adm)
+            // 1. Data UNAR 12 Bulan (Termasuk Pendaftar & Peserta)
             const updatedUnarMonths = [];
             let totalPendaftarAcc = 0;
             let totalPesertaAcc = 0;
@@ -1172,6 +1175,7 @@
                 const kategori = document.getElementById(`unar_kat_${i}`).value;
                 const lokasi = document.getElementById(`unar_lok_${i}`).value.trim();
                 const pendaftar = parseInt(document.getElementById(`unar_pend_${i}`).value) || 0;
+                const peserta = parseInt(document.getElementById(`unar_pes_${i}`).value) || 0;
                 const siaga = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
                 const penggalang = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
                 const penegak = parseInt(document.getElementById(`unar_pen_${i}`).value) || 0;
@@ -1180,11 +1184,11 @@
                 const status = document.getElementById(`unar_st_${i}`).value;
 
                 totalPendaftarAcc += pendaftar;
-                totalPesertaAcc += (siaga + penggalang + penegak);
+                totalPesertaAcc += peserta;
                 totalTidakLulusAcc += tidak_lulus;
 
                 updatedUnarMonths.push({
-                    id: i, bulan, tgl, kategori, lokasi, pendaftar, siaga, penggalang, penegak, tidak_lulus, tidak_lulus_adm, status
+                    id: i, bulan, tgl, kategori, lokasi, pendaftar, peserta, siaga, penggalang, penegak, tidak_lulus, tidak_lulus_adm, status
                 });
             }
             const totalLulusAcc = Math.max(0, totalPesertaAcc - totalTidakLulusAcc);
