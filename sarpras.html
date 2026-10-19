@@ -257,7 +257,7 @@
         }
 
         /* Gaya Tabel & Input Modal */
-        .table-edit-custom input, .table-edit-custom select {
+        .table-modal-edit input, .table-modal-edit select {
             font-size: 0.82rem;
             padding: 0.3rem 0.4rem;
         }
@@ -519,7 +519,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Dasbor, UNAR, Anggaran & SLA Monitoring</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran & SLA Monitoring</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
@@ -531,13 +531,13 @@
                                 <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data UNAR</button>
+                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data Tabel UNAR 2026</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-info" id="sla-tab" data-bs-toggle="tab" data-bs-target="#tab-sla" type="button" role="tab">4. SLA Monitoring</button>
+                                <button class="nav-link fw-bold text-info" id="sla-tab" data-bs-toggle="tab" data-bs-target="#tab-sla" type="button" role="tab">4. SLA Monitoring (12 Bulan)</button>
                             </li>
                         </ul>
 
@@ -604,7 +604,7 @@
 
                             <!-- TAB 2: TABEL EDIT SELURUH DATA UNAR 2026 -->
                             <div class="tab-pane fade" id="tab-unar" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-edit-custom" style="max-height: 420px; overflow-y: auto;">
+                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
                                         <thead class="table-dark sticky-top">
                                             <tr class="small text-nowrap">
@@ -624,53 +624,35 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="alert alert-info mt-3 small mb-0 d-flex align-items-center gap-2">
-                                    <i class="bi bi-info-circle-fill fs-5"></i>
-                                    <div>
-                                        Data tabel ini secara otomatis dikalkulasi total peserta & kelulusannya untuk memperbarui halaman <b>UNAR</b>.
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- TAB 3: REALISASI ANGGARAN -->
                             <div class="tab-pane fade" id="tab-anggaran" role="tabpanel">
                                 <div id="containerAnggaranEdit" class="d-flex flex-column gap-3" style="max-height: 420px; overflow-y: auto;">
-                                    <!-- Form Edit 5 Mata Anggaran di-generate via JS -->
-                                </div>
-                                <div class="alert alert-info mt-3 small mb-0 d-flex align-items-center gap-2">
-                                    <i class="bi bi-info-circle-fill fs-5"></i>
-                                    <div>
-                                        Perubahan angka Pagu dan Realisasi akan langsung memperbarui halaman <b>Realisasi Anggaran</b>.
-                                    </div>
+                                    <!-- Baris Edit Anggaran 5 Mata Anggaran di-generate via JS -->
                                 </div>
                             </div>
 
                             <!-- TAB 4: SLA MONITORING 12 BULAN -->
                             <div class="tab-pane fade" id="tab-sla" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-edit-custom" style="max-height: 420px; overflow-y: auto;">
+                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
                                         <thead class="table-dark sticky-top">
                                             <tr class="small text-nowrap">
-                                                <th style="width: 130px;">Bulan</th>
-                                                <th style="width: 90px;">Total Aset</th>
-                                                <th style="width: 90px;">Baik</th>
-                                                <th style="width: 90px;">Rusak</th>
-                                                <th style="min-width: 100px;">SLA Total</th>
-                                                <th style="min-width: 100px;">SLA Tetap</th>
-                                                <th style="min-width: 100px;">SLA Bergerak</th>
-                                                <th style="min-width: 120px;">Status Kunci</th>
+                                                <th style="width: 120px;">Bulan</th>
+                                                <th style="width: 80px;">Total Aset</th>
+                                                <th style="width: 70px;">Baik</th>
+                                                <th style="width: 70px;">Rusak</th>
+                                                <th style="width: 95px;">SLA Total</th>
+                                                <th style="width: 95px;">SLA Tetap</th>
+                                                <th style="width: 95px;">SLA Bergerak</th>
+                                                <th style="width: 110px;">Status Kunci</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbodySlaEdit" class="small">
-                                            <!-- Baris 12 Bulan SLA di-generate otomatis via JS -->
+                                            <!-- Baris 12 Bulan SLA di-generate via JS -->
                                         </tbody>
                                     </table>
-                                </div>
-                                <div class="alert alert-info mt-3 small mb-0 d-flex align-items-center gap-2">
-                                    <i class="bi bi-info-circle-fill fs-5"></i>
-                                    <div>
-                                        Perubahan data SLA bulanan ini akan langsung terhubung dan memperbarui tampilan kartu pada halaman <b>Operasional & Fungsi Monitoring</b> (`fungsi_monitoring.html`).
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -743,7 +725,9 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // Data Default 12 Bulan UNAR
+        let existingAnggaranMap = {};
+
+        // Data Default UNAR 12 Bulan
         const defaultUnarMonths = [
             { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, status: "Selesai" },
             { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, status: "Selesai" },
@@ -768,7 +752,7 @@
             { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000 }
         ];
 
-        // Data Default 12 Bulan SLA Monitoring
+        // Data Default SLA Monitoring 12 Bulan
         const defaultSlaMonths = [
             { id: 1, bulan: "January 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
             { id: 2, bulan: "February 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
@@ -863,15 +847,15 @@
                 let i = idx + 1;
                 html += `
                 <tr>
-                    <td class="fw-bold text-info" id="sla_bln_${i}">${m.bulan}</td>
+                    <td class="fw-bold text-dark" id="sla_bln_${i}">${m.bulan}</td>
                     <td><input type="number" id="sla_tot_${i}" class="form-control form-control-sm text-center" value="${m.total_aset}"></td>
-                    <td><input type="number" id="sla_baik_${i}" class="form-control form-control-sm text-center text-success fw-bold" value="${m.baik}"></td>
-                    <td><input type="number" id="sla_rusak_${i}" class="form-control form-control-sm text-center text-danger fw-bold" value="${m.rusak}"></td>
-                    <td><input type="text" id="sla_tot_val_${i}" class="form-control form-control-sm text-center fw-bold text-primary" value="${m.sla_total}"></td>
-                    <td><input type="text" id="sla_ttp_${i}" class="form-control form-control-sm text-center" value="${m.sla_tetap}"></td>
-                    <td><input type="text" id="sla_brg_${i}" class="form-control form-control-sm text-center" value="${m.sla_bergerak}"></td>
+                    <td><input type="number" id="sla_bk_${i}" class="form-control form-control-sm text-center text-success fw-bold" value="${m.baik}"></td>
+                    <td><input type="number" id="sla_rk_${i}" class="form-control form-control-sm text-center text-danger fw-bold" value="${m.rusak}"></td>
+                    <td><input type="text" id="sla_stot_${i}" class="form-control form-control-sm text-center text-primary fw-bold" value="${m.sla_total}"></td>
+                    <td><input type="text" id="sla_stet_${i}" class="form-control form-control-sm text-center" value="${m.sla_tetap}"></td>
+                    <td><input type="text" id="sla_sberg_${i}" class="form-control form-control-sm text-center" value="${m.sla_bergerak}"></td>
                     <td>
-                        <select id="sla_kunci_${i}" class="form-select form-select-sm fw-bold">
+                        <select id="sla_kc_${i}" class="form-select form-select-sm fw-bold">
                             <option value="TERKUNCI" ${m.status_kunci === 'TERKUNCI' ? 'selected' : ''}>TERKUNCI</option>
                             <option value="TERBUKA" ${m.status_kunci === 'TERBUKA' ? 'selected' : ''}>TERBUKA</option>
                         </select>
@@ -1027,7 +1011,7 @@
             database.ref('kinerja_sarpras').once('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // Load Kinerja Dasbor
+                    // 1. Load Kinerja Dasbor
                     for (let i = 1; i <= 6; i++) {
                         if (data['k' + i]) {
                             const elTarget = document.getElementById('inp_t_' + i);
@@ -1036,7 +1020,7 @@
                             if (elCapaian) elCapaian.value = data['k' + i].capaian;
                         }
                     }
-                    // Load Tabel UNAR 12 Bulan
+                    // 2. Load Tabel UNAR 12 Bulan
                     if (data.unar_detail && data.unar_detail.months) {
                         const months = data.unar_detail.months;
                         months.forEach((m, idx) => {
@@ -1051,38 +1035,39 @@
                             if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
                         });
                     }
-                    // Load Realisasi Anggaran 5 Program
+                    // 3. Load Realisasi Anggaran 5 Program
                     if (data.realisasi_anggaran) {
                         const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
                         listAngg.forEach((item, idx) => {
                             let i = idx + 1;
+                            existingAnggaranMap[item.id] = item;
                             if (document.getElementById(`anggaran_pagu_${i}`)) document.getElementById(`anggaran_pagu_${i}`).value = item.pagu || 0;
                             if (document.getElementById(`anggaran_realisasi_${i}`)) document.getElementById(`anggaran_realisasi_${i}`).value = item.realisasi || 0;
                         });
                     }
-                    // Load SLA Monitoring 12 Bulan
+                    // 4. Load SLA Monitoring 12 Bulan
                     if (data.sla_monitoring && data.sla_monitoring.months) {
-                        const months = data.sla_monitoring.months;
-                        months.forEach((m, idx) => {
+                        const slaList = data.sla_monitoring.months;
+                        slaList.forEach((m, idx) => {
                             let i = idx + 1;
                             if (document.getElementById(`sla_tot_${i}`)) document.getElementById(`sla_tot_${i}`).value = m.total_aset || 0;
-                            if (document.getElementById(`sla_baik_${i}`)) document.getElementById(`sla_baik_${i}`).value = m.baik || 0;
-                            if (document.getElementById(`sla_rusak_${i}`)) document.getElementById(`sla_rusak_${i}`).value = m.rusak || 0;
-                            if (document.getElementById(`sla_tot_val_${i}`)) document.getElementById(`sla_tot_val_${i}`).value = m.sla_total || '0.00%';
-                            if (document.getElementById(`sla_ttp_${i}`)) document.getElementById(`sla_ttp_${i}`).value = m.sla_tetap || '0.00%';
-                            if (document.getElementById(`sla_brg_${i}`)) document.getElementById(`sla_brg_${i}`).value = m.sla_bergerak || '0.00%';
-                            if (document.getElementById(`sla_kunci_${i}`)) document.getElementById(`sla_kunci_${i}`).value = m.status_kunci || 'TERKUNCI';
+                            if (document.getElementById(`sla_bk_${i}`)) document.getElementById(`sla_bk_${i}`).value = m.baik || 0;
+                            if (document.getElementById(`sla_rk_${i}`)) document.getElementById(`sla_rk_${i}`).value = m.rusak || 0;
+                            if (document.getElementById(`sla_stot_${i}`)) document.getElementById(`sla_stot_${i}`).value = m.sla_total || '0.00%';
+                            if (document.getElementById(`sla_stet_${i}`)) document.getElementById(`sla_stet_${i}`).value = m.sla_tetap || '0.00%';
+                            if (document.getElementById(`sla_sberg_${i}`)) document.getElementById(`sla_sberg_${i}`).value = m.sla_bergerak || '0.00%';
+                            if (document.getElementById(`sla_kc_${i}`)) document.getElementById(`sla_kc_${i}`).value = m.status_kunci || 'TERKUNCI';
                         });
                     }
                 }
             });
         }
 
-        // Simpan Perubahan Data Seluruh Tab Modal Ke Firebase
+        // Simpan Perubahan Data Ke Firebase
         function simpanKinerja(event) {
             event.preventDefault(); 
 
-            // 1. Ambil Data UNAR 12 Bulan & Kalkulasi Ringkasan
+            // 1. Data UNAR 12 Bulan
             const updatedUnarMonths = [];
             let totalPesertaAcc = 0;
             let totalTidakLulusAcc = 0;
@@ -1102,63 +1087,63 @@
                 totalTidakLulusAcc += tidak_lulus;
 
                 updatedUnarMonths.push({
-                    id: i,
-                    bulan: bulan,
-                    tgl: tgl,
-                    kategori: kategori,
-                    lokasi: lokasi,
-                    siaga: siaga,
-                    penggalang: penggalang,
-                    penegak: penegak,
-                    tidak_lulus: tidak_lulus,
-                    status: status
+                    id: i, bulan, tgl, kategori, lokasi, siaga, penggalang, penegak, tidak_lulus, status
                 });
             }
-
             const totalLulusAcc = Math.max(0, totalPesertaAcc - totalTidakLulusAcc);
 
-            // 2. Ambil Data Realisasi Anggaran 5 Program
+            // 2. Data Realisasi Anggaran 5 Program (Kalkulasi Tren Progres Bulanan)
             const updatedAnggaran = [];
             for (let i = 1; i <= 5; i++) {
                 const id = document.getElementById(`anggaran_id_${i}`).value;
                 const nama = document.getElementById(`anggaran_nama_${i}`).innerText;
                 const pagu = parseFloat(document.getElementById(`anggaran_pagu_${i}`).value) || 0;
                 const realisasi = parseFloat(document.getElementById(`anggaran_realisasi_${i}`).value) || 0;
+                const finalPersen = pagu > 0 ? (realisasi / pagu) * 100 : 0;
 
-                updatedAnggaran.push({
-                    id: id,
-                    nama: nama,
-                    pagu: pagu,
-                    realisasi: realisasi
+                // Kalkulasi proporsional tren 12 bulan berdasarkan capaian akhir
+                const calculatedProgress = [
+                    (finalPersen * 0.10).toFixed(1),
+                    (finalPersen * 0.22).toFixed(1),
+                    (finalPersen * 0.38).toFixed(1),
+                    (finalPersen * 0.52).toFixed(1),
+                    (finalPersen * 0.68).toFixed(1),
+                    (finalPersen * 0.82).toFixed(1),
+                    (finalPersen * 0.92).toFixed(1),
+                    finalPersen.toFixed(1),
+                    finalPersen.toFixed(1),
+                    finalPersen.toFixed(1),
+                    finalPersen.toFixed(1),
+                    finalPersen.toFixed(1)
+                ].map(v => parseFloat(v));
+
+                updatedAnggaran.push({ 
+                    id, 
+                    nama, 
+                    pagu, 
+                    realisasi,
+                    monthlyProgress: calculatedProgress 
                 });
             }
 
-            // 3. Ambil Data SLA Monitoring 12 Bulan
+            // 3. Data SLA Monitoring 12 Bulan
             const updatedSlaMonths = [];
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`sla_bln_${i}`).innerText;
                 const total_aset = parseInt(document.getElementById(`sla_tot_${i}`).value) || 0;
-                const baik = parseInt(document.getElementById(`sla_baik_${i}`).value) || 0;
-                const rusak = parseInt(document.getElementById(`sla_rusak_${i}`).value) || 0;
-                const sla_total = document.getElementById(`sla_tot_val_${i}`).value.trim();
-                const sla_tetap = document.getElementById(`sla_ttp_${i}`).value.trim();
-                const sla_bergerak = document.getElementById(`sla_brg_${i}`).value.trim();
-                const status_kunci = document.getElementById(`sla_kunci_${i}`).value;
+                const baik = parseInt(document.getElementById(`sla_bk_${i}`).value) || 0;
+                const rusak = parseInt(document.getElementById(`sla_rk_${i}`).value) || 0;
+                const sla_total = document.getElementById(`sla_stot_${i}`).value.trim();
+                const sla_tetap = document.getElementById(`sla_stet_${i}`).value.trim();
+                const sla_bergerak = document.getElementById(`sla_sberg_${i}`).value.trim();
+                const status_kunci = document.getElementById(`sla_kc_${i}`).value;
 
                 updatedSlaMonths.push({
-                    id: i,
-                    bulan: bulan,
-                    total_aset: total_aset,
-                    baik: baik,
-                    rusak: rusak,
-                    sla_total: sla_total,
-                    sla_tetap: sla_tetap,
-                    sla_bergerak: sla_bergerak,
-                    status_kunci: status_kunci
+                    id: i, bulan, total_aset, baik, rusak, sla_total, sla_tetap, sla_bergerak, status_kunci
                 });
             }
 
-            // 4. Gabungkan Semua Objek Update
+            // 4. Gabungkan Semua Objek Data Update
             const dataUpdate = {
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
                 k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
@@ -1178,7 +1163,6 @@
                 realisasi_anggaran: updatedAnggaran,
 
                 sla_monitoring: {
-                    terakhir_update: new Date().toLocaleDateString('id-ID'),
                     months: updatedSlaMonths
                 }
             };
@@ -1199,7 +1183,7 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Data Tersimpan!',
-                        text: 'Seluruh data Dasbor, UNAR, Anggaran, dan SLA Monitoring berhasil diperbarui.',
+                        text: 'Seluruh data berhasil diperbarui di Firebase.',
                         timer: 2500,
                         showConfirmButton: false
                     }).then(() => {
