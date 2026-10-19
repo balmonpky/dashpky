@@ -13,6 +13,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- Chart.js & Datalabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
     <style>
         :root {
             --primary-navy: #0f4c81;
@@ -59,7 +63,7 @@
             box-shadow: var(--card-shadow);
         }
 
-        /* CARD SLA STYLES (MATCHING SCREENSHOT) */
+        /* CARD SLA STYLES */
         .sla-card {
             background: #ffffff;
             border-radius: 16px;
@@ -234,6 +238,19 @@
             </div>
         </div>
 
+        <!-- GRAFIK REKAPITULASI LINE CHART (TREN SLA BULANAN) -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-dark m-0">
+                    <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Rekapitulasi Tren SLA Total (Tahun 2026)
+                </h5>
+                <span class="badge bg-light text-primary border px-3 py-2 fw-semibold">12 Bulan</span>
+            </div>
+            <div style="height: 280px; position: relative;">
+                <canvas id="chartSlaTrend"></canvas>
+            </div>
+        </div>
+
         <!-- GRID CARDS SLA BULANAN -->
         <div class="row g-4" id="slaCardContainer">
             <!-- 12 Kartu Bulanan di-render secara otomatis via JS dari Firebase -->
@@ -262,7 +279,13 @@
         }
         const database = firebase.database();
 
-        // Data Default 12 Bulan (Tampilan Awal Persis Sesuai Gambar)
+        let slaChartInstance = null;
+
+        if (typeof ChartDataLabels !== 'undefined') {
+            Chart.register(ChartDataLabels);
+        }
+
+        // Data Default 12 Bulan
         let slaMonths = [
             { id: 1, bulan: "January 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
             { id: 2, bulan: "February 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
@@ -291,14 +314,95 @@
                 if (data && data.months && Array.isArray(data.months)) {
                     slaMonths = data.months;
                 }
+                renderSlaChart();
                 renderSlaCards();
             }, (err) => {
                 console.warn("Menggunakan data default lokal:", err.message);
+                renderSlaChart();
                 renderSlaCards();
             });
         }
 
-        // RENDER KARTU SLA SESUAI DESAIN GAMBAR
+        // RENDER GRAFIK LINE CHART SLA
+        function renderSlaChart() {
+            const canvasEl = document.getElementById('chartSlaTrend');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
+
+            const labels = slaMonths.map(m => m.bulan.replace(' 2026', ''));
+            const dataValues = slaMonths.map(m => parseFloat((m.sla_total || '0').toString().replace('%', '')) || 0);
+
+            if (slaChartInstance) {
+                slaChartInstance.destroy();
+            }
+
+            // Gradient Fill bawah garis
+            const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
+            gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+            slaChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'SLA Total (%)',
+                        data: dataValues,
+                        borderColor: '#2563eb',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` SLA Total: ${context.raw.toFixed(2)}%`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#0f172a',
+                            font: { weight: 'bold', size: 10 },
+                            formatter: function(value) {
+                                return value > 0 ? value.toFixed(1) + '%' : '';
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', weight: '600' }, color: '#475569' }
+                        },
+                        y: {
+                            min: 80,
+                            max: 100,
+                            ticks: {
+                                stepSize: 5,
+                                font: { family: 'Inter', weight: '500' },
+                                callback: function(value) { return value + '%'; }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // RENDER KARTU SLA BULANAN
         function renderSlaCards() {
             const container = document.getElementById('slaCardContainer');
             if(!container) return;
