@@ -85,14 +85,17 @@
         .table-custom th {
             background-color: var(--primary-navy);
             color: white;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             vertical-align: middle;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            padding: 0.6rem 0.3rem;
+            line-height: 1.2;
         }
         .table-custom td {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             vertical-align: middle;
+            padding: 0.5rem 0.3rem;
         }
     </style>
 </head>
@@ -173,18 +176,19 @@
                 <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">No</th>
+                            <th style="width: 35px;">No</th>
                             <th>Bulan</th>
-                            <th>Tanggal Ujian</th>
+                            <th>Tgl Ujian</th>
                             <th>Kategori</th>
-                            <th>Lokasi Pelaksanaan</th>
-                            <th class="bg-info text-white">Jumlah Pendaftar</th>
-                            <th class="bg-primary text-white">Jumlah Peserta</th>
+                            <th>Lokasi</th>
+                            <th class="bg-info text-white">Jml<br>Pendaftar</th>
+                            <th class="bg-primary text-white">Jml<br>Peserta</th>
                             <th>Siaga</th>
                             <th>Penggalang</th>
                             <th>Penegak</th>
-                            <th>Tidak Lulus</th>
-                            <th class="bg-warning text-dark">Tidak Lulus Adm</th>
+                            <th class="bg-success text-white">Jml Lulus<br>Ujian</th>
+                            <th>Tidak<br>Lulus</th>
+                            <th class="bg-warning text-dark">Tidak Lulus<br>Adm</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -265,9 +269,8 @@
                 const tidakLulus = parseInt(m.tidak_lulus) || 0;
                 const tidakLulusAdm = parseInt(m.tidak_lulus_adm) || 0;
 
-                // KALKULASI UTAMA: Jumlah Peserta = Siaga + Penggalang + Penegak
-                const peserta = siaga + penggalang + penegak;
-                const lulusBulanIni = peserta;
+                const lulusBulanIni = siaga + penggalang + penegak;
+                const peserta = m.peserta !== undefined ? (parseInt(m.peserta) || lulusBulanIni) : lulusBulanIni;
 
                 totalPendaftar += pendaftar;
                 totalPeserta += peserta;
@@ -290,6 +293,7 @@
                         <td class="text-success fw-semibold">${siaga}</td>
                         <td class="text-success fw-semibold">${penggalang}</td>
                         <td class="text-success fw-semibold">${penegak}</td>
+                        <td class="fw-bold text-success bg-light">${lulusBulanIni}</td>
                         <td class="text-danger fw-bold">${tidakLulus}</td>
                         <td class="text-warning fw-bold bg-light">${tidakLulusAdm}</td>
                         <td>${badgeStatus}</td>
