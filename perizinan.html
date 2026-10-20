@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PELAYANAN & PERIZINAN 2026 - BALMON PALANGKARAYA</title>
+    <title>DASHBOARD PELAYANAN ISR 2026 - BALMON PALANGKARAYA</title>
 
-    <!-- Favicon & Google Font Inter -->
+    <!-- Favicon & Fonts -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -13,15 +13,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- ApexCharts CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
             --primary-navy: #0f4c81;
-            --accent-purple: #7c3aed;
+            --accent-blue: #1b75bc;
             --bg-light: #f8fafc;
-            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08);
+            --card-shadow: 0 10px 30px rgba(15, 76, 129, 0.08);
             --sidebar-collapsed-width: 68px;
             --sidebar-expanded-width: 280px;
         }
@@ -29,27 +29,23 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
-            background-image: 
-                radial-gradient(at 100% 0%, rgba(237, 233, 254, 0.7) 0, transparent 40%), 
-                radial-gradient(at 0% 100%, rgba(224, 242, 254, 0.6) 0, transparent 40%);
-            background-attachment: fixed;
             color: #334155;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* NAVBAR HEADER */
+        /* NAVBAR */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            padding: 0.8rem 2rem;
+            padding: 1rem 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 1050;
         }
-        
+
         .logo-container {
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             background: #fff;
             border-radius: 50%;
             display: flex;
@@ -58,8 +54,8 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .logo-container img {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
         }
 
@@ -167,7 +163,7 @@
 
         /* BANNER */
         .header-banner {
-            background: linear-gradient(135deg, #0f4c81 0%, #4c1d95 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             color: white;
             border-radius: 20px;
             padding: 2rem 2.5rem;
@@ -175,67 +171,51 @@
         }
 
         /* STAT CARDS */
-        .top-stat-card {
+        .stat-card {
             background: #ffffff;
-            border-radius: 18px;
+            border-radius: 16px;
             padding: 1.25rem 1.5rem;
             border: 1px solid #e2e8f0;
             box-shadow: var(--card-shadow);
             height: 100%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            transition: transform 0.3s ease;
         }
-        .top-stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.12);
+        .stat-card:hover {
+            transform: translateY(-4px);
         }
-        .top-stat-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            flex-shrink: 0;
-        }
-        .top-stat-title {
+        .stat-card .title {
             font-size: 0.78rem;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
         }
-        .top-stat-value {
-            font-size: 1.7rem;
+        .stat-card .value {
+            font-size: 1.8rem;
             font-weight: 800;
-            line-height: 1.1;
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
-        /* CHART CARDS */
+        /* CHART CARD */
         .chart-card {
             background: #ffffff;
             border-radius: 20px;
             padding: 1.5rem;
             border: 1px solid #e2e8f0;
             box-shadow: var(--card-shadow);
-            height: 100%;
-            transition: all 0.3s ease;
+            position: relative;
         }
-        .chart-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
+
+        .chart-3d-wrapper {
+            perspective: 1000px;
         }
-        .chart-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 0.75rem;
+
+        .chart-3d-canvas {
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .chart-card:hover .chart-3d-canvas {
+            transform: rotateX(4deg) rotateY(-2deg) scale(1.005);
         }
 
         /* TABEL */
@@ -245,12 +225,14 @@
             font-size: 0.78rem;
             vertical-align: middle;
             text-transform: uppercase;
-            padding: 0.75rem 0.5rem;
+            letter-spacing: 0.3px;
+            padding: 0.6rem 0.3rem;
+            line-height: 1.2;
         }
         .table-custom td {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             vertical-align: middle;
-            padding: 0.65rem 0.5rem;
+            padding: 0.5rem 0.3rem;
         }
 
         @media (max-width: 768px) {
@@ -261,7 +243,7 @@
 </head>
 <body>
 
-    <!-- NAVBAR HEADER -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-dark navbar-custom sticky-top">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="sarpras.html">
@@ -269,14 +251,14 @@
                     <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
-                    <span class="text-white d-block fs-6">PELAYANAN & PERIZINAN 2026</span>
+                    <span class="text-white d-block fs-6">MONITORING PELAYANAN & ISR 2026</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
             </a>
             
             <div class="d-flex gap-2 align-items-center">
                 <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Dashboard Sarpras
+                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
                 </a>
                 <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
                     <i class="bi bi-broadcast me-1"></i> Terhubung Realtime
@@ -348,100 +330,93 @@
         </ul>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN CONTENT WRAPPER -->
     <main class="main-wrapper">
         <div class="container-fluid">
-
+            
             <!-- HEADER BANNER -->
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING PELAYANAN & PERIZINAN ISR 2026</h2>
-                    <p class="mb-0 text-white-50">Pengelolaan Permohonan Izin Stasiun Radio, Konsultasi & Layanan Konsumen</p>
+                    <h2 class="fw-800 mb-1" style="font-weight: 800;">STATISTIK PELAYANAN ISR & DISTRIBUSI IZIN 2026</h2>
+                    <p class="mb-0 text-white-50">KONSULTASI ISR MITRA (LANGSUNG & ONLINE) SERTA REKAPITULASI ISR TERDISTRIBUSI</p>
                 </div>
                 <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
-                    <i class="bi bi-shield-check me-1"></i> SLA Terjamin
+                    <i class="bi bi-calendar-check me-1"></i> Tahun 2026
                 </div>
             </div>
 
             <!-- TOP STAT CARDS -->
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
+            <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
                 <div class="col">
-                    <div class="top-stat-card" style="border-left: 5px solid #0f4c81;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #0f4c81, #1e3a8a);"><i class="bi bi-file-earmark-text-fill"></i></div>
-                        <div>
-                            <div class="top-stat-title">Total Permohonan</div>
-                            <div class="top-stat-value text-dark" id="statTotalPermohonan">0</div>
-                            <small class="text-muted fw-semibold">Akumulasi Izin Masuk</small>
-                        </div>
+                    <div class="stat-card" style="border-left: 5px solid #0f4c81;">
+                        <div class="title" style="color: #0f4c81;"><i class="bi bi-person-workspace me-1"></i> Konsultasi Langsung</div>
+                        <div class="value" style="color: #0f4c81;" id="lblTotalLangsung">0</div>
+                        <small class="text-muted fw-semibold" id="lblSubLangsung">Mitra Hadir di Kantor</small>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="top-stat-card" style="border-left: 5px solid #10b981;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="bi bi-patch-check-fill"></i></div>
-                        <div>
-                            <div class="top-stat-title text-success">Disetujui & Terbit</div>
-                            <div class="top-stat-value text-success" id="statSelesai">0</div>
-                            <small class="text-muted fw-semibold">Selesai Diproses</small>
-                        </div>
+                    <div class="stat-card" style="border-left: 5px solid #1b75bc;">
+                        <div class="title text-primary"><i class="bi bi-laptop me-1"></i> Konsultasi Online</div>
+                        <div class="value text-primary" id="lblTotalOnline">0</div>
+                        <small class="text-muted fw-semibold" id="lblSubOnline">Virtual & Layanan Digital</small>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="top-stat-card" style="border-left: 5px solid #f59e0b;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="bi bi-hourglass-split"></i></div>
-                        <div>
-                            <div class="top-stat-title text-warning">Dalam Proses</div>
-                            <div class="top-stat-value text-warning" id="statDalamProses">0</div>
-                            <small class="text-muted fw-semibold">Verifikasi & Analisis</small>
-                        </div>
+                    <div class="stat-card" style="border-left: 5px solid #059669;">
+                        <div class="title text-success"><i class="bi bi-people-fill me-1"></i> Total Konsultasi ISR</div>
+                        <div class="value text-success" id="lblTotalKonsultasi">0</div>
+                        <small class="text-muted fw-semibold" id="lblSubKonsultasi">Akumulasi Mitra Servis</small>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="top-stat-card" style="border-left: 5px solid #7c3aed;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);"><i class="bi bi-percent"></i></div>
-                        <div>
-                            <div class="top-stat-title" style="color: #7c3aed;">Capaian SLA Layanan</div>
-                            <div class="top-stat-value" style="color: #7c3aed;" id="statSlaLayanan">0.0%</div>
-                            <small class="text-muted fw-semibold">Kepatuhan Waktu SLA</small>
+                    <div class="stat-card" style="border-left: 5px solid #d97706;">
+                        <div class="title text-warning"><i class="bi bi-file-earmark-check-fill me-1"></i> ISR Terdistribusi</div>
+                        <div class="value text-warning" id="lblTotalTerdistribusi">0</div>
+                        <small class="text-muted fw-semibold" id="lblSubTerdistribusi">Sertifikat Terbit/Tercetak</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LINE CHART: KONSULTASI ISR LANGSUNG VS ONLINE -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-card chart-3d-wrapper">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up me-2" style="color: #0f4c81;"></i>Grafik Tren Konsultasi ISR Mitra Per Bulan</h5>
+                                <small class="text-muted">Perbandingan Mitra Hadir Langsung vs Online dengan Efek Animasi & Layer 3D</small>
+                            </div>
+                            <span class="badge bg-light text-dark border"><i class="bi bi-layers me-1"></i>3D Layer Gradient Line</span>
+                        </div>
+                        <div style="height: 380px; position: relative;" class="chart-3d-canvas">
+                            <canvas id="chartLineIsrKonsultasi"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SEKSI GRAFIK -->
-            <div class="row g-4 mb-4">
-                <!-- DONUT CHART PROPORSI JENIS PERIZINAN -->
-                <div class="col-lg-5">
+            <!-- BAR CHART: ISR TERDISTRIBUSI PER BULAN -->
+            <div class="row mb-4">
+                <div class="col-12">
                     <div class="chart-card">
-                        <div class="chart-header">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-pie-chart-fill me-2" style="color: #7c3aed;"></i>Komposisi Jenis Layanan</h5>
-                                <small class="text-muted">Proporsi Permohonan Berdasarkan Sub-Layanan</small>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-line-fill me-2 text-warning"></i>Grafik ISR Terdistribusi Setiap Bulan</h5>
+                                <small class="text-muted">Jumlah Dokumen / Lisensi Izin Stasiun Radio (ISR) yang Berhasil Diserahkan</small>
                             </div>
-                            <span class="badge bg-light text-purple border fw-semibold" style="color: #7c3aed;">Interaktif 3D</span>
+                            <span class="badge bg-light text-dark border"><i class="bi bi-box-seam me-1"></i>Distribusi Per Bulan</span>
                         </div>
-                        <div id="donutChartPerizinan" style="min-height: 360px;"></div>
-                    </div>
-                </div>
-
-                <!-- TREN BULANAN LAYANAN & PERIZINAN -->
-                <div class="col-lg-7">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Tren Volume Layanan Bulanan</h5>
-                                <small class="text-muted">Jumlah Permohonan ISR & Konsultasi Masuk vs Selesai (2026)</small>
-                            </div>
-                            <span class="badge bg-light text-primary border fw-semibold">Akumulasi Bulanan</span>
+                        <div style="height: 320px; position: relative;">
+                            <canvas id="chartBarIsrTerdistribusi"></canvas>
                         </div>
-                        <div id="areaChartPerizinanBulanan" style="min-height: 360px;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- TABEL DETAIL LAYANAN PERIZINAN -->
+            <!-- TABEL RINCIAN BULANAN -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Kinerja Layanan & Perizinan ISR (2026)</h5>
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Rekapitulasi Pelayanan & Distribusi ISR (2026)</h5>
                     <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
                 </div>
                 <div class="table-responsive">
@@ -449,11 +424,12 @@
                         <thead>
                             <tr>
                                 <th style="width: 45px;">No</th>
-                                <th class="text-start">Kategori / Jenis Layanan</th>
-                                <th>Permohonan Masuk</th>
-                                <th class="bg-success text-white">Disetujui / Selesai</th>
-                                <th class="bg-warning text-dark">Dalam Proses</th>
-                                <th style="width: 180px;">SLA Tepat Waktu (%)</th>
+                                <th>Bulan</th>
+                                <th style="background-color: #0f4c81;" class="text-white">Konsultasi<br>Langsung</th>
+                                <th style="background-color: #1b75bc;" class="text-white">Konsultasi<br>Online</th>
+                                <th class="bg-success text-white">Total Konsultasi<br>Mitra</th>
+                                <th class="bg-warning text-dark">ISR Terdistribusi<br>(Dokumen)</th>
+                                <th style="background-color: #1e3a8a;" class="text-white">% Konsultasi<br>Langsung vs Online</th>
                             </tr>
                         </thead>
                         <tbody id="tblBodyPerizinan"></tbody>
@@ -464,11 +440,10 @@
         </div>
     </main>
 
-    <!-- SDK & LIBRARIES -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
+    <!-- FIREBASE SDK COMPAT -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -481,135 +456,212 @@
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
         };
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const database = firebase.database();
-        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
-        // Data Default Perizinan
-        let defaultPerizinanList = [
-            { id: "darat", nama: "ISR Stasiun Darat & Komunikasi", masuk: 185, selesai: 178, proses: 7, sla_pct: 98.2, monthlyMasuk: [15, 18, 22, 25, 20, 19, 21, 23, 22, 0, 0, 0] },
-            { id: "maritim", nama: "Layanan Perizinan Maritim (MOTS)", masuk: 120, selesai: 115, proses: 5, sla_pct: 99.0, monthlyMasuk: [10, 12, 14, 16, 15, 13, 18, 12, 10, 0, 0, 0] },
-            { id: "penerbangan", nama: "ISR Stasiun Penerbangan", masuk: 45, selesai: 43, proses: 2, sla_pct: 97.5, monthlyMasuk: [3, 4, 5, 6, 5, 4, 6, 7, 5, 0, 0, 0] },
-            { id: "konsultasi", nama: "Konsultasi & Layanan Informasi ISR", masuk: 210, selesai: 202, proses: 8, sla_pct: 98.8, monthlyMasuk: [18, 20, 25, 28, 22, 24, 26, 25, 22, 0, 0, 0] }
+        const bulanList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        let perizinanMonths = [
+            { id: 1, bulan: "Januari", langsung: 28, online: 35, terdistribusi: 42 },
+            { id: 2, bulan: "Februari", langsung: 32, online: 40, terdistribusi: 50 },
+            { id: 3, bulan: "Maret", langsung: 25, online: 48, terdistribusi: 55 },
+            { id: 4, bulan: "April", langsung: 42, online: 65, terdistribusi: 78 },
+            { id: 5, bulan: "Mei", langsung: 30, online: 52, terdistribusi: 60 },
+            { id: 6, bulan: "Juni", langsung: 35, online: 58, terdistribusi: 68 },
+            { id: 7, bulan: "Juli", langsung: 38, online: 60, terdistribusi: 72 },
+            { id: 8, bulan: "Agustus", langsung: 40, online: 64, terdistribusi: 80 },
+            { id: 9, bulan: "September", langsung: 45, online: 70, terdistribusi: 88 },
+            { id: 10, bulan: "Oktober", langsung: 0, online: 0, terdistribusi: 0 },
+            { id: 11, bulan: "November", langsung: 0, online: 0, terdistribusi: 0 },
+            { id: 12, bulan: "Desember", langsung: 0, online: 0, terdistribusi: 0 }
         ];
 
-        let donutChartInstance = null;
-        let areaChartInstance = null;
+        let lineChartInstance = null;
+        let barChartInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
-            loadPerizinanRealtime();
+            loadPerizinanDataRealtime();
         });
 
-        function initCharts() {
-            // 1. DONUT CHART 3D
-            const optionsDonut = {
-                series: [185, 120, 45, 210],
-                labels: ['ISR Stasiun Darat', 'Perizinan Maritim', 'Stasiun Penerbangan', 'Konsultasi ISR'],
-                chart: {
-                    type: 'donut',
-                    height: 360,
-                    dropShadow: { enabled: true, color: '#7c3aed', top: 12, left: 0, blur: 8, opacity: 0.2 }
-                },
-                colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
-                plotOptions: { pie: { donut: { size: '66%' } } },
-                dataLabels: { enabled: false },
-                legend: { position: 'bottom', fontSize: '12px', fontWeight: 700 }
-            };
-
-            donutChartInstance = new ApexCharts(document.getElementById('donutChartPerizinan'), optionsDonut);
-            donutChartInstance.render();
-
-            // 2. AREA TREN BULANAN
-            const optionsArea = {
-                series: [
-                    { name: "Permohonan Masuk", data: [46, 54, 66, 75, 62, 60, 71, 67, 59, 0, 0, 0] },
-                    { name: "Selesai Diproses", data: [44, 52, 63, 72, 60, 58, 69, 64, 56, 0, 0, 0] }
-                ],
-                chart: {
-                    height: 360,
-                    type: 'area',
-                    toolbar: { show: false },
-                    dropShadow: { enabled: true, color: '#0f4c81', top: 10, left: 0, blur: 6, opacity: 0.15 }
-                },
-                colors: ['#3b82f6', '#10b981'],
-                stroke: { curve: 'smooth', width: 3 },
-                fill: { type: 'gradient', gradient: { opacityFrom: 0.4, opacityTo: 0.05 } },
-                dataLabels: { enabled: false },
-                xaxis: { categories: bulanList },
-                tooltip: { enabled: true },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
-                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
-            };
-
-            areaChartInstance = new ApexCharts(document.getElementById('areaChartPerizinanBulanan'), optionsArea);
-            areaChartInstance.render();
-        }
-
-        function loadPerizinanRealtime() {
+        function loadPerizinanDataRealtime() {
             database.ref('kinerja_sarpras/perizinan_detail').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
-                    const list = Array.isArray(data) ? data : Object.values(data);
-                    if (list.length > 0) defaultPerizinanList = list;
+                if (data && data.months && Array.isArray(data.months)) {
+                    perizinanMonths = data.months;
                 }
                 updateDashboard();
             }, (err) => {
-                console.warn("Menggunakan data default lokal Perizinan:", err.message);
+                console.warn("Menggunakan data default lokal:", err.message);
                 updateDashboard();
+            });
+        }
+
+        function initCharts() {
+            const ctxLine = document.getElementById('chartLineIsrKonsultasi').getContext('2d');
+            
+            const gradLangsung = ctxLine.createLinearGradient(0, 0, 0, 350);
+            gradLangsung.addColorStop(0, 'rgba(15, 76, 129, 0.45)');
+            gradLangsung.addColorStop(1, 'rgba(15, 76, 129, 0.01)');
+
+            const gradOnline = ctxLine.createLinearGradient(0, 0, 0, 350);
+            gradOnline.addColorStop(0, 'rgba(27, 117, 188, 0.40)');
+            gradOnline.addColorStop(1, 'rgba(27, 117, 188, 0.01)');
+
+            lineChartInstance = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: bulanList,
+                    datasets: [
+                        {
+                            label: 'Konsultasi Langsung (Hadir)',
+                            data: [],
+                            borderColor: '#0f4c81',
+                            backgroundColor: gradLangsung,
+                            borderWidth: 4,
+                            fill: true,
+                            tension: 0.38,
+                            pointBackgroundColor: '#0f4c81',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 10
+                        },
+                        {
+                            label: 'Konsultasi Online (Virtual)',
+                            data: [],
+                            borderColor: '#1b75bc',
+                            backgroundColor: gradOnline,
+                            borderWidth: 4,
+                            fill: true,
+                            tension: 0.38,
+                            pointBackgroundColor: '#1b75bc',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 10
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 1800, easing: 'easeInOutQuart' },
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { font: { family: 'Inter', weight: 'bold', size: 12 }, usePointStyle: true, padding: 20 }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', weight: '600' } } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' },
+                            title: { display: true, text: 'Jumlah Mitra Konsultasi', color: '#0f4c81', font: { family: 'Inter', weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            const ctxBar = document.getElementById('chartBarIsrTerdistribusi').getContext('2d');
+            const gradBar = ctxBar.createLinearGradient(0, 0, 0, 300);
+            gradBar.addColorStop(0, '#f59e0b');
+            gradBar.addColorStop(1, '#d97706');
+
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: bulanList,
+                    datasets: [{
+                        label: 'ISR Terdistribusi',
+                        data: [],
+                        backgroundColor: gradBar,
+                        borderColor: '#b45309',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barPercentage: 0.55
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 1400, easing: 'easeOutBounce' },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', weight: '600' } } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' },
+                            title: { display: true, text: 'Jumlah Sertifikat/Lisensi ISR', color: '#d97706', font: { family: 'Inter', weight: 'bold' } }
+                        }
+                    }
+                }
             });
         }
 
         function updateDashboard() {
-            let totMasuk = 0, totSelesai = 0, totProses = 0, sumSla = 0;
-            const donutSeries = [], donutLabels = [];
+            const arrLangsung = [];
+            const arrOnline = [];
+            const arrTerdistribusi = [];
+
+            let totLangsung = 0;
+            let totOnline = 0;
+            let totTerdistribusi = 0;
+
             const tbody = document.getElementById('tblBodyPerizinan');
             tbody.innerHTML = '';
 
-            defaultPerizinanList.forEach((item, idx) => {
-                const masuk = parseInt(item.masuk) || 0;
-                const selesai = parseInt(item.selesai) || 0;
-                const proses = parseInt(item.proses) || 0;
-                const sla = parseFloat(item.sla_pct) || 0;
+            perizinanMonths.forEach((m, idx) => {
+                const lng = parseInt(m.langsung) || 0;
+                const onl = parseInt(m.online) || 0;
+                const dist = parseInt(m.terdistribusi) || 0;
 
-                totMasuk += masuk;
-                totSelesai += selesai;
-                totProses += proses;
-                sumSla += sla;
+                const totalKonsul = lng + onl;
+                
+                const pctLangsung = totalKonsul > 0 ? ((lng / totalKonsul) * 100).toFixed(1) : '0.0';
+                const pctOnline = totalKonsul > 0 ? ((onl / totalKonsul) * 100).toFixed(1) : '0.0';
+                const strRasio = totalKonsul > 0 ? `${pctLangsung}% / ${pctOnline}%` : '-';
 
-                donutSeries.push(masuk);
-                donutLabels.push(item.id ? item.id.toUpperCase() : `Layanan ${idx+1}`);
+                arrLangsung.push(lng);
+                arrOnline.push(onl);
+                arrTerdistribusi.push(dist);
+
+                totLangsung += lng;
+                totOnline += onl;
+                totTerdistribusi += dist;
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-bold">${idx + 1}</td>
-                        <td class="text-start fw-bold text-dark">${item.nama || item.id}</td>
-                        <td class="fw-bold text-primary">${masuk}</td>
-                        <td class="fw-bold text-success bg-light">${selesai}</td>
-                        <td class="fw-bold text-warning bg-light">${proses}</td>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="progress flex-grow-1" style="height: 8px;">
-                                    <div class="progress-bar bg-primary" style="width: ${sla}%"></div>
-                                </div>
-                                <span class="badge bg-light text-primary border fw-bold">${sla}%</span>
-                            </div>
-                        </td>
-                    </tr>`;
+                        <td class="fw-bold text-dark">${m.bulan}</td>
+                        <td class="fw-bold" style="color: #0f4c81;">${lng}</td>
+                        <td class="fw-bold text-primary">${onl}</td>
+                        <td class="fw-bold text-success bg-light">${totalKonsul}</td>
+                        <td class="fw-bold text-warning bg-light">${dist}</td>
+                        <td><span class="badge bg-light text-primary border border-primary fw-bold">${strRasio}</span></td>
+                    </tr>
+                `;
             });
 
-            const avgSla = defaultPerizinanList.length > 0 ? (sumSla / defaultPerizinanList.length).toFixed(1) : '0.0';
+            const totalKonsultasiAll = totLangsung + totOnline;
 
             // Update Top Cards
-            document.getElementById('statTotalPermohonan').textContent = totMasuk;
-            document.getElementById('statSelesai').textContent = totSelesai;
-            document.getElementById('statDalamProses').textContent = totProses;
-            document.getElementById('statSlaLayanan').textContent = `${avgSla}%`;
+            document.getElementById('lblTotalLangsung').textContent = totLangsung;
+            document.getElementById('lblTotalOnline').textContent = totOnline;
+            document.getElementById('lblTotalKonsultasi').textContent = totalKonsultasiAll;
+            document.getElementById('lblTotalTerdistribusi').textContent = totTerdistribusi;
 
             // Update Charts
-            if (donutChartInstance) {
-                donutChartInstance.updateOptions({ series: donutSeries, labels: donutLabels });
-            }
+            lineChartInstance.data.datasets[0].data = arrLangsung;
+            lineChartInstance.data.datasets[1].data = arrOnline;
+            lineChartInstance.update();
+
+            barChartInstance.data.datasets[0].data = arrTerdistribusi;
+            barChartInstance.update();
         }
     </script>
 </body>
