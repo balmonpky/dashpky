@@ -19,6 +19,8 @@
             --primary-blue: #0f4c81;
             --accent-blue: #1b75bc;
             --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+            --sidebar-collapsed-width: 68px;
+            --sidebar-expanded-width: 280px;
         }
 
         body {
@@ -32,18 +34,20 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         /* HEADER / NAVBAR */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            padding: 1rem 2rem;
+            padding: 0.8rem 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1050;
         }
         
         .logo-container {
-            width: 50px;
-            height: 50px;
+            width: 46px;
+            height: 46px;
             background: #fff;
             border-radius: 50%;
             display: flex;
@@ -52,95 +56,109 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .logo-container img {
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             object-fit: contain;
         }
 
-        /* AREA KONTEN TENGAH */
-        .main-container {
-            flex-grow: 1;
+        /* SIDEBAR AUTO-HIDE (SISI KIRI) */
+        .sidebar-autohide {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-collapsed-width);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            z-index: 1040;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            padding: 3rem 0;
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
         }
 
-        .header-title {
-            text-align: center;
-            margin-bottom: 3rem;
+        /* EFEK MOUSE HOVER MENGEMBANGKAN SIDEBAR */
+        .sidebar-autohide:hover {
+            width: var(--sidebar-expanded-width);
         }
-        .header-title h2 {
+
+        .sidebar-header {
+            padding: 0.5rem 1.25rem 1rem 1.25rem;
+            color: #93c5fd;
+            font-size: 0.72rem;
             font-weight: 800;
-            color: var(--primary-blue);
-            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 0.5rem;
         }
-        .header-title p {
-            font-size: 1.1rem;
-            color: #64748b;
+
+        .sidebar-autohide:hover .sidebar-header {
+            opacity: 1;
         }
 
-        /* DESAIN KARTU SUB-MENU */
-        .sub-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            height: 100%;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu .menu-item {
             position: relative;
-            overflow: hidden;
         }
 
-        .sub-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -10px rgba(15, 76, 129, 0.15);
-            background: #ffffff;
-            border-color: #bae6fd;
+        .sidebar-menu .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            color: rgba(255, 255, 255, 0.82);
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.25s ease;
+            white-space: nowrap;
         }
 
-        .icon-wrapper {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
+        .sidebar-menu .menu-link:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-left-color: #38bdf8;
+        }
+
+        .sidebar-menu .menu-icon {
+            font-size: 1.4rem;
+            min-width: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
-            margin: 0 auto 1.25rem auto;
-            transition: transform 0.3s;
-        }
-        .sub-card:hover .icon-wrapper {
-            transform: scale(1.1) rotate(5deg);
         }
 
-        .card-smfr .icon-wrapper { background: #eff6ff; color: #3b82f6; }
-        .card-unar .icon-wrapper { background: #f0fdf4; color: #22c55e; }
-        .card-mots .icon-wrapper { background: #fffbeb; color: #f59e0b; }
-        .card-bhp .icon-wrapper { background: #fef2f2; color: #ef4444; }
-        .card-izin .icon-wrapper { background: #faf5ff; color: #a855f7; }
-        .card-anggaran .icon-wrapper { background: #ecfdf5; color: #059669; }
-        .card-monitoring .icon-wrapper { background: #e0f2fe; color: #0284c7; }
-        .card-ikm .icon-wrapper { background: #fff7ed; color: #ea580c; }
-
-        .sub-card h5 {
-            font-weight: 700;
-            font-size: 1.15rem;
-            margin-bottom: 0.5rem;
-            color: #1e293b;
+        .sidebar-menu .menu-text {
+            margin-left: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.25s ease;
         }
-        .sub-card p {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 0;
-            line-height: 1.5;
+
+        .sidebar-autohide:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* WADAH KONTEN UTAMA DENGAN MARGIN KIRI MEMPERHITUNGKAN SIDEBAR */
+        .main-wrapper {
+            margin-left: var(--sidebar-collapsed-width);
+            flex-grow: 1;
+            padding: 2.5rem 2rem;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* HEADER KINERJA */
@@ -255,6 +273,7 @@
             padding: 1.5rem;
             color: #64748b;
             font-size: 0.9rem;
+            margin-left: var(--sidebar-collapsed-width);
         }
 
         /* Gaya Tabel & Input Modal */
@@ -264,9 +283,9 @@
         }
 
         @media (max-width: 768px) {
-            .header-title h2 { font-size: 1.5rem; }
-            .sub-card { padding: 1.5rem 1rem; }
-            .icon-wrapper { width: 55px; height: 55px; font-size: 1.8rem; }
+            .main-wrapper { margin-left: 0; padding: 1.5rem 1rem; }
+            .sidebar-autohide { display: none; }
+            .footer-custom { margin-left: 0; }
         }
     </style>
 </head>
@@ -274,7 +293,7 @@
 
     <!-- NAVBAR HEADER -->
     <nav class="navbar navbar-dark navbar-custom sticky-top">
-        <div class="container d-flex justify-content-between align-items-center">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
                 <div class="logo-container me-3">
                     <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
@@ -291,230 +310,219 @@
         </div>
     </nav>
 
-    <!-- AREA DASBOR KINERJA -->
-    <div class="container mt-4 mb-5">
-        <div class="header-kinerja">
-            <button id="btnAdminMain" class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
-                <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
-            </button>
-
-            <div class="header-icon-box">
-                <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
-            </div>
-            <div style="z-index: 1;">
-                <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2.2rem;">CAPAIAN KINERJA</h1>
-                <h5 class="mb-0 fw-light" style="color: #cbd5e1;">Tim Kerja Sarana Prasarana Monitoring dan Layanan</h5>
-            </div>
+    <!-- SIDEBAR AUTO-HIDE (DI SEBELAH KIRI BERSUSUN ATAS KE BAWAH) -->
+    <aside class="sidebar-autohide">
+        <div class="sidebar-header">
+            <span>LAYANAN & PERIZINAN</span>
         </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
+                    <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
+                    <span class="menu-text">Aplikasi SMFR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="unar.html" class="menu-link" title="UNAR">
+                    <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
+                    <span class="menu-text">UNAR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="MOTS">
+                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
+                    <span class="menu-text">MOTS</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="BHP">
+                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
+                    <span class="menu-text">BHP</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="perizinan.html" class="menu-link" title="Pelayanan & Perizinan">
+                    <span class="menu-icon" style="color: #c084fc;"><i class="bi bi-award-fill"></i></span>
+                    <span class="menu-text">Pelayanan & Perizinan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="realisasi_anggaran.html" class="menu-link" title="Realisasi Anggaran">
+                    <span class="menu-icon text-emerald" style="color: #34d399;"><i class="bi bi-cash-stack"></i></span>
+                    <span class="menu-text">Realisasi Anggaran</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
+                    <span class="menu-icon text-sky" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
+                    <span class="menu-text">Fungsi Monitoring</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="ikm.html" class="menu-link" title="IKM & IIPP">
+                    <span class="menu-icon text-amber" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
+                    <span class="menu-text">IKM & IIPP</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        <div class="row g-4" id="kinerjaContainer">
-            <!-- Kartu 1 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="kinerja-card accent-1">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="kinerja-icon bg-icon-1"><i class="bi bi-broadcast"></i></div>
-                        <div class="kinerja-title">Sertifikasi Operator Radio</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="capaian-value text-primary" id="val_capaian_1">0%</div>
-                        <span class="badge badge-status" id="status_1">Memuat...</span>
-                    </div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span>Target</span> <span id="val_target_1">0%</span>
-                    </div>
-                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_1" style="width: 0%"></div></div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span class="text-primary">Capaian</span> <span id="val_capaian_bar_1" class="text-primary">0%</span>
-                    </div>
-                    <div class="progress mb-0"><div class="progress-bar pb-cap-1" id="bar_capaian_1" style="width: 0%"></div></div>
+    <!-- KONTEN UTAMA DASBOR SARPRAS -->
+    <main class="main-wrapper">
+        <div class="container-fluid">
+            
+            <!-- BANNER CAPAIAN KINERJA -->
+            <div class="header-kinerja">
+                <button id="btnAdminMain" class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
+                    <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
+                </button>
+
+                <div class="header-icon-box">
+                    <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
+                </div>
+                <div style="z-index: 1;">
+                    <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2.2rem;">CAPAIAN KINERJA</h1>
+                    <h5 class="mb-0 fw-light" style="color: #cbd5e1;">Tim Kerja Sarana Prasarana Monitoring dan Layanan</h5>
                 </div>
             </div>
 
-            <!-- Kartu 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="kinerja-card accent-2">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="kinerja-icon bg-icon-2"><i class="bi bi-cash-coin"></i></div>
-                        <div class="kinerja-title">Biaya Hak Pengguna Frekuensi</div>
+            <!-- KARTU INDIKATOR DASBOR (K1 - K6) -->
+            <div class="row g-4" id="kinerjaContainer">
+                <!-- Kartu 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="kinerja-card accent-1">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="kinerja-icon bg-icon-1"><i class="bi bi-broadcast"></i></div>
+                            <div class="kinerja-title">Sertifikasi Operator Radio</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="capaian-value text-primary" id="val_capaian_1">0%</div>
+                            <span class="badge badge-status" id="status_1">Memuat...</span>
+                        </div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span>Target</span> <span id="val_target_1">0%</span>
+                        </div>
+                        <div class="progress"><div class="progress-bar pb-target" id="bar_target_1" style="width: 0%"></div></div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span class="text-primary">Capaian</span> <span id="val_capaian_bar_1" class="text-primary">0%</span>
+                        </div>
+                        <div class="progress mb-0"><div class="progress-bar pb-cap-1" id="bar_capaian_1" style="width: 0%"></div></div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="capaian-value text-indigo" style="color:#4f46e5;" id="val_capaian_2">0%</div>
-                        <span class="badge badge-status" id="status_2">Memuat...</span>
+                </div>
+
+                <!-- Kartu 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="kinerja-card accent-2">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="kinerja-icon bg-icon-2"><i class="bi bi-cash-coin"></i></div>
+                            <div class="kinerja-title">Biaya Hak Pengguna Frekuensi</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="capaian-value text-indigo" style="color:#4f46e5;" id="val_capaian_2">0%</div>
+                            <span class="badge badge-status" id="status_2">Memuat...</span>
+                        </div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span>Target</span> <span id="val_target_2">0%</span>
+                        </div>
+                        <div class="progress"><div class="progress-bar pb-target" id="bar_target_2" style="width: 0%"></div></div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span style="color:#4f46e5;">Capaian</span> <span id="val_capaian_bar_2" style="color:#4f46e5;">0%</span>
+                        </div>
+                        <div class="progress mb-0"><div class="progress-bar pb-cap-2" id="bar_capaian_2" style="width: 0%"></div></div>
                     </div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span>Target</span> <span id="val_target_2">0%</span>
+                </div>
+
+                <!-- Kartu 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="kinerja-card accent-3">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="kinerja-icon bg-icon-3"><i class="bi bi-display"></i></div>
+                            <div class="kinerja-title">Operasional & Fungsi Monitoring</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="capaian-value text-success" id="val_capaian_3">0%</div>
+                            <span class="badge badge-status" id="status_3">Memuat...</span>
+                        </div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span>Target</span> <span id="val_target_3">0%</span>
+                        </div>
+                        <div class="progress"><div class="progress-bar pb-target" id="bar_target_3" style="width: 0%"></div></div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span class="text-success">Capaian</span> <span id="val_capaian_bar_3" class="text-success">0%</span>
+                        </div>
+                        <div class="progress mb-0"><div class="progress-bar pb-cap-3" id="bar_capaian_3" style="width: 0%"></div></div>
                     </div>
-                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_2" style="width: 0%"></div></div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span style="color:#4f46e5;">Capaian</span> <span id="val_capaian_bar_2" style="color:#4f46e5;">0%</span>
+                </div>
+
+                <!-- Kartu 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="kinerja-card accent-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="kinerja-icon bg-icon-4"><i class="bi bi-shield-check"></i></div>
+                            <div class="kinerja-title">Zona Integritas<br>(ZI)</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="capaian-value" style="color: #7c3aed;" id="val_capaian_4">0</div>
+                            <span class="badge badge-status" id="status_4">Memuat...</span>
+                        </div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span>Target</span> <span id="val_target_4">0</span>
+                        </div>
+                        <div class="progress"><div class="progress-bar pb-target" id="bar_target_4" style="width: 0%"></div></div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span style="color:#7c3aed;">Capaian</span> <span id="val_capaian_bar_4" style="color:#7c3aed;">0</span>
+                        </div>
+                        <div class="progress mb-0"><div class="progress-bar pb-cap-4" id="bar_capaian_4" style="width: 0%"></div></div>
                     </div>
-                    <div class="progress mb-0"><div class="progress-bar pb-cap-2" id="bar_capaian_2" style="width: 0%"></div></div>
+                </div>
+
+                <!-- Kartu 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="kinerja-card accent-5">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="kinerja-icon bg-icon-5"><i class="bi bi-people-fill"></i></div>
+                            <div class="kinerja-title">Indeks Kepuasan Masyarakat (IKM)</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="capaian-value text-warning" id="val_capaian_5">0</div>
+                            <span class="badge badge-status" id="status_5">Memuat...</span>
+                        </div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span>Target</span> <span id="val_target_5">0</span>
+                        </div>
+                        <div class="progress"><div class="progress-bar pb-target" id="bar_target_5" style="width: 0%"></div></div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span class="text-warning">Capaian</span> <span id="val_capaian_bar_5" class="text-warning">0</span>
+                        </div>
+                        <div class="progress mb-0"><div class="progress-bar pb-cap-5" id="bar_capaian_5" style="width: 0%"></div></div>
+                    </div>
+                </div>
+
+                <!-- Kartu 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="kinerja-card accent-6">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="kinerja-icon bg-icon-6"><i class="bi bi-award-fill"></i></div>
+                            <div class="kinerja-title">Indeks Integritas Pelayanan Publik</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="capaian-value text-info" id="val_capaian_6">0</div>
+                            <span class="badge badge-status" id="status_6">Memuat...</span>
+                        </div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span>Target</span> <span id="val_target_6">0</span>
+                        </div>
+                        <div class="progress"><div class="progress-bar pb-target" id="bar_target_6" style="width: 0%"></div></div>
+                        <div class="d-flex justify-content-between progress-label">
+                            <span class="text-info">Capaian</span> <span id="val_capaian_bar_6" class="text-info">0</span>
+                        </div>
+                        <div class="progress mb-0"><div class="progress-bar pb-cap-6" id="bar_capaian_6" style="width: 0%"></div></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Kartu 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="kinerja-card accent-3">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="kinerja-icon bg-icon-3"><i class="bi bi-display"></i></div>
-                        <div class="kinerja-title">Operasional & Fungsi Monitoring</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="capaian-value text-success" id="val_capaian_3">0%</div>
-                        <span class="badge badge-status" id="status_3">Memuat...</span>
-                    </div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span>Target</span> <span id="val_target_3">0%</span>
-                    </div>
-                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_3" style="width: 0%"></div></div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span class="text-success">Capaian</span> <span id="val_capaian_bar_3" class="text-success">0%</span>
-                    </div>
-                    <div class="progress mb-0"><div class="progress-bar pb-cap-3" id="bar_capaian_3" style="width: 0%"></div></div>
-                </div>
-            </div>
-
-            <!-- Kartu 4 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="kinerja-card accent-4">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="kinerja-icon bg-icon-4"><i class="bi bi-shield-check"></i></div>
-                        <div class="kinerja-title">Zona Integritas<br>(ZI)</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="capaian-value" style="color: #7c3aed;" id="val_capaian_4">0</div>
-                        <span class="badge badge-status" id="status_4">Memuat...</span>
-                    </div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span>Target</span> <span id="val_target_4">0</span>
-                    </div>
-                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_4" style="width: 0%"></div></div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span style="color:#7c3aed;">Capaian</span> <span id="val_capaian_bar_4" style="color:#7c3aed;">0</span>
-                    </div>
-                    <div class="progress mb-0"><div class="progress-bar pb-cap-4" id="bar_capaian_4" style="width: 0%"></div></div>
-                </div>
-            </div>
-
-            <!-- Kartu 5 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="kinerja-card accent-5">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="kinerja-icon bg-icon-5"><i class="bi bi-people-fill"></i></div>
-                        <div class="kinerja-title">Indeks Kepuasan Masyarakat (IKM)</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="capaian-value text-warning" id="val_capaian_5">0</div>
-                        <span class="badge badge-status" id="status_5">Memuat...</span>
-                    </div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span>Target</span> <span id="val_target_5">0</span>
-                    </div>
-                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_5" style="width: 0%"></div></div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span class="text-warning">Capaian</span> <span id="val_capaian_bar_5" class="text-warning">0</span>
-                    </div>
-                    <div class="progress mb-0"><div class="progress-bar pb-cap-5" id="bar_capaian_5" style="width: 0%"></div></div>
-                </div>
-            </div>
-
-            <!-- Kartu 6 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="kinerja-card accent-6">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="kinerja-icon bg-icon-6"><i class="bi bi-award-fill"></i></div>
-                        <div class="kinerja-title">Indeks Integritas Pelayanan Publik</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="capaian-value text-info" id="val_capaian_6">0</div>
-                        <span class="badge badge-status" id="status_6">Memuat...</span>
-                    </div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span>Target</span> <span id="val_target_6">0</span>
-                    </div>
-                    <div class="progress"><div class="progress-bar pb-target" id="bar_target_6" style="width: 0%"></div></div>
-                    <div class="d-flex justify-content-between progress-label">
-                        <span class="text-info">Capaian</span> <span id="val_capaian_bar_6" class="text-info">0</span>
-                    </div>
-                    <div class="progress mb-0"><div class="progress-bar pb-cap-6" id="bar_capaian_6" style="width: 0%"></div></div>
-                </div>
-            </div>
         </div>
-    </div>
-
-    <!-- KONTEN UTAMA SUB-MENU -->
-    <div class="container main-container">
-        <div class="header-title">
-            <h2>Layanan & Program Kerja</h2>
-            <p>Pilih Layanan & Program Kerja yang ingin Anda kelola pada Tim Kerja Sarpras & Layanan.</p>
-        </div>
-
-        <div class="row g-4 justify-content-center">
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="smfr.html" class="sub-card card-smfr">
-                    <div class="icon-wrapper"><i class="bi bi-hdd-network-fill"></i></div>
-                    <h5>Aplikasi SMFR</h5>
-                    <p>Sistem Informasi & Database Perangkat Spektrum Frekuensi Radio.</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="unar.html" class="sub-card card-unar">
-                    <div class="icon-wrapper"><i class="bi bi-person-vcard-fill"></i></div>
-                    <h5>UNAR</h5>
-                    <p>Sistem Layanan & Administrasi Ujian Negara Amatir Radio.</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="#" class="sub-card card-mots">
-                    <div class="icon-wrapper"><i class="bi bi-truck-front-fill"></i></div>
-                    <h5>MOTS</h5>
-                    <p>Sistem Operasional & Monitoring Stasiun Bergerak (Mobile).</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="#" class="sub-card card-bhp">
-                    <div class="icon-wrapper"><i class="bi bi-receipt"></i></div>
-                    <h5>BHP</h5>
-                    <p>Sistem Pengelolaan & Pengecekan Biaya Hak Penggunaan Frekuensi.</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="perizinan.html" class="sub-card card-izin">
-                    <div class="icon-wrapper"><i class="bi bi-award-fill"></i></div>
-                    <h5>PELAYANAN & PERIZINAN</h5>
-                    <p>Layanan Konsultasi ISR (Langsung & Online) serta Distribusi Izin ISR.</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="realisasi_anggaran.html" class="sub-card card-anggaran">
-                    <div class="icon-wrapper"><i class="bi bi-cash-stack"></i></div>
-                    <h5>REALISASI ANGGARAN</h5>
-                    <p>Monitoring & Penyerapan Realisasi Anggaran Sarpras.</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="fungsi_monitoring.html" class="sub-card card-monitoring">
-                    <div class="icon-wrapper"><i class="bi bi-display"></i></div>
-                    <h5>OPERASIONAL & FUNGSI MONITORING</h5>
-                    <p>Capaian Service Level Agreement Perangkat Monitoring.</p>
-                </a>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-4">
-                <a href="ikm.html" class="sub-card card-ikm">
-                    <div class="icon-wrapper"><i class="bi bi-star-fill"></i></div>
-                    <h5>IKM & IIPP</h5>
-                    <p>Pengelolaan Indeks Kepuasan Masyarakat & Indeks Integritas Pelayanan Publik.</p>
-                </a>
-            </div>
-        </div>
-    </div>
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer-custom">
@@ -523,7 +531,7 @@
         </div>
     </footer>
 
-    <!-- MODAL PENGATURAN KINERJA (ADMIN CENTRAL) -->
+    <!-- MODAL PENGATURAN KINERJA (ADMIN CENTRAL - 6 TAB) -->
     <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="max-width: 95%;">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
