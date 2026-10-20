@@ -3,75 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASBOR UNAR - BALMON PALANGKARAYA</title>
-    
-    <!-- Favicon & Google Font Inter -->
+    <title>REKAPITULASI UNAR - BALMON PALANGKARAYA</title>
+
+    <!-- Favicon & Fonts -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Bootstrap 5 CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <!-- ApexCharts CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
-    
+
     <style>
         :root {
-            --primary-green: #059669;
-            --accent-green: #10b981;
-            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+            --primary-navy: #0f4c81;
+            --accent-blue: #1b75bc;
+            --bg-light: #f8fafc;
+            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
             --sidebar-collapsed-width: 68px;
             --sidebar-expanded-width: 280px;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: var(--bg-light);
             background-image: 
-                radial-gradient(at 100% 0%, rgba(209, 250, 229, 0.8) 0, transparent 40%), 
-                radial-gradient(at 0% 100%, rgba(167, 243, 208, 0.5) 0, transparent 40%);
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.08) 0px, transparent 60%);
             background-attachment: fixed;
             color: #334155;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
 
-        /* HEADER / NAVBAR */
+        /* NAVBAR HEADER */
         .navbar-custom {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            padding: 0.8rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 50%, #3b82f6 100%);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 25px rgba(15, 76, 129, 0.25);
             z-index: 1050;
         }
-        
+
         .logo-container {
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             background: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
         .logo-container img {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
         }
 
-        /* SIDEBAR AUTO-HIDE TERPADU */
+        /* SIDEBAR AUTO-HIDE */
         .sidebar-autohide {
             position: fixed;
             top: 68px;
             left: 0;
             bottom: 0;
             width: var(--sidebar-collapsed-width);
-            background: linear-gradient(180deg, #065f46 0%, #047857 100%);
-            box-shadow: 4px 0 25px rgba(5, 150, 105, 0.2);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 60%, #091e42 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.25);
             z-index: 1040;
             transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
@@ -88,7 +89,7 @@
 
         .sidebar-header {
             padding: 0.5rem 1.25rem 1rem 1.25rem;
-            color: #a7f3d0;
+            color: #93c5fd;
             font-size: 0.72rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -125,15 +126,15 @@
         }
 
         .sidebar-menu .menu-link:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
             color: #ffffff;
-            border-left-color: #34d399;
+            border-left-color: #38bdf8;
         }
 
         .sidebar-menu .menu-link.active {
-            background: rgba(255, 255, 255, 0.2) !important;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
             color: #ffffff !important;
-            border-left-color: #34d399 !important;
+            border-left-color: #38bdf8 !important;
             font-weight: 700;
         }
 
@@ -157,127 +158,157 @@
             opacity: 1;
         }
 
-        /* WADAH KONTEN UTAMA */
+        /* MAIN WRAPPER */
         .main-wrapper {
             margin-left: var(--sidebar-collapsed-width);
             flex-grow: 1;
-            padding: 2.5rem 2rem;
+            padding: 2rem 2rem;
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* HEADER BANNER UNAR */
+        /* BANNER GRADASI */
         .header-banner {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 40%, #0284c7 100%);
             color: white;
             border-radius: 24px;
-            padding: 2rem 2.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            box-shadow: 0 15px 35px rgba(4, 120, 87, 0.2);
+            padding: 2.2rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.22);
             position: relative;
             overflow: hidden;
         }
-
         .header-banner::after {
-            content: ''; position: absolute; top: -50%; right: -5%;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            content: '';
+            position: absolute;
+            top: -50%; right: -10%;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
+            pointer-events: none;
         }
 
-        .header-title-box {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            z-index: 1;
-        }
-
-        .header-icon-box {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.25);
-            padding: 1rem;
-            border-radius: 20px;
-        }
-
-        /* DROPDOWN SELECTOR TAHUN */
-        .select-tahun-box {
-            background: rgba(255, 255, 255, 0.95);
+        /* DROPDOWN TAHUN STYLING */
+        .btn-tahun-dropdown {
+            background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .btn-tahun-dropdown:hover, .btn-tahun-dropdown:focus, .btn-tahun-dropdown.show {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .dropdown-menu-tahun {
             border-radius: 14px;
+            padding: 0.5rem;
+            min-width: 140px;
+        }
+        .dropdown-menu-tahun .dropdown-item {
+            border-radius: 8px;
             padding: 0.5rem 1rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            z-index: 2;
+            transition: all 0.2s ease;
+        }
+        .dropdown-menu-tahun .dropdown-item:hover {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        .dropdown-menu-tahun .dropdown-item.active {
+            background: linear-gradient(135deg, #0f4c81, #1e3a8a);
+            color: #ffffff;
         }
 
-        /* KARTU STATISTIK SUMMARY */
-        .summary-card {
+        /* STAT CARDS */
+        .stat-card {
             background: #ffffff;
             border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            transition: all 0.3s ease;
+            padding: 1.25rem 1.4rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
             height: 100%;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
-        .summary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
         }
-
-        .summary-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
+        .stat-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             color: white;
-            margin-bottom: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
         }
 
-        .summary-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            line-height: 1.1;
-        }
+        .grad-info { background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); }
+        .grad-primary { background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%); }
+        .grad-success { background: linear-gradient(135deg, #34d399 0%, #059669 100%); }
+        .grad-danger { background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); }
+        .grad-warning { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
 
-        .summary-label {
-            font-size: 0.82rem;
+        .stat-card .title {
+            font-size: 0.75rem;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        /* CHART CARD */
-        .chart-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 1.8rem;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: var(--card-shadow);
-            margin-bottom: 2rem;
+        .stat-card .value {
+            font-size: 1.9rem;
+            font-weight: 800;
+            margin-top: 4px;
+            letter-spacing: -0.5px;
         }
 
-        .footer-custom {
-            text-align: center;
-            padding: 1.5rem;
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-left: var(--sidebar-collapsed-width);
+        /* CHART CARD */
+        .chart-card-3d {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        .chart-card-3d:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 45px rgba(15, 76, 129, 0.14);
+        }
+
+        /* TABEL */
+        .table-custom {
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .table-custom th {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%) !important;
+            color: white;
+            font-size: 0.78rem;
+            vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 0.85rem 0.4rem;
+            line-height: 1.3;
+            border: none;
+        }
+        .table-custom td {
+            font-size: 0.83rem;
+            vertical-align: middle;
+            padding: 0.65rem 0.4rem;
         }
 
         @media (max-width: 768px) {
             .main-wrapper { margin-left: 0; padding: 1.5rem 1rem; }
             .sidebar-autohide { display: none; }
-            .footer-custom { margin-left: 0; }
         }
     </style>
 </head>
@@ -286,23 +317,19 @@
     <!-- NAVBAR HEADER -->
     <nav class="navbar navbar-dark navbar-custom sticky-top">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="sarpras.html">
                 <div class="logo-container me-3">
-                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
-                <div class="d-none d-sm-block">
-                    <span class="text-white d-block fs-6 tracking-wide">TIM KERJA SARANA PRASARANA & LAYANAN</span>
-                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">BALMON SFRID KELAS II PALANGKARAYA</small>
+                <div>
+                    <span class="text-white d-block fs-6">MONITORING DATA UNAR</span>
+                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
-            </a>
-            
-            <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                <i class="bi bi-arrow-left-circle me-1"></i> Kembali ke Dasbor Sarpras
             </a>
         </div>
     </nav>
 
-    <!-- SIDEBAR AUTO-HIDE TERPADU SEBELAH KIRI -->
+    <!-- SIDEBAR AUTO-HIDE TERPADU -->
     <aside class="sidebar-autohide">
         <div class="sidebar-header">
             <span>LAYANAN & PERIZINAN</span>
@@ -365,115 +392,128 @@
         </ul>
     </aside>
 
-    <!-- KONTEN UTAMA UNAR -->
+    <!-- MAIN CONTENT WRAPPER -->
     <main class="main-wrapper">
         <div class="container-fluid">
             
-            <!-- BANNER HEADER WITH DROPDOWN TAHUN -->
-            <div class="header-banner">
-                <div class="header-title-box">
-                    <div class="header-icon-box">
-                        <i class="bi bi-person-vcard-fill text-white" style="font-size: 2.8rem;"></i>
-                    </div>
-                    <div>
-                        <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2rem;">
-                            SERTAFIKASI OPERATOR RADIO (UNAR) <span class="lbl-tahun-unar">2026</span>
-                        </h1>
-                        <h5 class="mb-0 fw-light" style="color: #a7f3d0;">Jadwal, Rekapitulasi Peserta & Hasil Ujian Negara Amatir Radio</h5>
-                    </div>
+            <!-- HEADER BANNER DENGAN DROPDOWN TAHUN -->
+            <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div style="z-index: 1;">
+                    <h2 class="fw-800 mb-1" style="font-weight: 800; letter-spacing: 0.5px;">
+                        PELAKSANAAN UJIAN NEGARA AMATIR RADIO (UNAR) <span id="lblTahunHeader">2026</span>
+                    </h2>
+                    <p class="mb-0 text-white-50">Data Statistik & Rekapitulasi Peserta Ujian Negara Amatir Radio Balmon Palangkaraya</p>
                 </div>
 
-                <!-- DROPDOWN SELEKSI TAHUN TERHUBUNG SARPRAS -->
-                <div class="select-tahun-box d-flex align-items-center gap-2">
-                    <i class="bi bi-calendar3 text-success fw-bold fs-5"></i>
-                    <label for="selectTahunUnar" class="fw-bold text-secondary mb-0 small" style="white-space: nowrap;">Tahun UNAR:</label>
-                    <select class="form-select form-select-sm fw-bold border-0 bg-light text-success" id="selectTahunUnar" onchange="handleGantiTahunUnar(this.value)" style="width: 110px; cursor: pointer;">
-                        <option value="2025">2025</option>
-                        <option value="2026" selected>2026</option>
-                        <option value="2027">2027</option>
-                        <option value="2028">2028</option>
-                        <option value="2029">2029</option>
-                        <option value="2030">2030</option>
-                    </select>
+                <!-- TOMBOL DROPDOWN TAHUN DI POJOK KANAN BANNER -->
+                <div class="dropdown" style="z-index: 2;">
+                    <button class="btn btn-tahun-dropdown fw-bold dropdown-toggle px-3.5 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar3 fs-6"></i>
+                        <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 dropdown-menu-tahun" aria-labelledby="dropdownTahun">
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this)">Tahun 2025</a></li>
+                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this)">Tahun 2026</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2027, this)">Tahun 2027</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2028, this)">Tahun 2028</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2029, this)">Tahun 2029</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2030, this)">Tahun 2030</a></li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- KARTU RANGKUMAN STATISTIK -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="summary-card">
-                        <div class="summary-icon" style="background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);">
-                            <i class="bi bi-file-earmark-person-fill"></i>
+            <!-- REKAP TOP CARDS STATISTIK -->
+            <div class="row row-cols-1 row-cols-md-5 g-3 mb-4">
+                <div class="col">
+                    <div class="stat-card" style="border-top: 4px solid #0284c7;">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="stat-card-icon grad-info"><i class="bi bi-journal-text"></i></div>
+                            <div class="title text-info">Total Pendaftar</div>
                         </div>
-                        <div class="summary-label">Total Pendaftar</div>
-                        <div class="summary-value text-info" id="cardTotalPendaftar">0</div>
+                        <div class="value text-dark" id="lblTotalPendaftar">0</div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="summary-card">
-                        <div class="summary-icon" style="background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);">
-                            <i class="bi bi-people-fill"></i>
+                <div class="col">
+                    <div class="stat-card" style="border-top: 4px solid #2563eb;">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="stat-card-icon grad-primary"><i class="bi bi-people"></i></div>
+                            <div class="title text-primary">Peserta Ujian</div>
                         </div>
-                        <div class="summary-label">Total Peserta Ujian</div>
-                        <div class="summary-value text-primary" id="cardTotalPeserta">0</div>
+                        <div class="value text-primary" id="lblTotalPeserta">0</div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="summary-card">
-                        <div class="summary-icon" style="background: linear-gradient(135deg, #34d399 0%, #059669 100%);">
-                            <i class="bi bi-check-circle-fill"></i>
+                <div class="col">
+                    <div class="stat-card" style="border-top: 4px solid #10b981;">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="stat-card-icon grad-success"><i class="bi bi-check-circle"></i></div>
+                            <div class="title text-success">Lulus Ujian</div>
                         </div>
-                        <div class="summary-label">Peserta Lulus</div>
-                        <div class="summary-value text-success" id="cardTotalLulus">0</div>
+                        <div class="value text-success" id="lblTotalLulus">0</div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="summary-card">
-                        <div class="summary-icon" style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);">
-                            <i class="bi bi-trophy-fill"></i>
+                <div class="col">
+                    <div class="stat-card" style="border-top: 4px solid #ef4444;">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="stat-card-icon grad-danger"><i class="bi bi-x-circle"></i></div>
+                            <div class="title text-danger">Tidak Lulus</div>
                         </div>
-                        <div class="summary-label">Tingkat Kelulusan</div>
-                        <div class="summary-value text-warning" id="cardPersenLulus">0%</div>
+                        <div class="value text-danger" id="lblTotalTidakLulus">0</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-top: 4px solid #f59e0b;">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="stat-card-icon grad-warning"><i class="bi bi-exclamation-triangle"></i></div>
+                            <div class="title text-warning">Tidak Lulus Adm</div>
+                        </div>
+                        <div class="value text-warning" id="lblTotalTidakLulusAdm">0</div>
                     </div>
                 </div>
             </div>
 
-            <!-- GRAFIK TREN KELULUSAN 3D AREA / SPLINE -->
-            <div class="chart-card">
-                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-graph-up-arrow text-success fs-4"></i>
-                        <h5 class="fw-bold mb-0">Grafik Tren Peserta & Kelulusan UNAR (<span class="lbl-tahun-unar">2026</span>)</h5>
+            <!-- GRAFIK TREN 3D UNAR -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-card-3d">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Pelaksanaan UNAR <span id="lblTahunChart">2026</span></h5>
+                                <small class="text-muted">Visualisasi Tren Pendaftar, Peserta Ujian, dan Tingkat Kelulusan Per Bulan</small>
+                            </div>
+                            <span class="badge bg-light text-primary border fw-semibold px-3 py-2"><i class="bi bi-layers me-1"></i>3D Spline Gradient</span>
+                        </div>
+                        <div id="chart3DUnarTrend" style="min-height: 360px;"></div>
                     </div>
-                    <span class="badge bg-light text-success border fw-bold px-3 py-2 rounded-pill">Data Realtime</span>
                 </div>
-                <div id="chartUnarTrend" style="min-height: 350px;"></div>
             </div>
 
-            <!-- TABEL REKAPITULASI DETAIL UNAR 12 BULAN -->
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-                <div class="card-header bg-dark text-white p-3 d-flex align-items-center justify-content-between">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-table me-2 text-warning"></i> Rekapitulasi Pelaksanaan UNAR Per Bulan (<span class="lbl-tahun-unar">2026</span>)</h6>
-                    <small class="text-light opacity-75">*Terhubung otomatis dengan Modul Sarpras</small>
+            <!-- TABEL RINCIAN UNAR -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Pelaksanaan UNAR Per Bulan (<span id="lblTahunTabel">2026</span>)</h5>
+                    <span class="badge bg-primary px-3 py-2 fw-semibold" id="badgeTahunTabel">Tahun 2026</span>
                 </div>
-                <div class="table-responsive bg-white p-2">
-                    <table class="table table-hover table-bordered align-middle text-center mb-0" style="font-size: 0.88rem;">
-                        <thead class="table-light">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
+                        <thead>
                             <tr>
+                                <th style="width: 35px;">No</th>
                                 <th>Bulan</th>
                                 <th>Tgl Ujian</th>
                                 <th>Kategori</th>
                                 <th>Lokasi</th>
-                                <th class="text-info">Pendaftar</th>
-                                <th class="text-primary">Peserta</th>
-                                <th class="text-success">Lulus</th>
-                                <th class="text-danger">Tidak Lulus</th>
+                                <th style="background: linear-gradient(135deg, #0284c7, #0369a1) !important;" class="text-white">Jml<br>Pendaftar</th>
+                                <th style="background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;" class="text-white">Jml<br>Peserta</th>
+                                <th>Siaga</th>
+                                <th>Penggalang</th>
+                                <th>Penegak</th>
+                                <th style="background: linear-gradient(135deg, #059669, #047857) !important;" class="text-white">Jml Lulus<br>Ujian</th>
+                                <th>Tidak<br>Lulus</th>
+                                <th style="background: linear-gradient(135deg, #d97706, #b45309) !important;" class="text-white">Tidak Lulus<br>Adm</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="tbodyUnarViewer">
-                            <!-- 12 Baris Bulan di-render oleh JS -->
-                        </tbody>
+                        <tbody id="tblBodyUnar"></tbody>
                     </table>
                 </div>
             </div>
@@ -481,23 +521,13 @@
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer-custom">
-        <div class="container fw-medium">
-            &copy; <script>document.write(new Date().getFullYear())</script> Tim Kerja Sarpras & Layanan - Balmon Palangka Raya.
-        </div>
-    </footer>
-
-    <!-- LIBRARY & SDK SCRIPT -->
+    <!-- SDK FIREBASE COMPAT & LIBRARIES -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
-    
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
     <script>
-        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
             authDomain: "smfr-database.firebaseapp.com",
@@ -507,182 +537,201 @@
             messagingSenderId: "890374389163",
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
         };
-        
+
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-        
         const database = firebase.database();
-        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-        const namaBulanFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        let activeUnarYear = "2026";
-        window.chartUnarTrend = null;
+        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        let currentSelectedYear = 2026;
         let activeFirebaseRef = null;
 
-        // 1. INIT GRAFIK 3D AREA APEXCHARTS
-        function initUnarChart() {
+        let unarMonths = [
+            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
+            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 5, status: "Selesai" },
+            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
+            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
+        ];
+
+        let chart3DUnarInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init3DChart();
+            loadUnarDataRealtime(currentSelectedYear);
+        });
+
+        function init3DChart() {
             const options = {
                 series: [
-                    { name: "Peserta UNAR", data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-                    { name: "Peserta Lulus", data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+                    { name: "Pendaftar", data: [] },
+                    { name: "Peserta Ujian", data: [] },
+                    { name: "Lulus Ujian", data: [] }
                 ],
                 chart: {
-                    height: 350,
+                    height: 360,
                     type: 'area',
                     toolbar: { show: false },
-                    dropShadow: { enabled: true, color: '#059669', top: 10, left: 0, blur: 6, opacity: 0.2 }
+                    dropShadow: { enabled: true, color: '#0f4c81', top: 12, left: 0, blur: 8, opacity: 0.22 }
                 },
-                colors: ['#2563eb', '#10b981'],
+                colors: ['#0284c7', '#2563eb', '#10b981'],
+                stroke: { curve: 'smooth', width: 3.5 },
                 fill: {
                     type: 'gradient',
-                    gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [0, 90, 100] }
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [0, 90, 100]
+                    }
                 },
-                stroke: { curve: 'smooth', width: 3 },
-                markers: { size: 5, strokeColors: '#fff', strokeWidth: 2 },
                 xaxis: { categories: bulanList },
                 grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                dataLabels: { enabled: false },
+                tooltip: { enabled: true },
                 legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
             };
 
-            const el = document.getElementById('chartUnarTrend');
-            if (el) {
-                window.chartUnarTrend = new ApexCharts(el, options);
-                window.chartUnarTrend.render();
-            }
+            chart3DUnarInstance = new ApexCharts(document.getElementById('chart3DUnarTrend'), options);
+            chart3DUnarInstance.render();
         }
 
-        // 2. RENDERING TABEL CONTAINER AWAL
-        function initTableStructure() {
-            const tbody = document.getElementById('tbodyUnarViewer');
-            if (!tbody) return;
-
-            let html = '';
-            for (let i = 1; i <= 12; i++) {
-                html += `
-                <tr>
-                    <td class="fw-bold text-dark">${namaBulanFull[i-1]}</td>
-                    <td id="td_unar_tgl_${i}">-</td>
-                    <td id="td_unar_kat_${i}">CAT Reguler</td>
-                    <td id="td_unar_lok_${i}">-</td>
-                    <td id="td_unar_pend_${i}" class="fw-bold text-info">0</td>
-                    <td id="td_unar_pes_${i}" class="fw-bold text-primary">0</td>
-                    <td id="td_unar_lul_${i}" class="fw-bold text-success">0</td>
-                    <td id="td_unar_tl_${i}" class="fw-bold text-danger">0</td>
-                    <td><span id="td_unar_st_${i}" class="badge bg-secondary">Mendatang</span></td>
-                </tr>`;
-            }
-            tbody.innerHTML = html;
-        }
-
-        // 3. HANDLER DROPDOWN PILIH TAHUN
-        function handleGantiTahunUnar(tahun) {
-            activeUnarYear = tahun;
-
-            document.querySelectorAll('.lbl-tahun-unar').forEach(el => {
-                el.textContent = tahun;
-            });
-
-            const Toast = Swal.mixin({
-                toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, timerProgressBar: true
-            });
-            Toast.fire({ icon: 'info', title: `Memuat Data UNAR Tahun ${tahun}` });
-
-            loadDataUnarRealtime(tahun);
-        }
-
-        // 4. LOAD DATA REALTIME DARI FIREBASE NODE SARPRAS
-        function loadDataUnarRealtime(tahun = activeUnarYear) {
+        function loadUnarDataRealtime(tahun = currentSelectedYear) {
             if (activeFirebaseRef) {
                 activeFirebaseRef.off();
             }
 
-            const pathNode = (tahun === '2026') 
+            const pathNode = (String(tahun) === '2026') 
                 ? 'kinerja_sarpras/unar_detail' 
                 : `kinerja_sarpras_by_year/${tahun}/unar_detail`;
 
             activeFirebaseRef = database.ref(pathNode);
 
             activeFirebaseRef.on('value', (snapshot) => {
-                let unarData = snapshot.val();
-
-                if (!unarData && tahun !== '2026') {
+                const data = snapshot.val();
+                if (data && data.months && Array.isArray(data.months)) {
+                    unarMonths = data.months;
+                    renderUnarDashboard();
+                } else if (String(tahun) !== '2026') {
                     database.ref('kinerja_sarpras/unar_detail').once('value', (snapFallback) => {
-                        updateUnarDashboardUI(snapFallback.val());
+                        const fbData = snapFallback.val();
+                        if (fbData && fbData.months && Array.isArray(fbData.months)) {
+                            unarMonths = fbData.months;
+                        }
+                        renderUnarDashboard();
                     });
                 } else {
-                    updateUnarDashboardUI(unarData);
+                    renderUnarDashboard();
                 }
+            }, (err) => {
+                console.warn("Menggunakan data default lokal:", err.message);
+                renderUnarDashboard();
             });
         }
 
-        // 5. UPDATE TAMPILAN DASHBOARD UI
-        function updateUnarDashboardUI(data) {
-            if (!data || !data.months) return;
+        function changeTahun(tahun, element) {
+            currentSelectedYear = tahun;
 
+            // Update Teks Label di Seluruh Elemen Dasbor
+            document.getElementById('lblTahunHeader').textContent = tahun;
+            document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChart').textContent = tahun;
+            document.getElementById('lblTahunTabel').textContent = tahun;
+            document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
+
+            // Update Class Active pada Menu Dropdown
+            document.querySelectorAll('.dropdown-menu-tahun .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+
+            // Muat data dari Firebase sesuai tahun
+            loadUnarDataRealtime(tahun);
+        }
+
+        function renderUnarDashboard() {
             let totalPendaftar = 0;
             let totalPeserta = 0;
             let totalLulus = 0;
+            let totalTidakLulus = 0;
+            let totalTidakLulusAdm = 0;
 
-            let chartPesertaData = [];
-            let chartLulusData = [];
+            const arrPendaftar = [];
+            const arrPeserta = [];
+            const arrLulus = [];
 
-            data.months.forEach((m, idx) => {
-                let sia = parseInt(m.siaga) || 0;
-                let peng = parseInt(m.penggalang) || 0;
-                let pen = parseInt(m.penegak) || 0;
-                let tl = parseInt(m.tidak_lulus) || 0;
-                let tladm = parseInt(m.tidak_lulus_adm) || 0;
+            const tbody = document.getElementById('tblBodyUnar');
+            tbody.innerHTML = '';
 
-                let peserta = sia + peng + pen;
-                let pendaftar = peserta + tladm;
-                let lulus = Math.max(0, peserta - tl);
+            unarMonths.forEach((m, idx) => {
+                const siaga = parseInt(m.siaga) || 0;
+                const penggalang = parseInt(m.penggalang) || 0;
+                const penegak = parseInt(m.penegak) || 0;
+                const tidakLulus = parseInt(m.tidak_lulus) || 0;
+                const tidakLulusAdm = parseInt(m.tidak_lulus_adm) || 0;
+
+                const peserta = m.peserta !== undefined ? (parseInt(m.peserta) || (siaga + penggalang + penegak)) : (siaga + penggalang + penegak);
+                const pendaftar = m.pendaftar !== undefined ? (parseInt(m.pendaftar) || (peserta + tidakLulusAdm)) : (peserta + tidakLulusAdm);
+                const lulusBulanIni = Math.max(0, peserta - tidakLulus);
 
                 totalPendaftar += pendaftar;
                 totalPeserta += peserta;
-                totalLulus += lulus;
+                totalLulus += lulusBulanIni;
+                totalTidakLulus += tidakLulus;
+                totalTidakLulusAdm += tidakLulusAdm;
 
-                chartPesertaData.push(peserta);
-                chartLulusData.push(lulus);
+                arrPendaftar.push(pendaftar);
+                arrPeserta.push(peserta);
+                arrLulus.push(lulusBulanIni);
 
-                let i = idx + 1;
-                if (document.getElementById(`td_unar_tgl_${i}`)) document.getElementById(`td_unar_tgl_${i}`).innerText = m.tgl || '-';
-                if (document.getElementById(`td_unar_kat_${i}`)) document.getElementById(`td_unar_kat_${i}`).innerText = m.kategori || 'CAT Reguler';
-                if (document.getElementById(`td_unar_lok_${i}`)) document.getElementById(`td_unar_lok_${i}`).innerText = m.lokasi || '-';
-                if (document.getElementById(`td_unar_pend_${i}`)) document.getElementById(`td_unar_pend_${i}`).innerText = pendaftar;
-                if (document.getElementById(`td_unar_pes_${i}`)) document.getElementById(`td_unar_pes_${i}`).innerText = peserta;
-                if (document.getElementById(`td_unar_lul_${i}`)) document.getElementById(`td_unar_lul_${i}`).innerText = lulus;
-                if (document.getElementById(`td_unar_tl_${i}`)) document.getElementById(`td_unar_tl_${i}`).innerText = tl;
-                
-                let stEl = document.getElementById(`td_unar_st_${i}`);
-                if (stEl) {
-                    stEl.innerText = m.status || 'Mendatang';
-                    if (m.status === 'Selesai') stEl.className = "badge bg-success";
-                    else if (m.status === 'Dibatalkan') stEl.className = "badge bg-danger";
-                    else stEl.className = "badge bg-secondary";
-                }
+                let badgeStatus = m.status === 'Selesai' 
+                    ? '<span class="badge bg-success bg-opacity-10 text-success border border-success px-2.5 py-1.5">Selesai</span>' 
+                    : (m.status === 'Dibatalkan' ? '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-2.5 py-1.5">Dibatalkan</span>' : '<span class="badge bg-secondary bg-opacity-10 text-secondary border px-2.5 py-1.5">Mendatang</span>');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-bold">${idx + 1}</td>
+                        <td class="fw-bold text-dark">${m.bulan}</td>
+                        <td>${m.tgl || '-'}</td>
+                        <td><span class="badge bg-light text-dark border">${m.kategori || 'CAT Reguler'}</span></td>
+                        <td>${m.lokasi || '-'}</td>
+                        <td class="fw-bold text-info bg-light">${pendaftar}</td>
+                        <td class="fw-bold text-primary bg-light">${peserta}</td>
+                        <td class="text-success fw-semibold">${siaga}</td>
+                        <td class="text-success fw-semibold">${penggalang}</td>
+                        <td class="text-success fw-semibold">${penegak}</td>
+                        <td class="fw-bold text-success bg-light">${lulusBulanIni}</td>
+                        <td class="text-danger fw-bold">${tidakLulus}</td>
+                        <td class="text-warning fw-bold bg-light">${tidakLulusAdm}</td>
+                        <td>${badgeStatus}</td>
+                    </tr>
+                `;
             });
 
-            if (document.getElementById('cardTotalPendaftar')) document.getElementById('cardTotalPendaftar').innerText = totalPendaftar;
-            if (document.getElementById('cardTotalPeserta')) document.getElementById('cardTotalPeserta').innerText = totalPeserta;
-            if (document.getElementById('cardTotalLulus')) document.getElementById('cardTotalLulus').innerText = totalLulus;
+            document.getElementById('lblTotalPendaftar').textContent = totalPendaftar;
+            document.getElementById('lblTotalPeserta').textContent = totalPeserta;
+            document.getElementById('lblTotalLulus').textContent = totalLulus;
+            document.getElementById('lblTotalTidakLulus').textContent = totalTidakLulus;
+            document.getElementById('lblTotalTidakLulusAdm').textContent = totalTidakLulusAdm;
 
-            let pctLulus = totalPeserta > 0 ? ((totalLulus / totalPeserta) * 100).toFixed(1) : "0.0";
-            if (document.getElementById('cardPersenLulus')) document.getElementById('cardPersenLulus').innerText = pctLulus + "%";
-
-            if (window.chartUnarTrend) {
-                window.chartUnarTrend.updateSeries([
-                    { name: "Peserta UNAR", data: chartPesertaData },
-                    { name: "Peserta Lulus", data: chartLulusData }
+            if (chart3DUnarInstance) {
+                chart3DUnarInstance.updateSeries([
+                    { name: "Pendaftar", data: arrPendaftar },
+                    { name: "Peserta Ujian", data: arrPeserta },
+                    { name: "Lulus Ujian", data: arrLulus }
                 ]);
             }
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            initTableStructure();
-            initUnarChart();
-            loadDataUnarRealtime(activeUnarYear);
-        });
     </script>
 </body>
 </html>
