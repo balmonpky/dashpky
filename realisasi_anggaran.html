@@ -390,12 +390,10 @@
                     type: 'donut',
                     height: 360,
                     events: {
-                        // Menangkap event klik pada Nama Program di Keterangan / Legenda
                         legendClick: function(chartContext, seriesIndex, config) {
                             toggleProgramSelection(seriesIndex);
-                            return false; // Mencegah potongan chart tersembunyi agar berfungsi sebagai pemilih data
+                            return false;
                         },
-                        // Menangkap event klik langsung pada Potongan Donat
                         dataPointSelection: function(event, chartContext, config) {
                             toggleProgramSelection(config.dataPointIndex);
                         }
@@ -422,9 +420,7 @@
                         donut: {
                             size: '67%',
                             background: 'transparent',
-                            labels: {
-                                show: false // Menggunakan kustom overlay HTML (#donutCenterInfo)
-                            }
+                            labels: { show: false }
                         }
                     }
                 },
@@ -447,10 +443,9 @@
             donutChartInstance = new ApexCharts(document.getElementById('donutChart3DAnggaran'), optionsDonut);
             donutChartInstance.render();
 
-            // Render awal teks tengah donat
             updateDonutCenterText();
 
-            // 2. AREA/BAR CHART TREN BULANAN
+            // 2. AREA/BAR CHART TREN BULANAN (DATALABELS DISABLED)
             const optionsArea = {
                 series: [],
                 chart: {
@@ -473,6 +468,10 @@
                     type: 'gradient',
                     gradient: { opacityFrom: 0.4, opacityTo: 0.05 }
                 },
+                // SEMBUNYIKAN NILAI ANGKA PADA GRAFIK
+                dataLabels: {
+                    enabled: false
+                },
                 xaxis: { categories: bulanList },
                 yaxis: {
                     labels: {
@@ -481,7 +480,9 @@
                         }
                     }
                 },
+                // NILAI HANYA MUNCUL SAAT KURSOR DISOROT
                 tooltip: {
+                    enabled: true,
                     y: { formatter: (val) => formatRupiah(val) }
                 },
                 grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
