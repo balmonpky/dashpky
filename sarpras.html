@@ -162,7 +162,7 @@
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* HEADER KINERJA */
+        /* HEADER KINERJA BANNER */
         .header-kinerja {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             color: white;
@@ -188,6 +188,20 @@
             border: 1px solid rgba(255,255,255,0.2);
             padding: 1rem;
             border-radius: 20px;
+        }
+
+        /* DROPDOWN TAHUN DASBOR BANNER */
+        .btn-tahun-dashboard {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .btn-tahun-dashboard:hover, .btn-tahun-dashboard:focus, .btn-tahun-dashboard.show {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         /* KARTU DASBOR */
@@ -269,7 +283,7 @@
             border-radius: 8px; font-weight: 700;
         }
 
-        /* CARD STYLING UNTUK GRAFIK (LINE & DONUT CHART 3D) */
+        /* CARD STYLING UNTUK GRAFIK */
         .chart-card {
             background: #ffffff;
             border-radius: 20px;
@@ -318,7 +332,6 @@
             margin-left: var(--sidebar-collapsed-width);
         }
 
-        /* Gaya Tabel & Input Modal */
         .table-modal-edit input, .table-modal-edit select {
             font-size: 0.8rem;
             padding: 0.25rem 0.3rem;
@@ -415,15 +428,38 @@
             
             <!-- BANNER CAPAIAN KINERJA -->
             <div class="header-kinerja">
-                <button id="btnAdminMain" class="btn btn-light btn-sm fw-bold shadow-sm position-absolute" style="top: 20px; right: 20px; z-index: 2; border-radius: 8px;" onclick="verifikasiAdmin()">
-                    <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
-                </button>
+                
+                <!-- WADAH KUMPULAN TOMBOL EDIT DATA & TAHUN DI UJUNG KANAN ATAS -->
+                <div class="position-absolute d-flex flex-column align-items-end gap-2" style="top: 18px; right: 20px; z-index: 2;">
+                    <!-- 1. Tombol Edit Data -->
+                    <button id="btnAdminMain" class="btn btn-light btn-sm fw-bold shadow-sm rounded-3" onclick="verifikasiAdmin()">
+                        <i class="bi bi-gear-fill text-primary me-1"></i> Edit Data
+                    </button>
+
+                    <!-- 2. Tombol Dropdown Pilih Tahun (Tepat di Bawah Edit Data) -->
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-tahun-dashboard fw-bold dropdown-toggle rounded-3 shadow-sm px-3 py-1.5 d-flex align-items-center gap-1.5" type="button" id="dropdownTahunDashboard" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-calendar3 fs-6"></i>
+                            <span>Tahun: <strong id="lblDashboardTahunActive">2026</strong></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="dropdownTahunDashboard" style="border-radius: 12px; min-width: 130px;">
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2025', this)">Tahun 2025</a></li>
+                            <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeDashboardYear('2026', this)">Tahun 2026</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2027', this)">Tahun 2027</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2028', this)">Tahun 2028</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2029', this)">Tahun 2029</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2030', this)">Tahun 2030</a></li>
+                        </ul>
+                    </div>
+                </div>
 
                 <div class="header-icon-box">
                     <i class="bi bi-bar-chart-line-fill text-white" style="font-size: 3rem;"></i>
                 </div>
                 <div style="z-index: 1;">
-                    <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2.2rem;">CAPAIAN KINERJA</h1>
+                    <h1 class="fw-bold mb-1" style="letter-spacing: 1px; font-size: 2.2rem;">
+                        CAPAIAN KINERJA <span id="lblHeaderBannerTahun">2026</span>
+                    </h1>
                     <h5 class="mb-0 fw-light" style="color: #cbd5e1;">Tim Kerja Sarana Prasarana Monitoring dan Layanan</h5>
                 </div>
             </div>
@@ -563,9 +599,8 @@
                 </div>
             </div>
 
-            <!-- SEKSI GRAFIK INTERAKTIF (LINE CHART 3D & DONUT CHART 3D) -->
+            <!-- SEKSI GRAFIK INTERAKTIF -->
             <div class="row g-4 mb-4">
-                <!-- 1. LINE CHART (TREN CAPAIAN BULANAN) -->
                 <div class="col-lg-8">
                     <div class="chart-card">
                         <div class="chart-header">
@@ -574,8 +609,8 @@
                                     <i class="bi bi-graph-up-arrow"></i>
                                 </div>
                                 <div>
-                                    <span>Tren Realisasi & Pelayanan Bulanan</span>
-                                    <small class="d-block text-muted fw-normal" style="font-size: 0.78rem;">Progres Komulatif Layanan & Serapan Anggaran (2026)</small>
+                                    <span>Tren Realisasi & Pelayanan Bulanan (<span id="lblChartLineTahun">2026</span>)</span>
+                                    <small class="d-block text-muted fw-normal" style="font-size: 0.78rem;">Progres Komulatif Layanan & Serapan Anggaran</small>
                                 </div>
                             </div>
                             <span class="badge bg-light text-primary border fw-semibold">Progres Akurat</span>
@@ -584,7 +619,6 @@
                     </div>
                 </div>
 
-                <!-- 2. DONUT CHART 3D (PROPORSI INDIKATOR KINERJA) -->
                 <div class="col-lg-4">
                     <div class="chart-card">
                         <div class="chart-header">
@@ -614,7 +648,7 @@
         </div>
     </footer>
 
-    <!-- MODAL PENGATURAN KINERJA (ADMIN CENTRAL - 6 TAB DENGAN DROPDOWN PILIH TAHUN 2025-2030) -->
+    <!-- MODAL EDIT DATA (ADMIN CENTRAL - 6 TAB) -->
     <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="max-width: 95%;">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
@@ -624,9 +658,8 @@
                 </div>
                 <div class="modal-body bg-light p-4">
                     
-                    <!-- DOKUMEN CONTROL BAR: TAB NAVIGASI & DROPDOWN SELEKSI TAHUN -->
+                    <!-- CONTROL BAR TAB MODAL & SELEKSI TAHUN -->
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom">
-                        <!-- TAB NAVIGASI MODAL -->
                         <ul class="nav nav-tabs border-0 m-0" id="adminTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
@@ -648,7 +681,6 @@
                             </li>
                         </ul>
 
-                        <!-- DROPDOWN TAHUN DATA (2025 - 2030) -->
                         <div class="d-flex align-items-center gap-2 bg-white px-3 py-1.5 rounded-3 border shadow-sm">
                             <i class="bi bi-calendar3 text-primary fw-bold"></i>
                             <label for="selectTahunEditor" class="fw-bold text-secondary mb-0 small" style="white-space: nowrap;">Tahun Data:</label>
@@ -912,6 +944,8 @@
 
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
         const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
+        
+        let activeDashboardYear = "2026";
         let selectedTahunEditor = "2026";
 
         // Data Default UNAR
@@ -971,7 +1005,7 @@
             { id: 12, bulan: "Desember", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 }
         ];
 
-        // Data Default Pelayanan ISR & Perizinan 12 Bulan
+        // Data Default Pelayanan ISR
         const defaultPerizinanMonths = [
             { id: 1, bulan: "Januari", langsung: 28, online: 35, terdistribusi: 42 },
             { id: 2, bulan: "Februari", langsung: 32, online: 40, terdistribusi: 50 },
@@ -987,12 +1021,10 @@
             { id: 12, bulan: "Desember", langsung: 0, online: 0, terdistribusi: 0 }
         ];
 
-        // INISIALISASI GRAFIK APEXCHARTS (3D DEPTH & ANIMASI SMOOTH)
         let chartLine = null;
         let chartDonut = null;
 
         function initDashboardCharts() {
-            // 1. OPSI LINE CHART
             const optionsLine = {
                 series: [
                     { name: "Total Konsultasi ISR", data: [63, 72, 73, 107, 82, 93, 98, 104, 115, 0, 0, 0] },
@@ -1003,105 +1035,36 @@
                     height: 350,
                     type: 'line',
                     toolbar: { show: false },
-                    dropShadow: {
-                        enabled: true,
-                        color: '#0f4c81',
-                        top: 12,
-                        left: 0,
-                        blur: 8,
-                        opacity: 0.22
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 1000,
-                        animateGradually: { enabled: true, delay: 150 },
-                        dynamicAnimation: { enabled: true, speed: 450 }
-                    }
+                    dropShadow: { enabled: true, color: '#0f4c81', top: 12, left: 0, blur: 8, opacity: 0.22 },
+                    animations: { enabled: true, easing: 'easeinout', speed: 1000 }
                 },
                 colors: ['#0f4c81', '#10b981', '#f59e0b'],
                 stroke: { curve: 'smooth', width: 4 },
-                markers: {
-                    size: 5,
-                    strokeColors: '#fff',
-                    strokeWidth: 2,
-                    hover: { size: 8 }
-                },
-                xaxis: {
-                    categories: bulanList,
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) { return Math.round(val); }
-                    }
-                },
-                grid: {
-                    borderColor: '#f1f5f9',
-                    strokeDashArray: 4
-                },
+                markers: { size: 5, strokeColors: '#fff', strokeWidth: 2 },
+                xaxis: { categories: bulanList },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
                 legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
             };
 
-            // 2. OPSI DONUT CHART
             const optionsDonut = {
                 series: [95, 88, 97.2, 1, 3.95, 9.5],
                 labels: ['Operator Radio', 'BHP Frekuensi', 'Monitoring SLA', 'Zona Integritas', 'IKM (Skala 4)', 'IIPP (Skala 10)'],
                 chart: {
                     type: 'donut',
                     height: 350,
-                    dropShadow: {
-                        enabled: true,
-                        color: '#1e293b',
-                        top: 14,
-                        left: 0,
-                        blur: 10,
-                        opacity: 0.18
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 1200,
-                        dynamicAnimation: { enabled: true, speed: 500 }
-                    }
+                    dropShadow: { enabled: true, color: '#1e293b', top: 14, left: 0, blur: 10, opacity: 0.18 }
                 },
                 colors: ['#3b82f6', '#6366f1', '#10b981', '#8b5cf6', '#f59e0b', '#0ea5e9'],
                 plotOptions: {
                     pie: {
-                        expandOnClick: true,
                         donut: {
                             size: '68%',
-                            background: 'transparent',
                             labels: {
                                 show: true,
                                 name: { show: true, fontSize: '13px', fontWeight: 700, color: '#64748b' },
-                                value: { show: true, fontSize: '22px', fontWeight: 800, color: '#0f4c81', formatter: (val) => `${val}%` },
-                                total: {
-                                    show: true,
-                                    label: 'Rata-rata Capaian',
-                                    fontWeight: 700,
-                                    color: '#475569',
-                                    formatter: function (w) {
-                                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                                        return (total / w.globals.series.length).toFixed(1) + '%';
-                                    }
-                                }
+                                value: { show: true, fontSize: '22px', fontWeight: 800, color: '#0f4c81', formatter: (val) => `${val}%` }
                             }
                         }
-                    }
-                },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shade: 'dark',
-                        type: 'diagonal1',
-                        shadeIntensity: 0.45,
-                        gradientToColors: undefined,
-                        inverseColors: true,
-                        opacityFrom: 0.95,
-                        opacityTo: 0.85,
-                        stops: [0, 90, 100]
                     }
                 },
                 dataLabels: { enabled: false },
@@ -1131,7 +1094,22 @@
             loadDataKinerjaRealtime();
         });
 
-        // HANDLER DENGAN EFEK TERPADU SAAT MENGUBAH TAHUN EDITOR (2025 - 2030)
+        // HANDLER PERUBAHAN TAHUN PADA DASBOR UTAMA
+        function changeDashboardYear(tahun, element) {
+            activeDashboardYear = tahun;
+            document.getElementById('lblDashboardTahunActive').textContent = tahun;
+            document.getElementById('lblHeaderBannerTahun').textContent = tahun;
+            document.getElementById('lblChartLineTahun').textContent = tahun;
+
+            document.querySelectorAll('#dropdownTahunDashboard + .dropdown-menu .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) element.classList.add('active');
+
+            loadDataKinerjaRealtime(tahun);
+        }
+
+        // HANDLER PERUBAHAN TAHUN PADA MODAL EDITOR
         function handleGantiTahunEditor(tahun) {
             selectedTahunEditor = tahun;
             document.querySelectorAll('.lbl-tahun-active').forEach(el => {
@@ -1139,16 +1117,9 @@
             });
 
             const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1500,
-                timerProgressBar: true
+                toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, timerProgressBar: true
             });
-            Toast.fire({
-                icon: 'info',
-                title: `Form Data Tahun ${tahun}`
-            });
+            Toast.fire({ icon: 'info', title: `Form Data Tahun ${tahun}` });
 
             loadExistingDataToModal(tahun);
         }
@@ -1284,9 +1255,7 @@
                     const serapanVal = parseFloat(inputRp ? inputRp.value : 0) || 0;
 
                     const pct = paguVal > 0 ? ((serapanVal / paguVal) * 100).toFixed(1) : '0.0';
-                    if (badgePct) {
-                        badgePct.innerText = `${pct}%`;
-                    }
+                    if (badgePct) badgePct.innerText = `${pct}%`;
                 }
             });
         }
@@ -1372,86 +1341,97 @@
             document.getElementById(`prz_tot_${i}`).value = lng + onl;
         }
 
-        function loadDataKinerjaRealtime() {
-            database.ref('kinerja_sarpras').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
+        function loadDataKinerjaRealtime(tahun = activeDashboardYear) {
+            const pathNode = (tahun === '2026') ? 'kinerja_sarpras' : `kinerja_sarpras_by_year/${tahun}`;
 
-                let capValues = [];
+            database.ref(pathNode).on('value', (snapshot) => {
+                let data = snapshot.val();
+                
+                if (!data && tahun !== '2026') {
+                    database.ref('kinerja_sarpras').once('value', (snapFallback) => {
+                        updateDashboardUI(snapFallback.val());
+                    });
+                } else {
+                    updateDashboardUI(data);
+                }
+            });
+        }
 
-                for (let i = 1; i <= 6; i++) {
-                    if (data['k' + i]) {
-                        let t = parseFloat(data['k' + i].target) || 0;
-                        let c = parseFloat(data['k' + i].capaian) || 0;
-                        let suf = data['k' + i].suffix || ''; 
+        function updateDashboardUI(data) {
+            if (!data) return;
 
-                        capValues.push(c);
+            let capValues = [];
 
-                        const elTarget = document.getElementById('val_target_' + i);
-                        const elCapaian = document.getElementById('val_capaian_' + i);
-                        const elCapBar = document.getElementById('val_capaian_bar_' + i);
+            for (let i = 1; i <= 6; i++) {
+                if (data['k' + i]) {
+                    let t = parseFloat(data['k' + i].target) || 0;
+                    let c = parseFloat(data['k' + i].capaian) || 0;
+                    let suf = data['k' + i].suffix || ''; 
 
-                        if (elTarget) elTarget.innerText = t + suf;
-                        if (elCapaian) elCapaian.innerText = c + suf;
-                        if (elCapBar) elCapBar.innerText = c + suf;
+                    capValues.push(c);
 
-                        let maxVal = Math.max(t, c, 1);
-                        let wTarget = (t / maxVal) * 100;
-                        let wCapaian = (c / maxVal) * 100;
+                    const elTarget = document.getElementById('val_target_' + i);
+                    const elCapaian = document.getElementById('val_capaian_' + i);
+                    const elCapBar = document.getElementById('val_capaian_bar_' + i);
 
-                        const barTarget = document.getElementById('bar_target_' + i);
-                        const barCapaian = document.getElementById('bar_capaian_' + i);
+                    if (elTarget) elTarget.innerText = t + suf;
+                    if (elCapaian) elCapaian.innerText = c + suf;
+                    if (elCapBar) elCapBar.innerText = c + suf;
 
-                        if (barTarget) barTarget.style.width = wTarget + '%';
-                        if (barCapaian) barCapaian.style.width = wCapaian + '%';
+                    let maxVal = Math.max(t, c, 1);
+                    let wTarget = (t / maxVal) * 100;
+                    let wCapaian = (c / maxVal) * 100;
 
-                        let statusEl = document.getElementById('status_' + i);
-                        if (statusEl) {
-                            let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
-                            if (c > t) {
-                                statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
-                                statusEl.className = "badge bg-light text-success border border-success";
-                            } else if (c < t) {
-                                statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
-                                statusEl.className = "badge bg-light text-danger border border-danger";
-                            } else {
-                                statusEl.innerHTML = "Sesuai Target";
-                                statusEl.className = "badge bg-light text-primary border border-primary";
-                            }
+                    const barTarget = document.getElementById('bar_target_' + i);
+                    const barCapaian = document.getElementById('bar_capaian_' + i);
+
+                    if (barTarget) barTarget.style.width = wTarget + '%';
+                    if (barCapaian) barCapaian.style.width = wCapaian + '%';
+
+                    let statusEl = document.getElementById('status_' + i);
+                    if (statusEl) {
+                        let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
+                        if (c > t) {
+                            statusEl.innerHTML = `↑ ${selisih}${suf} dari target`;
+                            statusEl.className = "badge bg-light text-success border border-success";
+                        } else if (c < t) {
+                            statusEl.innerHTML = `↓ ${Math.abs(selisih)}${suf} dari target`;
+                            statusEl.className = "badge bg-light text-danger border border-danger";
+                        } else {
+                            statusEl.innerHTML = "Sesuai Target";
+                            statusEl.className = "badge bg-light text-primary border border-primary";
                         }
                     }
                 }
+            }
 
-                // UPDATE DONUT CHART SECARA DINAMIS & HIDUP
-                if (chartDonut && capValues.length === 6) {
-                    chartDonut.updateSeries(capValues);
-                }
+            if (chartDonut && capValues.length === 6) {
+                chartDonut.updateSeries(capValues);
+            }
 
-                // UPDATE LINE CHART BERDASARKAN PERIZINAN & UNAR
-                if (chartLine && data.perizinan_detail && data.perizinan_detail.months) {
-                    let arrTotIzin = [];
-                    let arrDistIzin = [];
-                    let arrUnarPeserta = [];
+            if (chartLine && data.perizinan_detail && data.perizinan_detail.months) {
+                let arrTotIzin = [];
+                let arrDistIzin = [];
+                let arrUnarPeserta = [];
 
-                    data.perizinan_detail.months.forEach((m, idx) => {
-                        let totalKonsul = (parseInt(m.langsung) || 0) + (parseInt(m.online) || 0);
-                        arrTotIzin.push(totalKonsul);
-                        arrDistIzin.push(parseInt(m.terdistribusi) || 0);
+                data.perizinan_detail.months.forEach((m) => {
+                    let totalKonsul = (parseInt(m.langsung) || 0) + (parseInt(m.online) || 0);
+                    arrTotIzin.push(totalKonsul);
+                    arrDistIzin.push(parseInt(m.terdistribusi) || 0);
+                });
+
+                if (data.unar_detail && data.unar_detail.months) {
+                    data.unar_detail.months.forEach(m => {
+                        arrUnarPeserta.push((parseInt(m.siaga) || 0) + (parseInt(m.penggalang) || 0) + (parseInt(m.penegak) || 0));
                     });
-
-                    if (data.unar_detail && data.unar_detail.months) {
-                        data.unar_detail.months.forEach(m => {
-                            arrUnarPeserta.push((parseInt(m.siaga) || 0) + (parseInt(m.penggalang) || 0) + (parseInt(m.penegak) || 0));
-                        });
-                    }
-
-                    chartLine.updateSeries([
-                        { name: "Total Konsultasi ISR", data: arrTotIzin },
-                        { name: "ISR Terdistribusi", data: arrDistIzin },
-                        { name: "Peserta UNAR", data: arrUnarPeserta }
-                    ]);
                 }
-            });
+
+                chartLine.updateSeries([
+                    { name: "Total Konsultasi ISR", data: arrTotIzin },
+                    { name: "ISR Terdistribusi", data: arrDistIzin },
+                    { name: "Peserta UNAR", data: arrUnarPeserta }
+                ]);
+            }
         }
 
         function verifikasiAdmin() {
@@ -1539,8 +1519,6 @@
             
             database.ref(pathNode).once('value', (snapshot) => {
                 let data = snapshot.val();
-                
-                // Jika data tahun khusus belum ada di Firebase, fallback ke kinerja_sarpras utama
                 if (!data && tahun !== '2026') {
                     database.ref('kinerja_sarpras').once('value', (snapMain) => {
                         fillFormWithData(snapMain.val());
@@ -1554,7 +1532,6 @@
         function fillFormWithData(data) {
             if (!data) return;
 
-            // Load Dasbor
             for (let i = 1; i <= 6; i++) {
                 if (data['k' + i]) {
                     const elTarget = document.getElementById('inp_t_' + i);
@@ -1563,7 +1540,7 @@
                     if (elCapaian) elCapaian.value = data['k' + i].capaian;
                 }
             }
-            // Load UNAR
+
             if (data.unar_detail && data.unar_detail.months) {
                 const months = data.unar_detail.months;
                 months.forEach((m, idx) => {
@@ -1591,7 +1568,7 @@
                     if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
                 });
             }
-            // Load Anggaran
+
             if (data.realisasi_anggaran) {
                 const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
                 listAngg.forEach((item, idx) => {
@@ -1615,7 +1592,7 @@
                 });
                 hitungkanPersentaseAnggaran();
             }
-            // Load SLA
+
             if (data.sla_monitoring && data.sla_monitoring.months) {
                 const slaList = data.sla_monitoring.months;
                 slaList.forEach((m, idx) => {
@@ -1629,7 +1606,7 @@
                     if (document.getElementById(`sla_kc_${i}`)) document.getElementById(`sla_kc_${i}`).value = m.status_kunci || 'TERKUNCI';
                 });
             }
-            // Load IKM & IIPP
+
             if (data.ikm_iipp_detail && data.ikm_iipp_detail.months) {
                 const ikmList = data.ikm_iipp_detail.months;
                 ikmList.forEach((m, idx) => {
@@ -1642,7 +1619,7 @@
                     if (document.getElementById(`iipp_wanita_${i}`)) document.getElementById(`iipp_wanita_${i}`).value = m.iipp_wanita || 0;
                 });
             }
-            // Load Pelayanan ISR / Perizinan
+
             if (data.perizinan_detail && data.perizinan_detail.months) {
                 const przList = data.perizinan_detail.months;
                 przList.forEach((m, idx) => {
@@ -1660,7 +1637,6 @@
         function simpanKinerja(event) {
             event.preventDefault(); 
 
-            // 1. UNAR
             const updatedUnarMonths = [];
             let totalPendaftarAcc = 0, totalPesertaAcc = 0, totalLulusAcc = 0, totalTidakLulusAcc = 0;
 
@@ -1690,7 +1666,6 @@
                 });
             }
 
-            // 2. Realisasi Anggaran
             const updatedAnggaran = [];
             programIds.forEach((pId, idx) => {
                 let i = idx + 1;
@@ -1716,7 +1691,6 @@
                 });
             });
 
-            // 3. SLA Monitoring
             const updatedSlaMonths = [];
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`sla_bln_${i}`).innerText;
@@ -1733,7 +1707,6 @@
                 });
             }
 
-            // 4. IKM & IIPP
             const updatedIkmMonths = [];
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`ikm_bln_${i}`).innerText;
@@ -1749,7 +1722,6 @@
                 });
             }
 
-            // 5. Pelayanan ISR / Perizinan
             const updatedPerizinanMonths = [];
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`prz_bln_${i}`).innerText;
@@ -1762,7 +1734,6 @@
                 });
             }
 
-            // Object Gabungan Update Firebase
             const dataUpdate = {
                 tahun: selectedTahunEditor,
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
@@ -1782,18 +1753,9 @@
                 },
 
                 realisasi_anggaran: updatedAnggaran,
-
-                sla_monitoring: {
-                    months: updatedSlaMonths
-                },
-
-                ikm_iipp_detail: {
-                    months: updatedIkmMonths
-                },
-
-                perizinan_detail: {
-                    months: updatedPerizinanMonths
-                }
+                sla_monitoring: { months: updatedSlaMonths },
+                ikm_iipp_detail: { months: updatedIkmMonths },
+                perizinan_detail: { months: updatedPerizinanMonths }
             };
 
             Swal.fire({
@@ -1803,7 +1765,6 @@
                 didOpen: () => { Swal.showLoading(); }
             });
 
-            // Simpan ke node utama jika tahun 2026, dan simpan juga ke node riwayat tahunan
             const promises = [database.ref(`kinerja_sarpras_by_year/${selectedTahunEditor}`).update(dataUpdate)];
             if (selectedTahunEditor === '2026') {
                 promises.push(database.ref('kinerja_sarpras').update(dataUpdate));
