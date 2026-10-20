@@ -174,16 +174,23 @@
             padding: 2.2rem 2.5rem;
             box-shadow: 0 20px 40px rgba(15, 76, 129, 0.22);
             position: relative;
-            overflow: hidden;
         }
-        .header-banner::after {
+
+        .banner-bg-circle {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .banner-bg-circle::after {
             content: '';
             position: absolute;
             top: -50%; right: -10%;
             width: 320px; height: 320px;
             background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
-            pointer-events: none;
         }
 
         /* DROPDOWN TAHUN STYLING */
@@ -204,6 +211,7 @@
             border-radius: 14px;
             padding: 0.5rem;
             min-width: 140px;
+            z-index: 1060 !important;
         }
         .dropdown-menu-tahun .dropdown-item {
             border-radius: 8px;
@@ -398,6 +406,7 @@
             
             <!-- HEADER BANNER DENGAN DROPDOWN TAHUN -->
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="banner-bg-circle"></div>
                 <div style="z-index: 1;">
                     <h2 class="fw-800 mb-1" style="font-weight: 800; letter-spacing: 0.5px;">
                         PELAKSANAAN UJIAN NEGARA AMATIR RADIO (UNAR) <span id="lblTahunHeader">2026</span>
@@ -412,12 +421,12 @@
                         <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 dropdown-menu-tahun" aria-labelledby="dropdownTahun">
-                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this)">Tahun 2025</a></li>
-                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this)">Tahun 2026</a></li>
-                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2027, this)">Tahun 2027</a></li>
-                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2028, this)">Tahun 2028</a></li>
-                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2029, this)">Tahun 2029</a></li>
-                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2030, this)">Tahun 2030</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this, event)">Tahun 2025</a></li>
+                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this, event)">Tahun 2026</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2027, this, event)">Tahun 2027</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2028, this, event)">Tahun 2028</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2029, this, event)">Tahun 2029</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2030, this, event)">Tahun 2030</a></li>
                     </ul>
                 </div>
             </div>
@@ -544,27 +553,48 @@
         const database = firebase.database();
 
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        const namaBulanFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         let currentSelectedYear = 2026;
         let activeFirebaseRef = null;
 
-        let unarMonths = [
-            { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
-            { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 5, status: "Selesai" },
-            { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
-            { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
-            { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
-            { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
-            { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
-            { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
-        ];
+        let unarMonths = [];
+
+        function getDefaultMonthsForYear(tahun) {
+            if (String(tahun) === '2026') {
+                return [
+                    { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+                    { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+                    { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
+                    { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 5, status: "Selesai" },
+                    { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+                    { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+                    { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
+                    { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+                    { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+                    { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+                    { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+                    { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
+                ];
+            }
+            return Array.from({ length: 12 }, (_, i) => ({
+                id: i + 1,
+                bulan: namaBulanFull[i],
+                tgl: "-",
+                kategori: "CAT Reguler",
+                lokasi: "-",
+                siaga: 0,
+                penggalang: 0,
+                penegak: 0,
+                tidak_lulus: 0,
+                tidak_lulus_adm: 0,
+                status: "Mendatang"
+            }));
+        }
 
         let chart3DUnarInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            unarMonths = getDefaultMonthsForYear(currentSelectedYear);
             init3DChart();
             loadUnarDataRealtime(currentSelectedYear);
         });
@@ -619,25 +649,19 @@
                 const data = snapshot.val();
                 if (data && data.months && Array.isArray(data.months)) {
                     unarMonths = data.months;
-                    renderUnarDashboard();
-                } else if (String(tahun) !== '2026') {
-                    database.ref('kinerja_sarpras/unar_detail').once('value', (snapFallback) => {
-                        const fbData = snapFallback.val();
-                        if (fbData && fbData.months && Array.isArray(fbData.months)) {
-                            unarMonths = fbData.months;
-                        }
-                        renderUnarDashboard();
-                    });
                 } else {
-                    renderUnarDashboard();
+                    unarMonths = getDefaultMonthsForYear(tahun);
                 }
+                renderUnarDashboard();
             }, (err) => {
-                console.warn("Menggunakan data default lokal:", err.message);
+                console.warn("Error pemuatan data:", err.message);
+                unarMonths = getDefaultMonthsForYear(tahun);
                 renderUnarDashboard();
             });
         }
 
-        function changeTahun(tahun, element) {
+        function changeTahun(tahun, element, evt) {
+            if (evt) evt.preventDefault();
             currentSelectedYear = tahun;
 
             // Update Teks Label di Seluruh Elemen Dasbor
