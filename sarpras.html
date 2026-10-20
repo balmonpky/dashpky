@@ -13,6 +13,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- ApexCharts CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
     
     <style>
         :root {
@@ -61,7 +63,7 @@
             object-fit: contain;
         }
 
-        /* SIDEBAR AUTO-HIDE (SISI KIRI) */
+        /* SIDEBAR AUTO-HIDE */
         .sidebar-autohide {
             position: fixed;
             top: 68px;
@@ -80,7 +82,6 @@
             padding-bottom: 1.5rem;
         }
 
-        /* EFEK MOUSE HOVER MENGEMBANGKAN SIDEBAR */
         .sidebar-autohide:hover {
             width: var(--sidebar-expanded-width);
         }
@@ -153,7 +154,7 @@
             opacity: 1;
         }
 
-        /* WADAH KONTEN UTAMA DENGAN MARGIN KIRI MEMPERHITUNGKAN SIDEBAR */
+        /* WADAH KONTEN UTAMA */
         .main-wrapper {
             margin-left: var(--sidebar-collapsed-width);
             flex-grow: 1;
@@ -167,7 +168,7 @@
             color: white;
             border-radius: 24px;
             padding: 2rem 2.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
             gap: 25px;
@@ -268,6 +269,47 @@
             border-radius: 8px; font-weight: 700;
         }
 
+        /* CARD STYLING UNTUK GRAFIK (LINE & DONUT CHART 3D) */
+        .chart-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.8rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .chart-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.1);
+        }
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.75rem;
+        }
+        .chart-title-text {
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-icon-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
         .footer-custom {
             text-align: center;
             padding: 1.5rem;
@@ -310,7 +352,7 @@
         </div>
     </nav>
 
-    <!-- SIDEBAR AUTO-HIDE (DI SEBELAH KIRI BERSUSUN ATAS KE BAWAH) -->
+    <!-- SIDEBAR AUTO-HIDE -->
     <aside class="sidebar-autohide">
         <div class="sidebar-header">
             <span>LAYANAN & PERIZINAN</span>
@@ -387,7 +429,7 @@
             </div>
 
             <!-- KARTU INDIKATOR DASBOR (K1 - K6) -->
-            <div class="row g-4" id="kinerjaContainer">
+            <div class="row g-4 mb-5" id="kinerjaContainer">
                 <!-- Kartu 1 -->
                 <div class="col-md-6 col-lg-4">
                     <div class="kinerja-card accent-1">
@@ -517,6 +559,47 @@
                             <span class="text-info">Capaian</span> <span id="val_capaian_bar_6" class="text-info">0</span>
                         </div>
                         <div class="progress mb-0"><div class="progress-bar pb-cap-6" id="bar_capaian_6" style="width: 0%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEKSI GRAFIK INTERAKTIF (LINE CHART 3D & DONUT CHART 3D) -->
+            <div class="row g-4 mb-4">
+                <!-- 1. LINE CHART (TREN CAPAIAN BULANAN) -->
+                <div class="col-lg-8">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-text">
+                                <div class="chart-icon-badge" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                                <div>
+                                    <span>Tren Realisasi & Pelayanan Bulanan</span>
+                                    <small class="d-block text-muted fw-normal" style="font-size: 0.78rem;">Progres Komulatif Layanan & Serapan Anggaran (2026)</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-primary border fw-semibold">Progres Akurat</span>
+                        </div>
+                        <div id="lineChartKinerja" style="min-height: 350px;"></div>
+                    </div>
+                </div>
+
+                <!-- 2. DONUT CHART 3D (PROPORSI INDIKATOR KINERJA) -->
+                <div class="col-lg-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-text">
+                                <div class="chart-icon-badge" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
+                                    <i class="bi bi-pie-chart-fill"></i>
+                                </div>
+                                <div>
+                                    <span>Distribusi Kinerja Sarpras</span>
+                                    <small class="d-block text-muted fw-normal" style="font-size: 0.78rem;">Rasio Persentase Realisasi Indikator</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-purple border fw-semibold" style="color: #7c3aed;">3D Depth</span>
+                        </div>
+                        <div id="donutChartKinerja" style="min-height: 350px;"></div>
                     </div>
                 </div>
             </div>
@@ -784,6 +867,7 @@
     <!-- LIBRARY & SDK SCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
@@ -809,7 +893,7 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        const bulanList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
         const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
 
         // Data Default UNAR
@@ -885,12 +969,147 @@
             { id: 12, bulan: "Desember", langsung: 0, online: 0, terdistribusi: 0 }
         ];
 
+        // INISIALISASI GRAFIK APEXCHARTS (3D DEPTH & ANIMASI SMOOTH)
+        let chartLine = null;
+        let chartDonut = null;
+
+        function initDashboardCharts() {
+            // 1. OPSI LINE CHART (3D SMOOTH SPLINE WITH GRADIENT SHADOW)
+            const optionsLine = {
+                series: [
+                    { name: "Total Konsultasi ISR", data: [63, 72, 73, 107, 82, 93, 98, 104, 115, 0, 0, 0] },
+                    { name: "ISR Terdistribusi", data: [42, 50, 55, 78, 60, 68, 72, 80, 88, 0, 0, 0] },
+                    { name: "Peserta UNAR", data: [15, 12, 18, 50, 14, 11, 16, 13, 13, 0, 0, 0] }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    toolbar: { show: false },
+                    dropShadow: {
+                        enabled: true,
+                        color: '#0f4c81',
+                        top: 12,
+                        left: 0,
+                        blur: 8,
+                        opacity: 0.22
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 1000,
+                        animateGradually: { enabled: true, delay: 150 },
+                        dynamicAnimation: { enabled: true, speed: 450 }
+                    }
+                },
+                colors: ['#0f4c81', '#10b981', '#f59e0b'],
+                stroke: { curve: 'smooth', width: 4 },
+                markers: {
+                    size: 5,
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: { size: 8 }
+                },
+                xaxis: {
+                    categories: bulanList,
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) { return Math.round(val); }
+                    }
+                },
+                grid: {
+                    borderColor: '#f1f5f9',
+                    strokeDashArray: 4
+                },
+                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+            };
+
+            // 2. OPSI DONUT CHART (EFEK 3D DEPTH, SHADOW & SHADING GRADIENT)
+            const optionsDonut = {
+                series: [95, 88, 97.2, 1, 3.95, 9.5],
+                labels: ['Operator Radio', 'BHP Frekuensi', 'Monitoring SLA', 'Zona Integritas', 'IKM (Skala 4)', 'IIPP (Skala 10)'],
+                chart: {
+                    type: 'donut',
+                    height: 350,
+                    dropShadow: {
+                        enabled: true,
+                        color: '#1e293b',
+                        top: 14,
+                        left: 0,
+                        blur: 10,
+                        opacity: 0.18
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 1200,
+                        dynamicAnimation: { enabled: true, speed: 500 }
+                    }
+                },
+                colors: ['#3b82f6', '#6366f1', '#10b981', '#8b5cf6', '#f59e0b', '#0ea5e9'],
+                plotOptions: {
+                    pie: {
+                        expandOnClick: true,
+                        donut: {
+                            size: '68%',
+                            background: 'transparent',
+                            labels: {
+                                show: true,
+                                name: { show: true, fontSize: '13px', fontWeight: 700, color: '#64748b' },
+                                value: { show: true, fontSize: '22px', fontWeight: 800, color: '#0f4c81', formatter: (val) => `${val}%` },
+                                total: {
+                                    show: true,
+                                    label: 'Rata-rata Capaian',
+                                    fontWeight: 700,
+                                    color: '#475569',
+                                    formatter: function (w) {
+                                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                        return (total / w.globals.series.length).toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'dark',
+                        type: 'diagonal1',
+                        shadeIntensity: 0.45,
+                        gradientToColors: undefined,
+                        inverseColors: true,
+                        opacityFrom: 0.95,
+                        opacityTo: 0.85,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: { enabled: false },
+                legend: { position: 'bottom', fontSize: '12px', fontWeight: 500 }
+            };
+
+            const elLine = document.getElementById('lineChartKinerja');
+            const elDonut = document.getElementById('donutChartKinerja');
+
+            if (elLine) {
+                chartLine = new ApexCharts(elLine, optionsLine);
+                chartLine.render();
+            }
+            if (elDonut) {
+                chartDonut = new ApexCharts(elDonut, optionsDonut);
+                chartDonut.render();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             renderUnarEditTableRows();
             renderAnggaranEditRows();
             renderSlaEditTableRows();
             renderIkmEditTableRows();
             renderPerizinanEditTableRows();
+            initDashboardCharts();
             loadDataKinerjaRealtime();
         });
 
@@ -1118,11 +1337,15 @@
                 const data = snapshot.val();
                 if (!data) return;
 
+                let capValues = [];
+
                 for (let i = 1; i <= 6; i++) {
                     if (data['k' + i]) {
                         let t = parseFloat(data['k' + i].target) || 0;
                         let c = parseFloat(data['k' + i].capaian) || 0;
                         let suf = data['k' + i].suffix || ''; 
+
+                        capValues.push(c);
 
                         const elTarget = document.getElementById('val_target_' + i);
                         const elCapaian = document.getElementById('val_capaian_' + i);
@@ -1157,6 +1380,36 @@
                             }
                         }
                     }
+                }
+
+                // UPDATE DONUT CHART SECARA DINAMIS & HIDUP
+                if (chartDonut && capValues.length === 6) {
+                    chartDonut.updateSeries(capValues);
+                }
+
+                // UPDATE LINE CHART BERDASARKAN PERIZINAN & UNAR
+                if (chartLine && data.perizinan_detail && data.perizinan_detail.months) {
+                    let arrTotIzin = [];
+                    let arrDistIzin = [];
+                    let arrUnarPeserta = [];
+
+                    data.perizinan_detail.months.forEach((m, idx) => {
+                        let totalKonsul = (parseInt(m.langsung) || 0) + (parseInt(m.online) || 0);
+                        arrTotIzin.push(totalKonsul);
+                        arrDistIzin.push(parseInt(m.terdistribusi) || 0);
+                    });
+
+                    if (data.unar_detail && data.unar_detail.months) {
+                        data.unar_detail.months.forEach(m => {
+                            arrUnarPeserta.push((parseInt(m.siaga) || 0) + (parseInt(m.penggalang) || 0) + (parseInt(m.penegak) || 0));
+                        });
+                    }
+
+                    chartLine.updateSeries([
+                        { name: "Total Konsultasi ISR", data: arrTotIzin },
+                        { name: "ISR Terdistribusi", data: arrDistIzin },
+                        { name: "Peserta UNAR", data: arrUnarPeserta }
+                    ]);
                 }
             });
         }
