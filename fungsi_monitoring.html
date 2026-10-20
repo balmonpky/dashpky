@@ -29,248 +29,95 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
-            background-image: 
-                radial-gradient(at 100% 0%, rgba(224, 242, 254, 0.8) 0, transparent 40%), 
-                radial-gradient(at 0% 100%, rgba(186, 230, 253, 0.6) 0, transparent 40%);
-            background-attachment: fixed;
             color: #334155;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* NAVBAR HEADER */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             padding: 0.8rem 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 1050;
         }
-        
         .logo-container {
-            width: 46px;
-            height: 46px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 46px; height: 46px; background: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .logo-container img {
-            width: 34px;
-            height: 34px;
-            object-fit: contain;
-        }
+        .logo-container img { width: 34px; height: 34px; object-fit: contain; }
 
         /* SIDEBAR AUTO-HIDE */
         .sidebar-autohide {
-            position: fixed;
-            top: 68px;
-            left: 0;
-            bottom: 0;
-            width: var(--sidebar-collapsed-width);
-            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
-            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
-            z-index: 1040;
-            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-x: hidden;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            padding-top: 1rem;
-            padding-bottom: 1.5rem;
+            position: fixed; top: 68px; left: 0; bottom: 0;
+            width: var(--sidebar-collapsed-width); background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2); z-index: 1040; transition: width 0.35s ease;
+            overflow-x: hidden; overflow-y: auto; display: flex; flex-direction: column; padding: 1rem 0 1.5rem 0;
         }
-        .sidebar-autohide:hover {
-            width: var(--sidebar-expanded-width);
-        }
+        .sidebar-autohide:hover { width: var(--sidebar-expanded-width); }
         .sidebar-header {
-            padding: 0.5rem 1.25rem 1rem 1.25rem;
-            color: #93c5fd;
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 0.5rem;
+            padding: 0.5rem 1.25rem 1rem 1.25rem; color: #93c5fd; font-size: 0.72rem; font-weight: 800;
+            text-transform: uppercase; white-space: nowrap; opacity: 0; transition: opacity 0.25s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0.5rem;
         }
-        .sidebar-autohide:hover .sidebar-header {
-            opacity: 1;
-        }
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+        .sidebar-autohide:hover .sidebar-header { opacity: 1; }
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
         .sidebar-menu .menu-link {
-            display: flex;
-            align-items: center;
-            padding: 0.85rem 1.25rem;
-            color: rgba(255, 255, 255, 0.82);
-            text-decoration: none;
-            border-left: 4px solid transparent;
-            transition: all 0.25s ease;
-            white-space: nowrap;
+            display: flex; align-items: center; padding: 0.85rem 1.25rem; color: rgba(255, 255, 255, 0.82);
+            text-decoration: none; border-left: 4px solid transparent; transition: all 0.25s ease; white-space: nowrap;
         }
-        .sidebar-menu .menu-link:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #ffffff;
-            border-left-color: #38bdf8;
+        .sidebar-menu .menu-link:hover { background: rgba(255, 255, 255, 0.12); color: #ffffff; border-left-color: #38bdf8; }
+        .sidebar-menu .menu-link.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-left-color: #38bdf8 !important;
+            font-weight: 700;
         }
-        .sidebar-menu .menu-icon {
-            font-size: 1.4rem;
-            min-width: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .sidebar-menu .menu-text {
-            margin-left: 12px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
-        .sidebar-autohide:hover .menu-text {
-            opacity: 1;
-        }
+        .sidebar-menu .menu-icon { font-size: 1.4rem; min-width: 32px; display: flex; align-items: center; justify-content: center; }
+        .sidebar-menu .menu-text { margin-left: 12px; font-size: 0.88rem; font-weight: 600; opacity: 0; transition: opacity 0.25s ease; }
+        .sidebar-autohide:hover .menu-text { opacity: 1; }
 
-        /* MAIN WRAPPER */
         .main-wrapper {
-            margin-left: var(--sidebar-collapsed-width);
-            flex-grow: 1;
-            padding: 2rem 2rem;
-            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: var(--sidebar-collapsed-width); flex-grow: 1; padding: 2rem 2rem; transition: margin-left 0.35s ease;
         }
 
-        /* HEADER BANNER */
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 2rem 2.5rem;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
+            color: white; border-radius: 20px; padding: 2rem 2.5rem; box-shadow: var(--card-shadow);
         }
 
-        /* TOP STAT CARDS */
         .top-stat-card {
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 1.25rem 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            height: 100%;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            background: #ffffff; border-radius: 18px; padding: 1.25rem 1.5rem;
+            border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%; transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 15px;
         }
-        .top-stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
-        }
+        .top-stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12); }
         .top-stat-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: white; flex-shrink: 0;
         }
-        .top-stat-title {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .top-stat-value {
-            font-size: 1.7rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-top: 2px;
-        }
+        .top-stat-title { font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        .top-stat-value { font-size: 1.7rem; font-weight: 800; line-height: 1.1; margin-top: 2px; }
 
-        /* KARTU MONITORING SLA utama */
         .card-sla-monitoring {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 2rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            height: 100%;
+            background: #ffffff; border-radius: 24px; padding: 2rem; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%;
         }
 
         .select-bulan-custom {
-            border: 2px solid #38bdf8;
-            background-color: #f0f9ff;
-            color: #0369a1;
-            font-weight: 800;
-            border-radius: 12px;
-            padding: 0.45rem 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(56, 189, 248, 0.15);
-            transition: all 0.25s ease;
-        }
-        .select-bulan-custom:focus {
-            box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.3);
-            border-color: #0284c7;
+            border: 2px solid #38bdf8; background-color: #f0f9ff; color: #0369a1;
+            font-weight: 800; border-radius: 12px; padding: 0.45rem 1rem; cursor: pointer;
         }
 
-        .asset-summary-box {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 1.2rem;
-            border: 1px solid #f1f5f9;
-        }
-
+        .asset-summary-box { background: #f8fafc; border-radius: 16px; padding: 1.2rem; border: 1px solid #f1f5f9; }
         .performa-box-main {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border: 1px solid #bfdbfe;
-            border-radius: 20px;
-            padding: 1.8rem;
-            text-align: center;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe;
+            border-radius: 20px; padding: 1.8rem; text-align: center;
         }
-        .performa-value-main {
-            font-size: 3.2rem;
-            font-weight: 800;
-            color: #2563eb;
-            letter-spacing: -1px;
-            line-height: 1;
-        }
-
-        .performa-box-sub {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 1.2rem;
-            text-align: center;
-        }
+        .performa-value-main { font-size: 3.2rem; font-weight: 800; color: #2563eb; line-height: 1; }
+        .performa-box-sub { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.2rem; text-align: center; }
 
         .chart-card-3d {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 1.8rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-        .chart-card-3d:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
+            background: #ffffff; border-radius: 24px; padding: 1.8rem; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%;
         }
 
         @media (max-width: 768px) {
@@ -288,7 +135,7 @@
                 <div class="logo-container me-3">
                     <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
-                <div class="d-none d-sm-block">
+                <div>
                     <span class="text-white d-block fs-6">OPERASIONAL & FUNGSI MONITORING</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">BALMON SFRID KELAS II PALANGKARAYA</small>
                 </div>
@@ -300,12 +147,18 @@
         </div>
     </nav>
 
-    <!-- SIDEBAR AUTO-HIDE -->
+    <!-- SIDEBAR AUTO-HIDE TERPADU -->
     <aside class="sidebar-autohide">
         <div class="sidebar-header">
             <span>LAYANAN & PERIZINAN</span>
         </div>
         <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="sarpras.html" class="menu-link" title="Dashboard Utama Sarpras">
+                    <span class="menu-icon text-warning"><i class="bi bi-speedometer2"></i></span>
+                    <span class="menu-text">Dashboard Sarpras</span>
+                </a>
+            </li>
             <li class="menu-item">
                 <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
                     <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
@@ -316,6 +169,18 @@
                 <a href="unar.html" class="menu-link" title="UNAR">
                     <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
                     <span class="menu-text">UNAR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="MOTS">
+                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
+                    <span class="menu-text">MOTS</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="BHP">
+                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
+                    <span class="menu-text">BHP</span>
                 </a>
             </li>
             <li class="menu-item">
@@ -331,25 +196,23 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
-                    <span class="menu-icon text-sky" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
+                <a href="fungsi_monitoring.html" class="menu-link active" title="Operasional & Monitoring">
+                    <span class="menu-icon" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
                     <span class="menu-text">Fungsi Monitoring</span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="ikm.html" class="menu-link" title="IKM & IIPP">
-                    <span class="menu-icon text-amber" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
+                    <span class="menu-icon" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
                     <span class="menu-text">IKM & IIPP</span>
                 </a>
             </li>
         </ul>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-wrapper">
         <div class="container-fluid">
 
-            <!-- HEADER BANNER -->
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
                     <h2 class="fw-800 mb-1" style="font-weight: 800;">PERFORMANSI & DUKUNGAN MONITORING</h2>
@@ -360,14 +223,10 @@
                 </div>
             </div>
 
-            <!-- TOP STAT CARDS (DIHITUNG DARI JANUARI S.D. BULAN BERJALAN YANG DIPILIH) -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
-                <!-- Stat 1: Total Aset -->
                 <div class="col">
                     <div class="top-stat-card" style="border-left: 5px solid #0f4c81;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #0f4c81, #1e3a8a);">
-                            <i class="bi bi-hdd-stack-fill"></i>
-                        </div>
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #0f4c81, #1e3a8a);"><i class="bi bi-hdd-stack-fill"></i></div>
                         <div>
                             <div class="top-stat-title">Total Aset Stasiun</div>
                             <div class="top-stat-value text-dark" id="statTopTotalAset">0</div>
@@ -375,13 +234,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Stat 2: Perangkat Baik -->
                 <div class="col">
                     <div class="top-stat-card" style="border-left: 5px solid #10b981;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
-                            <i class="bi bi-check-circle-fill"></i>
-                        </div>
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="bi bi-check-circle-fill"></i></div>
                         <div>
                             <div class="top-stat-title text-success">Perangkat Baik</div>
                             <div class="top-stat-value text-success" id="statTopBaik">0</div>
@@ -389,13 +244,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Stat 3: Perangkat Rusak -->
                 <div class="col">
                     <div class="top-stat-card" style="border-left: 5px solid #ef4444;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                        </div>
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="bi bi-exclamation-triangle-fill"></i></div>
                         <div>
                             <div class="top-stat-title text-danger">Perangkat Rusak</div>
                             <div class="top-stat-value text-danger" id="statTopRusak">0</div>
@@ -403,13 +254,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Stat 4: Rata-rata SLA s.d. Bulan Berjalan -->
                 <div class="col">
                     <div class="top-stat-card" style="border-left: 5px solid #3b82f6;">
-                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                            <i class="bi bi-pie-chart-fill"></i>
-                        </div>
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><i class="bi bi-pie-chart-fill"></i></div>
                         <div>
                             <div class="top-stat-title text-primary">Rata-rata SLA Kumulatif</div>
                             <div class="top-stat-value text-primary" id="statTopRataSla">0.00%</div>
@@ -419,35 +266,22 @@
                 </div>
             </div>
 
-            <!-- MAIN SLA MONITORING CARD & GRAFIK 3D -->
             <div class="row g-4 mb-4">
-                
-                <!-- KARTU UTAMA SNAPSHOT SLA (SESUAI GAMBAR DENGAN DROPDOWN BULAN BERJALAN) -->
                 <div class="col-lg-5">
                     <div class="card-sla-monitoring">
-                        
-                        <!-- HEADER KARTU: DROPDOWN BULAN KIRI ATAS & STATUS TERKUNCI/TERBUKA KANAN ATAS -->
                         <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="p-2.5 bg-primary bg-opacity-10 text-primary rounded-3">
-                                    <i class="bi bi-calendar-event-fill fs-3"></i>
-                                </div>
+                                <div class="p-2.5 bg-primary bg-opacity-10 text-primary rounded-3"><i class="bi bi-calendar-event-fill fs-3"></i></div>
                                 <div>
-                                    <!-- DROPDOWN PILIHAN BULAN BERJALAN -->
-                                    <select id="selectBulanMonitoring" class="select-bulan-custom" onchange="gantiBulanMonitoring(this.value)">
-                                        <!-- Opsi akan terisi otomatis dari script -->
-                                    </select>
+                                    <select id="selectBulanMonitoring" class="select-bulan-custom" onchange="gantiBulanMonitoring(this.value)"></select>
                                     <div class="text-muted small fw-medium mt-1">Snapshot Penilaian SLA</div>
                                 </div>
                             </div>
-                            
-                            <!-- BADGE STATUS KUNCI -->
                             <span id="badgeStatusKunci" class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-3 fw-bold">
                                 <i class="bi bi-lock-fill me-1"></i> TERKUNCI
                             </span>
                         </div>
 
-                        <!-- RINGKASAN JUMLAH ASET -->
                         <div class="asset-summary-box mb-4">
                             <div class="row text-center align-items-center">
                                 <div class="col-4 border-end">
@@ -465,19 +299,16 @@
                             </div>
                         </div>
 
-                        <!-- SUB HEADER PERFORMA SLA -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="fw-bold text-dark m-0"><i class="bi bi-activity text-primary me-2"></i>Performa SLA</h6>
                             <span class="badge bg-light text-secondary border">Detail tersedia</span>
                         </div>
 
-                        <!-- KOTAK UTAMA SLA TOTAL -->
                         <div class="performa-box-main mb-3">
                             <div class="performa-value-main" id="lblCardSlaTotal">0.00%</div>
-                            <div class="fw-bold text-primary text-uppercase tracking-wider mt-1" style="font-size: 0.85rem;">SLA TOTAL</div>
+                            <div class="fw-bold text-primary text-uppercase mt-1" style="font-size: 0.85rem;">SLA TOTAL</div>
                         </div>
 
-                        <!-- KOTAK SUB SLA TETAP & SLA BERGERAK -->
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="performa-box-sub">
@@ -493,26 +324,12 @@
                             </div>
                         </div>
 
-                        <!-- TOMBOL AKSI METRIK -->
                         <div class="d-flex gap-2 mb-2">
-                            <button class="btn btn-primary fw-bold w-100 rounded-3 py-2.5 shadow-sm" onclick="lihatDetailSla()">
-                                <i class="bi bi-eye-fill me-1"></i> LIHAT DETAIL
-                            </button>
-                            <button class="btn btn-outline-secondary rounded-3 px-3" title="Edit SLA" onclick="bukaModalEditSla()">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                            <button class="btn btn-outline-danger rounded-3 px-3" title="Reset SLA" onclick="resetDataSlaBulan()">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
+                            <button class="btn btn-primary fw-bold w-100 rounded-3 py-2.5 shadow-sm" onclick="lihatDetailSla()"><i class="bi bi-eye-fill me-1"></i> LIHAT DETAIL</button>
                         </div>
-                        <button class="btn btn-light border text-dark fw-bold w-100 rounded-3 py-2 mt-1" onclick="lihatDetailStasiun()">
-                            <i class="bi bi-bar-chart-steps me-1"></i> DETAIL SLA STASIUN
-                        </button>
-
                     </div>
                 </div>
 
-                <!-- GRAFIK TREN BULANAN SLA 3D ANIMATED -->
                 <div class="col-lg-7">
                     <div class="chart-card-3d">
                         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
@@ -525,7 +342,6 @@
                         <div id="chart3DSlaTrend" style="min-height: 380px;"></div>
                     </div>
                 </div>
-
             </div>
 
         </div>
@@ -535,7 +351,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
@@ -550,14 +365,10 @@
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         const namaBulanList = ["January 2026", "February 2026", "March 2026", "April 2026", "May 2026", "June 2026", "July 2026", "August 2026", "September 2026", "October 2026", "November 2026", "December 2026"];
-        
-        // Data Default SLA 12 Bulan (Digunakan jika Firebase kosong)
         let defaultSlaMonths = [
             { id: 1, bulan: "January 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
             { id: 2, bulan: "February 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
@@ -573,7 +384,7 @@
             { id: 12, bulan: "December 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" }
         ];
 
-        let selectedMonthIndex = 0; // Default Index 0 (January 2026)
+        let selectedMonthIndex = 0;
         let chartSlaTrendInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -582,12 +393,10 @@
             loadSlaRealtime();
         });
 
-        // 1. ISI ISI DROPDOWN BULAN
         function populateDropdownBulan() {
             const selectEl = document.getElementById('selectBulanMonitoring');
             if(!selectEl) return;
             selectEl.innerHTML = '';
-
             namaBulanList.forEach((bln, idx) => {
                 const opt = document.createElement('option');
                 opt.value = idx;
@@ -597,13 +406,11 @@
             });
         }
 
-        // 2. LOGIKA KETIKA DROPDOWN BULAN BERUBAH
         function gantiBulanMonitoring(idxVal) {
             selectedMonthIndex = parseInt(idxVal) || 0;
             updateDashboardMonitoring();
         }
 
-        // 3. INISIALISASI GRAFIK 3D TREN SLA
         function init3DChart() {
             const options = {
                 series: [
@@ -612,121 +419,53 @@
                     { name: "SLA Bergerak", data: [] }
                 ],
                 chart: {
-                    height: 380,
-                    type: 'line',
-                    toolbar: { show: false },
-                    dropShadow: {
-                        enabled: true,
-                        color: '#0f4c81',
-                        top: 12,
-                        left: 0,
-                        blur: 8,
-                        opacity: 0.22
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 1000,
-                        animateGradually: { enabled: true, delay: 150 },
-                        dynamicAnimation: { enabled: true, speed: 450 }
-                    }
+                    height: 380, type: 'line', toolbar: { show: false },
+                    dropShadow: { enabled: true, color: '#0f4c81', top: 12, left: 0, blur: 8, opacity: 0.22 }
                 },
                 colors: ['#2563eb', '#10b981', '#f59e0b'],
                 stroke: { curve: 'smooth', width: 4 },
-                markers: {
-                    size: 5,
-                    strokeColors: '#fff',
-                    strokeWidth: 2,
-                    hover: { size: 8 }
-                },
-                xaxis: {
-                    categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-                yaxis: {
-                    max: 100,
-                    min: 80,
-                    labels: {
-                        formatter: function (val) { return val.toFixed(0) + '%'; }
-                    }
-                },
+                xaxis: { categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"] },
+                yaxis: { max: 100, min: 80, labels: { formatter: (val) => val.toFixed(0) + '%' } },
                 dataLabels: { enabled: false },
-                tooltip: {
-                    enabled: true,
-                    y: { formatter: (val) => val.toFixed(2) + '%' }
-                },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
-                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+                tooltip: { enabled: true, y: { formatter: (val) => val.toFixed(2) + '%' } },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
             };
 
             chartSlaTrendInstance = new ApexCharts(document.getElementById('chart3DSlaTrend'), options);
             chartSlaTrendInstance.render();
         }
 
-        // 4. SYNC REALTIME FIREBASE
         function loadSlaRealtime() {
             database.ref('kinerja_sarpras/sla_monitoring/months').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data && Array.isArray(data)) {
-                    defaultSlaMonths = data;
-                }
-                updateDashboardMonitoring();
-            }, (err) => {
-                console.warn("Menggunakan data default lokal SLA:", err.message);
+                if (data && Array.isArray(data)) defaultSlaMonths = data;
                 updateDashboardMonitoring();
             });
         }
 
-        // 5. MEMPERBARUI SELURUH DATA DASBOR
         function updateDashboardMonitoring() {
             if (!defaultSlaMonths || defaultSlaMonths.length === 0) return;
-
             const currData = defaultSlaMonths[selectedMonthIndex] || defaultSlaMonths[0];
 
-            // A. Update Kartu Utama SLA (Snapshot Bulan Terpilih)
             document.getElementById('lblCardTotalAset').innerText = currData.total_aset || 0;
             document.getElementById('lblCardBaik').innerText = currData.baik || 0;
             document.getElementById('lblCardRusak').innerText = currData.rusak || 0;
-
             document.getElementById('lblCardSlaTotal').innerText = currData.sla_total || '0.00%';
             document.getElementById('lblCardSlaTetap').innerText = currData.sla_tetap || '0.00%';
             document.getElementById('lblCardSlaBergerak').innerText = currData.sla_bergerak || '0.00%';
 
-            const badgeKunci = document.getElementById('badgeStatusKunci');
-            if (currData.status_kunci === 'TERKUNCI') {
-                badgeKunci.className = "badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-3 fw-bold";
-                badgeKunci.innerHTML = `<i class="bi bi-lock-fill me-1"></i> TERKUNCI`;
-            } else {
-                badgeKunci.className = "badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-3 fw-bold";
-                badgeKunci.innerHTML = `<i class="bi bi-unlock-fill me-1"></i> TERBUKA`;
-            }
-
-            // B. Update Top Stat Cards (Dihitung dari Januari sampai Bulan Berjalan Terpilih)
             document.getElementById('statTopTotalAset').innerText = currData.total_aset || 0;
             document.getElementById('statTopBaik').innerText = currData.baik || 0;
             document.getElementById('statTopRusak').innerText = currData.rusak || 0;
 
             let sumSlaTotal = 0;
-            let countMonths = selectedMonthIndex + 1; // Januari = 1, Februari = 2, dst.
+            let countMonths = selectedMonthIndex + 1;
+            for (let i = 0; i < countMonths; i++) sumSlaTotal += parseFloat(defaultSlaMonths[i].sla_total) || 0;
 
-            for (let i = 0; i < countMonths; i++) {
-                let rawVal = parseFloat(defaultSlaMonths[i].sla_total) || 0;
-                sumSlaTotal += rawVal;
-            }
+            document.getElementById('statTopRataSla').innerText = (sumSlaTotal / countMonths).toFixed(2) + '%';
+            document.getElementById('lblKeteranganBulanSla').innerText = `${namaBulanList[0].substring(0,3)} - ${namaBulanList[selectedMonthIndex].substring(0,3)} 2026`;
 
-            let avgSla = (sumSlaTotal / countMonths).toFixed(2);
-            document.getElementById('statTopRataSla').innerText = `${avgSla}%`;
-
-            const bulanAwal = namaBulanList[0].split(' ')[0].substring(0, 3);
-            const bulanAkhir = namaBulanList[selectedMonthIndex].split(' ')[0].substring(0, 3);
-            document.getElementById('lblKeteranganBulanSla').innerText = `${bulanAwal} - ${bulanAkhir} 2026`;
-
-            // C. Update Grafik Tren 3D ApexCharts
-            const arrSlaTotal = [];
-            const arrSlaTetap = [];
-            const arrSlaBergerak = [];
-
+            const arrSlaTotal = [], arrSlaTetap = [], arrSlaBergerak = [];
             defaultSlaMonths.forEach(m => {
                 arrSlaTotal.push(parseFloat(m.sla_total) || 0);
                 arrSlaTetap.push(parseFloat(m.sla_tetap) || 0);
@@ -742,58 +481,20 @@
             }
         }
 
-        // AKSI TOMBOL
         function lihatDetailSla() {
             const blnNama = namaBulanList[selectedMonthIndex];
             const dataNow = defaultSlaMonths[selectedMonthIndex];
             Swal.fire({
                 title: `Detail SLA - ${blnNama}`,
-                html: `
-                    <div class="text-start">
-                        <p><b>Total Aset Stasiun:</b> ${dataNow.total_aset}</p>
-                        <p><b>Perangkat Baik:</b> <span class="text-success fw-bold">${dataNow.baik}</span></p>
-                        <p><b>Perangkat Rusak:</b> <span class="text-danger fw-bold">${dataNow.rusak}</span></p>
-                        <hr>
-                        <p><b>SLA Total:</b> <span class="text-primary fw-bold">${dataNow.sla_total}</span></p>
-                        <p><b>SLA Tetap:</b> ${dataNow.sla_tetap}</p>
-                        <p><b>SLA Bergerak:</b> ${dataNow.sla_bergerak}</p>
-                        <p><b>Status Akses:</b> ${dataNow.status_kunci}</p>
-                    </div>
-                `,
-                icon: 'info'
-            });
-        }
-
-        function bukaModalEditSla() {
-            Swal.fire({
-                title: 'Akses Admin',
-                text: 'Untuk mengubah data SLA, silakan buka menu "Edit Data" di Dashboard Sarpras utama.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Buka Dasbor Sarpras',
-                cancelButtonText: 'Batal'
-            }).then((res) => {
-                if (res.isConfirmed) {
-                    window.location.href = 'sarpras.html';
-                }
-            });
-        }
-
-        function resetDataSlaBulan() {
-            Swal.fire({
-                title: 'Konfirmasi Reset',
-                text: `Apakah Anda yakin ingin mereset data SLA untuk ${namaBulanList[selectedMonthIndex]}?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Ya, Reset'
-            });
-        }
-
-        function lihatDetailStasiun() {
-            Swal.fire({
-                title: 'SLA Per Stasiun',
-                text: 'Menampilkan detail breakdown availability SLA untuk Stasiun Tetap dan Stasiun Bergerak.',
+                html: `<div class="text-start">
+                    <p><b>Total Aset Stasiun:</b> ${dataNow.total_aset}</p>
+                    <p><b>Perangkat Baik:</b> <span class="text-success fw-bold">${dataNow.baik}</span></p>
+                    <p><b>Perangkat Rusak:</b> <span class="text-danger fw-bold">${dataNow.rusak}</span></p>
+                    <hr>
+                    <p><b>SLA Total:</b> <span class="text-primary fw-bold">${dataNow.sla_total}</span></p>
+                    <p><b>SLA Tetap:</b> ${dataNow.sla_tetap}</p>
+                    <p><b>SLA Bergerak:</b> ${dataNow.sla_bergerak}</p>
+                </div>`,
                 icon: 'info'
             });
         }
