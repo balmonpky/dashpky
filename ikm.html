@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IKM & IIPP 2026 - BALMON PALANGKARAYA</title>
+    <title>IKM & IIPP - BALMON PALANGKARAYA</title>
 
     <!-- Favicon & Google Font Inter -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
@@ -172,6 +172,58 @@
             border-radius: 20px;
             padding: 2rem 2.5rem;
             box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        .banner-bg-circle {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .banner-bg-circle::after {
+            content: '';
+            position: absolute;
+            top: -50%; right: -10%;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+
+        /* DROPDOWN TAHUN STYLING */
+        .btn-tahun-dropdown {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .btn-tahun-dropdown:hover, .btn-tahun-dropdown:focus, .btn-tahun-dropdown.show {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .dropdown-menu-tahun {
+            border-radius: 14px;
+            padding: 0.5rem;
+            min-width: 140px;
+            z-index: 1060 !important;
+        }
+        .dropdown-menu-tahun .dropdown-item {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        .dropdown-menu-tahun .dropdown-item:hover {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+        .dropdown-menu-tahun .dropdown-item.active {
+            background: linear-gradient(135deg, #0f4c81, #b45309);
+            color: #ffffff;
         }
 
         /* STAT CARDS */
@@ -269,19 +321,10 @@
                     <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
-                    <span class="text-white d-block fs-6">IKM & IIPP 2026</span>
+                    <span class="text-white d-block fs-6">IKM & IIPP</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
             </a>
-            
-            <div class="d-flex gap-2 align-items-center">
-                <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Dashboard Sarpras
-                </a>
-                <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
-                    <i class="bi bi-broadcast me-1"></i> Terhubung Realtime
-                </span>
-            </div>
         </div>
     </nav>
 
@@ -354,12 +397,26 @@
 
             <!-- HEADER BANNER -->
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h2 class="fw-800 mb-1" style="font-weight: 800;">INDEKS KEPUASAN & INTEGRITAS PELAYANAN 2026</h2>
+                <div class="banner-bg-circle"></div>
+                <div style="z-index: 1;">
+                    <h2 class="fw-800 mb-1" style="font-weight: 800;">INDEKS KEPUASAN & INTEGRITAS PELAYANAN <span id="lblTahunHeader">2026</span></h2>
                     <p class="mb-0 text-white-50">EVALUASI PERSEPSI MASYARAKAT TERHADAP KUALITAS LAYANAN SARPRAS & PERIZINAN</p>
                 </div>
-                <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
-                    <i class="bi bi-star-fill me-1"></i> Nilai Mutu Layanan: A (Sangat Baik)
+
+                <!-- TOMBOL DROPDOWN TAHUN -->
+                <div class="dropdown" style="z-index: 2;">
+                    <button class="btn btn-tahun-dropdown fw-bold dropdown-toggle px-3.5 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar3 fs-6"></i>
+                        <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 dropdown-menu-tahun" aria-labelledby="dropdownTahun">
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this, event)">Tahun 2025</a></li>
+                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this, event)">Tahun 2026</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2027, this, event)">Tahun 2027</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2028, this, event)">Tahun 2028</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2029, this, event)">Tahun 2029</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2030, this, event)">Tahun 2030</a></li>
+                    </ul>
                 </div>
             </div>
 
@@ -370,8 +427,8 @@
                         <div class="top-stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="bi bi-emoji-smile-fill"></i></div>
                         <div>
                             <div class="top-stat-title text-warning">Skor IKM (Skala 4)</div>
-                            <div class="top-stat-value text-warning" id="lblIkmSkala4">3.95</div>
-                            <small class="text-muted fw-semibold">Mutu Pelayanan Sangat Baik</small>
+                            <div class="top-stat-value text-warning" id="lblIkmSkala4">0.00</div>
+                            <small class="text-muted fw-semibold" id="lblKategoriMutu">Mutu Pelayanan</small>
                         </div>
                     </div>
                 </div>
@@ -380,7 +437,7 @@
                         <div class="top-stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="bi bi-percent"></i></div>
                         <div>
                             <div class="top-stat-title text-success">Nilai IKM Konversi</div>
-                            <div class="top-stat-value text-success" id="lblIkmKonversi">98.75</div>
+                            <div class="top-stat-value text-success" id="lblIkmKonversi">0.00</div>
                             <small class="text-muted fw-semibold">Konversi Skala 100</small>
                         </div>
                     </div>
@@ -390,7 +447,7 @@
                         <div class="top-stat-icon" style="background: linear-gradient(135deg, #38bdf8, #0284c7);"><i class="bi bi-award-fill"></i></div>
                         <div>
                             <div class="top-stat-title text-info">Indeks IIPP (Skala 10)</div>
-                            <div class="top-stat-value text-info" id="lblIippSkor">9.50</div>
+                            <div class="top-stat-value text-info" id="lblIippSkor">0.00</div>
                             <small class="text-muted fw-semibold">Integritas Pelayanan Publik</small>
                         </div>
                     </div>
@@ -400,7 +457,7 @@
                         <div class="top-stat-icon" style="background: linear-gradient(135deg, #0f4c81, #1e3a8a);"><i class="bi bi-people-fill"></i></div>
                         <div>
                             <div class="top-stat-title">Total Responden</div>
-                            <div class="top-stat-value text-dark" id="lblTotalResponden">142</div>
+                            <div class="top-stat-value text-dark" id="lblTotalResponden">0</div>
                             <small class="text-muted fw-semibold">Masyarakat / Mitra Servis</small>
                         </div>
                     </div>
@@ -415,7 +472,7 @@
                         <div class="chart-header">
                             <div>
                                 <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-warning"></i>Tren Capaian IKM & IIPP Bulanan</h5>
-                                <small class="text-muted">Progres Nilai IKM dan IIPP dari Januari hingga Desember 2026</small>
+                                <small class="text-muted">Progres Nilai IKM dan IIPP dari Januari hingga Desember <span id="lblTahunChart">2026</span></small>
                             </div>
                             <span class="badge bg-light text-dark border fw-semibold">Capaian Bulanan</span>
                         </div>
@@ -441,8 +498,8 @@
             <!-- TABEL REKAPITULASI UNSUR PELAYANAN -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Nilai 9 Unsur Pelayanan IKM (2026)</h5>
-                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Nilai 9 Unsur Pelayanan IKM (<span id="lblTahunTabel">2026</span>)</h5>
+                    <span class="badge bg-primary px-3 py-2" id="badgeTahunTabel">Tahun 2026</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
@@ -483,34 +540,65 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        let currentSelectedYear = 2026;
+        let activeFirebaseRef = null;
 
-        // Data Unsur IKM Default
-        let defaultUnsurIkm = [
-            { no: 1, unsur: "Persyaratan Pelayanan", skor: 3.96 },
-            { no: 2, unsur: "Sistem, Mekanisme, dan Prosedur", skor: 3.92 },
-            { no: 3, unsur: "Waktu Penyelesaian", skor: 3.94 },
-            { no: 4, unsur: "Biaya / Tarif", skor: 4.00 },
-            { no: 5, unsur: "Produk Spesifikasi Jenis Layanan", skor: 3.95 },
-            { no: 6, unsur: "Kompetensi Pelaksana", skor: 3.97 },
-            { no: 7, unsur: "Perilaku Pelaksana", skor: 3.98 },
-            { no: 8, unsur: "Penanganan Pengaduan, Saran & Masukan", skor: 3.91 },
-            { no: 9, unsur: "Sarana dan Prasarana", skor: 3.92 }
-        ];
+        let currentIkmData = {};
+
+        function getDefaultIkmForYear(tahun) {
+            if (String(tahun) === '2026') {
+                return {
+                    unsur: [
+                        { no: 1, unsur: "Persyaratan Pelayanan", skor: 3.96 },
+                        { no: 2, unsur: "Sistem, Mekanisme, dan Prosedur", skor: 3.92 },
+                        { no: 3, unsur: "Waktu Penyelesaian", skor: 3.94 },
+                        { no: 4, unsur: "Biaya / Tarif", skor: 4.00 },
+                        { no: 5, unsur: "Produk Spesifikasi Jenis Layanan", skor: 3.95 },
+                        { no: 6, unsur: "Kompetensi Pelaksana", skor: 3.97 },
+                        { no: 7, unsur: "Perilaku Pelaksana", skor: 3.98 },
+                        { no: 8, unsur: "Penanganan Pengaduan, Saran & Masukan", skor: 3.91 },
+                        { no: 9, unsur: "Sarana dan Prasarana", skor: 3.92 }
+                    ],
+                    trend_ikm: [97.5, 98.0, 98.2, 98.5, 98.8, 98.6, 98.7, 98.9, 98.75, 0, 0, 0],
+                    trend_iipp: [9.3, 9.4, 9.4, 9.5, 9.6, 9.5, 9.5, 9.6, 9.5, 0, 0, 0],
+                    total_responden: 142,
+                    iipp_skor: 9.50
+                };
+            }
+            return {
+                unsur: [
+                    { no: 1, unsur: "Persyaratan Pelayanan", skor: 0 },
+                    { no: 2, unsur: "Sistem, Mekanisme, dan Prosedur", skor: 0 },
+                    { no: 3, unsur: "Waktu Penyelesaian", skor: 0 },
+                    { no: 4, unsur: "Biaya / Tarif", skor: 0 },
+                    { no: 5, unsur: "Produk Spesifikasi Jenis Layanan", skor: 0 },
+                    { no: 6, unsur: "Kompetensi Pelaksana", skor: 0 },
+                    { no: 7, unsur: "Perilaku Pelaksana", skor: 0 },
+                    { no: 8, unsur: "Penanganan Pengaduan, Saran & Masukan", skor: 0 },
+                    { no: 9, unsur: "Sarana dan Prasarana", skor: 0 }
+                ],
+                trend_ikm: Array(12).fill(0),
+                trend_iipp: Array(12).fill(0),
+                total_responden: 0,
+                iipp_skor: 0
+            };
+        }
 
         let lineChartInstance = null;
         let barChartInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            currentIkmData = getDefaultIkmForYear(currentSelectedYear);
             initCharts();
-            loadIkmRealtime();
+            loadIkmRealtime(currentSelectedYear);
         });
 
         function initCharts() {
             // 1. TREN BULANAN
             const optionsLine = {
                 series: [
-                    { name: "IKM (Skala 100)", data: [97.5, 98.0, 98.2, 98.5, 98.8, 98.6, 98.7, 98.9, 98.75, 0, 0, 0] },
-                    { name: "IIPP (Skala 10)", data: [9.3, 9.4, 9.4, 9.5, 9.6, 9.5, 9.5, 9.6, 9.5, 0, 0, 0] }
+                    { name: "IKM (Skala 100)", data: [] },
+                    { name: "IIPP (Skala 10)", data: [] }
                 ],
                 chart: {
                     height: 360,
@@ -531,7 +619,7 @@
 
             // 2. BAR UNSUR IKM
             const optionsBar = {
-                series: [{ name: "Skor Unsur", data: [3.96, 3.92, 3.94, 4.00, 3.95, 3.97, 3.98, 3.91, 3.92] }],
+                series: [{ name: "Skor Unsur", data: [] }],
                 chart: { type: 'bar', height: 360, toolbar: { show: false } },
                 colors: ['#f59e0b'],
                 plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '55%' } },
@@ -544,17 +632,57 @@
             barChartInstance.render();
         }
 
-        function loadIkmRealtime() {
-            database.ref('kinerja_sarpras/ikm_iipp_detail').on('value', (snapshot) => {
+        function loadIkmRealtime(tahun = currentSelectedYear) {
+            if (activeFirebaseRef) {
+                activeFirebaseRef.off();
+            }
+
+            const pathNode = (String(tahun) === '2026') 
+                ? 'kinerja_sarpras/ikm_iipp_detail' 
+                : `kinerja_sarpras_by_year/${tahun}/ikm_iipp_detail`;
+
+            activeFirebaseRef = database.ref(pathNode);
+
+            activeFirebaseRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data && data.unsur && Array.isArray(data.unsur)) {
-                    defaultUnsurIkm = data.unsur;
+                if (data) {
+                    const defaultData = getDefaultIkmForYear(tahun);
+                    currentIkmData = {
+                        unsur: (data.unsur && Array.isArray(data.unsur)) ? data.unsur : defaultData.unsur,
+                        trend_ikm: (data.trend_ikm && Array.isArray(data.trend_ikm)) ? data.trend_ikm : (data.trendIkm || defaultData.trend_ikm),
+                        trend_iipp: (data.trend_iipp && Array.isArray(data.trend_iipp)) ? data.trend_iipp : (data.trendIipp || defaultData.trend_iipp),
+                        total_responden: data.total_responden !== undefined ? data.total_responden : (data.totalResponden !== undefined ? data.totalResponden : defaultData.total_responden),
+                        iipp_skor: data.iipp_skor !== undefined ? data.iipp_skor : (data.iippSkor !== undefined ? data.iippSkor : defaultData.iipp_skor)
+                    };
+                } else {
+                    currentIkmData = getDefaultIkmForYear(tahun);
                 }
                 updateDashboard();
             }, (err) => {
-                console.warn("Menggunakan data default lokal IKM:", err.message);
+                console.warn("Error pemuatan data:", err.message);
+                currentIkmData = getDefaultIkmForYear(tahun);
                 updateDashboard();
             });
+        }
+
+        function changeTahun(tahun, element, evt) {
+            if (evt) evt.preventDefault();
+            currentSelectedYear = tahun;
+
+            document.getElementById('lblTahunHeader').textContent = tahun;
+            document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChart').textContent = tahun;
+            document.getElementById('lblTahunTabel').textContent = tahun;
+            document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
+
+            document.querySelectorAll('.dropdown-menu-tahun .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+
+            loadIkmRealtime(tahun);
         }
 
         function updateDashboard() {
@@ -563,15 +691,19 @@
 
             let totalSkor = 0;
             const barData = [];
-            const barCategories = [];
 
-            defaultUnsurIkm.forEach((item, idx) => {
+            const listUnsur = currentIkmData.unsur || [];
+
+            listUnsur.forEach((item, idx) => {
                 const skor = parseFloat(item.skor) || 0;
                 const konversi = (skor * 25).toFixed(2);
                 totalSkor += skor;
 
                 barData.push(skor);
-                barCategories.push(`U${idx + 1} ${item.unsur.split(' ')[0]}`);
+
+                let badgeMutu = skor >= 3.25 
+                    ? '<span class="badge bg-success bg-opacity-10 text-success border border-success fw-bold">A (Sangat Baik)</span>' 
+                    : (skor >= 2.6 ? '<span class="badge bg-primary bg-opacity-10 text-primary border border-primary fw-bold">B (Baik)</span>' : '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning fw-bold">C (Kurang Baik)</span>');
 
                 tbody.innerHTML += `
                     <tr>
@@ -579,19 +711,32 @@
                         <td class="text-start fw-bold text-dark">${item.unsur}</td>
                         <td class="fw-bold text-warning">${skor.toFixed(2)}</td>
                         <td class="fw-bold text-success bg-light">${konversi}</td>
-                        <td><span class="badge bg-success bg-opacity-10 text-success border border-success fw-bold">A (Sangat Baik)</span></td>
+                        <td>${badgeMutu}</td>
                     </tr>
                 `;
             });
 
-            const avgSkor4 = defaultUnsurIkm.length > 0 ? (totalSkor / defaultUnsurIkm.length) : 3.95;
+            const avgSkor4 = listUnsur.length > 0 ? (totalSkor / listUnsur.length) : 0;
             const avgKonversi = (avgSkor4 * 25).toFixed(2);
 
             document.getElementById('lblIkmSkala4').textContent = avgSkor4.toFixed(2);
             document.getElementById('lblIkmKonversi').textContent = avgKonversi;
+            document.getElementById('lblIippSkor').textContent = (parseFloat(currentIkmData.iipp_skor) || 0).toFixed(2);
+            document.getElementById('lblTotalResponden').textContent = currentIkmData.total_responden || 0;
+
+            if (document.getElementById('lblKategoriMutu')) {
+                document.getElementById('lblKategoriMutu').textContent = avgSkor4 >= 3.25 ? "Mutu: A (Sangat Baik)" : (avgSkor4 >= 2.6 ? "Mutu: B (Baik)" : "Mutu: C (Kurang Baik)");
+            }
 
             if (barChartInstance) {
                 barChartInstance.updateSeries([{ name: "Skor Unsur", data: barData }]);
+            }
+
+            if (lineChartInstance) {
+                lineChartInstance.updateSeries([
+                    { name: "IKM (Skala 100)", data: currentIkmData.trend_ikm || Array(12).fill(0) },
+                    { name: "IIPP (Skala 10)", data: currentIkmData.trend_iipp || Array(12).fill(0) }
+                ]);
             }
         }
     </script>
