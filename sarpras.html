@@ -485,8 +485,8 @@
             <div class="col-12 col-sm-6 col-lg-4">
                 <a href="perizinan.html" class="sub-card card-izin">
                     <div class="icon-wrapper"><i class="bi bi-award-fill"></i></div>
-                    <h5>PERIZINAN ISR & PELAYANAN</h5>
-                    <p>Layanan Konsultasi ISR (Langsung & Online) serta Distribusi Izin.</p>
+                    <h5>PELAYANAN & PERIZINAN</h5>
+                    <p>Layanan Konsultasi ISR (Langsung & Online) serta Distribusi Izin ISR.</p>
                 </a>
             </div>
 
@@ -552,7 +552,7 @@
                                 <button class="nav-link fw-bold text-warning" id="ikm-tab" data-bs-toggle="tab" data-bs-target="#tab-ikm" type="button" role="tab">5. Detail IKM & IIPP</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold" style="color: #0f4c81;" id="perizinan-tab" data-bs-toggle="tab" data-bs-target="#tab-perizinan" type="button" role="tab">6. Pelayanan ISR / Perizinan</button>
+                                <button class="nav-link fw-bold" style="color: #0f4c81;" id="perizinan-tab" data-bs-toggle="tab" data-bs-target="#tab-perizinan" type="button" role="tab">6. Pelayanan & Perizinan</button>
                             </li>
                         </ul>
 
@@ -714,7 +714,7 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 6: DETAIL PELAYANAN ISR & PERIZINAN -->
+                            <!-- TAB 6: DETAIL PELAYANAN & PERIZINAN ISR -->
                             <div class="tab-pane fade" id="tab-perizinan" role="tabpanel">
                                 <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
@@ -861,7 +861,7 @@
             { id: 12, bulan: "Desember", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 }
         ];
 
-        // Data Default Pelayanan ISR / Perizinan 12 Bulan
+        // Data Default Pelayanan ISR & Perizinan 12 Bulan
         const defaultPerizinanMonths = [
             { id: 1, bulan: "Januari", langsung: 28, online: 35, terdistribusi: 42 },
             { id: 2, bulan: "Februari", langsung: 32, online: 40, terdistribusi: 50 },
@@ -886,7 +886,7 @@
             loadDataKinerjaRealtime();
         });
 
-        // 1. Render UNAR Edit
+        // 1. UNAR
         function renderUnarEditTableRows() {
             const tbody = document.getElementById('tbodyUnarEdit');
             if(!tbody) return;
@@ -951,7 +951,7 @@
             document.getElementById(`unar_lul_${i}`).value = lulus;
         }
 
-        // 2. Render Anggaran Edit
+        // 2. Anggaran
         function renderAnggaranEditRows() {
             const containerPagu = document.getElementById('containerPaguAnggaran');
             const tbodyBulan = document.getElementById('tbodyAnggaranBulanEdit');
@@ -1024,7 +1024,7 @@
             });
         }
 
-        // 3. Render SLA Edit
+        // 3. SLA
         function renderSlaEditTableRows() {
             const tbody = document.getElementById('tbodySlaEdit');
             if(!tbody) return;
@@ -1052,7 +1052,7 @@
             tbody.innerHTML = html;
         }
 
-        // 4. Render IKM Edit
+        // 4. IKM
         function renderIkmEditTableRows() {
             const tbody = document.getElementById('tbodyIkmEdit');
             if(!tbody) return;
@@ -1074,7 +1074,7 @@
             tbody.innerHTML = html;
         }
 
-        // 5. Render Pelayanan ISR / Perizinan Edit (Tab 6)
+        // 5. Perizinan
         function renderPerizinanEditTableRows() {
             const tbody = document.getElementById('tbodyPerizinanEdit');
             if(!tbody) return;
