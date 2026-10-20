@@ -841,10 +841,10 @@
                                         <thead class="table-dark sticky-top">
                                             <tr class="small text-nowrap">
                                                 <th style="width: 100px;">Bulan</th>
-                                                <th style="width: 110px;" class="bg-primary text-white">Skor IKM (0-4)</th>
+                                                <th style="width: 120px;" class="bg-primary text-white">Skor IKM (0-4)</th>
                                                 <th style="width: 100px;">IKM Pria</th>
                                                 <th style="width: 100px;">IKM Wanita</th>
-                                                <th style="width: 110px;" class="bg-success text-white">Skor IIPP (0-10)</th>
+                                                <th style="width: 120px;" class="bg-success text-white">Skor IIPP (0-10)</th>
                                                 <th style="width: 100px;">IIPP Pria</th>
                                                 <th style="width: 100px;">IIPP Wanita</th>
                                             </tr>
@@ -943,6 +943,7 @@
         const auth = firebase.auth();
 
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        const bulanListFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
         
         let activeDashboardYear = "2026";
@@ -989,20 +990,20 @@
             { id: 12, bulan: "December 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" }
         ];
 
-        // Data Default IKM & IIPP
+        // Data Default IKM & IIPP Detail
         const defaultIkmIippMonths = [
-            { id: 1, bulan: "Januari", ikm_score: 3.75, iipp_score: 8.80, ikm_pria: 15, ikm_wanita: 12, iipp_pria: 14, iipp_wanita: 10 },
-            { id: 2, bulan: "Februari", ikm_score: 3.80, iipp_score: 8.95, ikm_pria: 18, ikm_wanita: 14, iipp_pria: 16, iipp_wanita: 12 },
-            { id: 3, bulan: "Maret", ikm_score: 3.82, iipp_score: 9.10, ikm_pria: 20, ikm_wanita: 16, iipp_pria: 18, iipp_wanita: 15 },
-            { id: 4, bulan: "April", ikm_score: 3.88, iipp_score: 9.25, ikm_pria: 25, ikm_wanita: 22, iipp_pria: 22, iipp_wanita: 20 },
-            { id: 5, bulan: "Mei", ikm_score: 3.85, iipp_score: 9.15, ikm_pria: 19, ikm_wanita: 17, iipp_pria: 17, iipp_wanita: 16 },
-            { id: 6, bulan: "Juni", ikm_score: 3.90, iipp_score: 9.30, ikm_pria: 22, ikm_wanita: 19, iipp_pria: 20, iipp_wanita: 18 },
-            { id: 7, bulan: "Juli", ikm_score: 3.87, iipp_score: 9.20, ikm_pria: 21, ikm_wanita: 18, iipp_pria: 19, iipp_wanita: 17 },
-            { id: 8, bulan: "Agustus", ikm_score: 3.92, iipp_score: 9.40, ikm_pria: 24, ikm_wanita: 20, iipp_pria: 22, iipp_wanita: 19 },
-            { id: 9, bulan: "September", ikm_score: 3.95, iipp_score: 9.50, ikm_pria: 26, ikm_wanita: 23, iipp_pria: 25, iipp_wanita: 21 },
-            { id: 10, bulan: "Oktober", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 },
-            { id: 11, bulan: "November", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 },
-            { id: 12, bulan: "Desember", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 }
+            { id: 1, bulan: "Januari", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+            { id: 2, bulan: "Februari", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+            { id: 3, bulan: "Maret", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 1 },
+            { id: 4, bulan: "April", ikm_skor: 3.96, ikm_score: 3.96, ikm_pria: 8, ikm_wanita: 0, iipp_skor: 9.92, iipp_score: 9.92, iipp_pria: 8, iipp_wanita: 0 },
+            { id: 5, bulan: "Mei", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 0 },
+            { id: 6, bulan: "Juni", ikm_skor: 3.78, ikm_score: 3.78, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 9.17, iipp_score: 9.17, iipp_pria: 1, iipp_wanita: 1 },
+            { id: 7, bulan: "Juli", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 0 },
+            { id: 8, bulan: "Agustus", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 1 },
+            { id: 9, bulan: "September", ikm_skor: 3.81, ikm_score: 3.81, ikm_pria: 3, ikm_wanita: 0, iipp_skor: 9.44, iipp_score: 9.44, iipp_pria: 3, iipp_wanita: 0 },
+            { id: 10, bulan: "Oktober", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+            { id: 11, bulan: "November", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+            { id: 12, bulan: "Desember", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 }
         ];
 
         // Data Default Pelayanan ISR
@@ -1047,7 +1048,7 @@
             };
 
             const optionsDonut = {
-                series: [95, 88, 97.2, 1, 3.95, 9.5],
+                series: [95, 88, 97.2, 1, 3.94, 9.79],
                 labels: ['Operator Radio', 'BHP Frekuensi', 'Monitoring SLA', 'Zona Integritas', 'IKM (Skala 4)', 'IIPP (Skala 10)'],
                 chart: {
                     type: 'donut',
@@ -1288,7 +1289,7 @@
             tbody.innerHTML = html;
         }
 
-        // 4. IKM
+        // 4. IKM & IIPP DETAIL (TAB 5)
         function renderIkmEditTableRows() {
             const tbody = document.getElementById('tbodyIkmEdit');
             if(!tbody) return;
@@ -1296,15 +1297,18 @@
             let html = '';
             defaultIkmIippMonths.forEach((m, idx) => {
                 let i = idx + 1;
+                let ikmVal = (m.ikm_skor !== null && m.ikm_skor !== undefined) ? m.ikm_skor : ((m.ikm_score !== null && m.ikm_score !== undefined) ? m.ikm_score : '');
+                let iippVal = (m.iipp_skor !== null && m.iipp_skor !== undefined) ? m.iipp_skor : ((m.iipp_score !== null && m.iipp_score !== undefined) ? m.iipp_score : '');
+
                 html += `
                 <tr>
                     <td class="fw-bold text-dark" id="ikm_bln_${i}">${m.bulan}</td>
-                    <td><input type="number" step="0.01" min="0" max="4" id="ikm_sc_${i}" class="form-control form-control-sm text-center fw-bold text-primary" value="${m.ikm_score}"></td>
-                    <td><input type="number" min="0" id="ikm_pria_${i}" class="form-control form-control-sm text-center" value="${m.ikm_pria}"></td>
-                    <td><input type="number" min="0" id="ikm_wanita_${i}" class="form-control form-control-sm text-center" value="${m.ikm_wanita}"></td>
-                    <td><input type="number" step="0.01" min="0" max="10" id="iipp_sc_${i}" class="form-control form-control-sm text-center fw-bold text-success" value="${m.iipp_score}"></td>
-                    <td><input type="number" min="0" id="iipp_pria_${i}" class="form-control form-control-sm text-center" value="${m.iipp_pria}"></td>
-                    <td><input type="number" min="0" id="iipp_wanita_${i}" class="form-control form-control-sm text-center" value="${m.iipp_wanita}"></td>
+                    <td><input type="number" step="0.01" min="0" max="4" id="ikm_sc_${i}" class="form-control form-control-sm text-center fw-bold text-primary" placeholder="Skor IKM" value="${ikmVal}"></td>
+                    <td><input type="number" min="0" id="ikm_pria_${i}" class="form-control form-control-sm text-center" value="${m.ikm_pria || 0}"></td>
+                    <td><input type="number" min="0" id="ikm_wanita_${i}" class="form-control form-control-sm text-center" value="${m.ikm_wanita || 0}"></td>
+                    <td><input type="number" step="0.01" min="0" max="10" id="iipp_sc_${i}" class="form-control form-control-sm text-center fw-bold text-success" placeholder="Skor IIPP" value="${iippVal}"></td>
+                    <td><input type="number" min="0" id="iipp_pria_${i}" class="form-control form-control-sm text-center" value="${m.iipp_pria || 0}"></td>
+                    <td><input type="number" min="0" id="iipp_wanita_${i}" class="form-control form-control-sm text-center" value="${m.iipp_wanita || 0}"></td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -1611,10 +1615,13 @@
                 const ikmList = data.ikm_iipp_detail.months;
                 ikmList.forEach((m, idx) => {
                     let i = idx + 1;
-                    if (document.getElementById(`ikm_sc_${i}`)) document.getElementById(`ikm_sc_${i}`).value = m.ikm_score || 0;
+                    let ikmVal = (m.ikm_skor !== undefined && m.ikm_skor !== null) ? m.ikm_skor : m.ikm_score;
+                    let iippVal = (m.iipp_skor !== undefined && m.iipp_skor !== null) ? m.iipp_skor : m.iipp_score;
+
+                    if (document.getElementById(`ikm_sc_${i}`)) document.getElementById(`ikm_sc_${i}`).value = (ikmVal !== null && ikmVal !== undefined) ? ikmVal : '';
                     if (document.getElementById(`ikm_pria_${i}`)) document.getElementById(`ikm_pria_${i}`).value = m.ikm_pria || 0;
                     if (document.getElementById(`ikm_wanita_${i}`)) document.getElementById(`ikm_wanita_${i}`).value = m.ikm_wanita || 0;
-                    if (document.getElementById(`iipp_sc_${i}`)) document.getElementById(`iipp_sc_${i}`).value = m.iipp_score || 0;
+                    if (document.getElementById(`iipp_sc_${i}`)) document.getElementById(`iipp_sc_${i}`).value = (iippVal !== null && iippVal !== undefined) ? iippVal : '';
                     if (document.getElementById(`iipp_pria_${i}`)) document.getElementById(`iipp_pria_${i}`).value = m.iipp_pria || 0;
                     if (document.getElementById(`iipp_wanita_${i}`)) document.getElementById(`iipp_wanita_${i}`).value = m.iipp_wanita || 0;
                 });
@@ -1710,15 +1717,28 @@
             const updatedIkmMonths = [];
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`ikm_bln_${i}`).innerText;
-                const ikm_score = parseFloat(document.getElementById(`ikm_sc_${i}`).value) || 0;
+                const rawIkmSc = document.getElementById(`ikm_sc_${i}`).value;
+                const rawIippSc = document.getElementById(`iipp_sc_${i}`).value;
+
                 const ikm_pria = parseInt(document.getElementById(`ikm_pria_${i}`).value) || 0;
                 const ikm_wanita = parseInt(document.getElementById(`ikm_wanita_${i}`).value) || 0;
-                const iipp_score = parseFloat(document.getElementById(`iipp_sc_${i}`).value) || 0;
                 const iipp_pria = parseInt(document.getElementById(`iipp_pria_${i}`).value) || 0;
                 const iipp_wanita = parseInt(document.getElementById(`iipp_wanita_${i}`).value) || 0;
 
+                const ikmVal = (rawIkmSc !== '' && !isNaN(rawIkmSc)) ? parseFloat(rawIkmSc) : null;
+                const iippVal = (rawIippSc !== '' && !isNaN(rawIippSc)) ? parseFloat(rawIippSc) : null;
+
                 updatedIkmMonths.push({
-                    id: i, bulan, ikm_score, ikm_pria, ikm_wanita, iipp_score, iipp_pria, iipp_wanita
+                    id: i,
+                    bulan,
+                    ikm_skor: ikmVal,
+                    ikm_score: ikmVal,
+                    ikm_pria,
+                    ikm_wanita,
+                    iipp_skor: iippVal,
+                    iipp_score: iippVal,
+                    iipp_pria,
+                    iipp_wanita
                 });
             }
 
