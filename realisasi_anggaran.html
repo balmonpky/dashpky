@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REALISASI ANGGARAN 2026 - BALMON PALANGKARAYA</title>
+    <title>REALISASI ANGGARAN - BALMON PALANGKARAYA</title>
 
     <!-- Favicon & Fonts -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
@@ -116,6 +116,58 @@
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             color: white; border-radius: 20px; padding: 2rem 2.5rem; box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        .banner-bg-circle {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .banner-bg-circle::after {
+            content: '';
+            position: absolute;
+            top: -50%; right: -10%;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+
+        /* DROPDOWN TAHUN STYLING */
+        .btn-tahun-dropdown {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .btn-tahun-dropdown:hover, .btn-tahun-dropdown:focus, .btn-tahun-dropdown.show {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .dropdown-menu-tahun {
+            border-radius: 14px;
+            padding: 0.5rem;
+            min-width: 140px;
+            z-index: 1060 !important;
+        }
+        .dropdown-menu-tahun .dropdown-item {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        .dropdown-menu-tahun .dropdown-item:hover {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        .dropdown-menu-tahun .dropdown-item.active {
+            background: linear-gradient(135deg, #0f4c81, #1e3a8a);
+            color: #ffffff;
         }
 
         .stat-card {
@@ -153,19 +205,10 @@
                     <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
-                    <span class="text-white d-block fs-6">REALISASI ANGGARAN 2026</span>
+                    <span class="text-white d-block fs-6">REALISASI ANGGARAN</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
             </a>
-            
-            <div class="d-flex gap-2 align-items-center">
-                <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Dashboard Sarpras
-                </a>
-                <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
-                    <i class="bi bi-broadcast me-1"></i> Terhubung Realtime
-                </span>
-            </div>
         </div>
     </nav>
 
@@ -236,12 +279,26 @@
         <div class="container-fluid">
             
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING & PROGRES ANGGARAN 2026</h2>
+                <div class="banner-bg-circle"></div>
+                <div style="z-index: 1;">
+                    <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING & PROGRES ANGGARAN <span id="lblTahunHeader">2026</span></h2>
                     <p class="mb-0 text-white-50">REKAPITULASI PENYERAPAN PAGU DAN REALISASI ANGGARAN 5 PROGRAM UTAMA</p>
                 </div>
-                <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
-                    <i class="bi bi-wallet2 me-1"></i> DIPA 2026
+
+                <!-- TOMBOL DROPDOWN TAHUN -->
+                <div class="dropdown" style="z-index: 2;">
+                    <button class="btn btn-tahun-dropdown fw-bold dropdown-toggle px-3.5 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar3 fs-6"></i>
+                        <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 dropdown-menu-tahun" aria-labelledby="dropdownTahun">
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this, event)">Tahun 2025</a></li>
+                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this, event)">Tahun 2026</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2027, this, event)">Tahun 2027</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2028, this, event)">Tahun 2028</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2029, this, event)">Tahun 2029</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2030, this, event)">Tahun 2030</a></li>
+                    </ul>
                 </div>
             </div>
 
@@ -309,8 +366,8 @@
 
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Realisasi 5 Program Sarpras (2026)</h5>
-                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Realisasi 5 Program Sarpras (<span id="lblTahunTabel">2026</span>)</h5>
+                    <span class="badge bg-primary px-3 py-2" id="badgeTahunTabel">Tahun 2026</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
@@ -352,22 +409,38 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        let currentSelectedYear = 2026;
+        let activeFirebaseRef = null;
 
-        let defaultAnggaranList = [
-            { id: "unar", nama: "Realisasi Anggaran UNAR", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
-            { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
-            { id: "transportable", nama: "Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000, monthlyNominal: [9000000, 21600000, 39600000, 63000000, 86400000, 108000000, 122400000, 135000000, 135000000, 135000000, 135000000, 135000000] },
-            { id: "bimtek", nama: "Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000, monthlyNominal: [12000000, 30000000, 48000000, 62400000, 78000000, 86400000, 96000000, 96000000, 96000000, 96000000, 96000000, 96000000] },
-            { id: "maritim", nama: "Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyNominal: [12800000, 24000000, 44800000, 64000000, 88000000, 108800000, 120000000, 128000000, 128000000, 128000000, 128000000, 128000000] }
-        ];
+        let defaultAnggaranList = [];
+
+        function getDefaultAnggaranForYear(tahun) {
+            if (String(tahun) === '2026') {
+                return [
+                    { id: "unar", nama: "Realisasi Anggaran UNAR", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
+                    { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
+                    { id: "transportable", nama: "Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000, monthlyNominal: [9000000, 21600000, 39600000, 63000000, 86400000, 108000000, 122400000, 135000000, 135000000, 135000000, 135000000, 135000000] },
+                    { id: "bimtek", nama: "Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000, monthlyNominal: [12000000, 30000000, 48000000, 62400000, 78000000, 86400000, 96000000, 96000000, 96000000, 96000000, 96000000, 96000000] },
+                    { id: "maritim", nama: "Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyNominal: [12800000, 24000000, 44800000, 64000000, 88000000, 108800000, 120000000, 128000000, 128000000, 128000000, 128000000, 128000000] }
+                ];
+            }
+            return [
+                { id: "unar", nama: "Realisasi Anggaran UNAR", pagu: 0, realisasi: 0, monthlyNominal: Array(12).fill(0) },
+                { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 0, realisasi: 0, monthlyNominal: Array(12).fill(0) },
+                { id: "transportable", nama: "Inspeksi Perangkat Transportable", pagu: 0, realisasi: 0, monthlyNominal: Array(12).fill(0) },
+                { id: "bimtek", nama: "Bimtek SRC dan IKRAN", pagu: 0, realisasi: 0, monthlyNominal: Array(12).fill(0) },
+                { id: "maritim", nama: "Perizinan Maritim On the Spot", pagu: 0, realisasi: 0, monthlyNominal: Array(12).fill(0) }
+            ];
+        }
 
         let donutChartInstance = null;
         let areaChartInstance = null;
         let selectedProgramIndex = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            defaultAnggaranList = getDefaultAnggaranForYear(currentSelectedYear);
             initCharts();
-            loadAnggaranRealtime();
+            loadAnggaranRealtime(currentSelectedYear);
         });
 
         function formatRupiah(angka) {
@@ -417,7 +490,7 @@
 
         function initCharts() {
             const optionsDonut = {
-                series: [112500000, 175000000, 135000000, 96000000, 128000000],
+                series: [0, 0, 0, 0, 0],
                 labels: ['UNAR', 'BHP', 'TRANSPORTABLE', 'BIMTEK', 'MARITIM'],
                 chart: {
                     type: 'donut',
@@ -459,15 +532,51 @@
             areaChartInstance.render();
         }
 
-        function loadAnggaranRealtime() {
-            database.ref('kinerja_sarpras/realisasi_anggaran').on('value', (snapshot) => {
+        function loadAnggaranRealtime(tahun = currentSelectedYear) {
+            if (activeFirebaseRef) {
+                activeFirebaseRef.off();
+            }
+
+            const pathNode = (String(tahun) === '2026') 
+                ? 'kinerja_sarpras/realisasi_anggaran' 
+                : `kinerja_sarpras_by_year/${tahun}/realisasi_anggaran`;
+
+            activeFirebaseRef = database.ref(pathNode);
+
+            activeFirebaseRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     const list = Array.isArray(data) ? data : Object.values(data);
                     if (list.length > 0) defaultAnggaranList = list;
+                    else defaultAnggaranList = getDefaultAnggaranForYear(tahun);
+                } else {
+                    defaultAnggaranList = getDefaultAnggaranForYear(tahun);
                 }
                 updateDashboard();
+            }, (err) => {
+                console.warn("Error pemuatan data:", err.message);
+                defaultAnggaranList = getDefaultAnggaranForYear(tahun);
+                updateDashboard();
             });
+        }
+
+        function changeTahun(tahun, element, evt) {
+            if (evt) evt.preventDefault();
+            currentSelectedYear = tahun;
+
+            document.getElementById('lblTahunHeader').textContent = tahun;
+            document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunTabel').textContent = tahun;
+            document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
+
+            document.querySelectorAll('.dropdown-menu-tahun .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+
+            loadAnggaranRealtime(tahun);
         }
 
         function updateDashboard() {
