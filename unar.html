@@ -13,6 +13,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- ApexCharts CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
+
     <style>
         :root {
             --primary-navy: #0f4c81;
@@ -192,6 +195,20 @@
             margin-top: 4px;
         }
 
+        /* CHART CARD */
+        .chart-card-3d {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        .chart-card-3d:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
+        }
+
         /* TABEL */
         .table-custom th {
             background-color: var(--primary-navy);
@@ -353,6 +370,22 @@
                 </div>
             </div>
 
+            <!-- GRAFIK TREN 3D UNAR -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-card-3d">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Pelaksanaan UNAR 2026</h5>
+                                <small class="text-muted">Visualisasi Tren Pendaftar, Peserta Ujian, dan Tingkat Kelulusan Per Bulan</small>
+                            </div>
+                            <span class="badge bg-light text-primary border fw-semibold"><i class="bi bi-layers me-1"></i>3D Spline Depth</span>
+                        </div>
+                        <div id="chart3DUnarTrend" style="min-height: 360px;"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- TABEL RINCIAN UNAR -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -387,10 +420,11 @@
         </div>
     </main>
 
-    <!-- SDK FIREBASE COMPAT -->
+    <!-- SDK FIREBASE COMPAT & LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -408,6 +442,8 @@
         }
         const database = firebase.database();
 
+        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
         let unarMonths = [
             { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
             { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
@@ -423,9 +459,38 @@
             { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
         ];
 
+        let chart3DUnarInstance = null;
+
         document.addEventListener('DOMContentLoaded', () => {
+            init3DChart();
             loadUnarDataRealtime();
         });
+
+        function init3DChart() {
+            const options = {
+                series: [
+                    { name: "Pendaftar", data: [] },
+                    { name: "Peserta Ujian", data: [] },
+                    { name: "Lulus Ujian", data: [] }
+                ],
+                chart: {
+                    height: 360,
+                    type: 'line',
+                    toolbar: { show: false },
+                    dropShadow: { enabled: true, color: '#0f4c81', top: 12, left: 0, blur: 8, opacity: 0.22 }
+                },
+                colors: ['#0284c7', '#2563eb', '#10b981'],
+                stroke: { curve: 'smooth', width: 4 },
+                xaxis: { categories: bulanList },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                dataLabels: { enabled: false },
+                tooltip: { enabled: true },
+                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+            };
+
+            chart3DUnarInstance = new ApexCharts(document.getElementById('chart3DUnarTrend'), options);
+            chart3DUnarInstance.render();
+        }
 
         function loadUnarDataRealtime() {
             database.ref('kinerja_sarpras/unar_detail').on('value', (snapshot) => {
@@ -447,6 +512,10 @@
             let totalTidakLulus = 0;
             let totalTidakLulusAdm = 0;
 
+            const arrPendaftar = [];
+            const arrPeserta = [];
+            const arrLulus = [];
+
             const tbody = document.getElementById('tblBodyUnar');
             tbody.innerHTML = '';
 
@@ -466,6 +535,10 @@
                 totalLulus += lulusBulanIni;
                 totalTidakLulus += tidakLulus;
                 totalTidakLulusAdm += tidakLulusAdm;
+
+                arrPendaftar.push(pendaftar);
+                arrPeserta.push(peserta);
+                arrLulus.push(lulusBulanIni);
 
                 let badgeStatus = m.status === 'Selesai' 
                     ? '<span class="badge bg-success">Selesai</span>' 
@@ -496,6 +569,14 @@
             document.getElementById('lblTotalLulus').textContent = totalLulus;
             document.getElementById('lblTotalTidakLulus').textContent = totalTidakLulus;
             document.getElementById('lblTotalTidakLulusAdm').textContent = totalTidakLulusAdm;
+
+            if (chart3DUnarInstance) {
+                chart3DUnarInstance.updateSeries([
+                    { name: "Pendaftar", data: arrPendaftar },
+                    { name: "Peserta Ujian", data: arrPeserta },
+                    { name: "Lulus Ujian", data: arrLulus }
+                ]);
+            }
         }
     </script>
 </body>
