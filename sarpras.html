@@ -483,10 +483,10 @@
             </div>
 
             <div class="col-12 col-sm-6 col-lg-4">
-                <a href="#" class="sub-card card-izin">
+                <a href="perizinan.html" class="sub-card card-izin">
                     <div class="icon-wrapper"><i class="bi bi-award-fill"></i></div>
-                    <h5>PERIZINAN SRC / IKRAN</h5>
-                    <p>Layanan Sertifikat Radio Operator & Izin Komunikasi Antar Penduduk.</p>
+                    <h5>PERIZINAN ISR & PELAYANAN</h5>
+                    <p>Layanan Konsultasi ISR (Langsung & Online) serta Distribusi Izin.</p>
                 </a>
             </div>
 
@@ -528,7 +528,7 @@
         <div class="modal-dialog modal-xl" style="max-width: 95%;">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA & IKM-IIPP</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA, IKM-IIPP & Pelayanan ISR</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
@@ -540,7 +540,7 @@
                                 <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data UNAR 2026</button>
+                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail UNAR 2026</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran</button>
@@ -550,6 +550,9 @@
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold text-warning" id="ikm-tab" data-bs-toggle="tab" data-bs-target="#tab-ikm" type="button" role="tab">5. Detail IKM & IIPP</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold" style="color: #0f4c81;" id="perizinan-tab" data-bs-toggle="tab" data-bs-target="#tab-perizinan" type="button" role="tab">6. Pelayanan ISR / Perizinan</button>
                             </li>
                         </ul>
 
@@ -691,7 +694,7 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 5: DETAIL DATA IKM & IIPP 12 BULAN -->
+                            <!-- TAB 5: DETAIL DATA IKM & IIPP -->
                             <div class="tab-pane fade" id="tab-ikm" role="tabpanel">
                                 <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
@@ -707,6 +710,24 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tbodyIkmEdit" class="small"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- TAB 6: DETAIL PELAYANAN ISR & PERIZINAN -->
+                            <div class="tab-pane fade" id="tab-perizinan" role="tabpanel">
+                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
+                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
+                                        <thead class="table-dark sticky-top">
+                                            <tr class="small text-nowrap">
+                                                <th style="width: 100px;">Bulan</th>
+                                                <th style="width: 130px;" class="bg-navy text-white">Konsultasi Langsung</th>
+                                                <th style="width: 130px;" class="bg-primary text-white">Konsultasi Online</th>
+                                                <th style="width: 120px;" class="bg-success text-white">Total Konsultasi (Auto)</th>
+                                                <th style="width: 140px;" class="bg-warning text-dark">ISR Terdistribusi (Dokumen)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyPerizinanEdit" class="small"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -783,7 +804,7 @@
         const bulanList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
 
-        // Data Default UNAR 12 Bulan
+        // Data Default UNAR
         const defaultUnarMonths = [
             { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
             { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
@@ -799,7 +820,7 @@
             { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
         ];
 
-        // Data Default 5 Mata Anggaran
+        // Data Default Anggaran
         const defaultAnggaranList = [
             { id: "unar", nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
             { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
@@ -808,7 +829,7 @@
             { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyNominal: [12800000, 24000000, 44800000, 64000000, 88000000, 108800000, 120000000, 128000000, 128000000, 128000000, 128000000, 128000000] }
         ];
 
-        // Data Default SLA Monitoring 12 Bulan
+        // Data Default SLA
         const defaultSlaMonths = [
             { id: 1, bulan: "January 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
             { id: 2, bulan: "February 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
@@ -824,7 +845,7 @@
             { id: 12, bulan: "December 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" }
         ];
 
-        // Data Default IKM & IIPP 12 Bulan
+        // Data Default IKM & IIPP
         const defaultIkmIippMonths = [
             { id: 1, bulan: "Januari", ikm_score: 3.75, iipp_score: 8.80, ikm_pria: 15, ikm_wanita: 12, iipp_pria: 14, iipp_wanita: 10 },
             { id: 2, bulan: "Februari", ikm_score: 3.80, iipp_score: 8.95, ikm_pria: 18, ikm_wanita: 14, iipp_pria: 16, iipp_wanita: 12 },
@@ -840,15 +861,32 @@
             { id: 12, bulan: "Desember", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 }
         ];
 
+        // Data Default Pelayanan ISR / Perizinan 12 Bulan
+        const defaultPerizinanMonths = [
+            { id: 1, bulan: "Januari", langsung: 28, online: 35, terdistribusi: 42 },
+            { id: 2, bulan: "Februari", langsung: 32, online: 40, terdistribusi: 50 },
+            { id: 3, bulan: "Maret", langsung: 25, online: 48, terdistribusi: 55 },
+            { id: 4, bulan: "April", langsung: 42, online: 65, terdistribusi: 78 },
+            { id: 5, bulan: "Mei", langsung: 30, online: 52, terdistribusi: 60 },
+            { id: 6, bulan: "Juni", langsung: 35, online: 58, terdistribusi: 68 },
+            { id: 7, bulan: "Juli", langsung: 38, online: 60, terdistribusi: 72 },
+            { id: 8, bulan: "Agustus", langsung: 40, online: 64, terdistribusi: 80 },
+            { id: 9, bulan: "September", langsung: 45, online: 70, terdistribusi: 88 },
+            { id: 10, bulan: "Oktober", langsung: 0, online: 0, terdistribusi: 0 },
+            { id: 11, bulan: "November", langsung: 0, online: 0, terdistribusi: 0 },
+            { id: 12, bulan: "Desember", langsung: 0, online: 0, terdistribusi: 0 }
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
             renderUnarEditTableRows();
             renderAnggaranEditRows();
             renderSlaEditTableRows();
             renderIkmEditTableRows();
+            renderPerizinanEditTableRows();
             loadDataKinerjaRealtime();
         });
 
-        // 1. Render Tabel Edit UNAR
+        // 1. Render UNAR Edit
         function renderUnarEditTableRows() {
             const tbody = document.getElementById('tbodyUnarEdit');
             if(!tbody) return;
@@ -913,7 +951,7 @@
             document.getElementById(`unar_lul_${i}`).value = lulus;
         }
 
-        // 2. Render Form Edit Pagu & Anggaran
+        // 2. Render Anggaran Edit
         function renderAnggaranEditRows() {
             const containerPagu = document.getElementById('containerPaguAnggaran');
             const tbodyBulan = document.getElementById('tbodyAnggaranBulanEdit');
@@ -986,7 +1024,7 @@
             });
         }
 
-        // 3. Render Tabel Edit SLA
+        // 3. Render SLA Edit
         function renderSlaEditTableRows() {
             const tbody = document.getElementById('tbodySlaEdit');
             if(!tbody) return;
@@ -1014,7 +1052,7 @@
             tbody.innerHTML = html;
         }
 
-        // 4. Render Tabel Edit IKM & IIPP
+        // 4. Render IKM Edit
         function renderIkmEditTableRows() {
             const tbody = document.getElementById('tbodyIkmEdit');
             if(!tbody) return;
@@ -1034,6 +1072,37 @@
                 </tr>`;
             });
             tbody.innerHTML = html;
+        }
+
+        // 5. Render Pelayanan ISR / Perizinan Edit (Tab 6)
+        function renderPerizinanEditTableRows() {
+            const tbody = document.getElementById('tbodyPerizinanEdit');
+            if(!tbody) return;
+
+            let html = '';
+            defaultPerizinanMonths.forEach((m, idx) => {
+                let i = idx + 1;
+                let lng = parseInt(m.langsung) || 0;
+                let onl = parseInt(m.online) || 0;
+                let dist = parseInt(m.terdistribusi) || 0;
+                let tot = lng + onl;
+
+                html += `
+                <tr>
+                    <td class="fw-bold text-dark" id="prz_bln_${i}">${m.bulan}</td>
+                    <td><input type="number" min="0" id="prz_lng_${i}" class="form-control form-control-sm text-center fw-bold" style="color: #0f4c81;" value="${lng}" oninput="hitungAutoPerizinanModal(${i})"></td>
+                    <td><input type="number" min="0" id="prz_onl_${i}" class="form-control form-control-sm text-center fw-bold text-primary" value="${onl}" oninput="hitungAutoPerizinanModal(${i})"></td>
+                    <td><input type="number" id="prz_tot_${i}" class="form-control form-control-sm text-center fw-bold text-success bg-light" value="${tot}" readonly></td>
+                    <td><input type="number" min="0" id="prz_dist_${i}" class="form-control form-control-sm text-center fw-bold text-warning" value="${dist}"></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function hitungAutoPerizinanModal(i) {
+            const lng = parseInt(document.getElementById(`prz_lng_${i}`).value) || 0;
+            const onl = parseInt(document.getElementById(`prz_onl_${i}`).value) || 0;
+            document.getElementById(`prz_tot_${i}`).value = lng + onl;
         }
 
         function loadDataKinerjaRealtime() {
@@ -1256,6 +1325,19 @@
                             if (document.getElementById(`iipp_wanita_${i}`)) document.getElementById(`iipp_wanita_${i}`).value = m.iipp_wanita || 0;
                         });
                     }
+                    // Load Pelayanan ISR / Perizinan
+                    if (data.perizinan_detail && data.perizinan_detail.months) {
+                        const przList = data.perizinan_detail.months;
+                        przList.forEach((m, idx) => {
+                            let i = idx + 1;
+                            let lng = m.langsung || 0;
+                            let onl = m.online || 0;
+                            if (document.getElementById(`prz_lng_${i}`)) document.getElementById(`prz_lng_${i}`).value = lng;
+                            if (document.getElementById(`prz_onl_${i}`)) document.getElementById(`prz_onl_${i}`).value = onl;
+                            if (document.getElementById(`prz_tot_${i}`)) document.getElementById(`prz_tot_${i}`).value = lng + onl;
+                            if (document.getElementById(`prz_dist_${i}`)) document.getElementById(`prz_dist_${i}`).value = m.terdistribusi || 0;
+                        });
+                    }
                 }
             });
         }
@@ -1352,6 +1434,19 @@
                 });
             }
 
+            // 5. Pelayanan ISR / Perizinan
+            const updatedPerizinanMonths = [];
+            for (let i = 1; i <= 12; i++) {
+                const bulan = document.getElementById(`prz_bln_${i}`).innerText;
+                const langsung = parseInt(document.getElementById(`prz_lng_${i}`).value) || 0;
+                const online = parseInt(document.getElementById(`prz_onl_${i}`).value) || 0;
+                const terdistribusi = parseInt(document.getElementById(`prz_dist_${i}`).value) || 0;
+
+                updatedPerizinanMonths.push({
+                    id: i, bulan, langsung, online, terdistribusi
+                });
+            }
+
             // Object Gabungan Update Firebase
             const dataUpdate = {
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
@@ -1378,6 +1473,10 @@
 
                 ikm_iipp_detail: {
                     months: updatedIkmMonths
+                },
+
+                perizinan_detail: {
+                    months: updatedPerizinanMonths
                 }
             };
 
