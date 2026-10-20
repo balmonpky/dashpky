@@ -507,7 +507,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-lg-4">
-                <a href="#" class="sub-card card-ikm">
+                <a href="ikm.html" class="sub-card card-ikm">
                     <div class="icon-wrapper"><i class="bi bi-star-fill"></i></div>
                     <h5>IKM & IIPP</h5>
                     <p>Pengelolaan Indeks Kepuasan Masyarakat & Indeks Integritas Pelayanan Publik.</p>
@@ -528,7 +528,7 @@
         <div class="modal-dialog modal-xl" style="max-width: 95%;">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran & SLA Monitoring</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA & IKM-IIPP</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
@@ -540,13 +540,16 @@
                                 <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data Tabel UNAR 2026</button>
+                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail Data UNAR 2026</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran (Nominal Rp & Auto % Capaian)</button>
+                                <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-info" id="sla-tab" data-bs-toggle="tab" data-bs-target="#tab-sla" type="button" role="tab">4. SLA Monitoring (12 Bulan)</button>
+                                <button class="nav-link fw-bold text-info" id="sla-tab" data-bs-toggle="tab" data-bs-target="#tab-sla" type="button" role="tab">4. SLA Monitoring</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold text-warning" id="ikm-tab" data-bs-toggle="tab" data-bs-target="#tab-ikm" type="button" role="tab">5. Detail IKM & IIPP</button>
                             </li>
                         </ul>
 
@@ -611,7 +614,7 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 2: TABEL EDIT SELURUH DATA UNAR 2026 -->
+                            <!-- TAB 2: UNAR -->
                             <div class="tab-pane fade" id="tab-unar" role="tabpanel">
                                 <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
@@ -632,26 +635,22 @@
                                                 <th style="min-width: 95px;">Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tbodyUnarEdit" class="small">
-                                            <!-- Baris 12 Bulan di-generate otomatis via JS -->
-                                        </tbody>
+                                        <tbody id="tbodyUnarEdit" class="small"></tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- TAB 3: REALISASI ANGGARAN (NOMINAL SERAPAN RP & AUTO CALCULATED % CAPAIAN) -->
+                            <!-- TAB 3: REALISASI ANGGARAN -->
                             <div class="tab-pane fade" id="tab-anggaran" role="tabpanel">
                                 <div class="card p-3 mb-3 border-0 shadow-sm bg-white">
                                     <h6 class="fw-bold text-primary mb-2"><i class="bi bi-wallet2 me-1"></i> Pagu Anggaran 5 Program (Rp)</h6>
-                                    <div class="row g-2" id="containerPaguAnggaran">
-                                        <!-- Inputs Pagu Anggaran Generated via JS -->
-                                    </div>
+                                    <div class="row g-2" id="containerPaguAnggaran"></div>
                                 </div>
 
                                 <div class="card p-3 border-0 shadow-sm bg-white">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h6 class="fw-bold text-primary m-0"><i class="bi bi-graph-up-arrow me-1"></i> Progres Penyerapan Anggaran Bulanan (Nominal Serapan Rp)</h6>
-                                        <span class="badge bg-light text-primary border"><i class="bi bi-calculator me-1"></i>% Capaian terhitung otomatis dari Pagu</span>
+                                        <span class="badge bg-light text-primary border"><i class="bi bi-calculator me-1"></i>% Capaian terhitung otomatis</span>
                                     </div>
                                     <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 330px; overflow-y: auto;">
                                         <table class="table table-bordered table-striped align-middle text-center mb-0">
@@ -665,15 +664,13 @@
                                                     <th>Maritim (Rp / %)</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="tbodyAnggaranBulanEdit" class="small">
-                                                <!-- Baris 12 Bulan Progres Serapan Nominal Generated via JS -->
-                                            </tbody>
+                                            <tbody id="tbodyAnggaranBulanEdit" class="small"></tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- TAB 4: SLA MONITORING 12 BULAN -->
+                            <!-- TAB 4: SLA MONITORING -->
                             <div class="tab-pane fade" id="tab-sla" role="tabpanel">
                                 <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
@@ -689,9 +686,27 @@
                                                 <th style="width: 110px;">Status Kunci</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tbodySlaEdit" class="small">
-                                            <!-- Baris 12 Bulan SLA di-generate via JS -->
-                                        </tbody>
+                                        <tbody id="tbodySlaEdit" class="small"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- TAB 5: DETAIL DATA IKM & IIPP 12 BULAN -->
+                            <div class="tab-pane fade" id="tab-ikm" role="tabpanel">
+                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
+                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
+                                        <thead class="table-dark sticky-top">
+                                            <tr class="small text-nowrap">
+                                                <th style="width: 100px;">Bulan</th>
+                                                <th style="width: 110px;" class="bg-primary text-white">Skor IKM (0-4)</th>
+                                                <th style="width: 100px;">IKM Pria</th>
+                                                <th style="width: 100px;">IKM Wanita</th>
+                                                <th style="width: 110px;" class="bg-success text-white">Skor IIPP (0-10)</th>
+                                                <th style="width: 100px;">IIPP Pria</th>
+                                                <th style="width: 100px;">IIPP Wanita</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyIkmEdit" class="small"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -809,14 +824,31 @@
             { id: 12, bulan: "December 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" }
         ];
 
+        // Data Default IKM & IIPP 12 Bulan
+        const defaultIkmIippMonths = [
+            { id: 1, bulan: "Januari", ikm_score: 3.75, iipp_score: 8.80, ikm_pria: 15, ikm_wanita: 12, iipp_pria: 14, iipp_wanita: 10 },
+            { id: 2, bulan: "Februari", ikm_score: 3.80, iipp_score: 8.95, ikm_pria: 18, ikm_wanita: 14, iipp_pria: 16, iipp_wanita: 12 },
+            { id: 3, bulan: "Maret", ikm_score: 3.82, iipp_score: 9.10, ikm_pria: 20, ikm_wanita: 16, iipp_pria: 18, iipp_wanita: 15 },
+            { id: 4, bulan: "April", ikm_score: 3.88, iipp_score: 9.25, ikm_pria: 25, ikm_wanita: 22, iipp_pria: 22, iipp_wanita: 20 },
+            { id: 5, bulan: "Mei", ikm_score: 3.85, iipp_score: 9.15, ikm_pria: 19, ikm_wanita: 17, iipp_pria: 17, iipp_wanita: 16 },
+            { id: 6, bulan: "Juni", ikm_score: 3.90, iipp_score: 9.30, ikm_pria: 22, ikm_wanita: 19, iipp_pria: 20, iipp_wanita: 18 },
+            { id: 7, bulan: "Juli", ikm_score: 3.87, iipp_score: 9.20, ikm_pria: 21, ikm_wanita: 18, iipp_pria: 19, iipp_wanita: 17 },
+            { id: 8, bulan: "Agustus", ikm_score: 3.92, iipp_score: 9.40, ikm_pria: 24, ikm_wanita: 20, iipp_pria: 22, iipp_wanita: 19 },
+            { id: 9, bulan: "September", ikm_score: 3.95, iipp_score: 9.50, ikm_pria: 26, ikm_wanita: 23, iipp_pria: 25, iipp_wanita: 21 },
+            { id: 10, bulan: "Oktober", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 },
+            { id: 11, bulan: "November", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 },
+            { id: 12, bulan: "Desember", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 }
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
             renderUnarEditTableRows();
             renderAnggaranEditRows();
             renderSlaEditTableRows();
+            renderIkmEditTableRows();
             loadDataKinerjaRealtime();
         });
 
-        // 1. Render Tabel Edit UNAR 12 Bulan (Jml Peserta & Jml Pendaftar Readonly Auto)
+        // 1. Render Tabel Edit UNAR
         function renderUnarEditTableRows() {
             const tbody = document.getElementById('tbodyUnarEdit');
             if(!tbody) return;
@@ -865,10 +897,6 @@
             tbody.innerHTML = html;
         }
 
-        // AUTO CALCULATE DI MODAL:
-        // 1. Peserta = Siaga + Penggalang + Penegak
-        // 2. Pendaftar = Peserta + Tidak Lulus Adm
-        // 3. Lulus Ujian = Peserta - Tidak Lulus Ujian
         function hitungAutoUnarModal(i) {
             const sia = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
             const peng = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
@@ -885,7 +913,7 @@
             document.getElementById(`unar_lul_${i}`).value = lulus;
         }
 
-        // 2. Render Form Edit Pagu & Tabel Serapan Nominal Rp Bulanan
+        // 2. Render Form Edit Pagu & Anggaran
         function renderAnggaranEditRows() {
             const containerPagu = document.getElementById('containerPaguAnggaran');
             const tbodyBulan = document.getElementById('tbodyAnggaranBulanEdit');
@@ -958,7 +986,7 @@
             });
         }
 
-        // 3. Render Tabel Edit SLA Monitoring 12 Bulan
+        // 3. Render Tabel Edit SLA
         function renderSlaEditTableRows() {
             const tbody = document.getElementById('tbodySlaEdit');
             if(!tbody) return;
@@ -986,22 +1014,32 @@
             tbody.innerHTML = html;
         }
 
+        // 4. Render Tabel Edit IKM & IIPP
+        function renderIkmEditTableRows() {
+            const tbody = document.getElementById('tbodyIkmEdit');
+            if(!tbody) return;
+
+            let html = '';
+            defaultIkmIippMonths.forEach((m, idx) => {
+                let i = idx + 1;
+                html += `
+                <tr>
+                    <td class="fw-bold text-dark" id="ikm_bln_${i}">${m.bulan}</td>
+                    <td><input type="number" step="0.01" min="0" max="4" id="ikm_sc_${i}" class="form-control form-control-sm text-center fw-bold text-primary" value="${m.ikm_score}"></td>
+                    <td><input type="number" min="0" id="ikm_pria_${i}" class="form-control form-control-sm text-center" value="${m.ikm_pria}"></td>
+                    <td><input type="number" min="0" id="ikm_wanita_${i}" class="form-control form-control-sm text-center" value="${m.ikm_wanita}"></td>
+                    <td><input type="number" step="0.01" min="0" max="10" id="iipp_sc_${i}" class="form-control form-control-sm text-center fw-bold text-success" value="${m.iipp_score}"></td>
+                    <td><input type="number" min="0" id="iipp_pria_${i}" class="form-control form-control-sm text-center" value="${m.iipp_pria}"></td>
+                    <td><input type="number" min="0" id="iipp_wanita_${i}" class="form-control form-control-sm text-center" value="${m.iipp_wanita}"></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
         function loadDataKinerjaRealtime() {
             database.ref('kinerja_sarpras').on('value', (snapshot) => {
                 const data = snapshot.val();
-                
-                if (!data) {
-                    const defaultData = {
-                        k1: { target: 100, capaian: 95, suffix: '%' },
-                        k2: { target: 100, capaian: 90, suffix: '%' },
-                        k3: { target: 100, capaian: 98, suffix: '%' },
-                        k4: { target: 100, capaian: 85, suffix: '' },
-                        k5: { target: 85, capaian: 88, suffix: '' },
-                        k6: { target: 90, capaian: 92, suffix: '' }
-                    };
-                    database.ref('kinerja_sarpras').set(defaultData);
-                    return;
-                }
+                if (!data) return;
 
                 for (let i = 1; i <= 6; i++) {
                     if (data['k' + i]) {
@@ -1126,12 +1164,11 @@
             }
         });
 
-        // Load Data Eksisting ke Form Modal Edit
         function loadExistingDataToModal() {
             database.ref('kinerja_sarpras').once('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // 1. Load Kinerja Dasbor
+                    // Load Dasbor
                     for (let i = 1; i <= 6; i++) {
                         if (data['k' + i]) {
                             const elTarget = document.getElementById('inp_t_' + i);
@@ -1140,7 +1177,7 @@
                             if (elCapaian) elCapaian.value = data['k' + i].capaian;
                         }
                     }
-                    // 2. Load Tabel UNAR 12 Bulan (Peserta = Siaga + Penggalang + Penegak, Pendaftar = Peserta + Tidak Lulus Adm)
+                    // Load UNAR
                     if (data.unar_detail && data.unar_detail.months) {
                         const months = data.unar_detail.months;
                         months.forEach((m, idx) => {
@@ -1157,21 +1194,18 @@
                             if (document.getElementById(`unar_tgl_${i}`)) document.getElementById(`unar_tgl_${i}`).value = m.tgl || '';
                             if (document.getElementById(`unar_kat_${i}`)) document.getElementById(`unar_kat_${i}`).value = m.kategori || 'CAT Reguler';
                             if (document.getElementById(`unar_lok_${i}`)) document.getElementById(`unar_lok_${i}`).value = m.lokasi || '';
-                            
                             if (document.getElementById(`unar_sia_${i}`)) document.getElementById(`unar_sia_${i}`).value = siaVal;
                             if (document.getElementById(`unar_peng_${i}`)) document.getElementById(`unar_peng_${i}`).value = pengVal;
                             if (document.getElementById(`unar_pen_${i}`)) document.getElementById(`unar_pen_${i}`).value = penVal;
                             if (document.getElementById(`unar_tl_${i}`)) document.getElementById(`unar_tl_${i}`).value = tlVal;
                             if (document.getElementById(`unar_tladm_${i}`)) document.getElementById(`unar_tladm_${i}`).value = tladmVal;
-
                             if (document.getElementById(`unar_pes_${i}`)) document.getElementById(`unar_pes_${i}`).value = autoPeserta;
                             if (document.getElementById(`unar_pend_${i}`)) document.getElementById(`unar_pend_${i}`).value = autoPendaftar;
                             if (document.getElementById(`unar_lul_${i}`)) document.getElementById(`unar_lul_${i}`).value = Math.max(0, autoPeserta - tlVal);
-
                             if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
                         });
                     }
-                    // 3. Load Realisasi Anggaran 5 Program
+                    // Load Anggaran
                     if (data.realisasi_anggaran) {
                         const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
                         listAngg.forEach((item, idx) => {
@@ -1195,7 +1229,7 @@
                         });
                         hitungkanPersentaseAnggaran();
                     }
-                    // 4. Load SLA Monitoring 12 Bulan
+                    // Load SLA
                     if (data.sla_monitoring && data.sla_monitoring.months) {
                         const slaList = data.sla_monitoring.months;
                         slaList.forEach((m, idx) => {
@@ -1209,20 +1243,29 @@
                             if (document.getElementById(`sla_kc_${i}`)) document.getElementById(`sla_kc_${i}`).value = m.status_kunci || 'TERKUNCI';
                         });
                     }
+                    // Load IKM & IIPP
+                    if (data.ikm_iipp_detail && data.ikm_iipp_detail.months) {
+                        const ikmList = data.ikm_iipp_detail.months;
+                        ikmList.forEach((m, idx) => {
+                            let i = idx + 1;
+                            if (document.getElementById(`ikm_sc_${i}`)) document.getElementById(`ikm_sc_${i}`).value = m.ikm_score || 0;
+                            if (document.getElementById(`ikm_pria_${i}`)) document.getElementById(`ikm_pria_${i}`).value = m.ikm_pria || 0;
+                            if (document.getElementById(`ikm_wanita_${i}`)) document.getElementById(`ikm_wanita_${i}`).value = m.ikm_wanita || 0;
+                            if (document.getElementById(`iipp_sc_${i}`)) document.getElementById(`iipp_sc_${i}`).value = m.iipp_score || 0;
+                            if (document.getElementById(`iipp_pria_${i}`)) document.getElementById(`iipp_pria_${i}`).value = m.iipp_pria || 0;
+                            if (document.getElementById(`iipp_wanita_${i}`)) document.getElementById(`iipp_wanita_${i}`).value = m.iipp_wanita || 0;
+                        });
+                    }
                 }
             });
         }
 
-        // Simpan Perubahan Data Ke Firebase
         function simpanKinerja(event) {
             event.preventDefault(); 
 
-            // 1. Data UNAR 12 Bulan (Peserta = Siaga + Penggalang + Penegak, Pendaftar = Peserta + Tidak Lulus Adm)
+            // 1. UNAR
             const updatedUnarMonths = [];
-            let totalPendaftarAcc = 0;
-            let totalPesertaAcc = 0;
-            let totalLulusAcc = 0;
-            let totalTidakLulusAcc = 0;
+            let totalPendaftarAcc = 0, totalPesertaAcc = 0, totalLulusAcc = 0, totalTidakLulusAcc = 0;
 
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`unar_bln_${i}`).innerText;
@@ -1250,9 +1293,8 @@
                 });
             }
 
-            // 2. Data Realisasi Anggaran 5 Program
+            // 2. Realisasi Anggaran
             const updatedAnggaran = [];
-
             programIds.forEach((pId, idx) => {
                 let i = idx + 1;
                 const id = document.getElementById(`anggaran_id_${i}`).value;
@@ -1273,16 +1315,11 @@
                 const realisasi = monthlyNominal[11] || 0;
 
                 updatedAnggaran.push({
-                    id: id,
-                    nama: nama,
-                    pagu: pagu,
-                    realisasi: realisasi,
-                    monthlyNominal: monthlyNominal,
-                    monthlyProgress: monthlyProgress
+                    id, nama, pagu, realisasi, monthlyNominal, monthlyProgress
                 });
             });
 
-            // 3. Data SLA Monitoring 12 Bulan
+            // 3. SLA Monitoring
             const updatedSlaMonths = [];
             for (let i = 1; i <= 12; i++) {
                 const bulan = document.getElementById(`sla_bln_${i}`).innerText;
@@ -1299,7 +1336,23 @@
                 });
             }
 
-            // 4. Gabungkan Semua Objek Data Update
+            // 4. IKM & IIPP
+            const updatedIkmMonths = [];
+            for (let i = 1; i <= 12; i++) {
+                const bulan = document.getElementById(`ikm_bln_${i}`).innerText;
+                const ikm_score = parseFloat(document.getElementById(`ikm_sc_${i}`).value) || 0;
+                const ikm_pria = parseInt(document.getElementById(`ikm_pria_${i}`).value) || 0;
+                const ikm_wanita = parseInt(document.getElementById(`ikm_wanita_${i}`).value) || 0;
+                const iipp_score = parseFloat(document.getElementById(`iipp_sc_${i}`).value) || 0;
+                const iipp_pria = parseInt(document.getElementById(`iipp_pria_${i}`).value) || 0;
+                const iipp_wanita = parseInt(document.getElementById(`iipp_wanita_${i}`).value) || 0;
+
+                updatedIkmMonths.push({
+                    id: i, bulan, ikm_score, ikm_pria, ikm_wanita, iipp_score, iipp_pria, iipp_wanita
+                });
+            }
+
+            // Object Gabungan Update Firebase
             const dataUpdate = {
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
                 k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
@@ -1321,12 +1374,16 @@
 
                 sla_monitoring: {
                     months: updatedSlaMonths
+                },
+
+                ikm_iipp_detail: {
+                    months: updatedIkmMonths
                 }
             };
 
             Swal.fire({
                 title: 'Menyimpan...',
-                text: 'Memperbarui Dasbor, UNAR, Anggaran, & SLA Monitoring',
+                text: 'Memperbarui seluruh data Sarpras di Firebase',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
