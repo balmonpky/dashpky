@@ -19,6 +19,8 @@
             --accent-blue: #1b75bc;
             --bg-light: #f8fafc;
             --card-shadow: 0 10px 30px rgba(15, 76, 129, 0.08);
+            --sidebar-collapsed-width: 68px;
+            --sidebar-expanded-width: 280px;
         }
 
         body {
@@ -26,12 +28,16 @@
             background-color: var(--bg-light);
             color: #334155;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* NAVBAR HEADER */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             padding: 1rem 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1050;
         }
 
         .logo-container {
@@ -50,6 +56,109 @@
             object-fit: contain;
         }
 
+        /* SIDEBAR AUTO-HIDE */
+        .sidebar-autohide {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-collapsed-width);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            z-index: 1040;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .sidebar-autohide:hover {
+            width: var(--sidebar-expanded-width);
+        }
+
+        .sidebar-header {
+            padding: 0.5rem 1.25rem 1rem 1.25rem;
+            color: #93c5fd;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-autohide:hover .sidebar-header {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            color: rgba(255, 255, 255, 0.82);
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar-menu .menu-link:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-left-color: #38bdf8;
+        }
+
+        .sidebar-menu .menu-link.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-left-color: #38bdf8 !important;
+            font-weight: 700;
+        }
+
+        .sidebar-menu .menu-icon {
+            font-size: 1.4rem;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-menu .menu-text {
+            margin-left: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .sidebar-autohide:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* MAIN WRAPPER */
+        .main-wrapper {
+            margin-left: var(--sidebar-collapsed-width);
+            flex-grow: 1;
+            padding: 2rem 2rem;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* BANNER */
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             color: white;
@@ -58,6 +167,7 @@
             box-shadow: var(--card-shadow);
         }
 
+        /* STAT CARDS */
         .stat-card {
             background: #ffffff;
             border-radius: 16px;
@@ -82,6 +192,7 @@
             margin-top: 4px;
         }
 
+        /* TABEL */
         .table-custom th {
             background-color: var(--primary-navy);
             color: white;
@@ -96,6 +207,11 @@
             font-size: 0.82rem;
             vertical-align: middle;
             padding: 0.5rem 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper { margin-left: 0; padding: 1.5rem 1rem; }
+            .sidebar-autohide { display: none; }
         }
     </style>
 </head>
@@ -125,85 +241,151 @@
         </div>
     </nav>
 
-    <div class="container-fluid px-4 my-4">
-        
-        <!-- HEADER BANNER -->
-        <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="fw-800 mb-1" style="font-weight: 800;">PELAKSANAAN UJIAN NEGARA AMATIR RADIO (UNAR) 2026</h2>
-                <p class="mb-0 text-white-50">Data Statistik & Rekapitulasi Peserta Ujian Negara Amatir Radio Balmon Palangkaraya</p>
-            </div>
-            <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
-                <i class="bi bi-calendar-check me-1"></i> Tahun 2026
-            </div>
+    <!-- SIDEBAR AUTO-HIDE TERPADU -->
+    <aside class="sidebar-autohide">
+        <div class="sidebar-header">
+            <span>LAYANAN & PERIZINAN</span>
         </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="sarpras.html" class="menu-link" title="Dashboard Utama Sarpras">
+                    <span class="menu-icon text-warning"><i class="bi bi-speedometer2"></i></span>
+                    <span class="menu-text">Dashboard Sarpras</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
+                    <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
+                    <span class="menu-text">Aplikasi SMFR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="unar.html" class="menu-link active" title="UNAR">
+                    <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
+                    <span class="menu-text">UNAR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="MOTS">
+                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
+                    <span class="menu-text">MOTS</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="BHP">
+                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
+                    <span class="menu-text">BHP</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="perizinan.html" class="menu-link" title="Pelayanan & Perizinan">
+                    <span class="menu-icon" style="color: #c084fc;"><i class="bi bi-award-fill"></i></span>
+                    <span class="menu-text">Pelayanan & Perizinan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="realisasi_anggaran.html" class="menu-link" title="Realisasi Anggaran">
+                    <span class="menu-icon" style="color: #34d399;"><i class="bi bi-cash-stack"></i></span>
+                    <span class="menu-text">Realisasi Anggaran</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
+                    <span class="menu-icon" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
+                    <span class="menu-text">Fungsi Monitoring</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="ikm.html" class="menu-link" title="IKM & IIPP">
+                    <span class="menu-icon" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
+                    <span class="menu-text">IKM & IIPP</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        <!-- REKAP TOP CARDS STATISTIK (5 KARTU SEJAJAR) -->
-        <div class="row row-cols-1 row-cols-md-5 g-3 mb-4">
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #0284c7;">
-                    <div class="title text-info"><i class="bi bi-journal-text me-1"></i> Total Pendaftar</div>
-                    <div class="value text-info" id="lblTotalPendaftar">0</div>
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="main-wrapper">
+        <div class="container-fluid">
+            
+            <!-- HEADER BANNER -->
+            <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-800 mb-1" style="font-weight: 800;">PELAKSANAAN UJIAN NEGARA AMATIR RADIO (UNAR) 2026</h2>
+                    <p class="mb-0 text-white-50">Data Statistik & Rekapitulasi Peserta Ujian Negara Amatir Radio Balmon Palangkaraya</p>
+                </div>
+                <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
+                    <i class="bi bi-calendar-check me-1"></i> Tahun 2026
                 </div>
             </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #2563eb;">
-                    <div class="title text-primary"><i class="bi bi-people me-1"></i> Total Peserta Ujian</div>
-                    <div class="value text-primary" id="lblTotalPeserta">0</div>
+
+            <!-- REKAP TOP CARDS STATISTIK (5 KARTU SEJAJAR) -->
+            <div class="row row-cols-1 row-cols-md-5 g-3 mb-4">
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #0284c7;">
+                        <div class="title text-info"><i class="bi bi-journal-text me-1"></i> Total Pendaftar</div>
+                        <div class="value text-info" id="lblTotalPendaftar">0</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #2563eb;">
+                        <div class="title text-primary"><i class="bi bi-people me-1"></i> Total Peserta Ujian</div>
+                        <div class="value text-primary" id="lblTotalPeserta">0</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #10b981;">
+                        <div class="title text-success"><i class="bi bi-check-circle me-1"></i> Total Lulus Ujian</div>
+                        <div class="value text-success" id="lblTotalLulus">0</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #ef4444;">
+                        <div class="title text-danger"><i class="bi bi-x-circle me-1"></i> Total Tidak Lulus Ujian</div>
+                        <div class="value text-danger" id="lblTotalTidakLulus">0</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #f59e0b;">
+                        <div class="title text-warning"><i class="bi bi-exclamation-triangle me-1"></i> Total Tidak Lulus Administrasi</div>
+                        <div class="value text-warning" id="lblTotalTidakLulusAdm">0</div>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #10b981;">
-                    <div class="title text-success"><i class="bi bi-check-circle me-1"></i> Total Lulus Ujian</div>
-                    <div class="value text-success" id="lblTotalLulus">0</div>
+
+            <!-- TABEL RINCIAN UNAR -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Pelaksanaan UNAR Per Bulan (2026)</h5>
+                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
+                        <thead>
+                            <tr>
+                                <th style="width: 35px;">No</th>
+                                <th>Bulan</th>
+                                <th>Tgl Ujian</th>
+                                <th>Kategori</th>
+                                <th>Lokasi</th>
+                                <th class="bg-info text-white">Jml<br>Pendaftar</th>
+                                <th class="bg-primary text-white">Jml<br>Peserta</th>
+                                <th>Siaga</th>
+                                <th>Penggalang</th>
+                                <th>Penegak</th>
+                                <th class="bg-success text-white">Jml Lulus<br>Ujian</th>
+                                <th>Tidak<br>Lulus</th>
+                                <th class="bg-warning text-dark">Tidak Lulus<br>Adm</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBodyUnar"></tbody>
+                    </table>
                 </div>
             </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #ef4444;">
-                    <div class="title text-danger"><i class="bi bi-x-circle me-1"></i> Total Tidak Lulus Ujian</div>
-                    <div class="value text-danger" id="lblTotalTidakLulus">0</div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #f59e0b;">
-                    <div class="title text-warning"><i class="bi bi-exclamation-triangle me-1"></i> Total Tidak Lulus Administrasi</div>
-                    <div class="value text-warning" id="lblTotalTidakLulusAdm">0</div>
-                </div>
-            </div>
+
         </div>
-
-        <!-- TABEL RINCIAN UNAR -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Pelaksanaan UNAR Per Bulan (2026)</h5>
-                <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
-                    <thead>
-                        <tr>
-                            <th style="width: 35px;">No</th>
-                            <th>Bulan</th>
-                            <th>Tgl Ujian</th>
-                            <th>Kategori</th>
-                            <th>Lokasi</th>
-                            <th class="bg-info text-white">Jml<br>Pendaftar</th>
-                            <th class="bg-primary text-white">Jml<br>Peserta</th>
-                            <th>Siaga</th>
-                            <th>Penggalang</th>
-                            <th>Penegak</th>
-                            <th class="bg-success text-white">Jml Lulus<br>Ujian</th>
-                            <th>Tidak<br>Lulus</th>
-                            <th class="bg-warning text-dark">Tidak Lulus<br>Adm</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tblBodyUnar"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
+    </main>
 
     <!-- SDK FIREBASE COMPAT -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
@@ -275,10 +457,6 @@
                 const tidakLulus = parseInt(m.tidak_lulus) || 0;
                 const tidakLulusAdm = parseInt(m.tidak_lulus_adm) || 0;
 
-                // KALKULASI OTOMATIS:
-                // 1. Peserta = Siaga + Penggalang + Penegak
-                // 2. Pendaftar = Peserta + Tidak Lulus Adm
-                // 3. Lulus Ujian = Peserta - Tidak Lulus Ujian
                 const peserta = m.peserta !== undefined ? (parseInt(m.peserta) || (siaga + penggalang + penegak)) : (siaga + penggalang + penegak);
                 const pendaftar = m.pendaftar !== undefined ? (parseInt(m.pendaftar) || (peserta + tidakLulusAdm)) : (peserta + tidakLulusAdm);
                 const lulusBulanIni = Math.max(0, peserta - tidakLulus);
