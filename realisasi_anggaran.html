@@ -22,6 +22,8 @@
             --accent-blue: #1b75bc;
             --bg-light: #f8fafc;
             --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08);
+            --sidebar-collapsed-width: 68px;
+            --sidebar-expanded-width: 280px;
         }
 
         body {
@@ -31,11 +33,11 @@
             min-height: 100vh;
         }
 
-        /* NAVBAR */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             padding: 1rem 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1050;
         }
 
         .logo-container {
@@ -54,96 +56,91 @@
             object-fit: contain;
         }
 
-        /* BANNER */
+        /* SIDEBAR AUTO-HIDE */
+        .sidebar-autohide {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-collapsed-width);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            z-index: 1040;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+        }
+        .sidebar-autohide:hover { width: var(--sidebar-expanded-width); }
+        .sidebar-header {
+            padding: 0.5rem 1.25rem 1rem 1.25rem;
+            color: #93c5fd;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-autohide:hover .sidebar-header { opacity: 1; }
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+        .sidebar-menu .menu-link {
+            display: flex; align-items: center; padding: 0.85rem 1.25rem;
+            color: rgba(255, 255, 255, 0.82); text-decoration: none;
+            border-left: 4px solid transparent; transition: all 0.25s ease; white-space: nowrap;
+        }
+        .sidebar-menu .menu-link:hover { background: rgba(255, 255, 255, 0.12); color: #ffffff; border-left-color: #38bdf8; }
+        .sidebar-menu .menu-link.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-left-color: #38bdf8 !important;
+            font-weight: 700;
+        }
+        .sidebar-menu .menu-icon { font-size: 1.4rem; min-width: 32px; display: flex; align-items: center; justify-content: center; }
+        .sidebar-menu .menu-text { margin-left: 12px; font-size: 0.88rem; font-weight: 600; opacity: 0; transition: opacity 0.25s ease; }
+        .sidebar-autohide:hover .menu-text { opacity: 1; }
+
+        .main-wrapper {
+            margin-left: var(--sidebar-collapsed-width);
+            flex-grow: 1;
+            padding: 2rem 2rem;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 2rem 2.5rem;
-            box-shadow: var(--card-shadow);
+            color: white; border-radius: 20px; padding: 2rem 2.5rem; box-shadow: var(--card-shadow);
         }
 
-        /* STAT CARDS */
         .stat-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 1.25rem 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            height: 100%;
-            transition: transform 0.3s ease;
+            background: #ffffff; border-radius: 16px; padding: 1.25rem 1.5rem;
+            border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%; transition: transform 0.3s ease;
         }
-        .stat-card:hover {
-            transform: translateY(-4px);
-        }
-        .stat-card .title {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-        }
-        .stat-card .value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-top: 4px;
-        }
+        .stat-card:hover { transform: translateY(-4px); }
+        .stat-card .title { font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        .stat-card .value { font-size: 1.6rem; font-weight: 800; margin-top: 4px; }
 
-        /* CHART CARDS WITH 3D DEPTH EFFECTS */
         .chart-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            height: 100%;
-            transition: all 0.3s ease;
+            background: #ffffff; border-radius: 20px; padding: 1.5rem;
+            border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%; transition: all 0.3s ease;
         }
-        .chart-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
-        }
+        .chart-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12); }
+        .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; }
 
-        .chart-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 0.75rem;
-        }
-
-        /* WADAH INTERAKTIF TEKS TENGAH DONAT */
-        .donut-wrapper {
-            position: relative;
-            min-height: 360px;
-        }
+        .donut-wrapper { position: relative; min-height: 360px; }
         .donut-center-info {
-            position: absolute;
-            top: 44%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            text-align: center;
-            width: 55%;
-            z-index: 10;
-            transition: all 0.3s ease;
+            position: absolute; top: 44%; left: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; text-align: center; width: 55%; z-index: 10; transition: all 0.3s ease;
         }
 
-        /* TABEL */
-        .table-custom th {
-            background-color: var(--primary-navy);
-            color: white;
-            font-size: 0.78rem;
-            vertical-align: middle;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            padding: 0.75rem 0.5rem;
-        }
-        .table-custom td {
-            font-size: 0.85rem;
-            vertical-align: middle;
-            padding: 0.65rem 0.5rem;
-        }
+        .table-custom th { background-color: var(--primary-navy); color: white; font-size: 0.78rem; vertical-align: middle; text-transform: uppercase; padding: 0.75rem 0.5rem; }
+        .table-custom td { font-size: 0.85rem; vertical-align: middle; padding: 0.65rem 0.5rem; }
     </style>
 </head>
 <body>
@@ -163,7 +160,7 @@
             
             <div class="d-flex gap-2 align-items-center">
                 <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
+                    <i class="bi bi-arrow-left me-1"></i> Dashboard Sarpras
                 </a>
                 <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
                     <i class="bi bi-broadcast me-1"></i> Terhubung Realtime
@@ -172,113 +169,168 @@
         </div>
     </nav>
 
-    <div class="container-fluid px-4 my-4">
-        
-        <!-- HEADER BANNER -->
-        <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING & PROGRES ANGGARAN 2026</h2>
-                <p class="mb-0 text-white-50">REKAPITULASI PENYERAPAN PAGU DAN REALISASI ANGGARAN 5 PROGRAM UTAMA</p>
-            </div>
-            <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
-                <i class="bi bi-wallet2 me-1"></i> DIPA 2026
-            </div>
+    <!-- SIDEBAR AUTO-HIDE TERPADU -->
+    <aside class="sidebar-autohide">
+        <div class="sidebar-header">
+            <span>LAYANAN & PERIZINAN</span>
         </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="sarpras.html" class="menu-link" title="Dashboard Utama Sarpras">
+                    <span class="menu-icon text-warning"><i class="bi bi-speedometer2"></i></span>
+                    <span class="menu-text">Dashboard Sarpras</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
+                    <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
+                    <span class="menu-text">Aplikasi SMFR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="unar.html" class="menu-link" title="UNAR">
+                    <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
+                    <span class="menu-text">UNAR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="MOTS">
+                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
+                    <span class="menu-text">MOTS</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="BHP">
+                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
+                    <span class="menu-text">BHP</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="perizinan.html" class="menu-link" title="Pelayanan & Perizinan">
+                    <span class="menu-icon" style="color: #c084fc;"><i class="bi bi-award-fill"></i></span>
+                    <span class="menu-text">Pelayanan & Perizinan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="realisasi_anggaran.html" class="menu-link active" title="Realisasi Anggaran">
+                    <span class="menu-icon" style="color: #34d399;"><i class="bi bi-cash-stack"></i></span>
+                    <span class="menu-text">Realisasi Anggaran</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
+                    <span class="menu-icon" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
+                    <span class="menu-text">Fungsi Monitoring</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="ikm.html" class="menu-link" title="IKM & IIPP">
+                    <span class="menu-icon" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
+                    <span class="menu-text">IKM & IIPP</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        <!-- TOP STAT CARDS -->
-        <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #0f4c81;">
-                    <div class="title" style="color: #0f4c81;"><i class="bi bi-bank me-1"></i> Total Pagu Anggaran</div>
-                    <div class="value" style="color: #0f4c81;" id="lblTotalPagu">Rp 0</div>
-                    <small class="text-muted fw-semibold">Alokasi DIPA 5 Program</small>
-                </div>
-            </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #059669;">
-                    <div class="title text-success"><i class="bi bi-cash-stack me-1"></i> Total Realisasi</div>
-                    <div class="value text-success" id="lblTotalRealisasi">Rp 0</div>
-                    <small class="text-muted fw-semibold">Serapan Akumulasi</small>
-                </div>
-            </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #d97706;">
-                    <div class="title text-warning"><i class="bi bi-piggy-bank-fill me-1"></i> Sisa Anggaran</div>
-                    <div class="value text-warning" id="lblSisaAnggaran">Rp 0</div>
-                    <small class="text-muted fw-semibold">Sisa Pagu DIPA</small>
-                </div>
-            </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #2563eb;">
-                    <div class="title text-primary"><i class="bi bi-percent me-1"></i> Persentase Serapan</div>
-                    <div class="value text-primary" id="lblPersenRealisasi">0%</div>
-                    <small class="text-muted fw-semibold">Capaian Terhadap Pagu</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- CHART SECTION: DONUT CHART 3D & BAR CHART TREN BULANAN -->
-        <div class="row g-4 mb-4">
+    <main class="main-wrapper">
+        <div class="container-fluid">
             
-            <!-- DONUT CHART 3D INTERAKTIF DENGAN TAMPILAN DETAIL PROGRAM DI TENGAH -->
-            <div class="col-lg-5">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <h5 class="fw-bold text-dark m-0"><i class="bi bi-pie-chart-fill me-2" style="color: #7c3aed;"></i>Proporsi Realisasi Per Program</h5>
-                            <small class="text-muted">Klik program di keterangan untuk melihat Realisasi & Sisa</small>
-                        </div>
-                        <span class="badge bg-light text-purple border fw-semibold" style="color: #7c3aed;">Interaktif 3D</span>
-                    </div>
+            <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING & PROGRES ANGGARAN 2026</h2>
+                    <p class="mb-0 text-white-50">REKAPITULASI PENYERAPAN PAGU DAN REALISASI ANGGARAN 5 PROGRAM UTAMA</p>
+                </div>
+                <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
+                    <i class="bi bi-wallet2 me-1"></i> DIPA 2026
+                </div>
+            </div>
 
-                    <div class="donut-wrapper">
-                        <div id="donutChart3DAnggaran"></div>
-                        <!-- ELEMEN TEKS KHUSUS TENGAH DONAT -->
-                        <div id="donutCenterInfo" class="donut-center-info"></div>
+            <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #0f4c81;">
+                        <div class="title" style="color: #0f4c81;"><i class="bi bi-bank me-1"></i> Total Pagu Anggaran</div>
+                        <div class="value" style="color: #0f4c81;" id="lblTotalPagu">Rp 0</div>
+                        <small class="text-muted fw-semibold">Alokasi DIPA 5 Program</small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #059669;">
+                        <div class="title text-success"><i class="bi bi-cash-stack me-1"></i> Total Realisasi</div>
+                        <div class="value text-success" id="lblTotalRealisasi">Rp 0</div>
+                        <small class="text-muted fw-semibold">Serapan Akumulasi</small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #d97706;">
+                        <div class="title text-warning"><i class="bi bi-piggy-bank-fill me-1"></i> Sisa Anggaran</div>
+                        <div class="value text-warning" id="lblSisaAnggaran">Rp 0</div>
+                        <small class="text-muted fw-semibold">Sisa Pagu DIPA</small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-card" style="border-left: 5px solid #2563eb;">
+                        <div class="title text-primary"><i class="bi bi-percent me-1"></i> Persentase Serapan</div>
+                        <div class="value text-primary" id="lblPersenRealisasi">0%</div>
+                        <small class="text-muted fw-semibold">Capaian Terhadap Pagu</small>
                     </div>
                 </div>
             </div>
 
-            <!-- AREA / BAR CHART TREN PENYERAPAN BULANAN -->
-            <div class="col-lg-7">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Tren Penyerapan Anggaran Bulanan</h5>
-                            <small class="text-muted">Progres Akumulasi Serapan Nominal (Rp) Januari - Desember</small>
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-pie-chart-fill me-2" style="color: #7c3aed;"></i>Proporsi Realisasi Per Program</h5>
+                                <small class="text-muted">Klik program di keterangan untuk melihat Realisasi & Sisa</small>
+                            </div>
+                            <span class="badge bg-light text-purple border fw-semibold" style="color: #7c3aed;">Interaktif 3D</span>
                         </div>
-                        <span class="badge bg-light text-primary border fw-semibold">Akumulasi Bulanan</span>
+                        <div class="donut-wrapper">
+                            <div id="donutChart3DAnggaran"></div>
+                            <div id="donutCenterInfo" class="donut-center-info"></div>
+                        </div>
                     </div>
-                    <div id="barChartAnggaranBulanan" style="min-height: 360px;"></div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Tren Penyerapan Anggaran Bulanan</h5>
+                                <small class="text-muted">Progres Akumulasi Serapan Nominal (Rp) Januari - Desember</small>
+                            </div>
+                            <span class="badge bg-light text-primary border fw-semibold">Akumulasi Bulanan</span>
+                        </div>
+                        <div id="barChartAnggaranBulanan" style="min-height: 360px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Realisasi 5 Program Sarpras (2026)</h5>
+                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px;">No</th>
+                                <th class="text-start">Nama Program / Kegiatan</th>
+                                <th>Pagu Anggaran (Rp)</th>
+                                <th class="bg-success text-white">Realisasi (Rp)</th>
+                                <th class="bg-warning text-dark">Sisa Anggaran (Rp)</th>
+                                <th style="width: 180px;">Progres Serapan (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBodyAnggaran"></tbody>
+                    </table>
                 </div>
             </div>
 
         </div>
-
-        <!-- TABEL RINCIAN PROGRAM ANGGARAN -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Realisasi 5 Program Sarpras (2026)</h5>
-                <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
-                    <thead>
-                        <tr>
-                            <th style="width: 45px;">No</th>
-                            <th class="text-start">Nama Program / Kegiatan</th>
-                            <th>Pagu Anggaran (Rp)</th>
-                            <th class="bg-success text-white">Realisasi (Rp)</th>
-                            <th class="bg-warning text-dark">Sisa Anggaran (Rp)</th>
-                            <th style="width: 180px;">Progres Serapan (%)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tblBodyAnggaran"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
+    </main>
 
     <!-- SDK & LIBRARIES -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -297,14 +349,10 @@
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
-        // Data Default Realisasi Anggaran 5 Program
         let defaultAnggaranList = [
             { id: "unar", nama: "Realisasi Anggaran UNAR", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
             { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
@@ -315,7 +363,7 @@
 
         let donutChartInstance = null;
         let areaChartInstance = null;
-        let selectedProgramIndex = null; // Menyimpan indeks program yang sedang dipilih
+        let selectedProgramIndex = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
@@ -326,13 +374,8 @@
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
         }
 
-        // LOGIKA MEMPERBARUI TAMPILAN TENGAH DONAT
         function toggleProgramSelection(index) {
-            if (selectedProgramIndex === index) {
-                selectedProgramIndex = null; // Kembali ke tampilan ringkasan total
-            } else {
-                selectedProgramIndex = index; // Pilih program spesifik
-            }
+            selectedProgramIndex = (selectedProgramIndex === index) ? null : index;
             updateDonutCenterText();
         }
 
@@ -341,7 +384,6 @@
             if (!centerEl) return;
 
             if (selectedProgramIndex === null) {
-                // Ringkasan Total Seluruh Program
                 let totPagu = 0, totRealisasi = 0;
                 defaultAnggaranList.forEach(item => {
                     totPagu += parseFloat(item.pagu) || 0;
@@ -351,38 +393,29 @@
                 let totPct = totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0';
 
                 centerEl.innerHTML = `
-                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Realisasi</div>
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Realisasi</div>
                     <div style="font-size: 1.35rem; font-weight: 800; color: #0f4c81; line-height: 1.2; margin: 2px 0;">${formatRupiah(totRealisasi)}</div>
-                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; margin-top: 2px;">
-                        Sisa: <span style="font-weight: 800;">${formatRupiah(totSisa)}</span>
-                    </div>
-                    <div style="font-size: 0.7rem; font-weight: 600; color: #10b981; margin-top: 2px;">
-                        <i class="bi bi-check-circle-fill"></i> Serapan ${totPct}%
-                    </div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706;">Sisa: ${formatRupiah(totSisa)}</div>
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #10b981; margin-top: 2px;"><i class="bi bi-check-circle-fill"></i> Serapan ${totPct}%</div>
                 `;
             } else {
-                // Tampilan Detail Program Yang Diklik
                 const item = defaultAnggaranList[selectedProgramIndex];
                 const pagu = parseFloat(item.pagu) || 0;
                 const realisasi = parseFloat(item.realisasi) || 0;
                 const sisa = pagu - realisasi;
-                const pct = pagu > 0 ? ((realisasi / pagu) * 100).toFixed(1) : '0.0';
                 const progName = item.id ? item.id.toUpperCase() : `PROGRAM ${selectedProgramIndex + 1}`;
 
                 centerEl.innerHTML = `
-                    <span class="badge bg-primary px-2 py-1 mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">${progName}</span>
+                    <span class="badge bg-primary px-2 py-1 mb-1" style="font-size: 0.7rem;">${progName}</span>
                     <div style="font-size: 0.72rem; font-weight: 700; color: #059669; text-transform: uppercase;">Realisasi</div>
-                    <div style="font-size: 1.2rem; font-weight: 800; color: #059669; line-height: 1.2;">${formatRupiah(realisasi)}</div>
-                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; margin-top: 3px;">
-                        Sisa: <span style="font-weight: 800;">${formatRupiah(sisa)}</span>
-                    </div>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: #059669;">${formatRupiah(realisasi)}</div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; margin-top: 3px;">Sisa: ${formatRupiah(sisa)}</div>
                     <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Klik lagi untuk reset</small>
                 `;
             }
         }
 
         function initCharts() {
-            // 1. DONUT CHART 3D INTERAKTIF DENGAN HANDLER LEGEND CLICK
             const optionsDonut = {
                 series: [112500000, 175000000, 135000000, 96000000, 128000000],
                 labels: ['UNAR', 'BHP', 'TRANSPORTABLE', 'BIMTEK', 'MARITIM'],
@@ -390,103 +423,36 @@
                     type: 'donut',
                     height: 360,
                     events: {
-                        legendClick: function(chartContext, seriesIndex, config) {
-                            toggleProgramSelection(seriesIndex);
-                            return false;
-                        },
-                        dataPointSelection: function(event, chartContext, config) {
-                            toggleProgramSelection(config.dataPointIndex);
-                        }
+                        legendClick: function(chartContext, seriesIndex) { toggleProgramSelection(seriesIndex); return false; },
+                        dataPointSelection: function(event, chartContext, config) { toggleProgramSelection(config.dataPointIndex); }
                     },
-                    dropShadow: {
-                        enabled: true,
-                        color: '#0f4c81',
-                        top: 14,
-                        left: 0,
-                        blur: 10,
-                        opacity: 0.22
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 1200,
-                        dynamicAnimation: { enabled: true, speed: 500 }
-                    }
+                    dropShadow: { enabled: true, color: '#0f4c81', top: 14, left: 0, blur: 10, opacity: 0.22 }
                 },
                 colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9'],
-                plotOptions: {
-                    pie: {
-                        expandOnClick: true,
-                        donut: {
-                            size: '67%',
-                            background: 'transparent',
-                            labels: { show: false }
-                        }
-                    }
-                },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shade: 'dark',
-                        type: 'diagonal1',
-                        shadeIntensity: 0.45,
-                        inverseColors: true,
-                        opacityFrom: 0.95,
-                        opacityTo: 0.85,
-                        stops: [0, 90, 100]
-                    }
-                },
+                plotOptions: { pie: { donut: { size: '67%', labels: { show: false } } } },
                 dataLabels: { enabled: false },
                 legend: { position: 'bottom', fontSize: '12px', fontWeight: 700 }
             };
 
             donutChartInstance = new ApexCharts(document.getElementById('donutChart3DAnggaran'), optionsDonut);
             donutChartInstance.render();
-
             updateDonutCenterText();
 
-            // 2. AREA/BAR CHART TREN BULANAN (DATALABELS DISABLED)
             const optionsArea = {
                 series: [],
                 chart: {
                     height: 360,
                     type: 'area',
                     toolbar: { show: false },
-                    dropShadow: {
-                        enabled: true,
-                        color: '#1e3a8a',
-                        top: 10,
-                        left: 0,
-                        blur: 6,
-                        opacity: 0.15
-                    },
-                    animations: { enabled: true, easing: 'easeinout', speed: 1000 }
+                    dropShadow: { enabled: true, color: '#1e3a8a', top: 10, left: 0, blur: 6, opacity: 0.15 }
                 },
                 colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9'],
                 stroke: { curve: 'smooth', width: 3 },
-                fill: {
-                    type: 'gradient',
-                    gradient: { opacityFrom: 0.4, opacityTo: 0.05 }
-                },
-                // SEMBUNYIKAN NILAI ANGKA PADA GRAFIK
-                dataLabels: {
-                    enabled: false
-                },
+                dataLabels: { enabled: false },
                 xaxis: { categories: bulanList },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) {
-                            return 'Rp ' + (val / 1000000).toFixed(0) + ' Jt';
-                        }
-                    }
-                },
-                // NILAI HANYA MUNCUL SAAT KURSOR DISOROT
-                tooltip: {
-                    enabled: true,
-                    y: { formatter: (val) => formatRupiah(val) }
-                },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
-                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+                yaxis: { labels: { formatter: (val) => 'Rp ' + (val / 1000000).toFixed(0) + ' Jt' } },
+                tooltip: { enabled: true, y: { formatter: (val) => formatRupiah(val) } },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
             };
 
             areaChartInstance = new ApexCharts(document.getElementById('barChartAnggaranBulanan'), optionsArea);
@@ -501,20 +467,12 @@
                     if (list.length > 0) defaultAnggaranList = list;
                 }
                 updateDashboard();
-            }, (err) => {
-                console.warn("Menggunakan data default lokal:", err.message);
-                updateDashboard();
             });
         }
 
         function updateDashboard() {
-            let totPagu = 0;
-            let totRealisasi = 0;
-
-            const donutSeries = [];
-            const donutLabels = [];
-            const areaSeries = [];
-
+            let totPagu = 0, totRealisasi = 0;
+            const donutSeries = [], donutLabels = [], areaSeries = [];
             const tbody = document.getElementById('tblBodyAnggaran');
             tbody.innerHTML = '';
 
@@ -524,60 +482,38 @@
                 const sisa = pagu - realisasi;
                 const pct = pagu > 0 ? ((realisasi / pagu) * 100).toFixed(1) : '0.0';
 
-                totPagu += pagu;
-                totRealisasi += realisasi;
-
+                totPagu += pagu; totRealisasi += realisasi;
                 donutSeries.push(realisasi);
                 donutLabels.push(item.id ? item.id.toUpperCase() : `Prog ${idx+1}`);
 
                 if (item.monthlyNominal && Array.isArray(item.monthlyNominal)) {
-                    areaSeries.push({
-                        name: item.id ? item.id.toUpperCase() : `Prog ${idx+1}`,
-                        data: item.monthlyNominal
-                    });
+                    areaSeries.push({ name: item.id ? item.id.toUpperCase() : `Prog ${idx+1}`, data: item.monthlyNominal });
                 }
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-bold">${idx + 1}</td>
                         <td class="text-start fw-bold text-dark">${item.nama || item.id}</td>
-                        <td class="fw-bold text-navy" style="color: #0f4c81;">${formatRupiah(pagu)}</td>
+                        <td class="fw-bold" style="color: #0f4c81;">${formatRupiah(pagu)}</td>
                         <td class="fw-bold text-success bg-light">${formatRupiah(realisasi)}</td>
                         <td class="fw-bold text-warning bg-light">${formatRupiah(sisa)}</td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <div class="progress flex-grow-1" style="height: 8px;">
-                                    <div class="progress-bar bg-primary" style="width: ${pct}%"></div>
-                                </div>
+                                <div class="progress flex-grow-1" style="height: 8px;"><div class="progress-bar bg-primary" style="width: ${pct}%"></div></div>
                                 <span class="badge bg-light text-primary border fw-bold">${pct}%</span>
                             </div>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
 
-            const totSisa = totPagu - totRealisasi;
-            const totPct = totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0';
-
-            // Update Top Cards
             document.getElementById('lblTotalPagu').textContent = formatRupiah(totPagu);
             document.getElementById('lblTotalRealisasi').textContent = formatRupiah(totRealisasi);
-            document.getElementById('lblSisaAnggaran').textContent = formatRupiah(totSisa);
-            document.getElementById('lblPersenRealisasi').textContent = `${totPct}%`;
+            document.getElementById('lblSisaAnggaran').textContent = formatRupiah(totPagu - totRealisasi);
+            document.getElementById('lblPersenRealisasi').textContent = (totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0') + '%';
 
-            // Update ApexDonut 3D Chart
-            donutChartInstance.updateOptions({
-                series: donutSeries,
-                labels: donutLabels
-            });
-
-            // Perbarui Teks Tengah
+            donutChartInstance.updateOptions({ series: donutSeries, labels: donutLabels });
             updateDonutCenterText();
-
-            // Update ApexArea Chart
-            if (areaSeries.length > 0) {
-                areaChartInstance.updateSeries(areaSeries);
-            }
+            if (areaSeries.length > 0) areaChartInstance.updateSeries(areaSeries);
         }
     </script>
 </body>
