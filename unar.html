@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REKAPITULASI UNAR 2026 - BALMON PALANGKARAYA</title>
+    <title>REKAPITULASI UNAR - BALMON PALANGKARAYA</title>
 
     <!-- Favicon & Fonts -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
@@ -186,6 +186,39 @@
             pointer-events: none;
         }
 
+        /* DROPDOWN TAHUN STYLING */
+        .btn-tahun-dropdown {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .btn-tahun-dropdown:hover, .btn-tahun-dropdown:focus, .btn-tahun-dropdown.show {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .dropdown-menu-tahun {
+            border-radius: 14px;
+            padding: 0.5rem;
+            min-width: 140px;
+        }
+        .dropdown-menu-tahun .dropdown-item {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        .dropdown-menu-tahun .dropdown-item:hover {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        .dropdown-menu-tahun .dropdown-item.active {
+            background: linear-gradient(135deg, #0f4c81, #1e3a8a);
+            color: #ffffff;
+        }
+
         /* STAT CARDS */
         .stat-card {
             background: #ffffff;
@@ -289,7 +322,7 @@
                     <img src="Logo Balmon Palangkaraya fix.png" alt="Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
-                    <span class="text-white d-block fs-6">MONITORING DATA UNAR 2026</span>
+                    <span class="text-white d-block fs-6">MONITORING DATA UNAR</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
             </a>
@@ -363,11 +396,26 @@
     <main class="main-wrapper">
         <div class="container-fluid">
             
-            <!-- HEADER BANNER -->
-            <div class="header-banner mb-4">
+            <!-- HEADER BANNER DENGAN DROPDOWN TAHUN -->
+            <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div style="z-index: 1;">
-                    <h2 class="fw-800 mb-1" style="font-weight: 800; letter-spacing: 0.5px;">PELAKSANAAN UJIAN NEGARA AMATIR RADIO (UNAR) 2026</h2>
+                    <h2 class="fw-800 mb-1" style="font-weight: 800; letter-spacing: 0.5px;">
+                        PELAKSANAAN UJIAN NEGARA AMATIR RADIO (UNAR) <span id="lblTahunHeader">2026</span>
+                    </h2>
                     <p class="mb-0 text-white-50">Data Statistik & Rekapitulasi Peserta Ujian Negara Amatir Radio Balmon Palangkaraya</p>
+                </div>
+
+                <!-- TOMBOL DROPDOWN TAHUN DI POJOK KANAN -->
+                <div class="dropdown" style="z-index: 2;">
+                    <button class="btn btn-tahun-dropdown fw-bold dropdown-toggle px-3.5 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar3 fs-6"></i>
+                        <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 dropdown-menu-tahun" aria-labelledby="dropdownTahun">
+                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this)">Tahun 2026</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this)">Tahun 2025</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2024, this)">Tahun 2024</a></li>
+                    </ul>
                 </div>
             </div>
 
@@ -426,7 +474,7 @@
                     <div class="chart-card-3d">
                         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                             <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Pelaksanaan UNAR 2026</h5>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Pelaksanaan UNAR <span id="lblTahunChart">2026</span></h5>
                                 <small class="text-muted">Visualisasi Tren Pendaftar, Peserta Ujian, dan Tingkat Kelulusan Per Bulan</small>
                             </div>
                             <span class="badge bg-light text-primary border fw-semibold px-3 py-2"><i class="bi bi-layers me-1"></i>3D Spline Gradient</span>
@@ -439,8 +487,8 @@
             <!-- TABEL RINCIAN UNAR -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Pelaksanaan UNAR Per Bulan (2026)</h5>
-                    <span class="badge bg-primary px-3 py-2 fw-semibold">Tahun 2026</span>
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Pelaksanaan UNAR Per Bulan (<span id="lblTahunTabel">2026</span>)</h5>
+                    <span class="badge bg-primary px-3 py-2 fw-semibold" id="badgeTahunTabel">Tahun 2026</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
@@ -493,6 +541,7 @@
         const database = firebase.database();
 
         const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        let currentSelectedYear = 2026;
 
         let unarMonths = [
             { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
@@ -562,6 +611,28 @@
                 console.warn("Menggunakan data default lokal:", err.message);
                 renderUnarDashboard();
             });
+        }
+
+        function changeTahun(tahun, element) {
+            currentSelectedYear = tahun;
+
+            // Update Teks Label di Seluruh Elemen Dasbor
+            document.getElementById('lblTahunHeader').textContent = tahun;
+            document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChart').textContent = tahun;
+            document.getElementById('lblTahunTabel').textContent = tahun;
+            document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
+
+            // Update Class Active pada Menu Dropdown
+            document.querySelectorAll('.dropdown-menu-tahun .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+
+            // Muat ulang data sesuai tahun yang dipilih
+            renderUnarDashboard();
         }
 
         function renderUnarDashboard() {
