@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REALISASI ANGGARAN SARPRAS - BALMON PALANGKARAYA</title>
+    <title>REALISASI ANGGARAN 2026 - BALMON PALANGKARAYA</title>
 
     <!-- Favicon & Fonts -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
@@ -13,32 +13,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Chart.js & Datalabels Plugin -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <!-- ApexCharts CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
 
     <style>
         :root {
             --primary-navy: #0f4c81;
             --accent-blue: #1b75bc;
             --bg-light: #f8fafc;
-            --card-shadow: 0 10px 30px rgba(15, 76, 129, 0.08);
-            --color-pagu: #3b82f6;
-            --color-realisasi: #10b981;
-            --color-sisa: #f59e0b;
+            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08);
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
-            background-image: 
-                radial-gradient(at 100% 0%, rgba(224, 242, 254, 0.8) 0, transparent 40%), 
-                radial-gradient(at 0% 100%, rgba(186, 230, 253, 0.5) 0, transparent 40%);
-            background-attachment: fixed;
             color: #334155;
             min-height: 100vh;
         }
 
+        /* NAVBAR */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             padding: 1rem 2rem;
@@ -61,26 +54,16 @@
             object-fit: contain;
         }
 
+        /* BANNER */
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
             color: white;
             border-radius: 20px;
             padding: 2rem 2.5rem;
             box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-        .header-banner::after {
-            content: '';
-            position: absolute;
-            top: -40%;
-            right: -5%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
         }
 
+        /* STAT CARDS */
         .stat-card {
             background: #ffffff;
             border-radius: 16px;
@@ -94,11 +77,10 @@
             transform: translateY(-4px);
         }
         .stat-card .title {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .stat-card .value {
             font-size: 1.6rem;
@@ -106,86 +88,61 @@
             margin-top: 4px;
         }
 
-        /* CHART CONTAINER STYLES */
-        .main-chart-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 1.5rem 1.8rem;
-            box-shadow: var(--card-shadow);
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .btn-filter-chart {
-            font-size: 0.78rem;
-            font-weight: 700;
-            border-radius: 8px;
-            padding: 0.35rem 0.85rem;
-            border: 1px solid #cbd5e1;
-            background-color: #f8fafc;
-            color: #475569;
-            transition: all 0.25s ease;
-        }
-        .btn-filter-chart:hover {
-            background-color: #e2e8f0;
-            color: #0f172a;
-        }
-        .btn-filter-chart.active {
-            background-color: #0f4c81;
-            color: #ffffff;
-            border-color: #0f4c81;
-            box-shadow: 0 4px 10px rgba(15, 76, 129, 0.2);
-        }
-
+        /* CHART CARDS WITH 3D DEPTH EFFECTS */
         .chart-card {
             background: #ffffff;
             border-radius: 20px;
-            padding: 1.75rem;
+            padding: 1.5rem;
             border: 1px solid #e2e8f0;
             box-shadow: var(--card-shadow);
             height: 100%;
-            display: flex;
-            flex-direction: column;
             transition: all 0.3s ease;
         }
         .chart-card:hover {
-            box-shadow: 0 15px 35px rgba(15, 76, 129, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
         }
 
-        .badge-persen {
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 0.4rem 0.8rem;
-            border-radius: 50rem;
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.75rem;
         }
 
-        .chart-box {
+        /* WADAH INTERAKTIF TEKS TENGAH DONAT */
+        .donut-wrapper {
             position: relative;
-            height: 230px;
-            width: 100%;
-            margin-top: 1rem;
+            min-height: 360px;
+        }
+        .donut-center-info {
+            position: absolute;
+            top: 44%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            text-align: center;
+            width: 55%;
+            z-index: 10;
+            transition: all 0.3s ease;
         }
 
-        .progress-custom {
-            height: 10px;
-            border-radius: 10px;
-            background-color: #f1f5f9;
-            overflow: hidden;
-        }
-        .progress-bar-custom {
-            background: linear-gradient(90deg, #10b981, #059669);
-            border-radius: 10px;
-            transition: width 1s ease-in-out;
-        }
-
+        /* TABEL */
         .table-custom th {
             background-color: var(--primary-navy);
             color: white;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 0.75rem 0.5rem;
         }
         .table-custom td {
             font-size: 0.85rem;
+            vertical-align: middle;
+            padding: 0.65rem 0.5rem;
         }
     </style>
 </head>
@@ -196,10 +153,10 @@
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="sarpras.html">
                 <div class="logo-container me-3">
-                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
-                    <span class="text-white d-block fs-6">MONITORING REALISASI ANGGARAN</span>
+                    <span class="text-white d-block fs-6">REALISASI ANGGARAN 2026</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
             </a>
@@ -209,7 +166,7 @@
                     <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
                 </a>
                 <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
-                    <i class="bi bi-broadcast me-1"></i> Terhubung Realtime dengan Admin Sarpras
+                    <i class="bi bi-broadcast me-1"></i> Terhubung Realtime
                 </span>
             </div>
         </div>
@@ -220,88 +177,100 @@
         <!-- HEADER BANNER -->
         <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h2 class="fw-800 mb-1" style="font-weight: 800;">REKAPITULASI REALISASI ANGGARAN 2026</h2>
-                <p class="mb-0 text-white-50">Monitoring Capaian Penyerapan Anggaran Kegiatan Sarpras Balmon Palangkaraya</p>
+                <h2 class="fw-800 mb-1" style="font-weight: 800;">MONITORING & PROGRES ANGGARAN 2026</h2>
+                <p class="mb-0 text-white-50">REKAPITULASI PENYERAPAN PAGU DAN REALISASI ANGGARAN 5 PROGRAM UTAMA</p>
             </div>
-            <div class="text-end bg-white bg-opacity-10 px-4 py-2 rounded-4 backdrop-blur">
-                <span class="d-block text-white-50 small fw-bold">TOTAL REALISASI KESELURUHAN</span>
-                <span class="fs-3 fw-bold text-warning" id="lblTotalCapaianPersen">0.00%</span>
+            <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
+                <i class="bi bi-wallet2 me-1"></i> DIPA 2026
             </div>
         </div>
 
-        <!-- REKAP TOTAL TOP CARDS -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="stat-card" style="border-left: 5px solid var(--color-pagu);">
-                    <div class="title text-primary"><i class="bi bi-wallet2 me-1"></i> Total Pagu Anggaran</div>
-                    <div class="value text-primary" id="lblTotalPagu">Rp 0</div>
+        <!-- TOP STAT CARDS -->
+        <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
+            <div class="col">
+                <div class="stat-card" style="border-left: 5px solid #0f4c81;">
+                    <div class="title" style="color: #0f4c81;"><i class="bi bi-bank me-1"></i> Total Pagu Anggaran</div>
+                    <div class="value" style="color: #0f4c81;" id="lblTotalPagu">Rp 0</div>
+                    <small class="text-muted fw-semibold">Alokasi DIPA 5 Program</small>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stat-card" style="border-left: 5px solid var(--color-realisasi);">
+            <div class="col">
+                <div class="stat-card" style="border-left: 5px solid #059669;">
                     <div class="title text-success"><i class="bi bi-cash-stack me-1"></i> Total Realisasi</div>
                     <div class="value text-success" id="lblTotalRealisasi">Rp 0</div>
+                    <small class="text-muted fw-semibold">Serapan Akumulasi</small>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stat-card" style="border-left: 5px solid var(--color-sisa);">
-                    <div class="title text-warning"><i class="bi bi-piggy-bank me-1"></i> Total Sisa Anggaran</div>
-                    <div class="value text-warning" id="lblTotalSisa">Rp 0</div>
+            <div class="col">
+                <div class="stat-card" style="border-left: 5px solid #d97706;">
+                    <div class="title text-warning"><i class="bi bi-piggy-bank-fill me-1"></i> Sisa Anggaran</div>
+                    <div class="value text-warning" id="lblSisaAnggaran">Rp 0</div>
+                    <small class="text-muted fw-semibold">Sisa Pagu DIPA</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-card" style="border-left: 5px solid #2563eb;">
+                    <div class="title text-primary"><i class="bi bi-percent me-1"></i> Persentase Serapan</div>
+                    <div class="value text-primary" id="lblPersenRealisasi">0%</div>
+                    <small class="text-muted fw-semibold">Capaian Terhadap Pagu</small>
                 </div>
             </div>
         </div>
 
-        <!-- GRAFIK REKAPITULASI LINE CHART (PROGRES REALISASI BULANAN INTERAKTIF) -->
-        <div class="main-chart-card mb-4">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2 border-bottom">
-                <div>
-                    <h5 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
-                        <i class="bi bi-graph-up-arrow text-primary"></i>
-                        Grafik Progres Realisasi Anggaran Bulanan (Tahun 2026)
-                    </h5>
-                    <small class="text-muted">Tren persentase penyerapan anggaran per Uraian Kegiatan/Program</small>
-                </div>
+        <!-- CHART SECTION: DONUT CHART 3D & BAR CHART TREN BULANAN -->
+        <div class="row g-4 mb-4">
+            
+            <!-- DONUT CHART 3D INTERAKTIF DENGAN TAMPILAN DETAIL PROGRAM DI TENGAH -->
+            <div class="col-lg-5">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h5 class="fw-bold text-dark m-0"><i class="bi bi-pie-chart-fill me-2" style="color: #7c3aed;"></i>Proporsi Realisasi Per Program</h5>
+                            <small class="text-muted">Klik program di keterangan untuk melihat Realisasi & Sisa</small>
+                        </div>
+                        <span class="badge bg-light text-purple border fw-semibold" style="color: #7c3aed;">Interaktif 3D</span>
+                    </div>
 
-                <!-- FILTER KONTROL GRAFIK -->
-                <div class="d-flex flex-wrap gap-1" id="filterChartControls">
-                    <button class="btn btn-filter-chart active" onclick="switchAnggaranChartFilter('all')">Semua Program</button>
-                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('unar')">UNAR</button>
-                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('bhp')">BHP</button>
-                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('transportable')">Transportable</button>
-                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('bimtek')">Bimtek</button>
-                    <button class="btn btn-filter-chart" onclick="switchAnggaranChartFilter('maritim')">Maritim</button>
+                    <div class="donut-wrapper">
+                        <div id="donutChart3DAnggaran"></div>
+                        <!-- ELEMEN TEKS KHUSUS TENGAH DONAT -->
+                        <div id="donutCenterInfo" class="donut-center-info"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- AREA CANVAS GRAFIK -->
-            <div style="height: 320px; position: relative;">
-                <canvas id="chartAnggaranTrend"></canvas>
+            <!-- AREA / BAR CHART TREN PENYERAPAN BULANAN -->
+            <div class="col-lg-7">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Tren Penyerapan Anggaran Bulanan</h5>
+                            <small class="text-muted">Progres Akumulasi Serapan Nominal (Rp) Januari - Desember</small>
+                        </div>
+                        <span class="badge bg-light text-primary border fw-semibold">Akumulasi Bulanan</span>
+                    </div>
+                    <div id="barChartAnggaranBulanan" style="min-height: 360px;"></div>
+                </div>
             </div>
+
         </div>
 
-        <!-- GRID 5 GRAFIK ITEM ANGGARAN (DOUGHNUT) -->
-        <div class="row g-4 mb-4" id="gridChartsContainer">
-            <!-- 5 Kartu Grafik Diberikan Secara Dinamis via JS -->
-        </div>
-
-        <!-- TABEL CAPAIAN BULANAN SERTA PENGATURAN KINERJA -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mt-4">
+        <!-- TABEL RINCIAN PROGRAM ANGGARAN -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Capaian Penyerapan Anggaran Per Bulan (2026)</h5>
-                <span class="badge bg-primary px-3 py-2">Tahun Anggaran 2026</span>
+                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Realisasi 5 Program Sarpras (2026)</h5>
+                <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">No</th>
-                            <th style="min-width: 130px;">Bulan (2026)</th>
-                            <th>UNAR (%)</th>
-                            <th>BHP (%)</th>
-                            <th>Transportable (%)</th>
-                            <th>Bimtek (%)</th>
-                            <th>Maritim (%)</th>
-                            <th style="width: 220px;">Rata-rata Capaian Kumulatif (%)</th>
+                            <th style="width: 45px;">No</th>
+                            <th class="text-start">Nama Program / Kegiatan</th>
+                            <th>Pagu Anggaran (Rp)</th>
+                            <th class="bg-success text-white">Realisasi (Rp)</th>
+                            <th class="bg-warning text-dark">Sisa Anggaran (Rp)</th>
+                            <th style="width: 180px;">Progres Serapan (%)</th>
                         </tr>
                     </thead>
                     <tbody id="tblBodyAnggaran"></tbody>
@@ -311,10 +280,11 @@
 
     </div>
 
-    <!-- SDK FIREBASE COMPAT -->
+    <!-- SDK & LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -332,406 +302,281 @@
         }
         const database = firebase.database();
 
-        const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-        const bulanFullNames = [
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+        // Data Default Realisasi Anggaran 5 Program
+        let defaultAnggaranList = [
+            { id: "unar", nama: "Realisasi Anggaran UNAR", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
+            { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
+            { id: "transportable", nama: "Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000, monthlyNominal: [9000000, 21600000, 39600000, 63000000, 86400000, 108000000, 122400000, 135000000, 135000000, 135000000, 135000000, 135000000] },
+            { id: "bimtek", nama: "Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000, monthlyNominal: [12000000, 30000000, 48000000, 62400000, 78000000, 86400000, 96000000, 96000000, 96000000, 96000000, 96000000, 96000000] },
+            { id: "maritim", nama: "Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyNominal: [12800000, 24000000, 44800000, 64000000, 88000000, 108800000, 120000000, 128000000, 128000000, 128000000, 128000000, 128000000] }
         ];
 
-        // Color Palette per Program Anggaran
-        const programColors = {
-            unar: "#2563eb",
-            bhp: "#10b981",
-            transportable: "#f59e0b",
-            bimtek: "#8b5cf6",
-            maritim: "#06b6d4"
-        };
-
-        // 5 MATA ANGGARAN DEFAULT DENGAN TREN PROGRES BULANAN (12 BULAN)
-        let listAnggaran = [
-            { 
-                id: "unar", 
-                nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", 
-                pagu: 150000000, 
-                realisasi: 112500000,
-                monthlyProgress: [10, 20, 32, 45, 55, 62, 70, 75, 75, 75, 75, 75] 
-            },
-            { 
-                id: "bhp", 
-                nama: "Realisasi Anggaran BHP", 
-                pagu: 200000000, 
-                realisasi: 175000000,
-                monthlyProgress: [8, 18, 30, 42, 58, 68, 78, 87.5, 87.5, 87.5, 87.5, 87.5] 
-            },
-            { 
-                id: "transportable", 
-                nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", 
-                pagu: 180000000, 
-                realisasi: 135000000,
-                monthlyProgress: [5, 12, 22, 35, 48, 60, 68, 75, 75, 75, 75, 75] 
-            },
-            { 
-                id: "bimtek", 
-                nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", 
-                pagu: 120000000, 
-                realisasi: 96000000,
-                monthlyProgress: [10, 25, 40, 52, 65, 72, 80, 80, 80, 80, 80, 80] 
-            },
-            { 
-                id: "maritim", 
-                nama: "Realisasi Anggaran Perizinan Maritim On the Spot", 
-                pagu: 160000000, 
-                realisasi: 128000000,
-                monthlyProgress: [8, 15, 28, 40, 55, 68, 75, 80, 80, 80, 80, 80] 
-            }
-        ];
-
-        let doughnutChartInstances = {};
-        let lineChartInstance = null;
-        let currentChartFilter = 'all';
-
-        if (typeof ChartDataLabels !== 'undefined') {
-            Chart.register(ChartDataLabels);
-        }
+        let donutChartInstance = null;
+        let areaChartInstance = null;
+        let selectedProgramIndex = null; // Menyimpan indeks program yang sedang dipilih
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadDataAnggaranRealtime();
+            initCharts();
+            loadAnggaranRealtime();
         });
 
         function formatRupiah(angka) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
         }
 
-        function loadDataAnggaranRealtime() {
-            const refAnggaran = database.ref('kinerja_sarpras/realisasi_anggaran');
-
-            refAnggaran.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data && Array.isArray(data)) {
-                    updateLocalDataWithFirebase(data);
-                } else if (data && typeof data === 'object') {
-                    updateLocalDataWithFirebase(Object.values(data));
-                }
-                renderDashboard();
-            }, (err) => {
-                console.warn("Menggunakan data default lokal:", err.message);
-                renderDashboard();
-            });
-        }
-
-        function updateLocalDataWithFirebase(firebaseData) {
-            firebaseData.forEach((fbItem, idx) => {
-                let target = listAnggaran.find(item => item.id === fbItem.id) || listAnggaran[idx];
-                if (target) {
-                    target.pagu = parseFloat(fbItem.pagu) || 0;
-                    target.realisasi = parseFloat(fbItem.realisasi) || 0;
-                    if (fbItem.nama) target.nama = fbItem.nama;
-
-                    // Apabila terdapat custom monthly data dari firebase, perbarui, jika tidak maka kalkulasi proporsional
-                    if (fbItem.monthlyProgress && Array.isArray(fbItem.monthlyProgress)) {
-                        target.monthlyProgress = fbItem.monthlyProgress;
-                    } else {
-                        let finalPersen = target.pagu > 0 ? (target.realisasi / target.pagu) * 100 : 0;
-                        target.monthlyProgress = [
-                            (finalPersen * 0.1).toFixed(1),
-                            (finalPersen * 0.22).toFixed(1),
-                            (finalPersen * 0.38).toFixed(1),
-                            (finalPersen * 0.52).toFixed(1),
-                            (finalPersen * 0.68).toFixed(1),
-                            (finalPersen * 0.82).toFixed(1),
-                            (finalPersen * 0.92).toFixed(1),
-                            finalPersen.toFixed(1),
-                            finalPersen.toFixed(1),
-                            finalPersen.toFixed(1),
-                            finalPersen.toFixed(1),
-                            finalPersen.toFixed(1)
-                        ];
-                    }
-                }
-            });
-        }
-
-        function switchAnggaranChartFilter(type) {
-            currentChartFilter = type;
-            const buttons = document.querySelectorAll('.btn-filter-chart');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            const filterMap = { 'all': 0, 'unar': 1, 'bhp': 2, 'transportable': 3, 'bimtek': 4, 'maritim': 5 };
-            if (buttons[filterMap[type]]) {
-                buttons[filterMap[type]].classList.add('active');
+        // LOGIKA MEMPERBARUI TAMPILAN TENGAH DONAT
+        function toggleProgramSelection(index) {
+            if (selectedProgramIndex === index) {
+                selectedProgramIndex = null; // Kembali ke tampilan ringkasan total
+            } else {
+                selectedProgramIndex = index; // Pilih program spesifik
             }
-
-            renderLineChart();
+            updateDonutCenterText();
         }
 
-        function renderDashboard() {
-            let totalPagu = 0;
-            let totalRealisasi = 0;
+        function updateDonutCenterText() {
+            const centerEl = document.getElementById('donutCenterInfo');
+            if (!centerEl) return;
 
-            const gridContainer = document.getElementById('gridChartsContainer');
-            const tbody = document.getElementById('tblBodyAnggaran');
-            
-            gridContainer.innerHTML = '';
-            tbody.innerHTML = '';
+            if (selectedProgramIndex === null) {
+                // Ringkasan Total Seluruh Program
+                let totPagu = 0, totRealisasi = 0;
+                defaultAnggaranList.forEach(item => {
+                    totPagu += parseFloat(item.pagu) || 0;
+                    totRealisasi += parseFloat(item.realisasi) || 0;
+                });
+                let totSisa = totPagu - totRealisasi;
+                let totPct = totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0';
 
-            listAnggaran.forEach((item, idx) => {
-                const pagu = parseFloat(item.pagu) || 0;
-                const realisasi = parseFloat(item.realisasi) || 0;
-                const sisa = Math.max(0, pagu - realisasi);
-                const persen = pagu > 0 ? ((realisasi / pagu) * 100).toFixed(2) : '0.00';
-
-                totalPagu += pagu;
-                totalRealisasi += realisasi;
-
-                // GENERATE KARTU & GRAFIK DOUGHNUT
-                const col = document.createElement('div');
-                col.className = 'col-lg-4 col-md-6';
-                col.innerHTML = `
-                    <div class="chart-card">
-                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                            <h6 class="fw-bold text-dark m-0 lh-sm">${item.nama}</h6>
-                            <span class="badge ${persen >= 80 ? 'bg-success' : persen >= 50 ? 'bg-warning text-dark' : 'bg-danger'} badge-persen">${persen}%</span>
-                        </div>
-
-                        <div class="chart-box">
-                            <canvas id="chart_${item.id || idx}"></canvas>
-                        </div>
-
-                        <div class="mt-3 pt-3 border-top">
-                            <div class="d-flex justify-content-between small text-muted mb-1">
-                                <span>Realisasi: <strong class="text-success">${formatRupiah(realisasi)}</strong></span>
-                                <span>Pagu: <strong>${formatRupiah(pagu)}</strong></span>
-                            </div>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar progress-bar-custom" style="width: ${Math.min(100, persen)}%"></div>
-                            </div>
-                        </div>
+                centerEl.innerHTML = `
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Realisasi</div>
+                    <div style="font-size: 1.35rem; font-weight: 800; color: #0f4c81; line-height: 1.2; margin: 2px 0;">${formatRupiah(totRealisasi)}</div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; margin-top: 2px;">
+                        Sisa: <span style="font-weight: 800;">${formatRupiah(totSisa)}</span>
+                    </div>
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #10b981; margin-top: 2px;">
+                        <i class="bi bi-check-circle-fill"></i> Serapan ${totPct}%
                     </div>
                 `;
-                gridContainer.appendChild(col);
+            } else {
+                // Tampilan Detail Program Yang Diklik
+                const item = defaultAnggaranList[selectedProgramIndex];
+                const pagu = parseFloat(item.pagu) || 0;
+                const realisasi = parseFloat(item.realisasi) || 0;
+                const sisa = pagu - realisasi;
+                const pct = pagu > 0 ? ((realisasi / pagu) * 100).toFixed(1) : '0.0';
+                const progName = item.id ? item.id.toUpperCase() : `PROGRAM ${selectedProgramIndex + 1}`;
 
-                // Render Chart Donut per item
-                setTimeout(() => {
-                    renderSingleDoughnutChart(item.id || idx, pagu, realisasi, sisa);
-                }, 50);
+                centerEl.innerHTML = `
+                    <span class="badge bg-primary px-2 py-1 mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">${progName}</span>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #059669; text-transform: uppercase;">Realisasi</div>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: #059669; line-height: 1.2;">${formatRupiah(realisasi)}</div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; margin-top: 3px;">
+                        Sisa: <span style="font-weight: 800;">${formatRupiah(sisa)}</span>
+                    </div>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Klik lagi untuk reset</small>
+                `;
+            }
+        }
+
+        function initCharts() {
+            // 1. DONUT CHART 3D INTERAKTIF DENGAN HANDLER LEGEND CLICK
+            const optionsDonut = {
+                series: [112500000, 175000000, 135000000, 96000000, 128000000],
+                labels: ['UNAR', 'BHP', 'TRANSPORTABLE', 'BIMTEK', 'MARITIM'],
+                chart: {
+                    type: 'donut',
+                    height: 360,
+                    events: {
+                        // Menangkap event klik pada Nama Program di Keterangan / Legenda
+                        legendClick: function(chartContext, seriesIndex, config) {
+                            toggleProgramSelection(seriesIndex);
+                            return false; // Mencegah potongan chart tersembunyi agar berfungsi sebagai pemilih data
+                        },
+                        // Menangkap event klik langsung pada Potongan Donat
+                        dataPointSelection: function(event, chartContext, config) {
+                            toggleProgramSelection(config.dataPointIndex);
+                        }
+                    },
+                    dropShadow: {
+                        enabled: true,
+                        color: '#0f4c81',
+                        top: 14,
+                        left: 0,
+                        blur: 10,
+                        opacity: 0.22
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 1200,
+                        dynamicAnimation: { enabled: true, speed: 500 }
+                    }
+                },
+                colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9'],
+                plotOptions: {
+                    pie: {
+                        expandOnClick: true,
+                        donut: {
+                            size: '67%',
+                            background: 'transparent',
+                            labels: {
+                                show: false // Menggunakan kustom overlay HTML (#donutCenterInfo)
+                            }
+                        }
+                    }
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'dark',
+                        type: 'diagonal1',
+                        shadeIntensity: 0.45,
+                        inverseColors: true,
+                        opacityFrom: 0.95,
+                        opacityTo: 0.85,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: { enabled: false },
+                legend: { position: 'bottom', fontSize: '12px', fontWeight: 700 }
+            };
+
+            donutChartInstance = new ApexCharts(document.getElementById('donutChart3DAnggaran'), optionsDonut);
+            donutChartInstance.render();
+
+            // Render awal teks tengah donat
+            updateDonutCenterText();
+
+            // 2. AREA/BAR CHART TREN BULANAN
+            const optionsArea = {
+                series: [],
+                chart: {
+                    height: 360,
+                    type: 'area',
+                    toolbar: { show: false },
+                    dropShadow: {
+                        enabled: true,
+                        color: '#1e3a8a',
+                        top: 10,
+                        left: 0,
+                        blur: 6,
+                        opacity: 0.15
+                    },
+                    animations: { enabled: true, easing: 'easeinout', speed: 1000 }
+                },
+                colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9'],
+                stroke: { curve: 'smooth', width: 3 },
+                fill: {
+                    type: 'gradient',
+                    gradient: { opacityFrom: 0.4, opacityTo: 0.05 }
+                },
+                xaxis: { categories: bulanList },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) {
+                            return 'Rp ' + (val / 1000000).toFixed(0) + ' Jt';
+                        }
+                    }
+                },
+                tooltip: {
+                    y: { formatter: (val) => formatRupiah(val) }
+                },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+            };
+
+            areaChartInstance = new ApexCharts(document.getElementById('barChartAnggaranBulanan'), optionsArea);
+            areaChartInstance.render();
+        }
+
+        function loadAnggaranRealtime() {
+            database.ref('kinerja_sarpras/realisasi_anggaran').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const list = Array.isArray(data) ? data : Object.values(data);
+                    if (list.length > 0) defaultAnggaranList = list;
+                }
+                updateDashboard();
+            }, (err) => {
+                console.warn("Menggunakan data default lokal:", err.message);
+                updateDashboard();
             });
+        }
 
-            // GENERATE TABEL CAPAIAN BULANAN (12 BULAN)
-            bulanFullNames.forEach((bln, mIdx) => {
-                let sumPersen = 0;
-                let progCellsHTML = '';
+        function updateDashboard() {
+            let totPagu = 0;
+            let totRealisasi = 0;
 
-                listAnggaran.forEach((prog) => {
-                    let val = parseFloat(prog.monthlyProgress[mIdx]) || 0;
-                    sumPersen += val;
-                    
-                    let colorClass = val >= 80 ? 'text-success' : (val >= 50 ? 'text-warning' : 'text-primary');
-                    progCellsHTML += `<td class="fw-bold ${colorClass}">${val.toFixed(1)}%</td>`;
-                });
+            const donutSeries = [];
+            const donutLabels = [];
+            const areaSeries = [];
 
-                let avgPersen = (sumPersen / listAnggaran.length).toFixed(2);
-                let badgeClass = avgPersen >= 80 ? 'bg-success' : (avgPersen >= 50 ? 'bg-warning text-dark' : 'bg-primary');
+            const tbody = document.getElementById('tblBodyAnggaran');
+            tbody.innerHTML = '';
+
+            defaultAnggaranList.forEach((item, idx) => {
+                const pagu = parseFloat(item.pagu) || 0;
+                const realisasi = parseFloat(item.realisasi) || 0;
+                const sisa = pagu - realisasi;
+                const pct = pagu > 0 ? ((realisasi / pagu) * 100).toFixed(1) : '0.0';
+
+                totPagu += pagu;
+                totRealisasi += realisasi;
+
+                donutSeries.push(realisasi);
+                donutLabels.push(item.id ? item.id.toUpperCase() : `Prog ${idx+1}`);
+
+                if (item.monthlyNominal && Array.isArray(item.monthlyNominal)) {
+                    areaSeries.push({
+                        name: item.id ? item.id.toUpperCase() : `Prog ${idx+1}`,
+                        data: item.monthlyNominal
+                    });
+                }
 
                 tbody.innerHTML += `
                     <tr>
-                        <td class="fw-bold">${mIdx + 1}</td>
-                        <td class="text-start fw-bold text-dark">${bln} 2026</td>
-                        ${progCellsHTML}
+                        <td class="fw-bold">${idx + 1}</td>
+                        <td class="text-start fw-bold text-dark">${item.nama || item.id}</td>
+                        <td class="fw-bold text-navy" style="color: #0f4c81;">${formatRupiah(pagu)}</td>
+                        <td class="fw-bold text-success bg-light">${formatRupiah(realisasi)}</td>
+                        <td class="fw-bold text-warning bg-light">${formatRupiah(sisa)}</td>
                         <td>
-                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                <div class="progress flex-grow-1 progress-custom" style="height: 8px;">
-                                    <div class="progress-bar progress-bar-custom" style="width: ${Math.min(100, avgPersen)}%"></div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="progress flex-grow-1" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" style="width: ${pct}%"></div>
                                 </div>
-                                <span class="badge ${badgeClass}">${avgPersen}%</span>
+                                <span class="badge bg-light text-primary border fw-bold">${pct}%</span>
                             </div>
                         </td>
                     </tr>
                 `;
             });
 
-            // UPDATE TOTAL
-            const totalSisa = Math.max(0, totalPagu - totalRealisasi);
-            const totalPersen = totalPagu > 0 ? ((totalRealisasi / totalPagu) * 100).toFixed(2) : '0.00';
+            const totSisa = totPagu - totRealisasi;
+            const totPct = totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0';
 
-            document.getElementById('lblTotalPagu').textContent = formatRupiah(totalPagu);
-            document.getElementById('lblTotalRealisasi').textContent = formatRupiah(totalRealisasi);
-            document.getElementById('lblTotalSisa').textContent = formatRupiah(totalSisa);
-            document.getElementById('lblTotalCapaianPersen').textContent = `${totalPersen}%`;
+            // Update Top Cards
+            document.getElementById('lblTotalPagu').textContent = formatRupiah(totPagu);
+            document.getElementById('lblTotalRealisasi').textContent = formatRupiah(totRealisasi);
+            document.getElementById('lblSisaAnggaran').textContent = formatRupiah(totSisa);
+            document.getElementById('lblPersenRealisasi').textContent = `${totPct}%`;
 
-            // RENDER LINE CHART TREN BULANAN
-            renderLineChart();
-        }
+            // Update ApexDonut 3D Chart
+            donutChartInstance.updateOptions({
+                series: donutSeries,
+                labels: donutLabels
+            });
 
-        // RENDER GRAFIK TREN LINE CHART ANGGARAN
-        function renderLineChart() {
-            const canvasEl = document.getElementById('chartAnggaranTrend');
-            if (!canvasEl) return;
-            const ctx = canvasEl.getContext('2d');
+            // Perbarui Teks Tengah
+            updateDonutCenterText();
 
-            if (lineChartInstance) {
-                lineChartInstance.destroy();
+            // Update ApexArea Chart
+            if (areaSeries.length > 0) {
+                areaChartInstance.updateSeries(areaSeries);
             }
-
-            const allDatasets = listAnggaran.map(item => {
-                const color = programColors[item.id] || '#3b82f6';
-
-                // Buat gradasi background
-                const grad = ctx.createLinearGradient(0, 0, 0, 300);
-                grad.addColorStop(0, color + '33'); 
-                grad.addColorStop(1, color + '00');
-
-                const dataArray = item.monthlyProgress.map(v => parseFloat(v) || 0);
-
-                return {
-                    id: item.id,
-                    label: item.nama.replace("Realisasi Anggaran ", ""),
-                    data: dataArray,
-                    borderColor: color,
-                    backgroundColor: grad,
-                    borderWidth: 3,
-                    fill: currentChartFilter === item.id,
-                    tension: 0.4,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: color,
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 7,
-                    pointHoverBorderWidth: 3
-                };
-            });
-
-            // Filter Dataset berdasarkan pilihan
-            const activeDatasets = currentChartFilter === 'all' 
-                ? allDatasets 
-                : allDatasets.filter(ds => ds.id === currentChartFilter);
-
-            lineChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: bulanLabels,
-                    datasets: activeDatasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 1200,
-                        easing: 'easeInOutQuart'
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'end',
-                            labels: {
-                                usePointStyle: true,
-                                pointStyle: 'circle',
-                                font: { family: 'Inter', size: 11, weight: '700' },
-                                padding: 12
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleFont: { family: 'Inter', size: 13, weight: 'bold' },
-                            bodyFont: { family: 'Inter', size: 12 },
-                            padding: 12,
-                            cornerRadius: 10,
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.dataset.label}: ${context.raw.toFixed(2)}%`;
-                                }
-                            }
-                        },
-                        datalabels: {
-                            anchor: 'end',
-                            align: 'top',
-                            offset: 4,
-                            color: function(context) {
-                                return context.dataset.borderColor;
-                            },
-                            font: { family: 'Inter', weight: 'bold', size: 9 },
-                            formatter: function(value) {
-                                return value > 0 ? value.toFixed(0) + '%' : '';
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { family: 'Inter', weight: '600' }, color: '#475569' }
-                        },
-                        y: {
-                            min: 0,
-                            max: 105,
-                            ticks: {
-                                stepSize: 20,
-                                font: { family: 'Inter', weight: '500' },
-                                callback: function(value) { return value + '%'; }
-                            },
-                            grid: { color: '#f1f5f9' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderSingleDoughnutChart(chartId, pagu, realisasi, sisa) {
-            const canvas = document.getElementById(`chart_${chartId}`);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-
-            if (doughnutChartInstances[chartId]) {
-                doughnutChartInstances[chartId].destroy();
-            }
-
-            doughnutChartInstances[chartId] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Realisasi', 'Sisa Anggaran'],
-                    datasets: [{
-                        data: [realisasi, sisa],
-                        backgroundColor: ['#10b981', '#f5bc3f'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                font: { family: 'Inter', size: 11, weight: '600' }
-                            }
-                        },
-                        datalabels: {
-                            color: '#1e293b',
-                            font: { weight: 'bold', size: 11 },
-                            formatter: (value, ctx) => {
-                                const total = pagu;
-                                if (total === 0 || value === 0) return '';
-                                const percentage = ((value / total) * 100).toFixed(1) + '%';
-                                return percentage;
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.label}: ${formatRupiah(context.raw)}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
         }
     </script>
 </body>
