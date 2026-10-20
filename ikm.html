@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD CAPAIAN IKM & IIPP 2026 - BALMON PALANGKARAYA</title>
+    <title>IKM & IIPP 2026 - BALMON PALANGKARAYA</title>
 
-    <!-- Favicon & Fonts -->
+    <!-- Favicon & Google Font Inter -->
     <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -13,33 +13,43 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ApexCharts CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
 
     <style>
         :root {
             --primary-navy: #0f4c81;
-            --accent-blue: #1b75bc;
+            --accent-amber: #f59e0b;
             --bg-light: #f8fafc;
-            --card-shadow: 0 10px 30px rgba(15, 76, 129, 0.08);
+            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08);
+            --sidebar-collapsed-width: 68px;
+            --sidebar-expanded-width: 280px;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(254, 243, 199, 0.6) 0, transparent 40%), 
+                radial-gradient(at 0% 100%, rgba(224, 242, 254, 0.6) 0, transparent 40%);
+            background-attachment: fixed;
             color: #334155;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* NAVBAR HEADER */
         .navbar-custom {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            padding: 1rem 2rem;
+            padding: 0.8rem 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1050;
         }
-
+        
         .logo-container {
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
             background: #fff;
             border-radius: 50%;
             display: flex;
@@ -48,86 +58,225 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .logo-container img {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             object-fit: contain;
         }
 
+        /* SIDEBAR AUTO-HIDE */
+        .sidebar-autohide {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-collapsed-width);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            z-index: 1040;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .sidebar-autohide:hover {
+            width: var(--sidebar-expanded-width);
+        }
+
+        .sidebar-header {
+            padding: 0.5rem 1.25rem 1rem 1.25rem;
+            color: #93c5fd;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-autohide:hover .sidebar-header {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            color: rgba(255, 255, 255, 0.82);
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar-menu .menu-link:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-left-color: #38bdf8;
+        }
+
+        .sidebar-menu .menu-link.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-left-color: #38bdf8 !important;
+            font-weight: 700;
+        }
+
+        .sidebar-menu .menu-icon {
+            font-size: 1.4rem;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-menu .menu-text {
+            margin-left: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .sidebar-autohide:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* MAIN WRAPPER */
+        .main-wrapper {
+            margin-left: var(--sidebar-collapsed-width);
+            flex-grow: 1;
+            padding: 2rem 2rem;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* BANNER HEADER */
         .header-banner {
-            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #b45309 100%);
             color: white;
             border-radius: 20px;
             padding: 2rem 2.5rem;
             box-shadow: var(--card-shadow);
         }
 
-        .stat-card {
+        /* STAT CARDS */
+        .top-stat-card {
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 1.25rem 1.5rem;
             border: 1px solid #e2e8f0;
             box-shadow: var(--card-shadow);
             height: 100%;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .stat-card:hover {
-            transform: translateY(-4px);
+        .top-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.12);
         }
-        .stat-card .title {
+        .top-stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        .top-stat-title {
             font-size: 0.78rem;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
         }
-        .stat-card .value {
-            font-size: 1.8rem;
+        .top-stat-value {
+            font-size: 1.7rem;
             font-weight: 800;
-            margin-top: 4px;
+            line-height: 1.1;
+            margin-top: 2px;
         }
 
+        /* CHART CARDS */
         .chart-card {
             background: #ffffff;
             border-radius: 20px;
             padding: 1.5rem;
             border: 1px solid #e2e8f0;
             box-shadow: var(--card-shadow);
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        .chart-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
+        }
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.75rem;
         }
 
+        /* TABEL */
         .table-custom th {
             background-color: var(--primary-navy);
             color: white;
             font-size: 0.78rem;
             vertical-align: middle;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
-            padding: 0.6rem 0.3rem;
-            line-height: 1.2;
+            padding: 0.75rem 0.5rem;
         }
         .table-custom td {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             vertical-align: middle;
-            padding: 0.5rem 0.3rem;
+            padding: 0.65rem 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper { margin-left: 0; padding: 1.5rem 1rem; }
+            .sidebar-autohide { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR HEADER -->
     <nav class="navbar navbar-dark navbar-custom sticky-top">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="sarpras.html">
                 <div class="logo-container me-3">
-                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
-                    <span class="text-white d-block fs-6">MONITORING IKM & IIPP 2026</span>
+                    <span class="text-white d-block fs-6">IKM & IIPP 2026</span>
                     <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
                 </div>
             </a>
             
             <div class="d-flex gap-2 align-items-center">
                 <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Sarpras
+                    <i class="bi bi-arrow-left me-1"></i> Dashboard Sarpras
                 </a>
                 <span class="badge bg-primary px-3 py-2 fw-semibold shadow-sm">
                     <i class="bi bi-broadcast me-1"></i> Terhubung Realtime
@@ -136,123 +285,189 @@
         </div>
     </nav>
 
-    <div class="container-fluid px-4 my-4">
-        
-        <!-- HEADER BANNER -->
-        <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="fw-800 mb-1" style="font-weight: 800;">CAPAIAN IKM & IIPP TAHUN 2026</h2>
-                <p class="mb-0 text-white-50">Indeks Kepuasan Masyarakat (Skala 4.0) & Indeks Integritas Pelayanan Publik (Skala 10.0)</p>
-            </div>
-            <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
-                <i class="bi bi-calendar-check me-1"></i> Tahun 2026
-            </div>
+    <!-- SIDEBAR AUTO-HIDE TERPADU -->
+    <aside class="sidebar-autohide">
+        <div class="sidebar-header">
+            <span>LAYANAN & PERIZINAN</span>
         </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="sarpras.html" class="menu-link" title="Dashboard Utama Sarpras">
+                    <span class="menu-icon text-warning"><i class="bi bi-speedometer2"></i></span>
+                    <span class="menu-text">Dashboard Sarpras</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
+                    <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
+                    <span class="menu-text">Aplikasi SMFR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="unar.html" class="menu-link" title="UNAR">
+                    <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
+                    <span class="menu-text">UNAR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="MOTS">
+                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
+                    <span class="menu-text">MOTS</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" title="BHP">
+                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
+                    <span class="menu-text">BHP</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="perizinan.html" class="menu-link" title="Pelayanan & Perizinan">
+                    <span class="menu-icon" style="color: #c084fc;"><i class="bi bi-award-fill"></i></span>
+                    <span class="menu-text">Pelayanan & Perizinan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="realisasi_anggaran.html" class="menu-link" title="Realisasi Anggaran">
+                    <span class="menu-icon" style="color: #34d399;"><i class="bi bi-cash-stack"></i></span>
+                    <span class="menu-text">Realisasi Anggaran</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
+                    <span class="menu-icon" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
+                    <span class="menu-text">Fungsi Monitoring</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="ikm.html" class="menu-link active" title="IKM & IIPP">
+                    <span class="menu-icon" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
+                    <span class="menu-text">IKM & IIPP</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        <!-- TOP STAT CARDS -->
-        <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #3b82f6;">
-                    <div class="title text-primary"><i class="bi bi-star-fill me-1"></i> Rata-Rata IKM (Skala 4)</div>
-                    <div class="value text-primary" id="lblAvgIkm">0.00</div>
-                    <small class="text-muted fw-semibold" id="lblKategoriIkm">Sangat Baik</small>
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper">
+        <div class="container-fluid">
+
+            <!-- HEADER BANNER -->
+            <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-800 mb-1" style="font-weight: 800;">INDEKS KEPUASAN & INTEGRITAS PELAYANAN 2026</h2>
+                    <p class="mb-0 text-white-50">EVALUASI PERSEPSI MASYARAKAT TERHADAP KUALITAS LAYANAN SARPRAS & PERIZINAN</p>
+                </div>
+                <div class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-3 fs-6 fw-bold">
+                    <i class="bi bi-star-fill me-1"></i> Nilai Mutu Layanan: A (Sangat Baik)
                 </div>
             </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #10b981;">
-                    <div class="title text-success"><i class="bi bi-shield-check me-1"></i> Rata-Rata IIPP (Skala 10)</div>
-                    <div class="value text-success" id="lblAvgIipp">0.00</div>
-                    <small class="text-muted fw-semibold" id="lblKategoriIipp">Sangat Tinggi</small>
+
+            <!-- TOP STAT CARDS -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
+                <div class="col">
+                    <div class="top-stat-card" style="border-left: 5px solid #f59e0b;">
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="bi bi-emoji-smile-fill"></i></div>
+                        <div>
+                            <div class="top-stat-title text-warning">Skor IKM (Skala 4)</div>
+                            <div class="top-stat-value text-warning" id="lblIkmSkala4">3.95</div>
+                            <small class="text-muted fw-semibold">Mutu Pelayanan Sangat Baik</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="top-stat-card" style="border-left: 5px solid #10b981;">
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="bi bi-percent"></i></div>
+                        <div>
+                            <div class="top-stat-title text-success">Nilai IKM Konversi</div>
+                            <div class="top-stat-value text-success" id="lblIkmKonversi">98.75</div>
+                            <small class="text-muted fw-semibold">Konversi Skala 100</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="top-stat-card" style="border-left: 5px solid #0284c7;">
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #38bdf8, #0284c7);"><i class="bi bi-award-fill"></i></div>
+                        <div>
+                            <div class="top-stat-title text-info">Indeks IIPP (Skala 10)</div>
+                            <div class="top-stat-value text-info" id="lblIippSkor">9.50</div>
+                            <small class="text-muted fw-semibold">Integritas Pelayanan Publik</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="top-stat-card" style="border-left: 5px solid #0f4c81;">
+                        <div class="top-stat-icon" style="background: linear-gradient(135deg, #0f4c81, #1e3a8a);"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <div class="top-stat-title">Total Responden</div>
+                            <div class="top-stat-value text-dark" id="lblTotalResponden">142</div>
+                            <small class="text-muted fw-semibold">Masyarakat / Mitra Servis</small>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #f59e0b;">
-                    <div class="title text-warning"><i class="bi bi-people-fill me-1"></i> Total Responden IKM</div>
-                    <div class="value text-warning" id="lblTotalResponIkm">0</div>
-                    <small class="text-muted fw-semibold" id="lblDetailResponIkm">Pria: 0 | Wanita: 0</small>
+
+            <!-- SEKSI GRAFIK INTERAKTIF -->
+            <div class="row g-4 mb-4">
+                <!-- TREN BULANAN SKOR IKM -->
+                <div class="col-lg-7">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-warning"></i>Tren Capaian IKM & IIPP Bulanan</h5>
+                                <small class="text-muted">Progres Nilai IKM dan IIPP dari Januari hingga Desember 2026</small>
+                            </div>
+                            <span class="badge bg-light text-dark border fw-semibold">Capaian Bulanan</span>
+                        </div>
+                        <div id="chartLineIkmTrend" style="min-height: 360px;"></div>
+                    </div>
+                </div>
+
+                <!-- RADAR/BAR ELEMENT PENILAIAN UNSUR IKM -->
+                <div class="col-lg-5">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Skor Per Unsur Pelayanan</h5>
+                                <small class="text-muted">Evaluasi 9 Unsur Utama Survey Kepuasan Masyarakat</small>
+                            </div>
+                            <span class="badge bg-light text-primary border fw-semibold">9 Unsur IKM</span>
+                        </div>
+                        <div id="chartBarUnsurIkm" style="min-height: 360px;"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="stat-card" style="border-left: 5px solid #8b5cf6;">
-                    <div class="title" style="color: #8b5cf6;"><i class="bi bi-person-check-fill me-1"></i> Total Responden IIPP</div>
-                    <div class="value" style="color: #8b5cf6;" id="lblTotalResponIipp">0</div>
-                    <small class="text-muted fw-semibold" id="lblDetailResponIipp">Pria: 0 | Wanita: 0</small>
+
+            <!-- TABEL REKAPITULASI UNSUR PELAYANAN -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Nilai 9 Unsur Pelayanan IKM (2026)</h5>
+                    <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px;">No</th>
+                                <th class="text-start">Unsur Pelayanan Publik</th>
+                                <th>Nilai Rata-rata (Skala 4)</th>
+                                <th class="bg-success text-white">Nilai Konversi (100)</th>
+                                <th>Kategori / Mutu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBodyUnsurIkm"></tbody>
+                    </table>
                 </div>
             </div>
+
         </div>
+    </main>
 
-        <!-- BAGIAN ATAS: LINE CHART DUAL AXIS -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="chart-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Capaian Bulanan IKM (Skala 4) vs IIPP (Skala 10)</h5>
-                        <span class="badge bg-light text-dark border"><i class="bi bi-info-circle me-1"></i>Dual Y-Axis</span>
-                    </div>
-                    <div style="height: 380px; position: relative;">
-                        <canvas id="chartLineIkmIipp"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BAGIAN BAWAH: BAR CHARTS RESPONDEN BERDASARKAN JENIS KELAMIN -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-6">
-                <div class="chart-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Responden IKM per Bulan (Gender)</h5>
-                    </div>
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="chartBarRespondenIkm"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="chart-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-line-fill me-2 text-success"></i>Responden IIPP per Bulan (Gender)</h5>
-                    </div>
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="chartBarRespondenIipp"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABEL RINCIAN BULANAN -->
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Rekapitulasi IKM & IIPP (2026)</h5>
-                <span class="badge bg-primary px-3 py-2">Tahun 2026</span>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-custom align-middle mb-0 text-center">
-                    <thead>
-                        <tr>
-                            <th style="width: 40px;">No</th>
-                            <th>Bulan</th>
-                            <th class="bg-primary text-white">Skor IKM<br>(Skala 4)</th>
-                            <th>IKM Pria</th>
-                            <th>IKM Wanita</th>
-                            <th>Total Responden IKM</th>
-                            <th class="bg-success text-white">Skor IIPP<br>(Skala 10)</th>
-                            <th>IIPP Pria</th>
-                            <th>IIPP Wanita</th>
-                            <th>Total Responden IIPP</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tblBodyIkm"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- FIREBASE COMPAT -->
+    <!-- SDK & LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -265,239 +480,119 @@
             appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
-        let bulanList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        
-        let ikmIippMonths = [
-            { id: 1, bulan: "Januari", ikm_score: 3.75, iipp_score: 8.80, ikm_pria: 15, ikm_wanita: 12, iipp_pria: 14, iipp_wanita: 10 },
-            { id: 2, bulan: "Februari", ikm_score: 3.80, iipp_score: 8.95, ikm_pria: 18, ikm_wanita: 14, iipp_pria: 16, iipp_wanita: 12 },
-            { id: 3, bulan: "Maret", ikm_score: 3.82, iipp_score: 9.10, ikm_pria: 20, ikm_wanita: 16, iipp_pria: 18, iipp_wanita: 15 },
-            { id: 4, bulan: "April", ikm_score: 3.88, iipp_score: 9.25, ikm_pria: 25, ikm_wanita: 22, iipp_pria: 22, iipp_wanita: 20 },
-            { id: 5, bulan: "Mei", ikm_score: 3.85, iipp_score: 9.15, ikm_pria: 19, ikm_wanita: 17, iipp_pria: 17, iipp_wanita: 16 },
-            { id: 6, bulan: "Juni", ikm_score: 3.90, iipp_score: 9.30, ikm_pria: 22, ikm_wanita: 19, iipp_pria: 20, iipp_wanita: 18 },
-            { id: 7, bulan: "Juli", ikm_score: 3.87, iipp_score: 9.20, ikm_pria: 21, ikm_wanita: 18, iipp_pria: 19, iipp_wanita: 17 },
-            { id: 8, bulan: "Agustus", ikm_score: 3.92, iipp_score: 9.40, ikm_pria: 24, ikm_wanita: 20, iipp_pria: 22, iipp_wanita: 19 },
-            { id: 9, bulan: "September", ikm_score: 3.95, iipp_score: 9.50, ikm_pria: 26, ikm_wanita: 23, iipp_pria: 25, iipp_wanita: 21 },
-            { id: 10, bulan: "Oktober", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 },
-            { id: 11, bulan: "November", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 },
-            { id: 12, bulan: "Desember", ikm_score: 0.00, iipp_score: 0.00, ikm_pria: 0, ikm_wanita: 0, iipp_pria: 0, iipp_wanita: 0 }
+        // Data Unsur IKM Default
+        let defaultUnsurIkm = [
+            { no: 1, unsur: "Persyaratan Pelayanan", skor: 3.96 },
+            { no: 2, unsur: "Sistem, Mekanisme, dan Prosedur", skor: 3.92 },
+            { no: 3, unsur: "Waktu Penyelesaian", skor: 3.94 },
+            { no: 4, unsur: "Biaya / Tarif", skor: 4.00 },
+            { no: 5, unsur: "Produk Spesifikasi Jenis Layanan", skor: 3.95 },
+            { no: 6, unsur: "Kompetensi Pelaksana", skor: 3.97 },
+            { no: 7, unsur: "Perilaku Pelaksana", skor: 3.98 },
+            { no: 8, unsur: "Penanganan Pengaduan, Saran & Masukan", skor: 3.91 },
+            { no: 9, unsur: "Sarana dan Prasarana", skor: 3.92 }
         ];
 
         let lineChartInstance = null;
-        let barIkmInstance = null;
-        let barIippInstance = null;
+        let barChartInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
-            loadIkmIippDataRealtime();
+            loadIkmRealtime();
         });
 
-        function loadIkmIippDataRealtime() {
+        function initCharts() {
+            // 1. TREN BULANAN
+            const optionsLine = {
+                series: [
+                    { name: "IKM (Skala 100)", data: [97.5, 98.0, 98.2, 98.5, 98.8, 98.6, 98.7, 98.9, 98.75, 0, 0, 0] },
+                    { name: "IIPP (Skala 10)", data: [9.3, 9.4, 9.4, 9.5, 9.6, 9.5, 9.5, 9.6, 9.5, 0, 0, 0] }
+                ],
+                chart: {
+                    height: 360,
+                    type: 'line',
+                    toolbar: { show: false },
+                    dropShadow: { enabled: true, color: '#f59e0b', top: 10, left: 0, blur: 6, opacity: 0.2 }
+                },
+                colors: ['#f59e0b', '#0284c7'],
+                stroke: { curve: 'smooth', width: 3 },
+                xaxis: { categories: bulanList },
+                dataLabels: { enabled: false },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+            };
+
+            lineChartInstance = new ApexCharts(document.getElementById('chartLineIkmTrend'), optionsLine);
+            lineChartInstance.render();
+
+            // 2. BAR UNSUR IKM
+            const optionsBar = {
+                series: [{ name: "Skor Unsur", data: [3.96, 3.92, 3.94, 4.00, 3.95, 3.97, 3.98, 3.91, 3.92] }],
+                chart: { type: 'bar', height: 360, toolbar: { show: false } },
+                colors: ['#f59e0b'],
+                plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '55%' } },
+                dataLabels: { enabled: true, formatter: (val) => val.toFixed(2) },
+                xaxis: { categories: ["U1 Persyaratan", "U2 Prosedur", "U3 Waktu", "U4 Tarif", "U5 Produk", "U6 Kompetensi", "U7 Perilaku", "U8 Pengaduan", "U9 Sarpras"], max: 4.0 },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+            };
+
+            barChartInstance = new ApexCharts(document.getElementById('chartBarUnsurIkm'), optionsBar);
+            barChartInstance.render();
+        }
+
+        function loadIkmRealtime() {
             database.ref('kinerja_sarpras/ikm_iipp_detail').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data && data.months && Array.isArray(data.months)) {
-                    ikmIippMonths = data.months;
+                if (data && data.unsur && Array.isArray(data.unsur)) {
+                    defaultUnsurIkm = data.unsur;
                 }
                 updateDashboard();
             }, (err) => {
-                console.warn("Menggunakan data default lokal:", err.message);
+                console.warn("Menggunakan data default lokal IKM:", err.message);
                 updateDashboard();
-            });
-        }
-
-        function initCharts() {
-            // 1. Line Chart Dual Y-Axis
-            const ctxLine = document.getElementById('chartLineIkmIipp').getContext('2d');
-            lineChartInstance = new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: bulanList,
-                    datasets: [
-                        {
-                            label: 'Capaian IKM (Skala 4)',
-                            data: [],
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                            yAxisID: 'yIKM'
-                        },
-                        {
-                            label: 'Capaian IIPP (Skala 10)',
-                            data: [],
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                            yAxisID: 'yIIPP'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 1500, easing: 'easeInOutQuart' },
-                    interaction: { mode: 'index', intersect: false },
-                    scales: {
-                        yIKM: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            min: 0,
-                            max: 4.0,
-                            title: { display: true, text: 'Skor IKM (Max 4.0)', color: '#3b82f6', font: { weight: 'bold' } },
-                            grid: { color: 'rgba(226, 232, 240, 0.6)' }
-                        },
-                        yIIPP: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            min: 0,
-                            max: 10.0,
-                            title: { display: true, text: 'Skor IIPP (Max 10.0)', color: '#10b981', font: { weight: 'bold' } },
-                            grid: { drawOnChartArea: false }
-                        }
-                    }
-                }
-            });
-
-            // 2. Bar Chart Responden IKM
-            const ctxBarIkm = document.getElementById('chartBarRespondenIkm').getContext('2d');
-            barIkmInstance = new Chart(ctxBarIkm, {
-                type: 'bar',
-                data: {
-                    labels: bulanList,
-                    datasets: [
-                        { label: 'Pria', data: [], backgroundColor: '#2563eb', borderRadius: 6 },
-                        { label: 'Wanita', data: [], backgroundColor: '#ec4899', borderRadius: 6 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 1200 },
-                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' } } }
-                }
-            });
-
-            // 3. Bar Chart Responden IIPP
-            const ctxBarIipp = document.getElementById('chartBarRespondenIipp').getContext('2d');
-            barIippInstance = new Chart(ctxBarIipp, {
-                type: 'bar',
-                data: {
-                    labels: bulanList,
-                    datasets: [
-                        { label: 'Pria', data: [], backgroundColor: '#4f46e5', borderRadius: 6 },
-                        { label: 'Wanita', data: [], backgroundColor: '#f59e0b', borderRadius: 6 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 1200 },
-                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' } } }
-                }
             });
         }
 
         function updateDashboard() {
-            const arrIkmScore = [];
-            const arrIippScore = [];
-
-            const arrIkmPria = [];
-            const arrIkmWanita = [];
-
-            const arrIippPria = [];
-            const arrIippWanita = [];
-
-            let sumIkm = 0, countIkm = 0;
-            let sumIipp = 0, countIipp = 0;
-
-            let totalIkmPria = 0, totalIkmWanita = 0;
-            let totalIippPria = 0, totalIippWanita = 0;
-
-            const tbody = document.getElementById('tblBodyIkm');
+            const tbody = document.getElementById('tblBodyUnsurIkm');
             tbody.innerHTML = '';
 
-            ikmIippMonths.forEach((m, idx) => {
-                const ikmSc = parseFloat(m.ikm_score) || 0;
-                const iippSc = parseFloat(m.iipp_score) || 0;
+            let totalSkor = 0;
+            const barData = [];
+            const barCategories = [];
 
-                const ikmP = parseInt(m.ikm_pria) || 0;
-                const ikmW = parseInt(m.ikm_wanita) || 0;
-                const ikmTot = ikmP + ikmW;
+            defaultUnsurIkm.forEach((item, idx) => {
+                const skor = parseFloat(item.skor) || 0;
+                const konversi = (skor * 25).toFixed(2);
+                totalSkor += skor;
 
-                const iippP = parseInt(m.iipp_pria) || 0;
-                const iippW = parseInt(m.iipp_wanita) || 0;
-                const iippTot = iippP + iippW;
-
-                arrIkmScore.push(ikmSc);
-                arrIippScore.push(iippSc);
-
-                arrIkmPria.push(ikmP);
-                arrIkmWanita.push(ikmW);
-
-                arrIippPria.push(iippP);
-                arrIippWanita.push(iippW);
-
-                if (ikmSc > 0) { sumIkm += ikmSc; countIkm++; }
-                if (iippSc > 0) { sumIipp += iippSc; countIipp++; }
-
-                totalIkmPria += ikmP; totalIkmWanita += ikmW;
-                totalIippPria += iippP; totalIippWanita += iippW;
+                barData.push(skor);
+                barCategories.push(`U${idx + 1} ${item.unsur.split(' ')[0]}`);
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-bold">${idx + 1}</td>
-                        <td class="fw-bold text-dark">${m.bulan}</td>
-                        <td class="fw-bold text-primary bg-light">${ikmSc > 0 ? ikmSc.toFixed(2) : '-'}</td>
-                        <td>${ikmP}</td>
-                        <td>${ikmW}</td>
-                        <td class="fw-bold">${ikmTot}</td>
-                        <td class="fw-bold text-success bg-light">${iippSc > 0 ? iippSc.toFixed(2) : '-'}</td>
-                        <td>${iippP}</td>
-                        <td>${iippW}</td>
-                        <td class="fw-bold">${iippTot}</td>
+                        <td class="text-start fw-bold text-dark">${item.unsur}</td>
+                        <td class="fw-bold text-warning">${skor.toFixed(2)}</td>
+                        <td class="fw-bold text-success bg-light">${konversi}</td>
+                        <td><span class="badge bg-success bg-opacity-10 text-success border border-success fw-bold">A (Sangat Baik)</span></td>
                     </tr>
                 `;
             });
 
-            // Update Top Cards
-            const avgIkm = countIkm > 0 ? (sumIkm / countIkm) : 0;
-            const avgIipp = countIipp > 0 ? (sumIipp / countIipp) : 0;
+            const avgSkor4 = defaultUnsurIkm.length > 0 ? (totalSkor / defaultUnsurIkm.length) : 3.95;
+            const avgKonversi = (avgSkor4 * 25).toFixed(2);
 
-            document.getElementById('lblAvgIkm').textContent = avgIkm.toFixed(2);
-            document.getElementById('lblAvgIipp').textContent = avgIipp.toFixed(2);
+            document.getElementById('lblIkmSkala4').textContent = avgSkor4.toFixed(2);
+            document.getElementById('lblIkmKonversi').textContent = avgKonversi;
 
-            document.getElementById('lblTotalResponIkm').textContent = totalIkmPria + totalIkmWanita;
-            document.getElementById('lblDetailResponIkm').textContent = `Pria: ${totalIkmPria} | Wanita: ${totalIkmWanita}`;
-
-            document.getElementById('lblTotalResponIipp').textContent = totalIippPria + totalIippWanita;
-            document.getElementById('lblDetailResponIipp').textContent = `Pria: ${totalIippPria} | Wanita: ${totalIippWanita}`;
-
-            // Update Line Chart
-            lineChartInstance.data.datasets[0].data = arrIkmScore;
-            lineChartInstance.data.datasets[1].data = arrIippScore;
-            lineChartInstance.update();
-
-            // Update Bar Charts
-            barIkmInstance.data.datasets[0].data = arrIkmPria;
-            barIkmInstance.data.datasets[1].data = arrIkmWanita;
-            barIkmInstance.update();
-
-            barIippInstance.data.datasets[0].data = arrIippPria;
-            barIippInstance.data.datasets[1].data = arrIippWanita;
-            barIippInstance.update();
+            if (barChartInstance) {
+                barChartInstance.updateSeries([{ name: "Skor Unsur", data: barData }]);
+            }
         }
     </script>
 </body>
