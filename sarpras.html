@@ -834,9 +834,32 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 5: DETAIL DATA IKM & IIPP -->
+                            <!-- TAB 5: DETAIL DATA IKM & IIPP (MODEL IMPORT EXCEL) -->
                             <div class="tab-pane fade" id="tab-ikm" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
+                                <div class="card p-3 mb-3 border-0 shadow-sm bg-white" style="border-radius: 12px;">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                        <h6 class="fw-bold text-warning mb-0" style="color: #d97706 !important;">
+                                            <i class="bi bi-file-earmark-excel-fill me-1"></i> Import Data Survei Persepsi IKM & IIPP dari Excel
+                                        </h6>
+                                        <span class="badge bg-light text-secondary border">Format .xlsx / .xls</span>
+                                    </div>
+                                    <p class="small text-muted mb-3">
+                                        Unggah file Excel survei mentah bulanan/tahunan. Sistem akan membaca tanggal survei, jenis kelamin, skor IKM (skala 4), dan mengalokasikan skor IIPP (konversi skala 10) secara otomatis ke dalam tabel di bawah.
+                                    </p>
+                                    
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-md-8">
+                                            <input type="file" id="excelFileIkm" class="form-control form-control-sm" accept=".xlsx, .xls">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-warning btn-sm w-100 fw-bold text-dark shadow-sm" onclick="importExcelIkmData()">
+                                                <i class="bi bi-arrow-repeat me-1"></i> Proses & Auto-Fill Tabel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 380px; overflow-y: auto;">
                                     <table class="table table-bordered table-striped align-middle text-center mb-0">
                                         <thead class="table-dark sticky-top">
                                             <tr class="small text-nowrap">
@@ -917,6 +940,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
+    <!-- SheetJS CDN untuk Parsing Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
@@ -999,7 +1024,7 @@
             { id: 5, bulan: "Mei", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 0 },
             { id: 6, bulan: "Juni", ikm_skor: 3.78, ikm_score: 3.78, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 9.17, iipp_score: 9.17, iipp_pria: 1, iipp_wanita: 1 },
             { id: 7, bulan: "Juli", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 0 },
-            { id: 8, bulan: "Agustus", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 1 },
+            { id: 8, bulan: "Agustus", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 2, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 2, iipp_wanita: 0 },
             { id: 9, bulan: "September", ikm_skor: 3.81, ikm_score: 3.81, ikm_pria: 3, ikm_wanita: 0, iipp_skor: 9.44, iipp_score: 9.44, iipp_pria: 3, iipp_wanita: 0 },
             { id: 10, bulan: "Oktober", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
             { id: 11, bulan: "November", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
@@ -1312,6 +1337,153 @@
                 </tr>`;
             });
             tbody.innerHTML = html;
+        }
+
+        // FUNGSI PROSES & IMPORT FILE EXCEL SURVEI IKM & IIPP
+        function importExcelIkmData() {
+            const fileInput = document.getElementById('excelFileIkm');
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                Swal.fire('Perhatian', 'Silakan pilih file Excel survei (.xlsx / .xls) terlebih dahulu.', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    if (!jsonData || jsonData.length < 2) {
+                        Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
+                        return;
+                    }
+
+                    const headers = jsonData[0] || [];
+                    let startDateIdx = 2;
+                    let genderIdx = 13;
+                    let ikmStartIdx = 17, ikmEndIdx = 25;
+                    let iippStartIdx = 27, iippEndIdx = 31;
+
+                    // Pencarian index kolom secara dinamis jika kata kunci ditemukan
+                    headers.forEach((h, idx) => {
+                        if (typeof h === 'string') {
+                            const lower = h.toLowerCase();
+                            if (lower.includes('start date') || lower.includes('tanggal')) startDateIdx = idx;
+                            if (lower.includes('jenis kelamin') || lower.includes('gender')) genderIdx = idx;
+                        }
+                    });
+
+                    const selectedYear = parseInt(selectedTahunEditor) || 2026;
+
+                    // Array penampung statistik bulanan (indeks 0=Januari s.d. 11=Desember)
+                    const monthlyStats = Array.from({ length: 12 }, () => ({
+                        ikm_sum: 0, ikm_count: 0,
+                        iipp_sum: 0, iipp_count: 0,
+                        pria: 0, wanita: 0, respondents: 0
+                    }));
+
+                    // Iterasi baris data (mulai baris ke-2, mengabaikan header/sub-header)
+                    for (let r = 2; r < jsonData.length; r++) {
+                        const row = jsonData[r];
+                        if (!row || row[startDateIdx] === undefined || row[startDateIdx] === null) continue;
+
+                        let dateVal = row[startDateIdx];
+                        let dateObj = null;
+
+                        if (typeof dateVal === 'number') {
+                            dateObj = new Date((dateVal - (25567 + 2)) * 86400 * 1000);
+                        } else if (typeof dateVal === 'string') {
+                            dateObj = new Date(dateVal);
+                        } else if (dateVal instanceof Date) {
+                            dateObj = dateVal;
+                        }
+
+                        if (!dateObj || isNaN(dateObj.getTime())) continue;
+
+                        const rowYear = dateObj.getFullYear();
+                        if (rowYear !== selectedYear) continue;
+
+                        const monthIdx = dateObj.getMonth(); // 0 - 11
+
+                        // Klasifikasi Jenis Kelamin
+                        const genderStr = row[genderIdx] ? String(row[genderIdx]).toLowerCase().trim() : '';
+                        if (genderStr.includes('laki') || genderStr.includes('pria')) {
+                            monthlyStats[monthIdx].pria++;
+                        } else if (genderStr.includes('perempuan') || genderStr.includes('wanita')) {
+                            monthlyStats[monthIdx].wanita++;
+                        }
+                        monthlyStats[monthIdx].respondents++;
+
+                        // Hitung Skor IKM (9 Pertanyaan, Skala 1-4)
+                        const ikmScores = [];
+                        for (let c = ikmStartIdx; c <= ikmEndIdx; c++) {
+                            if (row[c] !== undefined && row[c] !== null && row[c] !== '') {
+                                const val = parseFloat(row[c]);
+                                if (!isNaN(val)) ikmScores.push(val);
+                            }
+                        }
+                        if (ikmScores.length > 0) {
+                            const ikmAvgResp = ikmScores.reduce((a, b) => a + b, 0) / ikmScores.length;
+                            monthlyStats[monthIdx].ikm_sum += ikmAvgResp;
+                            monthlyStats[monthIdx].ikm_count++;
+                        }
+
+                        // Hitung Skor IIPP (5 Pertanyaan, Skala 1-6 -> Konversi ke Skala 10)
+                        const iippScores = [];
+                        for (let c = iippStartIdx; c <= iippEndIdx; c++) {
+                            if (row[c] !== undefined && row[c] !== null && row[c] !== '') {
+                                const val = parseFloat(row[c]);
+                                if (!isNaN(val)) iippScores.push(val);
+                            }
+                        }
+                        if (iippScores.length > 0) {
+                            const iippAvgResp = iippScores.reduce((a, b) => a + b, 0) / iippScores.length;
+                            const iippScale10 = (iippAvgResp / 6.0) * 10.0;
+                            monthlyStats[monthIdx].iipp_sum += iippScale10;
+                            monthlyStats[monthIdx].iipp_count++;
+                        }
+                    }
+
+                    // Isi otomatis ke dalam tabel input modal
+                    let processedCount = 0;
+                    for (let m = 0; m < 12; m++) {
+                        const i = m + 1;
+                        const st = monthlyStats[m];
+
+                        const ikmAvg = st.ikm_count > 0 ? (st.ikm_sum / st.ikm_count).toFixed(2) : '';
+                        const iippAvg = st.iipp_count > 0 ? (st.iipp_sum / st.iipp_count).toFixed(2) : '';
+
+                        document.getElementById(`ikm_sc_${i}`).value = ikmAvg;
+                        document.getElementById(`ikm_pria_${i}`).value = st.pria;
+                        document.getElementById(`ikm_wanita_${i}`).value = st.wanita;
+
+                        document.getElementById(`iipp_sc_${i}`).value = iippAvg;
+                        document.getElementById(`iipp_pria_${i}`).value = st.pria;
+                        document.getElementById(`iipp_wanita_${i}`).value = st.wanita;
+
+                        if (st.respondents > 0) processedCount++;
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Import Berhasil!',
+                        text: `Data survei Excel Tahun ${selectedYear} berhasil diproses untuk ${processedCount} bulan data survei. Silakan periksa tabel dan klik "Simpan Semua Perubahan".`,
+                        confirmButtonText: 'OK'
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
         }
 
         // 5. Perizinan
