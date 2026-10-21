@@ -17,8 +17,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e0f2fe;
-            color: #334155;
+            background: linear-gradient(135deg, #cfe3f7 0%, #dceefa 40%, #e8f4fc 100%);
+            color: #1e293b;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -26,208 +26,166 @@
             position: relative;
         }
 
-        /* ========================================= */
-        /* ANIMASI LATAR BELAKANG (MOVING BLOBS)     */
-        /* ========================================= */
+        /* ANIMASI LATAR BELAKANG */
         .bg-shapes {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             overflow: hidden;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         }
         .shape {
             position: absolute;
-            filter: blur(60px);
-            opacity: 0.6;
-            animation: float 20s infinite alternate ease-in-out;
+            filter: blur(70px);
+            opacity: 0.5;
+            animation: float 22s infinite alternate ease-in-out;
         }
         .shape-1 {
-            width: 400px; height: 400px;
-            background: #bae6fd;
-            top: -10%; left: -10%;
-            animation-delay: 0s;
+            width: 480px; height: 480px;
+            background: #93c5fd;
+            top: -10%; left: -5%;
         }
         .shape-2 {
-            width: 500px; height: 500px;
+            width: 520px; height: 520px;
             background: #bfdbfe;
-            bottom: -20%; right: -10%;
-            animation-delay: -5s;
+            bottom: -15%; right: -5%;
+            animation-delay: -6s;
         }
         .shape-3 {
-            width: 300px; height: 300px;
-            background: #ddd6fe;
-            top: 30%; left: 40%;
-            animation-delay: -10s;
+            width: 380px; height: 380px;
+            background: #c084fc;
+            top: 25%; left: 38%;
+            opacity: 0.25;
+            animation-delay: -12s;
         }
 
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            50% { transform: translate(50px, 30px) scale(1.1) rotate(10deg); }
-            100% { transform: translate(-30px, 50px) scale(0.9) rotate(-10deg); }
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+            100% { transform: translate(-30px, 45px) scale(0.92); }
         }
 
-        /* ========================================= */
-        /* NAVBAR                                    */
-        /* ========================================= */
+        /* NAVBAR */
         .navbar-custom {
-            background: rgba(15, 76, 129, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            background: rgba(15, 76, 129, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 0.85rem 2rem;
+            box-shadow: 0 4px 25px rgba(15, 76, 129, 0.15);
         }
         .logo-container {
-            width: 55px; height: 55px;
+            width: 50px; height: 50px;
             background: #fff;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .navbar-brand:hover .logo-container {
-            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .logo-container img {
-            width: 40px; height: 40px; object-fit: contain;
+            width: 36px; height: 36px; object-fit: contain;
         }
 
-        /* ========================================= */
-        /* AREA KONTEN TENGAH                        */
-        /* ========================================= */
+        /* CONTAINER UTAMA */
         .main-container {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 3rem 0;
+            padding: 2.5rem 0;
             z-index: 1;
         }
 
         .welcome-text {
             text-align: center;
-            margin-bottom: 3.5rem;
-            animation: fadeUp 1s ease-out forwards;
+            margin-bottom: 2.5rem;
         }
         .welcome-text h1 {
             font-weight: 800;
-            color: var(--primary-blue);
-            letter-spacing: -1px;
-            margin-bottom: 0.5rem;
-            font-size: 2.5rem;
+            color: #0f4c81;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.4rem;
+            font-size: 2.2rem;
         }
         .welcome-text p {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             color: #475569;
-        }
-
-        /* ========================================= */
-        /* DESAIN KARTU MENU (GLASSMORPHISM)         */
-        /* ========================================= */
-        .portal-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 24px;
-            padding: 2.5rem 1.5rem;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            height: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0; /* Mulai dari tak terlihat untuk animasi */
-            transform: translateY(30px);
-        }
-
-        .portal-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 0;
-            border-radius: 24px 24px 0 0;
-            transition: height 0.4s ease;
-            z-index: -1;
-            opacity: 0.1;
-        }
-
-        .card-sarpras::before { background: #3b82f6; }
-        .card-kualitas::before { background: #10b981; }
-        .card-monitoring::before { background: #f59e0b; }
-        .card-umum::before { background: #8b5cf6; }
-
-        .portal-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-            background: rgba(255, 255, 255, 0.95);
-            border-color: #fff;
-        }
-        .portal-card:hover::before {
-            height: 100%;
-        }
-
-        .icon-wrapper {
-            width: 85px; height: 85px;
-            border-radius: 22px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.8rem;
-            margin: 0 auto 1.5rem auto;
-            transition: all 0.5s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-        .portal-card:hover .icon-wrapper {
-            transform: scale(1.15) rotate(8deg);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        /* Pewarnaan Icon */
-        .card-sarpras .icon-wrapper { background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; }
-        .card-kualitas .icon-wrapper { background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #059669; }
-        .card-monitoring .icon-wrapper { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #d97706; }
-        .card-umum .icon-wrapper { background: linear-gradient(135deg, #f5f3ff, #ede9fe); color: #7c3aed; }
-
-        .portal-card h4 {
-            font-weight: 800;
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-            color: #1e293b;
-        }
-        .portal-card p {
-            font-size: 0.95rem;
-            color: #64748b;
-            margin-bottom: 0;
-            line-height: 1.6;
             font-weight: 500;
         }
 
-        /* FOOTER */
+        /* DESAIN KARTU GLASSMORPHISM SESUAI GAMBAR */
+        .portal-card {
+            background: rgba(255, 255, 255, 0.48);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 28px;
+            padding: 2.2rem 1.6rem 1.6rem 1.6rem;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 520px;
+            height: 100%;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.72);
+            border-color: #ffffff;
+            box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12);
+        }
+
+        /* ILUSTRASI GAMBAR LINGKARAN ATAS */
+        .graphic-container {
+            width: 140px;
+            height: 140px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .card-title-text {
+            font-weight: 800;
+            font-size: 1.35rem;
+            line-height: 1.3;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        .card-desc-text {
+            font-size: 0.92rem;
+            color: #334155;
+            line-height: 1.55;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        /* WIDGET FOOTER MASING-MASING KARTU */
+        .widget-footer {
+            width: 100%;
+            margin-top: auto;
+            padding-top: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* FOOTER HALAMAN */
         .footer-custom {
             text-align: center;
             padding: 1.5rem;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             z-index: 1;
         }
 
-        /* ========================================= */
-        /* ANIMASI MUNCUL BERURUTAN (STAGGERED)      */
-        /* ========================================= */
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-card-1 { animation: fadeUp 0.8s ease-out 0.2s forwards; }
-        .animate-card-2 { animation: fadeUp 0.8s ease-out 0.4s forwards; }
-        .animate-card-3 { animation: fadeUp 0.8s ease-out 0.6s forwards; }
-        .animate-card-4 { animation: fadeUp 0.8s ease-out 0.8s forwards; }
-
-        @media (max-width: 768px) {
-            .welcome-text h1 { font-size: 2rem; }
-            .portal-card { padding: 1.5rem 1rem; }
-            .icon-wrapper { width: 70px; height: 70px; font-size: 2.2rem; }
+        @media (max-width: 991px) {
+            .portal-card { min-height: 480px; }
         }
     </style>
 </head>
@@ -245,7 +203,7 @@
         <div class="container d-flex justify-content-center justify-content-md-start">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
                 <div class="logo-container me-3">
-                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
                 </div>
                 <div>
                     <span class="text-white d-block fs-5 tracking-wide">PORTAL APLIKASI TERPADU</span>
@@ -259,46 +217,238 @@
     <div class="container main-container">
         
         <div class="welcome-text">
-            <!-- Teks ini akan diubah oleh JavaScript berdasarkan waktu -->
             <h1 id="greetingText">Selamat Datang</h1>
             <p>Silakan pilih ruang kerja (dashboard) divisi yang ingin Anda akses.</p>
         </div>
 
         <div class="row g-4 justify-content-center">
             
-            <!-- 1. TIM KERJA SARANA PRASARANA -->
+            <!-- 1. TIM KERJA SARANA PRASARANA & LAYANAN -->
             <div class="col-12 col-md-6 col-xl-3">
-                <a href="sarpras.html" class="portal-card card-sarpras animate-card-1">
-                    <div class="icon-wrapper"><i class="bi bi-hdd-network"></i></div>
-                    <h4>Tim Kerja Sarana Prasarana & Layanan</h4>
-                    <p>Akses database SMFR, log peminjaman, inventaris, dan perbaikan perangkat.</p>
+                <a href="sarpras.html" class="portal-card">
+                    <!-- Ilustrasi Server 3D pada Lingkaran Biru -->
+                    <div class="graphic-container">
+                        <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
+                            <defs>
+                                <linearGradient id="blueSphere" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#3b82f6"/>
+                                    <stop offset="100%" stop-color="#1d4ed8"/>
+                                </linearGradient>
+                                <filter id="shadowBlue" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#1d4ed8" flood-opacity="0.35"/>
+                                </filter>
+                            </defs>
+                            <!-- Bola Biru Latar -->
+                            <circle cx="65" cy="65" r="52" fill="url(#blueSphere)" filter="url(#shadowBlue)"/>
+                            <!-- Server Rack 3D -->
+                            <rect x="42" y="35" width="46" height="60" rx="6" fill="#1e293b" stroke="#60a5fa" stroke-width="2"/>
+                            <!-- Server Blade 1 -->
+                            <rect x="46" y="41" width="38" height="11" rx="2" fill="#334155"/>
+                            <circle cx="51" cy="46.5" r="1.8" fill="#10b981"/>
+                            <circle cx="56" cy="46.5" r="1.8" fill="#38bdf8"/>
+                            <rect x="63" y="45" width="16" height="3" rx="1" fill="#64748b"/>
+                            <!-- Server Blade 2 -->
+                            <rect x="46" y="55" width="38" height="11" rx="2" fill="#334155"/>
+                            <circle cx="51" cy="60.5" r="1.8" fill="#10b981"/>
+                            <circle cx="56" cy="60.5" r="1.8" fill="#f59e0b"/>
+                            <rect x="63" y="59" width="16" height="3" rx="1" fill="#64748b"/>
+                            <!-- Server Blade 3 -->
+                            <rect x="46" y="69" width="38" height="11" rx="2" fill="#334155"/>
+                            <circle cx="51" cy="74.5" r="1.8" fill="#10b981"/>
+                            <circle cx="56" cy="74.5" r="1.8" fill="#38bdf8"/>
+                            <rect x="63" y="73" width="16" height="3" rx="1" fill="#64748b"/>
+                            <!-- Server Blade 4 -->
+                            <rect x="46" y="83" width="38" height="8" rx="2" fill="#0f172a"/>
+                            <circle cx="51" cy="87" r="1.5" fill="#ef4444"/>
+                        </svg>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="card-title-text">Tim Kerja Sarana Prasarana & Layanan</div>
+                        <div class="card-desc-text">
+                            Pemeliharaan Perangkat Monitoring, Ujian Negara Amatir Radio, Layanan Perizinan ISR, Program Maritim On the Spot, Survey IKM & IIPP
+                        </div>
+                    </div>
+
+                    <!-- Widget Bawah: Speedometer Data Usage -->
+                    <div class="widget-footer d-flex align-items-center justify-content-center gap-2">
+                        <svg width="28" height="22" viewBox="0 0 32 24" fill="none">
+                            <path d="M4 20 A 12 12 0 0 1 28 20" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M4 20 A 12 12 0 0 1 22 10" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M22 10 A 12 12 0 0 1 28 20" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+                            <circle cx="16" cy="20" r="3" fill="#1e293b"/>
+                            <line x1="16" y1="20" x2="23" y2="10" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">Data Usage: High</span>
+                    </div>
                 </a>
             </div>
 
             <!-- 2. TIM KERJA KUALITAS LAYANAN -->
             <div class="col-12 col-md-6 col-xl-3">
-                <a href="#" class="portal-card card-kualitas animate-card-2">
-                    <div class="icon-wrapper"><i class="bi bi-star-fill"></i></div>
-                    <h4>Tim Kerja Kualitas Layanan</h4>
-                    <p>Manajemen mutu, evaluasi pelayanan publik, dan pengelolaan aduan masyarakat.</p>
+                <a href="#" class="portal-card">
+                    <!-- Ilustrasi Smartphone & Kompas pada Lingkaran Hijau -->
+                    <div class="graphic-container">
+                        <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
+                            <defs>
+                                <linearGradient id="tealSphere" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#10b981"/>
+                                    <stop offset="100%" stop-color="#059669"/>
+                                </linearGradient>
+                                <filter id="shadowTeal" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#059669" flood-opacity="0.35"/>
+                                </filter>
+                            </defs>
+                            <!-- Bola Hijau Latar -->
+                            <circle cx="65" cy="65" r="52" fill="url(#tealSphere)" filter="url(#shadowTeal)"/>
+                            <!-- Smartphone Frame -->
+                            <rect x="48" y="32" width="34" height="64" rx="7" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
+                            <rect x="51" y="36" width="28" height="54" rx="4" fill="#f8fafc"/>
+                            <!-- Dashboard Gauge on Phone -->
+                            <path d="M 57 58 A 8 8 0 0 1 73 58" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+                            <line x1="65" y1="58" x2="70" y2="53" stroke="#ef4444" stroke-width="2"/>
+                            <!-- Speedometer Arc below -->
+                            <rect x="54" y="66" width="22" height="18" rx="3" fill="#e2e8f0"/>
+                            <path d="M 58 78 L 62 72 L 67 75 L 72 69" stroke="#10b981" stroke-width="2" fill="none"/>
+                            <!-- Floating Compass Floating Left Top -->
+                            <circle cx="38" cy="45" r="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+                            <polygon points="38,38 41,45 38,43 35,45" fill="#ef4444"/>
+                            <polygon points="38,52 41,45 38,47 35,45" fill="#64748b"/>
+                        </svg>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="card-title-text">Tim Kerja Kualitas Layanan</div>
+                        <div class="card-desc-text">
+                            Pemeriksaan Microwave link, pengukuran kualitas layanan telekomunikasi, dan verifikasi koordinat site
+                        </div>
+                    </div>
+
+                    <!-- Widget Bawah: Grafik Bar CSAT Score -->
+                    <div class="widget-footer d-flex align-items-center justify-content-between px-2">
+                        <!-- Bar Chart -->
+                        <div class="d-flex align-items-end gap-1" style="height: 24px;">
+                            <span class="rounded-1" style="width: 7px; height: 10px; background: #818cf8;"></span>
+                            <span class="rounded-1" style="width: 7px; height: 16px; background: #60a5fa;"></span>
+                            <span class="rounded-1" style="width: 7px; height: 20px; background: #34d399;"></span>
+                            <span class="rounded-1" style="width: 7px; height: 24px; background: #10b981;"></span>
+                        </div>
+                        <!-- Bintang CSAT -->
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="text-warning fs-6">★</span>
+                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">CSAT Score: 4.8/5</span>
+                        </div>
+                    </div>
                 </a>
             </div>
 
-            <!-- 3. TIM KERJA MONITORING DAN PENERTIBAN -->
+            <!-- 3. TIM KERJA MONITORING & PENERTIBAN -->
             <div class="col-12 col-md-6 col-xl-3">
-                <a href="#" class="portal-card card-monitoring animate-card-3">
-                    <div class="icon-wrapper"><i class="bi bi-radar"></i></div>
-                    <h4>Tim Kerja Monitoring & Penertiban</h4>
-                    <p>Sistem pemantauan spektrum frekuensi radio dan log kegiatan penertiban lapangan.</p>
+                <a href="#" class="portal-card">
+                    <!-- Ilustrasi Antena / Menara 3D pada Lingkaran Emas/Kuning -->
+                    <div class="graphic-container">
+                        <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
+                            <defs>
+                                <linearGradient id="goldSphere" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fbbf24"/>
+                                    <stop offset="100%" stop-color="#d97706"/>
+                                </linearGradient>
+                                <filter id="shadowGold" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#d97706" flood-opacity="0.35"/>
+                                </filter>
+                            </defs>
+                            <!-- Bola Kuning Latar -->
+                            <circle cx="65" cy="65" r="52" fill="url(#goldSphere)" filter="url(#shadowGold)"/>
+                            <!-- Menara Antena Pemancar -->
+                            <!-- Structure Lattice Lines -->
+                            <line x1="65" y1="35" x2="48" y2="92" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="65" y1="35" x2="82" y2="92" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="52" y1="80" x2="78" y2="80" stroke="#ffffff" stroke-width="2.5"/>
+                            <line x1="56" y1="66" x2="74" y2="66" stroke="#ffffff" stroke-width="2.5"/>
+                            <line x1="60" y1="52" x2="70" y2="52" stroke="#ffffff" stroke-width="2.5"/>
+                            <!-- Cross braces -->
+                            <line x1="52" y1="80" x2="74" y2="66" stroke="#ffffff" stroke-width="1.5"/>
+                            <line x1="78" y1="80" x2="56" y2="66" stroke="#ffffff" stroke-width="1.5"/>
+                            <!-- Parabolic Dishes -->
+                            <circle cx="44" cy="55" r="8" fill="#ffffff"/>
+                            <circle cx="44" cy="55" r="5" fill="#d97706"/>
+                            <circle cx="86" cy="55" r="8" fill="#ffffff"/>
+                            <circle cx="86" cy="55" r="5" fill="#d97706"/>
+                            <!-- Signal Waves -->
+                            <circle cx="65" cy="35" r="4" fill="#ffffff"/>
+                            <path d="M 57 27 A 12 12 0 0 1 73 27" stroke="#ffffff" stroke-width="2" fill="none"/>
+                            <path d="M 51 21 A 18 18 0 0 1 79 21" stroke="#ffffff" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="card-title-text">Tim Kerja Monitoring & Penertiban</div>
+                        <div class="card-desc-text">
+                            Sistem pemantauan spektrum frekuensi radio dan log kegiatan penertiban.
+                        </div>
+                    </div>
+
+                    <!-- Widget Bawah: Log Aktivitas Waktu -->
+                    <div class="widget-footer text-start" style="font-size: 0.8rem; color: #475569; line-height: 1.5;">
+                        <div class="fw-semibold">10:15 - Activity Detected (Band X)</div>
+                        <div class="fw-semibold">10:30 - Patrol Log</div>
+                    </div>
                 </a>
             </div>
 
             <!-- 4. SUB BAGIAN UMUM -->
             <div class="col-12 col-md-6 col-xl-3">
-                <a href="#" class="portal-card card-umum animate-card-4">
-                    <div class="icon-wrapper"><i class="bi bi-buildings"></i></div>
-                    <h4>Sub Bagian Umum</h4>
-                    <p>Administrasi perkantoran, persuratan, keuangan, kepegawaian, dan rumah tangga.</p>
+                <a href="#" class="portal-card">
+                    <!-- Ilustrasi Gedung Putih 3D pada Lingkaran Ungu -->
+                    <div class="graphic-container">
+                        <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
+                            <defs>
+                                <linearGradient id="purpleSphere" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#a855f7"/>
+                                    <stop offset="100%" stop-color="#6b21a8"/>
+                                </linearGradient>
+                                <filter id="shadowPurple" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#6b21a8" flood-opacity="0.35"/>
+                                </filter>
+                            </defs>
+                            <!-- Bola Ungu Latar -->
+                            <circle cx="65" cy="65" r="52" fill="url(#purpleSphere)" filter="url(#shadowPurple)"/>
+                            <!-- Gedung Klasik Putih -->
+                            <!-- Base & Steps -->
+                            <rect x="36" y="82" width="58" height="6" rx="1" fill="#ffffff"/>
+                            <rect x="39" y="78" width="52" height="4" fill="#e2e8f0"/>
+                            <!-- Main Columns Base -->
+                            <rect x="42" y="52" width="46" height="26" fill="#f8fafc"/>
+                            <!-- Columns -->
+                            <rect x="45" y="54" width="4" height="24" fill="#cbd5e1"/>
+                            <rect x="53" y="54" width="4" height="24" fill="#cbd5e1"/>
+                            <rect x="61" y="54" width="4" height="24" fill="#cbd5e1"/>
+                            <rect x="69" y="54" width="4" height="24" fill="#cbd5e1"/>
+                            <rect x="77" y="54" width="4" height="24" fill="#cbd5e1"/>
+                            <!-- Triangular Roof (Pediment) -->
+                            <polygon points="65,36 38,52 92,52" fill="#ffffff"/>
+                            <!-- Dome -->
+                            <path d="M 57 36 A 8 8 0 0 1 73 36 Z" fill="#e2e8f0"/>
+                            <!-- Flag Pole -->
+                            <line x1="65" y1="28" x2="65" y2="18" stroke="#ffffff" stroke-width="1.5"/>
+                            <polygon points="65,18 73,21 65,24" fill="#3b82f6"/>
+                        </svg>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="card-title-text">Sub Bagian Umum</div>
+                        <div class="card-desc-text">
+                            Administrasi perkantoran, persuratan, keuangan, kepegawaian, dan rumah tangga.
+                        </div>
+                    </div>
+
+                    <!-- Widget Bawah: Status Ikon Folder, HR, Coins, Home -->
+                    <div class="widget-footer d-flex align-items-center justify-content-center flex-wrap gap-2 text-nowrap" style="font-size: 0.8rem;">
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-folder-fill text-warning"></i> [23] [23]</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-person-fill text-primary"></i> HR] [15]</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-coin text-warning"></i> Coins [500]</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-house-door-fill text-purple" style="color: #8b5cf6;"></i> [15]</span>
+                    </div>
                 </a>
             </div>
 
@@ -324,92 +474,87 @@
         document.getElementById('greetingText').innerText = sapaan;
     </script>
 
-            <!-- Pastikan SweetAlert2 dan Bootstrap JS terhubung -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- BOOTSTRAP & SWEETALERT2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- SDK Firebase (Jika di index.html belum ada) -->
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <!-- SDK FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
-<script>
-    // 1. INISIALISASI FIREBASE
-    const firebaseConfigIndex = {
-        apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
-        authDomain: "smfr-database.firebaseapp.com",
-        databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "smfr-database",
-        storageBucket: "smfr-database.firebasestorage.app",
-        messagingSenderId: "890374389163",
-        appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
-    };
-    
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfigIndex);
-    }
-    const dbIndex = firebase.database();
-    const refKinerja = dbIndex.ref('kinerja_sarpras');
+    <script>
+        // INISIALISASI FIREBASE
+        const firebaseConfigIndex = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfigIndex);
+        }
+        const dbIndex = firebase.database();
+        const refKinerja = dbIndex.ref('kinerja_sarpras');
 
-    // 2. FUNGSI VERIFIKASI PASSWORD
-    function verifikasiAdmin() {
-        Swal.fire({
-            title: 'Akses Admin',
-            text: 'Masukkan Password untuk mengubah data Kinerja:',
-            input: 'password',
-            inputAttributes: { autocapitalize: 'off' },
-            showCancelButton: true,
-            confirmButtonText: 'Buka Pengaturan',
-            confirmButtonColor: '#0f4c81'
-        }).then((result) => {
-            // GANTI 'admin123' DENGAN PASSWORD RAHASIA ANDA
-            if (result.value === 'admin123') {
-                
-                // Jika password benar, ambil data lama dari Firebase lalu buka modal
-                refKinerja.once('value').then((snap) => {
-                    const data = snap.val();
-                    if (data) {
-                        for (let i = 1; i <= 6; i++) {
-                            if (data['k' + i]) {
-                                document.getElementById('inp_t_' + i).value = data['k' + i].target;
-                                document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+        function verifikasiAdmin() {
+            Swal.fire({
+                title: 'Akses Admin',
+                text: 'Masukkan Password untuk mengubah data Kinerja:',
+                input: 'password',
+                inputAttributes: { autocapitalize: 'off' },
+                showCancelButton: true,
+                confirmButtonText: 'Buka Pengaturan',
+                confirmButtonColor: '#0f4c81'
+            }).then((result) => {
+                if (result.value === 'admin123') {
+                    refKinerja.once('value').then((snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            for (let i = 1; i <= 6; i++) {
+                                if (data['k' + i]) {
+                                    document.getElementById('inp_t_' + i).value = data['k' + i].target;
+                                    document.getElementById('inp_c_' + i).value = data['k' + i].capaian;
+                                }
                             }
                         }
-                    }
-                    // Buka Modal Bootstrap
-                    var myModal = new bootstrap.Modal(document.getElementById('modalKinerja'));
-                    myModal.show();
-                });
+                        var myModal = new bootstrap.Modal(document.getElementById('modalKinerja'));
+                        myModal.show();
+                    });
 
-            } else if (result.value) {
-                Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
-            }
-        });
-    }
-
-    // 3. FUNGSI SIMPAN PERUBAHAN
-    function simpanKinerja(e) {
-        e.preventDefault();
-        
-        const dataBaru = {
-            k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
-            k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
-            k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
-            k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
-            k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
-            k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
-        };
-
-        refKinerja.set(dataBaru)
-            .then(() => {
-                // Tutup Modal
-                var modalEl = document.getElementById('modalKinerja');
-                var modalObj = bootstrap.Modal.getInstance(modalEl);
-                modalObj.hide();
-                
-                Swal.fire('Berhasil!', 'Data Kinerja berhasil diupdate ke semua perangkat.', 'success');
-            })
-            .catch((error) => {
-                Swal.fire('Gagal!', error.message, 'error');
+                } else if (result.value) {
+                    Swal.fire('Akses Ditolak!', 'Password Salah.', 'error');
+                }
             });
-    }
-</script>
+        }
+
+        function simpanKinerja(e) {
+            e.preventDefault();
+            
+            const dataBaru = {
+                k1: { target: document.getElementById('inp_t_1').value, capaian: document.getElementById('inp_c_1').value, suffix: '%' },
+                k2: { target: document.getElementById('inp_t_2').value, capaian: document.getElementById('inp_c_2').value, suffix: '%' },
+                k3: { target: document.getElementById('inp_t_3').value, capaian: document.getElementById('inp_c_3').value, suffix: '%' },
+                k4: { target: document.getElementById('inp_t_4').value, capaian: document.getElementById('inp_c_4').value, suffix: '' },
+                k5: { target: document.getElementById('inp_t_5').value, capaian: document.getElementById('inp_c_5').value, suffix: '' },
+                k6: { target: document.getElementById('inp_t_6').value, capaian: document.getElementById('inp_c_6').value, suffix: '' }
+            };
+
+            refKinerja.set(dataBaru)
+                .then(() => {
+                    var modalEl = document.getElementById('modalKinerja');
+                    var modalObj = bootstrap.Modal.getInstance(modalEl);
+                    modalObj.hide();
+                    
+                    Swal.fire('Berhasil!', 'Data Kinerja berhasil diupdate ke semua perangkat.', 'success');
+                })
+                .catch((error) => {
+                    Swal.fire('Gagal!', error.message, 'error');
+                });
+        }
+    </script>
+</body>
+</html>
