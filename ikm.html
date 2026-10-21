@@ -434,7 +434,7 @@
                 </div>
             </div>
 
-            <!-- TOP STAT CARDS (SESUAI GAMBAR) -->
+            <!-- TOP STAT CARDS -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
                 <div class="col">
                     <div class="stat-card-custom stat-card-blue">
@@ -478,20 +478,40 @@
                 </div>
             </div>
 
-            <!-- GRAFIK TREN CAPAIAN BULANAN (DUAL Y-AXIS 3D) -->
+            <!-- GRAFIK UTAMA 1: LINE CHART TAJAM TREN KATEGORI PENILAIAN (IIPP & IKM) -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-card-3d shadow-sm" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom flex-wrap gap-2">
+                            <div>
+                                <h5 class="fw-bold text-dark m-0">
+                                    <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Tren Nilai Rata-Rata per Kategori Penilaian IIPP & IKM (<span id="lblTahunChartKat">2026</span>)
+                                </h5>
+                                <small class="text-muted">Perkembangan Skor Realtime Setiap Bulan per Kategori Unsur Survei (Data dikirim dari SARPEL)</small>
+                            </div>
+                            <span class="badge bg-primary text-white px-3 py-2 fw-semibold">
+                                <i class="bi bi-layers-fill me-1"></i> 14 Kategori (5 IIPP & 9 IKM)
+                            </span>
+                        </div>
+                        <div id="chartTrendKategori3D" style="min-height: 480px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRAFIK UTAMA 2: GRAFIK TREN CAPAIAN BULANAN (DIBUAT LEBIH RINGKAS DI BAWAH) -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="chart-card-3d">
-                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom flex-wrap gap-2">
                             <div>
-                                <h5 class="fw-bold text-dark m-0">
-                                    <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Capaian Bulanan IKM (Skala 4) vs IIPP (Skala 10)
-                                </h5>
-                                <small class="text-muted">Perbandingan Nilai IKM dan IIPP Setiap Bulan Dalam Satu Tampilan Interaktif</small>
+                                <h6 class="fw-bold text-dark m-0">
+                                    <i class="bi bi-activity me-2 text-primary"></i>Grafik Tren Capaian Bulanan IKM (Skala 4) vs IIPP (Skala 10)
+                                </h6>
+                                <small class="text-muted">Ringkasan Perbandingan Nilai Keseluruhan IKM dan IIPP Setiap Bulan</small>
                             </div>
-                            <span class="badge bg-light text-primary border fw-semibold px-3 py-2"><i class="bi bi-layers me-1"></i>Dual Y-Axis 3D Spline</span>
+                            <span class="badge bg-light text-primary border fw-semibold px-3 py-1.5"><i class="bi bi-layers me-1"></i>Dual Y-Axis Spline</span>
                         </div>
-                        <div id="chartDualIkmIipp" style="min-height: 380px;"></div>
+                        <div id="chartDualIkmIipp" style="min-height: 260px;"></div>
                     </div>
                 </div>
             </div>
@@ -522,7 +542,7 @@
                 </div>
             </div>
 
-            <!-- TABEL REKAPITULASI (SESUAI GAMBAR) -->
+            <!-- TABEL REKAPITULASI -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark m-0">
@@ -592,9 +612,9 @@
                     { id: 7, bulan: "Juli", ikm_skor: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_pria: 1, iipp_wanita: 0 },
                     { id: 8, bulan: "Agustus", ikm_skor: 4.00, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 10.00, iipp_pria: 1, iipp_wanita: 1 },
                     { id: 9, bulan: "September", ikm_skor: 3.81, ikm_pria: 3, ikm_wanita: 0, iipp_skor: 9.44, iipp_pria: 3, iipp_wanita: 0 },
-                    { id: 10, bulan: "Oktober", ikm_skor: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_pria: 0, iipp_wanita: 0 },
-                    { id: 11, bulan: "November", ikm_skor: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_pria: 0, iipp_wanita: 0 },
-                    { id: 12, bulan: "Desember", ikm_skor: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_pria: 0, iipp_wanita: 0 }
+                    { id: 10, bulan: "Oktober", ikm_skor: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, ikm_pria: 0, ikm_wanita: 0 },
+                    { id: 11, bulan: "November", ikm_skor: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, ikm_pria: 0, ikm_wanita: 0 },
+                    { id: 12, bulan: "Desember", ikm_skor: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, ikm_pria: 0, ikm_wanita: 0 }
                 ];
             }
             return Array.from({ length: 12 }, (_, i) => ({
@@ -609,6 +629,7 @@
             }));
         }
 
+        let chartCategory3DInstance = null;
         let chartDualInstance = null;
         let chartRespondenIkmInstance = null;
         let chartRespondenIippInstance = null;
@@ -620,24 +641,79 @@
         });
 
         function initCharts() {
-            // 1. DUAL Y-AXIS CHART (IKM SKALA 4 VS IIPP SKALA 10)
+            // 1. LINE CHART TAJAM TREN 14 KATEGORI PENILAIAN (5 IIPP & 9 IKM)
+            const optionsCat3D = {
+                series: [
+                    // IIPP Categories (5)
+                    { name: "[IIPP] Diskriminasi Pelayanan", data: [null, null, 6.00, 5.95, 6.00, 5.50, 6.00, 6.00, 5.67, null, null, null] },
+                    { name: "[IIPP] Pelayanan Di Luar Prosedur", data: [null, null, 6.00, 5.95, 6.00, 5.50, 6.00, 6.00, 5.67, null, null, null] },
+                    { name: "[IIPP] Penerimaan Imbalan", data: [null, null, 6.00, 5.95, 6.00, 5.50, 6.00, 6.00, 5.67, null, null, null] },
+                    { name: "[IIPP] Percaloan/Perantara Tidak Resmi", data: [null, null, 6.00, 5.95, 6.00, 5.50, 6.00, 6.00, 5.67, null, null, null] },
+                    { name: "[IIPP] Pungutan Liar (Pungli)", data: [null, null, 6.00, 5.95, 6.00, 5.50, 6.00, 6.00, 5.67, null, null, null] },
+                    // IKM Categories (9)
+                    { name: "[IKM] Biaya/tarif", data: [null, null, 4.00, 4.00, 4.00, 3.85, 4.00, 4.00, 3.90, null, null, null] },
+                    { name: "[IKM] Kompetensi Pelaksana", data: [null, null, 4.00, 3.98, 4.00, 3.80, 4.00, 4.00, 3.85, null, null, null] },
+                    { name: "[IKM] Penanganan Pengaduan, Saran dan Masukan", data: [null, null, 4.00, 3.93, 4.00, 3.75, 4.00, 4.00, 3.80, null, null, null] },
+                    { name: "[IKM] Perilaku Pelaksana", data: [null, null, 4.00, 3.99, 4.00, 3.85, 4.00, 4.00, 3.88, null, null, null] },
+                    { name: "[IKM] Persyaratan", data: [null, null, 4.00, 3.92, 4.00, 3.75, 4.00, 4.00, 3.80, null, null, null] },
+                    { name: "[IKM] Produk Sertifikasi Jenis Pelayanan", data: [null, null, 4.00, 3.95, 4.00, 3.80, 4.00, 4.00, 3.82, null, null, null] },
+                    { name: "[IKM] Sarana dan Prasarana", data: [null, null, 4.00, 3.91, 4.00, 3.70, 4.00, 4.00, 3.75, null, null, null] },
+                    { name: "[IKM] Sistem, Mekanisme, dan Prosedur", data: [null, null, 4.00, 3.90, 4.00, 3.75, 4.00, 4.00, 3.78, null, null, null] },
+                    { name: "[IKM] Waktu Penyelesaian", data: [null, null, 4.00, 3.88, 4.00, 3.70, 4.00, 4.00, 3.72, null, null, null] }
+                ],
+                chart: {
+                    height: 480,
+                    type: 'line',
+                    toolbar: { show: true },
+                    dropShadow: { enabled: false }, // Tanpa bayangan buram agar garis terlihat jelas
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 1000
+                    }
+                },
+                colors: [
+                    '#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4',
+                    '#2563eb', '#6366f1', '#8b5cf6', '#d946ef', '#ec4899', '#f43f5e', '#84cc16', '#14b8a6', '#0284c7'
+                ],
+                stroke: { curve: 'smooth', width: 2.5 },
+                markers: { size: 4, strokeColors: '#ffffff', strokeWidth: 2, hover: { size: 7 } },
+                xaxis: { categories: bulanListFull, labels: { style: { fontWeight: 600, colors: '#64748b' } } },
+                yaxis: {
+                    min: 0, max: 6, tickAmount: 6,
+                    labels: { formatter: (val) => val ? val.toFixed(1) : '0', style: { fontWeight: 600 } }
+                },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                legend: { position: 'bottom', horizontalAlign: 'center', fontWeight: 600, fontSize: '12px', itemMargin: { horizontal: 8, vertical: 5 } },
+                tooltip: { 
+                    theme: 'dark', 
+                    shared: true,
+                    intersect: false,
+                    y: { formatter: (val) => (val !== null && val !== undefined) ? val.toFixed(2) : 'Belum Ada Data' } 
+                }
+            };
+
+            chartCategory3DInstance = new ApexCharts(document.getElementById('chartTrendKategori3D'), optionsCat3D);
+            chartCategory3DInstance.render();
+
+            // 2. DUAL Y-AXIS CHART RINGKAS (IKM SKALA 4 VS IIPP SKALA 10)
             const optionsDual = {
                 series: [
                     { name: "Capaian IKM (Skala 4)", type: 'area', data: [] },
                     { name: "Capaian IIPP (Skala 10)", type: 'line', data: [] }
                 ],
                 chart: {
-                    height: 380,
+                    height: 260,
                     type: 'line',
                     toolbar: { show: false },
-                    dropShadow: { enabled: true, color: '#2563eb', top: 10, left: 0, blur: 8, opacity: 0.2 },
-                    animations: { enabled: true, easing: 'easeinout', speed: 1200 }
+                    dropShadow: { enabled: true, color: '#2563eb', top: 6, left: 0, blur: 6, opacity: 0.18 },
+                    animations: { enabled: true, easing: 'easeinout', speed: 1000 }
                 },
                 colors: ['#2563eb', '#10b981'],
-                stroke: { curve: 'smooth', width: [3, 3] },
+                stroke: { curve: 'smooth', width: [2.5, 2.5] },
                 fill: {
                     type: ['gradient', 'solid'],
-                    gradient: { shadeIntensity: 1, opacityFrom: 0.35, opacityTo: 0.02, stops: [0, 90, 100] }
+                    gradient: { shadeIntensity: 1, opacityFrom: 0.25, opacityTo: 0.02, stops: [0, 90, 100] }
                 },
                 xaxis: { categories: bulanListFull },
                 yaxis: [
@@ -655,15 +731,15 @@
                         labels: { formatter: (val) => val ? val.toFixed(0) : '0' }
                     }
                 ],
-                markers: { size: 5, strokeColors: '#fff', strokeWidth: 2 },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
-                legend: { position: 'top', horizontalAlign: 'center', fontWeight: 600 }
+                markers: { size: 4, strokeColors: '#fff', strokeWidth: 2 },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 3 },
+                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
             };
 
             chartDualInstance = new ApexCharts(document.getElementById('chartDualIkmIipp'), optionsDual);
             chartDualInstance.render();
 
-            // 2. BAR CHART RESPONDEN IKM (GENDER)
+            // 3. BAR CHART RESPONDEN IKM (GENDER)
             const optionsIkmBar = {
                 series: [
                     { name: "Pria", data: [] },
@@ -686,7 +762,7 @@
             chartRespondenIkmInstance = new ApexCharts(document.getElementById('chartBarRespondenIkm'), optionsIkmBar);
             chartRespondenIkmInstance.render();
 
-            // 3. BAR CHART RESPONDEN IIPP (GENDER)
+            // 4. BAR CHART RESPONDEN IIPP (GENDER)
             const optionsIippBar = {
                 series: [
                     { name: "Pria", data: [] },
@@ -742,6 +818,7 @@
 
             document.getElementById('lblTahunHeader').textContent = tahun;
             document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChartKat').textContent = tahun;
             document.getElementById('lblTahunTabel').textContent = tahun;
             document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
 
@@ -767,6 +844,10 @@
             const arrIkmWanitaChart = [];
             const arrIippPriaChart = [];
             const arrIippWanitaChart = [];
+
+            // Penampung 14 Kategori (Nilai null jika bulan belum ada responden)
+            const ii1 = [], ii2 = [], ii3 = [], ii4 = [], ii5 = [];
+            const ik1 = [], ik2 = [], ik3 = [], ik4 = [], ik5 = [], ik6 = [], ik7 = [], ik8 = [], ik9 = [];
 
             const tbody = document.getElementById('tblBodyIkmIipp');
             tbody.innerHTML = '';
@@ -795,13 +876,34 @@
                     sumIippSkorWeighted += (iippSkorNum * totalIippResp);
                 }
 
-                arrIkmSkorChart.push(ikmSkorNum !== null ? ikmSkorNum : 0);
-                arrIippSkorChart.push(iippSkorNum !== null ? iippSkorNum : 0);
+                arrIkmSkorChart.push(ikmSkorNum !== null ? ikmSkorNum : null);
+                arrIippSkorChart.push(iippSkorNum !== null ? iippSkorNum : null);
 
                 arrIkmPriaChart.push(ikmPria);
                 arrIkmWanitaChart.push(ikmWanita);
                 arrIippPriaChart.push(iippPria);
                 arrIippWanitaChart.push(iippWanita);
+
+                // Populate Kategori (Gunakan null jika belum ada responden)
+                const kat = m.kategori_detail || {};
+                const iippRaw6 = (iippSkorNum !== null && totalIippResp > 0) ? (iippSkorNum / 10.0) * 6.0 : null;
+                const ikmVal = (ikmSkorNum !== null && totalIkmResp > 0) ? ikmSkorNum : null;
+
+                ii1.push(kat.iipp_diskriminasi !== undefined ? kat.iipp_diskriminasi : iippRaw6);
+                ii2.push(kat.iipp_luar_prosedur !== undefined ? kat.iipp_luar_prosedur : iippRaw6);
+                ii3.push(kat.iipp_imbalan !== undefined ? kat.iipp_imbalan : iippRaw6);
+                ii4.push(kat.iipp_percaloan !== undefined ? kat.iipp_percaloan : iippRaw6);
+                ii5.push(kat.iipp_pungli !== undefined ? kat.iipp_pungli : iippRaw6);
+
+                ik1.push(kat.ikm_biaya !== undefined ? kat.ikm_biaya : ikmVal);
+                ik2.push(kat.ikm_kompetensi !== undefined ? kat.ikm_kompetensi : ikmVal);
+                ik3.push(kat.ikm_pengaduan !== undefined ? kat.ikm_pengaduan : ikmVal);
+                ik4.push(kat.ikm_perilaku !== undefined ? kat.ikm_perilaku : ikmVal);
+                ik5.push(kat.ikm_persyaratan !== undefined ? kat.ikm_persyaratan : ikmVal);
+                ik6.push(kat.ikm_produk !== undefined ? kat.ikm_produk : ikmVal);
+                ik7.push(kat.ikm_sarpras !== undefined ? kat.ikm_sarpras : ikmVal);
+                ik8.push(kat.ikm_prosedur !== undefined ? kat.ikm_prosedur : ikmVal);
+                ik9.push(kat.ikm_waktu !== undefined ? kat.ikm_waktu : ikmVal);
 
                 const strIkmSkor = ikmSkorNum !== null ? ikmSkorNum.toFixed(2) : '-';
                 const strIippSkor = iippSkorNum !== null ? iippSkorNum.toFixed(2) : '-';
@@ -842,6 +944,25 @@
             document.getElementById('cardIippGender').textContent = `Pria: ${totIippPria} | Wanita: ${totIippWanita}`;
 
             // UPDATE CHARTS
+            if (chartCategory3DInstance) {
+                chartCategory3DInstance.updateSeries([
+                    { name: "[IIPP] Diskriminasi Pelayanan", data: ii1 },
+                    { name: "[IIPP] Pelayanan Di Luar Prosedur", data: ii2 },
+                    { name: "[IIPP] Penerimaan Imbalan", data: ii3 },
+                    { name: "[IIPP] Percaloan/Perantara Tidak Resmi", data: ii4 },
+                    { name: "[IIPP] Pungutan Liar (Pungli)", data: ii5 },
+                    { name: "[IKM] Biaya/tarif", data: ik1 },
+                    { name: "[IKM] Kompetensi Pelaksana", data: ik2 },
+                    { name: "[IKM] Penanganan Pengaduan, Saran dan Masukan", data: ik3 },
+                    { name: "[IKM] Perilaku Pelaksana", data: ik4 },
+                    { name: "[IKM] Persyaratan", data: ik5 },
+                    { name: "[IKM] Produk Sertifikasi Jenis Pelayanan", data: ik6 },
+                    { name: "[IKM] Sarana dan Prasarana", data: ik7 },
+                    { name: "[IKM] Sistem, Mekanisme, dan Prosedur", data: ik8 },
+                    { name: "[IKM] Waktu Penyelesaian", data: ik9 }
+                ]);
+            }
+
             if (chartDualInstance) {
                 chartDualInstance.updateSeries([
                     { name: "Capaian IKM (Skala 4)", type: 'area', data: arrIkmSkorChart },
