@@ -384,7 +384,7 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link" title="MOTS">
+                <a href="mots.html" class="menu-link" title="MOTS">
                     <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
                     <span class="menu-text">MOTS</span>
                 </a>
@@ -648,12 +648,12 @@
         </div>
     </footer>
 
-    <!-- MODAL EDIT DATA (ADMIN CENTRAL - 6 TAB) -->
+    <!-- MODAL EDIT DATA (ADMIN CENTRAL - 7 TAB) -->
     <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="max-width: 95%;">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA, IKM-IIPP & Pelayanan ISR</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA, IKM-IIPP, Pelayanan ISR & MOTS</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
@@ -678,6 +678,9 @@
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold" style="color: #0f4c81;" id="perizinan-tab" data-bs-toggle="tab" data-bs-target="#tab-perizinan" type="button" role="tab">6. Pelayanan & Perizinan</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold text-danger" id="mots-tab" data-bs-toggle="tab" data-bs-target="#tab-mots" type="button" role="tab">7. Layanan MOTS & ISR</button>
                             </li>
                         </ul>
 
@@ -895,6 +898,59 @@
                                         </thead>
                                         <tbody id="tbodyPerizinanEdit" class="small"></tbody>
                                     </table>
+                                </div>
+                            </div>
+
+                            <!-- TAB 7: INTEGRASI DENGAN DASHBOARD MOTS -->
+                            <div class="tab-pane fade" id="tab-mots" role="tabpanel">
+                                <!-- CARD 1: UPLOAD FILE EXCEL ISR DITERBITKAN -->
+                                <div class="card p-4 mb-3 border-0 shadow-sm bg-white" style="border-radius: 16px;">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                        <h6 class="fw-bold mb-0 text-success">
+                                            <i class="bi bi-file-earmark-excel-fill me-2"></i>Upload File Excel Data ISR Diterbitkan
+                                        </h6>
+                                        <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle rounded-pill px-3 py-1">
+                                            Format .xlsx / .xls
+                                        </span>
+                                    </div>
+                                    <p class="small text-muted mb-3">
+                                        Upload file Excel daftar sertifikat ISR diterbitkan untuk memperbarui tabel ISR dan grafik tren bulanan pada dashboard <strong>mots.html</strong>.
+                                    </p>
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-md-8">
+                                            <input type="file" id="excelFileIsrDiterbitkan" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-success btn-sm w-100 fw-bold text-white shadow-sm" onclick="importExcelIsrDiterbitkan()">
+                                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload & Simpan Ke Firebase
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CARD 2: UPLOAD FILE EXCEL PESERTA BIMTEK SRC & IKRAN -->
+                                <div class="card p-4 border-0 shadow-sm bg-white" style="border-radius: 16px;">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                        <h6 class="fw-bold mb-0" style="color: #0d9488;">
+                                            <i class="bi bi-people-fill me-2"></i>Upload File Excel Peserta Bimtek SRC & IKRAN
+                                        </h6>
+                                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill px-3 py-1">
+                                            Format .xlsx / .xls
+                                        </span>
+                                    </div>
+                                    <p class="small text-muted mb-3">
+                                        Upload file Excel daftar peserta Bimtek untuk memperbarui tabel Peserta Bimtek pada dashboard <strong>mots.html</strong>.
+                                    </p>
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-md-8">
+                                            <input type="file" id="excelFilePesertaBimtek" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-sm w-100 fw-bold text-white shadow-sm" onclick="importExcelPesertaBimtek()" style="background-color: #0d9488; border-color: #0d9488;">
+                                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload & Simpan Ke Firebase
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1345,7 +1401,7 @@
             tbody.innerHTML = html;
         }
 
-        // FUNGSI PROSES & IMPORT FILE EXCEL SURVEI IKM & IIPP (KOREKSI INDEKS KOLOM)
+        // FUNGSI PROSES & IMPORT FILE EXCEL SURVEI IKM & IIPP
         function importExcelIkmData() {
             const fileInput = document.getElementById('excelFileIkm');
             if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
@@ -1445,12 +1501,6 @@
                         });
 
                     } else {
-                        // FORMAT SURVEI MENTAH (PEMETAAN PRESISI UNTUK EXCEL RESPONDEN)
-                        // Column C (Index 2) = Start Date
-                        // Column E (Index 4) = Jenis Kelamin
-                        // Column I-Q (Index 8-16) = 9 Pertanyaan IKM (Skala 1-4)
-                        // Column S-W (Index 18-22) = 5 Pertanyaan IIPP (Skala 1-6)
-
                         const startDateIdx = 2;
                         const genderIdx = 4;
                         const ikmStartIdx = 8, ikmEndIdx = 16;
@@ -1486,7 +1536,7 @@
                             const rowYear = dateObj.getFullYear();
                             if (rowYear !== selectedYear) continue;
 
-                            const monthIdx = dateObj.getMonth(); // 0 - 11
+                            const monthIdx = dateObj.getMonth(); 
 
                             const genderStr = row[genderIdx] ? String(row[genderIdx]).toLowerCase().trim() : '';
                             if (genderStr.includes('laki') || genderStr.includes('pria')) {
@@ -1496,7 +1546,6 @@
                             }
                             monthlyStats[monthIdx].respondents++;
 
-                            // 9 Pertanyaan IKM (Index 8 - 16, Skala 1-4)
                             const ikmScores = [];
                             for (let c = ikmStartIdx; c <= ikmEndIdx; c++) {
                                 const catIdx = c - ikmStartIdx;
@@ -1515,7 +1564,6 @@
                                 monthlyStats[monthIdx].ikm_count++;
                             }
 
-                            // 5 Pertanyaan IIPP (Index 18 - 22, Skala 1-6 Konversi ke Skala 10)
                             const iippScores = [];
                             for (let c = iippStartIdx; c <= iippEndIdx; c++) {
                                 const catIdx = c - iippStartIdx;
@@ -1523,7 +1571,6 @@
                                     const val = parseFloat(row[c]);
                                     if (!isNaN(val)) {
                                         iippScores.push(val);
-                                        // Simpan nilai terkonversi ke skala 10 untuk per sub-kategori
                                         monthlyStats[monthIdx].iipp_cats[catIdx] += (val / 6.0) * 10.0;
                                         monthlyStats[monthIdx].iipp_counts[catIdx]++;
                                     }
@@ -1555,7 +1602,6 @@
 
                             const getAvgCat = (sum, count) => count > 0 ? parseFloat((sum / count).toFixed(2)) : null;
 
-                            // Simpan detail 14 variabel kategori untuk disinkronkan ke Firebase & ikm.html
                             tempIkmKategoriDetail[m] = {
                                 ikm_persyaratan: getAvgCat(st.ikm_cats[0], st.ikm_counts[0]),
                                 ikm_prosedur: getAvgCat(st.ikm_cats[1], st.ikm_counts[1]),
@@ -1623,6 +1669,183 @@
             const lng = parseInt(document.getElementById(`prz_lng_${i}`).value) || 0;
             const onl = parseInt(document.getElementById(`prz_onl_${i}`).value) || 0;
             document.getElementById(`prz_tot_${i}`).value = lng + onl;
+        }
+
+        // 6. FUNGSI IMPORT EXCEL DATA ISR DITERBITKAN UNTUK DASHBOARD MOTS
+        function importExcelIsrDiterbitkan() {
+            const fileInput = document.getElementById('excelFileIsrDiterbitkan');
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                Swal.fire('Perhatian', 'Silakan pilih file Excel daftar ISR diterbitkan terlebih dahulu.', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+
+                    if (!jsonDataRaw || jsonDataRaw.length === 0) {
+                        Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
+                        return;
+                    }
+
+                    const parsedIsrList = [];
+                    const isrMonthlyCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    const bulanKeyList = ["jan", "feb", "mar", "apr", "mei", "jun", "jul", "agu", "sep", "okt", "nov", "des"];
+
+                    jsonDataRaw.forEach((row) => {
+                        if (row && row.length >= 2 && row[0]) {
+                            const col0 = String(row[0]).toLowerCase();
+                            if (col0.includes('no') || col0.includes('nama') || col0.includes('pemohon')) return;
+
+                            const tglText = row[3] ? String(row[3]).trim() : '';
+                            parsedIsrList.push({
+                                pemohon: row[0] ? String(row[0]).trim() : '',
+                                stasiun: row[1] ? String(row[1]).trim() : 'IKRAN',
+                                noIsr: row[2] ? String(row[2]).trim() : '',
+                                tglTerbit: tglText || new Date().toLocaleDateString('id-ID'),
+                                status: row[4] ? String(row[4]).trim() : 'Aktif'
+                            });
+
+                            if (tglText) {
+                                const tglLower = tglText.toLowerCase();
+                                bulanKeyList.forEach((bName, bIdx) => {
+                                    if (tglLower.includes(bName)) {
+                                        isrMonthlyCounts[bIdx]++;
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    if (parsedIsrList.length === 0) {
+                        Swal.fire('Peringatan', 'Tidak ada baris data ISR yang valid ditemukan.', 'warning');
+                        return;
+                    }
+
+                    const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                    const pathNode = (selectedYear === 2026) 
+                        ? 'kinerja_sarpras/mots_detail' 
+                        : `kinerja_sarpras_by_year/${selectedYear}/mots_detail`;
+
+                    Swal.fire({
+                        title: 'Menyimpan Data...',
+                        text: `Mengunggah ${parsedIsrList.length} data ISR ke Firebase`,
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+
+                    database.ref(pathNode).update({
+                        isr_diterbitkan: parsedIsrList,
+                        isr_bulanan: isrMonthlyCounts,
+                        isrMots: `${parsedIsrList.length} ISR`
+                    }).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Upload Berhasil!',
+                            text: `Berhasil mengunggah ${parsedIsrList.length} data ISR Diterbitkan & memperbarui grafik bulanan di mots.html.`,
+                            confirmButtonText: 'OK'
+                        });
+                    }).catch(err => {
+                        Swal.fire('Error Firebase', err.message, 'error');
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 7. FUNGSI IMPORT EXCEL PESERTA BIMTEK UNTUK DASHBOARD MOTS
+        function importExcelPesertaBimtek() {
+            const fileInput = document.getElementById('excelFilePesertaBimtek');
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                Swal.fire('Perhatian', 'Silakan pilih file Excel data peserta Bimtek terlebih dahulu.', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+
+                    if (!jsonDataRaw || jsonDataRaw.length === 0) {
+                        Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
+                        return;
+                    }
+
+                    const parsedPesertaList = [];
+
+                    jsonDataRaw.forEach((row) => {
+                        if (row && row.length >= 2 && row[0]) {
+                            const col0 = String(row[0]).toLowerCase();
+                            if (col0.includes('no') || col0.includes('nama') || col0.includes('callsign')) return;
+
+                            parsedPesertaList.push({
+                                nama: row[0] ? String(row[0]).trim() : '',
+                                callsign: row[1] ? String(row[1]).trim() : '',
+                                certNo: row[2] ? String(row[2]).trim() : '',
+                                tgl: row[3] ? String(row[3]).trim() : new Date().toLocaleDateString('id-ID'),
+                                status: row[4] ? String(row[4]).trim() : 'Siap Cetak'
+                            });
+                        }
+                    });
+
+                    if (parsedPesertaList.length === 0) {
+                        Swal.fire('Peringatan', 'Tidak ada baris data Peserta Bimtek yang valid ditemukan.', 'warning');
+                        return;
+                    }
+
+                    const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                    const pathNode = (selectedYear === 2026) 
+                        ? 'kinerja_sarpras/mots_detail' 
+                        : `kinerja_sarpras_by_year/${selectedYear}/mots_detail`;
+
+                    Swal.fire({
+                        title: 'Menyimpan Data...',
+                        text: `Mengunggah ${parsedPesertaList.length} data Peserta Bimtek ke Firebase`,
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+
+                    database.ref(pathNode).update({
+                        peserta_bimtek: parsedPesertaList,
+                        pesertaBimtek: `${parsedPesertaList.length} Peserta`
+                    }).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Upload Berhasil!',
+                            text: `Berhasil mengunggah ${parsedPesertaList.length} data Peserta Bimtek ke Firebase untuk Tahun ${selectedYear}.`,
+                            confirmButtonText: 'OK'
+                        });
+                    }).catch(err => {
+                        Swal.fire('Error Firebase', err.message, 'error');
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
         }
 
         function loadDataKinerjaRealtime(tahun = activeDashboardYear) {
