@@ -517,25 +517,24 @@
                         <!-- SEARCH FILTER ISR -->
                         <div class="input-group input-group-sm mb-2">
                             <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" id="inpSearchIsr" class="form-control" placeholder="Cari pemohon, nomor ISR, atau stasiun..." onkeyup="filterIsrTable()">
+                            <input type="text" id="inpSearchIsr" class="form-control" placeholder="Cari perusahaan, kapal, nomor izin..." onkeyup="filterIsrTable()">
                         </div>
 
-                        <!-- TABEL SCROLL DATA ISR -->
+                        <!-- TABEL SCROLL DATA ISR (5 KOLOM sesuaI instruksi) -->
                         <div class="table-responsive table-data-scroll border rounded-3 bg-white">
                             <table class="table table-hover table-striped table-bordered align-middle text-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 35px;">No</th>
-                                        <th>Nama Pemohon / Perusahaan</th>
-                                        <th>Jenis / Stasiun</th>
-                                        <th>No. ISR</th>
-                                        <th>Tgl Terbit</th>
-                                        <th>Status</th>
+                                        <th style="width: 35px;">No.</th>
+                                        <th>Nama Perusahaan</th>
+                                        <th>Nama Kapal</th>
+                                        <th>Bulan Terbit</th>
+                                        <th>Nomor Izin</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyDataIsr">
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted py-3">Memuat data ISR diterbitkan...</td>
+                                        <td colspan="5" class="text-center text-muted py-3">Memuat data ISR diterbitkan...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -793,12 +792,12 @@
                 rawDataIsrList = data.isr_diterbitkan;
             } else {
                 rawDataIsrList = [
-                    { pemohon: "Palangka Utama", stasiun: "IKRAN", noIsr: "2.74973455111.72511", tglTerbit: "07 Agu 2026", status: "Aktif" },
-                    { pemohon: "PT. Borneo Radio", stasiun: "VHF Marine", noIsr: "2.81023948122.91022", tglTerbit: "12 Agu 2026", status: "Aktif" },
-                    { pemohon: "Komunitas Maritim", stasiun: "SRC", noIsr: "2.91029384711.10293", tglTerbit: "15 Agu 2026", status: "Aktif" },
-                    { pemohon: "Koperasi Kumai", stasiun: "IKRAN", noIsr: "2.38492019384.81920", tglTerbit: "18 Agu 2026", status: "Aktif" },
-                    { pemohon: "Dinas Perikanan", stasiun: "Land Mobile", noIsr: "2.19283746501.92810", tglTerbit: "22 Agu 2026", status: "Aktif" },
-                    { pemohon: "PT. Palangka Trans", stasiun: "IKRAN", noIsr: "2.91827364510.18273", tglTerbit: "25 Agu 2026", status: "Aktif" }
+                    { namaPerusahaan: "PT. Palangka Utama", namaKapal: "KM. Borneo Express", bulanTerbit: "Agustus 2026", nomorIzin: "2.74973455111.72511" },
+                    { namaPerusahaan: "PT. Borneo Radio", namaKapal: "KM. Bahari 01", bulanTerbit: "Agustus 2026", nomorIzin: "2.81023948122.91022" },
+                    { namaPerusahaan: "Komunitas Maritim", namaKapal: "KM. Sinar Laut", bulanTerbit: "Agustus 2026", nomorIzin: "2.91029384711.10293" },
+                    { namaPerusahaan: "Koperasi Kumai", namaKapal: "KM. Kumai Jaya", bulanTerbit: "Agustus 2026", nomorIzin: "2.38492019384.81920" },
+                    { namaPerusahaan: "Dinas Perikanan", namaKapal: "KM. Pengawas I", bulanTerbit: "Agustus 2026", nomorIzin: "2.19283746501.92810" },
+                    { namaPerusahaan: "PT. Palangka Trans", namaKapal: "KM. Trans Maritime", bulanTerbit: "Agustus 2026", nomorIzin: "2.91827364510.18273" }
                 ];
             }
             renderIsrTable(rawDataIsrList);
@@ -809,11 +808,12 @@
             if (data.isr_bulanan && Array.isArray(data.isr_bulanan) && data.isr_bulanan.length === 12) {
                 isrMonthlyTrend = data.isr_bulanan;
             } else if (rawDataIsrList.length > 0) {
-                // Hitung otomatis berdasarkan bulan pada tglTerbit jika array isr_bulanan belum disimpan manual
+                // Hitung otomatis berdasarkan bulan jika array isr_bulanan belum disimpan manual
                 const bulanList = ["jan", "feb", "mar", "apr", "mei", "jun", "jul", "agu", "sep", "okt", "nov", "des"];
                 rawDataIsrList.forEach(item => {
-                    if (item.tglTerbit) {
-                        const tglLower = String(item.tglTerbit).toLowerCase();
+                    const tglText = item.bulanTerbit || item.tglTerbit || '';
+                    if (tglText) {
+                        const tglLower = String(tglText).toLowerCase();
                         bulanList.forEach((bName, bIdx) => {
                             if (tglLower.includes(bName)) {
                                 isrMonthlyTrend[bIdx]++;
@@ -845,7 +845,7 @@
             renderPesertaBimtekTable(rawPesertaBimtekList);
         }
 
-        // RENDER TABEL ISR DITERBITKAN
+        // RENDER TABEL ISR DITERBITKAN (DENGAN 5 KOLOM BARU)
         function renderIsrTable(list) {
             const tbody = document.getElementById('tbodyDataIsr');
             const badgeTotal = document.getElementById('badgeTotalIsr');
@@ -853,21 +853,24 @@
             if (badgeTotal) badgeTotal.textContent = `${list.length} ISR`;
 
             if (!list || list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">Belum ada data ISR diterbitkan. Upload via sarpras.html</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Belum ada data ISR diterbitkan. Upload via sarpras.html</td></tr>`;
                 return;
             }
 
             let html = '';
             list.forEach((item, idx) => {
-                const statusBadgeClass = (item.status && item.status.toLowerCase().includes('aktif')) ? 'bg-success' : 'bg-primary';
+                const perusahaan = item.namaPerusahaan || item.pemohon || item.perusahaan || '-';
+                const kapal = item.namaKapal || item.kapal || item.stasiun || '-';
+                const bulan = item.bulanTerbit || item.tglTerbit || '-';
+                const noIzin = item.nomorIzin || item.noIsr || item.noIzin || '-';
+
                 html += `
                     <tr>
                         <td class="fw-bold">${idx + 1}</td>
-                        <td class="text-start fw-semibold text-dark">${item.pemohon || '-'}</td>
-                        <td><span class="badge bg-light text-teal border border-teal" style="color:#0d9488;">${item.stasiun || '-'}</span></td>
-                        <td class="small text-muted fw-bold">${item.noIsr || '-'}</td>
-                        <td class="small">${item.tglTerbit || '-'}</td>
-                        <td><span class="badge ${statusBadgeClass}">${item.status || 'Aktif'}</span></td>
+                        <td class="text-start fw-semibold text-dark">${perusahaan}</td>
+                        <td><span class="badge bg-light text-teal border border-teal" style="color:#0d9488;">${kapal}</span></td>
+                        <td class="small">${bulan}</td>
+                        <td class="small text-muted fw-bold">${noIzin}</td>
                     </tr>
                 `;
             });
@@ -883,9 +886,12 @@
             }
 
             const filtered = rawDataIsrList.filter(item => {
-                return (item.pemohon && item.pemohon.toLowerCase().includes(query)) ||
-                       (item.stasiun && item.stasiun.toLowerCase().includes(query)) ||
-                       (item.noIsr && item.noIsr.toLowerCase().includes(query));
+                const perusahaan = (item.namaPerusahaan || item.pemohon || item.perusahaan || '').toLowerCase();
+                const kapal = (item.namaKapal || item.kapal || item.stasiun || '').toLowerCase();
+                const bulan = (item.bulanTerbit || item.tglTerbit || '').toLowerCase();
+                const noIzin = (item.nomorIzin || item.noIsr || item.noIzin || '').toLowerCase();
+
+                return perusahaan.includes(query) || kapal.includes(query) || bulan.includes(query) || noIzin.includes(query);
             });
 
             renderIsrTable(filtered);
