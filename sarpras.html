@@ -396,9 +396,9 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link" title="BHP">
+                <a href="bhp.html" class="menu-link" title="BHP Frekuensi">
                     <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
-                    <span class="menu-text">BHP</span>
+                    <span class="menu-text">BHP Frekuensi</span>
                 </a>
             </li>
             <li class="menu-item">
@@ -654,12 +654,12 @@
         </div>
     </footer>
 
-    <!-- MODAL EDIT DATA (ADMIN CENTRAL - 7 TAB) -->
+    <!-- MODAL EDIT DATA (ADMIN CENTRAL - 8 TAB INKLUSIF BHP) -->
     <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="max-width: 95%;">
             <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA, IKM-IIPP, Pelayanan ISR & MOTS</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA, IKM-IIPP, Pelayanan ISR, MOTS & BHP</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
@@ -686,7 +686,10 @@
                                 <button class="nav-link fw-bold" style="color: #0f4c81;" id="perizinan-tab" data-bs-toggle="tab" data-bs-target="#tab-perizinan" type="button" role="tab">6. Pelayanan & Perizinan</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-danger" id="mots-tab" data-bs-toggle="tab" data-bs-target="#tab-mots" type="button" role="tab">7. Layanan MOTS & ISR</button>
+                                <button class="nav-link fw-bold text-warning" id="mots-tab" data-bs-toggle="tab" data-bs-target="#tab-mots" type="button" role="tab">7. Layanan MOTS & ISR</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold text-danger" id="bhp-tab" data-bs-toggle="tab" data-bs-target="#tab-bhp" type="button" role="tab">8. Penagihan BHP</button>
                             </li>
                         </ul>
 
@@ -959,6 +962,56 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- TAB 8: INTEGRASI DENGAN DASHBOARD BHP FREKUENSI -->
+                            <div class="tab-pane fade" id="tab-bhp" role="tabpanel">
+                                <!-- CARD 1: RINGKASAN TAGIHAN SPP BHP -->
+                                <div class="card p-4 mb-3 border-0 shadow-sm bg-white" style="border-radius: 16px;">
+                                    <h6 class="fw-bold text-primary mb-3">
+                                        <i class="bi bi-receipt me-2"></i>Ringkasan Tagihan SPP BHP Frekuensi
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold text-secondary small mb-1">Annual / Renewal (Tagihan Tahunan)</label>
+                                            <input type="number" id="inp_bhp_annual" class="form-control form-control-sm shadow-sm" value="81" min="0" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold text-secondary small mb-1">New (Tagihan Baru)</label>
+                                            <input type="number" id="inp_bhp_new" class="form-control form-control-sm shadow-sm" value="0" min="0" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold text-secondary small mb-1">Reminder (Surat Peringatan)</label>
+                                            <input type="number" id="inp_bhp_reminder" class="form-control form-control-sm shadow-sm" value="77" min="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CARD 2: UPLOAD FILE EXCEL DETAIL PENAGIHAN BHP -->
+                                <div class="card p-4 border-0 shadow-sm bg-white" style="border-radius: 16px;">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                        <h6 class="fw-bold mb-0 text-danger">
+                                            <i class="bi bi-file-earmark-excel-fill me-2"></i>Upload File Excel Detail Penagihan SPP BHP
+                                        </h6>
+                                        <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle rounded-pill px-3 py-1">
+                                            Format .xlsx / .xls
+                                        </span>
+                                    </div>
+                                    <p class="small text-muted mb-3">
+                                        Upload file Excel daftar tagihan BHP untuk memperbarui tabel penagihan dan grafik progress bulanan pada dashboard <strong>bhp.html</strong>.
+                                    </p>
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-md-8">
+                                            <input type="file" id="excelFileBhpTagihan" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger btn-sm w-100 fw-bold text-white shadow-sm" onclick="importExcelBhpTagihan()">
+                                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload & Simpan Ke Firebase
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 mt-4">
@@ -1038,6 +1091,7 @@
         
         let activeDashboardYear = "2026";
         let selectedTahunEditor = "2026";
+        let currentBhpTagihanList = [];
 
         // Array Penampung 14 Sub-Kategori Penilaian IKM & IIPP per Bulan
         let tempIkmKategoriDetail = Array.from({ length: 12 }, () => null);
@@ -1854,6 +1908,106 @@
             reader.readAsArrayBuffer(file);
         }
 
+        // 8. FUNGSI IMPORT EXCEL DETAIL TAGIHAN SPP BHP UNTUK DASHBOARD BHP.HTML
+        function importExcelBhpTagihan() {
+            const fileInput = document.getElementById('excelFileBhpTagihan');
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                Swal.fire('Perhatian', 'Silakan pilih file Excel data penagihan BHP terlebih dahulu.', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+
+                    if (!jsonDataRaw || jsonDataRaw.length === 0) {
+                        Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
+                        return;
+                    }
+
+                    const parsedBhpList = [];
+                    let annualCount = 0;
+                    let newCount = 0;
+                    let reminderCount = 0;
+
+                    jsonDataRaw.forEach((row) => {
+                        if (row && row.length >= 2 && row[0]) {
+                            const col0 = String(row[0]).toLowerCase();
+                            if (col0.includes('no') || col0.includes('wajib bayar') || col0.includes('nama')) return;
+
+                            const kat = row[3] ? String(row[3]).trim() : 'Annual/Renewal';
+                            const katLower = kat.toLowerCase();
+                            if (katLower.includes('new') || katLower.includes('baru')) newCount++;
+                            else if (katLower.includes('reminder') || katLower.includes('peringatan')) reminderCount++;
+                            else annualCount++;
+
+                            parsedBhpList.push({
+                                wajibBayar: row[1] ? String(row[1]).trim() : (row[0] ? String(row[0]).trim() : ''),
+                                noSpp: row[2] ? String(row[2]).trim() : '',
+                                kategori: kat,
+                                nominal: row[4] ? parseFloat(String(row[4]).replace(/[^0-9.]/g, '')) || 0 : 0,
+                                tglJatuhTempo: row[5] ? String(row[5]).trim() : '',
+                                status: row[6] ? String(row[6]).trim() : 'Lunas'
+                            });
+                        }
+                    });
+
+                    if (parsedBhpList.length === 0) {
+                        Swal.fire('Peringatan', 'Tidak ada baris data BHP yang valid ditemukan.', 'warning');
+                        return;
+                    }
+
+                    currentBhpTagihanList = parsedBhpList;
+
+                    const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                    const pathNode = (selectedYear === 2026) 
+                        ? 'kinerja_sarpras/bhp_detail' 
+                        : `kinerja_sarpras_by_year/${selectedYear}/bhp_detail`;
+
+                    Swal.fire({
+                        title: 'Menyimpan Data...',
+                        text: `Mengunggah ${parsedBhpList.length} data penagihan BHP ke Firebase`,
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+
+                    database.ref(pathNode).update({
+                        annual: annualCount || 81,
+                        new_tagihan: newCount || 0,
+                        reminder: reminderCount || 77,
+                        tagihan_list: parsedBhpList
+                    }).then(() => {
+                        if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = annualCount || 81;
+                        if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = newCount || 0;
+                        if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = reminderCount || 77;
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Upload Berhasil!',
+                            text: `Berhasil mengunggah ${parsedBhpList.length} data penagihan BHP & memperbarui dashboard bhp.html.`,
+                            confirmButtonText: 'OK'
+                        });
+                    }).catch(err => {
+                        Swal.fire('Error Firebase', err.message, 'error');
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
         function loadDataKinerjaRealtime(tahun = activeDashboardYear) {
             const pathNode = (tahun === '2026') ? 'kinerja_sarpras' : `kinerja_sarpras_by_year/${tahun}`;
 
@@ -2153,6 +2307,13 @@
                     if (document.getElementById(`prz_dist_${i}`)) document.getElementById(`prz_dist_${i}`).value = m.terdistribusi || 0;
                 });
             }
+
+            if (data.bhp_detail) {
+                if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = (data.bhp_detail.annual !== undefined) ? data.bhp_detail.annual : 81;
+                if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = (data.bhp_detail.new_tagihan !== undefined) ? data.bhp_detail.new_tagihan : 0;
+                if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = (data.bhp_detail.reminder !== undefined) ? data.bhp_detail.reminder : 77;
+                if (data.bhp_detail.tagihan_list) currentBhpTagihanList = data.bhp_detail.tagihan_list;
+            }
         }
 
         function simpanKinerja(event) {
@@ -2290,6 +2451,10 @@
                 });
             }
 
+            const bhpAnnual = parseInt(document.getElementById('inp_bhp_annual')?.value) || 81;
+            const bhpNew = parseInt(document.getElementById('inp_bhp_new')?.value) || 0;
+            const bhpReminder = parseInt(document.getElementById('inp_bhp_reminder')?.value) || 77;
+
             const dataUpdate = {
                 tahun: selectedTahunEditor,
                 k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
@@ -2311,7 +2476,14 @@
                 realisasi_anggaran: updatedAnggaran,
                 sla_monitoring: { months: updatedSlaMonths },
                 ikm_iipp_detail: { months: updatedIkmMonths },
-                perizinan_detail: { months: updatedPerizinanMonths }
+                perizinan_detail: { months: updatedPerizinanMonths },
+
+                bhp_detail: {
+                    annual: bhpAnnual,
+                    new_tagihan: bhpNew,
+                    reminder: bhpReminder,
+                    tagihan_list: currentBhpTagihanList
+                }
             };
 
             Swal.fire({
