@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASHBOARD BHP FREKUENSI RADIO - BALMON PALANGKARAYA</title>
+
+    <!-- Favicon & Google Font Inter -->
+    <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- ApexCharts CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
+
+    <style>
+        :root {
+            --primary-navy: #0f4c81;
+            --accent-blue: #2563eb;
+            --accent-amber: #f59e0b;
+            --accent-teal: #0d9488;
+            --accent-emerald: #10b981;
+            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+            --sidebar-collapsed-width: 68px;
+            --sidebar-expanded-width: 280px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(15, 76, 129, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR HEADER */
+        .navbar-custom {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1050;
+        }
+        
+        .logo-container {
+            width: 46px;
+            height: 46px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .logo-container img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+        }
+
+        /* SIDEBAR AUTO-HIDE */
+        .sidebar-autohide {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-collapsed-width);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            z-index: 1040;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .sidebar-autohide:hover {
+            width: var(--sidebar-expanded-width);
+        }
+
+        .sidebar-header {
+            padding: 0.5rem 1.25rem 1rem 1.25rem;
+            color: #93c5fd;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-autohide:hover .sidebar-header {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            color: rgba(255, 255, 255, 0.82);
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar-menu .menu-link:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-left-color: #38bdf8;
+        }
+
+        .sidebar-menu .menu-link.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-left-color: #38bdf8 !important;
+            font-weight: 700;
+        }
+
+        .sidebar-menu .menu-icon {
+            font-size: 1.4rem;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-menu .menu-text {
+            margin-left: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .sidebar-autohide:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* MAIN WRAPPER */
+        .main-wrapper {
+            margin-left: var(--sidebar-collapsed-width);
+            flex-grow: 1;
+            padding: 1.5rem 2rem;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* HEADER BANNER UTAMA */
+        .header-bhp-banner {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 60%, #2563eb 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 10px 25px rgba(15, 76, 129, 0.18);
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .banner-bg-circle {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .banner-bg-circle::after {
+            content: '';
+            position: absolute;
+            top: -40%; right: -5%;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+
+        /* DROPDOWN TAHUN */
+        .btn-tahun-dropdown {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .btn-tahun-dropdown:hover, .btn-tahun-dropdown:focus, .btn-tahun-dropdown.show {
+            background: rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* KARTU KPI MODERN (4 CARD ATAS) */
+        .card-kpi-bhp {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 18px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        .card-kpi-bhp:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 35px rgba(15, 76, 129, 0.12);
+            border-color: #cbd5e1;
+        }
+
+        .card-kpi-bhp::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 6px;
+            border-radius: 18px 0 0 18px;
+        }
+
+        .kpi-annual::before { background: #3b82f6; }
+        .kpi-new::before { background: #06b6d4; }
+        .kpi-reminder::before { background: #f59e0b; }
+        .kpi-total::before { background: #eab308; }
+
+        .icon-box-kpi {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* KARTU GRAFIK & TABEL */
+        .card-custom {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            padding: 1.5rem;
+        }
+        .card-custom:hover {
+            box-shadow: 0 20px 35px rgba(15, 76, 129, 0.1);
+        }
+
+        /* TABEL SCROLLING */
+        .table-data-scroll {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .table-data-scroll table th {
+            position: sticky;
+            top: 0;
+            background-color: #0f4c81 !important;
+            color: white;
+            z-index: 2;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table-data-scroll table td {
+            font-size: 0.82rem;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper { margin-left: 0; padding: 1rem; }
+            .sidebar-autohide { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar navbar-dark navbar-custom sticky-top">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="sarpras.html">
+                <div class="logo-container me-3">
+                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
+                </div>
+                <div>
+                    <span class="text-white d-block fs-6">PENAGIHAN BHP FREKUENSI RADIO</span>
+                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">TIM KERJA SARPRAS & LAYANAN</small>
+                </div>
+            </a>
+            
+            <a href="sarpras.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
+                <i class="bi bi-arrow-left-circle me-1"></i> Dashboard Sarpras
+            </a>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR AUTO-HIDE TERPADU -->
+    <aside class="sidebar-autohide">
+        <div class="sidebar-header">
+            <span>LAYANAN & PERIZINAN</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="sarpras.html" class="menu-link" title="Dashboard Utama Sarpras">
+                    <span class="menu-icon text-warning"><i class="bi bi-speedometer2"></i></span>
+                    <span class="menu-text">Dashboard Sarpras</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
+                    <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
+                    <span class="menu-text">Aplikasi SMFR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="unar.html" class="menu-link" title="UNAR">
+                    <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
+                    <span class="menu-text">UNAR</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="mots.html" class="menu-link" title="MOTS">
+                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
+                    <span class="menu-text">MOTS & Bimtek</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="bhp.html" class="menu-link active" title="BHP">
+                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
+                    <span class="menu-text">BHP Frekuensi</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="perizinan.html" class="menu-link" title="Pelayanan & Perizinan">
+                    <span class="menu-icon" style="color: #c084fc;"><i class="bi bi-award-fill"></i></span>
+                    <span class="menu-text">Pelayanan & Perizinan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="realisasi_anggaran.html" class="menu-link" title="Realisasi Anggaran">
+                    <span class="menu-icon" style="color: #34d399;"><i class="bi bi-cash-stack"></i></span>
+                    <span class="menu-text">Realisasi Anggaran</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
+                    <span class="menu-icon" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
+                    <span class="menu-text">Fungsi Monitoring</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="ikm.html" class="menu-link" title="IKM & IIPP">
+                    <span class="menu-icon" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
+                    <span class="menu-text">IKM & IIPP</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper">
+        <div class="container-fluid">
+
+            <!-- HEADER BANNER -->
+            <div class="header-bhp-banner mb-4">
+                <div class="banner-bg-circle"></div>
+
+                <div style="z-index: 1;">
+                    <h3 class="fw-extrabold mb-1" style="letter-spacing: 0.5px;">PENAGIHAN TAGIHAN SPP BHP FREKUENSI RADIO</h3>
+                    <h6 class="fw-light mb-0 text-white-50">Jumlah tagihan yang telah ditagihkan sesuai target pusat (<span id="lblTahunHeader">2026</span>)</h6>
+                </div>
+
+                <!-- DROPDOWN SELEKSI TAHUN -->
+                <div class="dropdown" style="z-index: 2;">
+                    <button class="btn btn-sm btn-tahun-dropdown fw-bold dropdown-toggle rounded-3 px-3 py-2 d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar3 fs-6"></i>
+                        <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="dropdownTahun" style="border-radius: 12px;">
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2025, this, event)">Tahun 2025</a></li>
+                        <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeTahun(2026, this, event)">Tahun 2026</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2027, this, event)">Tahun 2027</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2028, this, event)">Tahun 2028</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2029, this, event)">Tahun 2029</a></li>
+                        <li><a class="dropdown-item fw-semibold" href="#" onclick="changeTahun(2030, this, event)">Tahun 2030</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SEKSI 1: 4 KARTU KPI RINGKASAN TAGIHAN SPP -->
+            <div class="row g-3 mb-4">
+                <!-- KPI 1: Annual/Renewal -->
+                <div class="col-6 col-lg-3">
+                    <div class="card-kpi-bhp kpi-annual">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="small fw-bold text-secondary text-uppercase">Annual / Renewal</span>
+                            <div class="icon-box-kpi" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                                <i class="bi bi-journal-check"></i>
+                            </div>
+                        </div>
+                        <h2 class="fw-extrabold text-primary mb-0" id="valAnnual">81</h2>
+                        <small class="text-muted fw-semibold" style="font-size: 0.78rem;">Tagihan Tahunan</small>
+                    </div>
+                </div>
+
+                <!-- KPI 2: New -->
+                <div class="col-6 col-lg-3">
+                    <div class="card-kpi-bhp kpi-new">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="small fw-bold text-secondary text-uppercase">New</span>
+                            <div class="icon-box-kpi" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                                <i class="bi bi-file-earmark-plus-fill"></i>
+                            </div>
+                        </div>
+                        <h2 class="fw-extrabold text-info mb-0" id="valNew">0</h2>
+                        <small class="text-muted fw-semibold" style="font-size: 0.78rem;">Tagihan Baru</small>
+                    </div>
+                </div>
+
+                <!-- KPI 3: Reminder -->
+                <div class="col-6 col-lg-3">
+                    <div class="card-kpi-bhp kpi-reminder">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="small fw-bold text-secondary text-uppercase">Reminder</span>
+                            <div class="icon-box-kpi" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <i class="bi bi-bell-fill"></i>
+                            </div>
+                        </div>
+                        <h2 class="fw-extrabold text-warning mb-0" id="valReminder">77</h2>
+                        <small class="text-muted fw-semibold" style="font-size: 0.78rem;">Surat Peringatan</small>
+                    </div>
+                </div>
+
+                <!-- KPI 4: Total -->
+                <div class="col-6 col-lg-3">
+                    <div class="card-kpi-bhp kpi-total">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="small fw-bold text-secondary text-uppercase">Total Tagihan</span>
+                            <div class="icon-box-kpi" style="background: linear-gradient(135deg, #eab308, #ca8a04);">
+                                <i class="bi bi-receipt-cutoff"></i>
+                            </div>
+                        </div>
+                        <h2 class="fw-extrabold text-dark mb-0" id="valTotal">158</h2>
+                        <small class="text-muted fw-semibold" style="font-size: 0.78rem;">Keseluruhan SPP</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEKSI 2: GRAFIK INTERAKTIF -->
+            <div class="row g-4 mb-4">
+                <!-- GRAFIK 1: KOLOM AKUMULASI TAGIHAN SESUAI GAMBAR SAMPLING -->
+                <div class="col-lg-6">
+                    <div class="card-custom">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0">
+                                    <i class="bi bi-bar-chart-fill text-primary me-2"></i>Distribusi Tagihan SPP BHP
+                                </h6>
+                                <small class="text-muted" style="font-size: 0.75rem;">Perbandingan Kategori Penagihan Aktif</small>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary border rounded-pill px-3 py-1 fw-bold">Target Pusat</span>
+                        </div>
+                        <div id="chartDistribusiBhp" style="min-height: 310px;"></div>
+                    </div>
+                </div>
+
+                <!-- GRAFIK 2: GRAFIK TREN PROGRESS CAPAIAN BULANAN (JAN - DES) -->
+                <div class="col-lg-6">
+                    <div class="card-custom">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0">
+                                    <i class="bi bi-graph-up-arrow text-emerald me-2" style="color: #10b981;"></i>Progress Capaian Penagihan Bulanan
+                                </h6>
+                                <small class="text-muted" style="font-size: 0.75rem;">Realisasi Penerbitan & Pembayaran SPP BHP (<span id="lblTahunChartProgress">2026</span>)</small>
+                            </div>
+                            <span class="badge bg-success-subtle text-success border rounded-pill px-3 py-1 fw-bold">Progres Akurat</span>
+                        </div>
+                        <div id="chartProgressBulanan" style="min-height: 310px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEKSI 3: TABEL DETAIL DATA DUKUNG SPP BHP -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
+                    <div class="card-custom">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2 border-bottom">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0">
+                                    <i class="bi bi-table text-primary me-2"></i>Detail Daftar Penagihan SPP BHP Frekuensi Radio
+                                </h6>
+                                <small class="text-muted" style="font-size: 0.75rem;">Data riwayat penagihan dan status pembayaran wajib bayar</small>
+                            </div>
+                            <span class="badge bg-primary text-white rounded-pill px-3 py-1.5 fw-bold" id="badgeTotalTable">0 Tagihan</span>
+                        </div>
+
+                        <!-- SEARCH FILTER TABEL -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
+                                    <input type="text" id="inpSearchBhp" class="form-control" placeholder="Cari Wajib Bayar, Nomor SPP, atau Status..." onkeyup="filterBhpTable()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TABEL SCROLL DATA -->
+                        <div class="table-responsive table-data-scroll border rounded-3 bg-white">
+                            <table class="table table-hover table-striped table-bordered align-middle text-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">No</th>
+                                        <th>Nama Wajib Bayar / Perusahaan</th>
+                                        <th>Nomor SPP / Tagihan</th>
+                                        <th>Kategori</th>
+                                        <th>Nominal (Rp)</th>
+                                        <th>Tgl Jatuh Tempo</th>
+                                        <th>Status Pembayaran</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyBhpData">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted py-3">Memuat data penagihan BHP...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER HALAMAN -->
+    <footer class="footer-custom text-center py-3 text-muted border-top bg-white small" style="margin-left: var(--sidebar-collapsed-width);">
+        <div class="container fw-medium">
+            &copy; <script>document.write(new Date().getFullYear())</script> Tim Kerja Sarpras & Layanan - Balai Monitor Spektrum Frekuensi Radio Kelas II Palangka Raya.
+        </div>
+    </footer>
+
+    <!-- SDK & LIBRARIES SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+    <!-- LOGIKA SCRIPT UTAMA DASHBOARD BHP -->
+    <script>
+        // FIREBASE CONFIGURATION (TERHUBUNG KE SARPRAS)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+            authDomain: "smfr-database.firebaseapp.com",
+            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smfr-database",
+            storageBucket: "smfr-database.firebasestorage.app",
+            messagingSenderId: "890374389163",
+            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        let selectedYear = 2026;
+
+        let chartDistribusi = null;
+        let chartProgress = null;
+        let rawBhpList = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initChartDistribusi();
+            initChartProgress();
+            loadBhpDataRealtime(selectedYear);
+        });
+
+        // 1. INISIALISASI GRAFIK KOLOM KATEGORI (ANNUAL, NEW, REMINDER, TOTAL)
+        function initChartDistribusi() {
+            const options = {
+                series: [{
+                    name: 'Jumlah Tagihan',
+                    data: [81, 0, 77, 158]
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 310,
+                    toolbar: { show: false },
+                    animations: { enabled: true, easing: 'easeinout', speed: 800 }
+                },
+                colors: ['#3b82f6', '#06b6d4', '#f59e0b', '#eab308'],
+                plotOptions: {
+                    bar: {
+                        distributed: true,
+                        borderRadius: 10,
+                        columnWidth: '50%',
+                        dataLabels: { position: 'top' }
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    offsetY: -22,
+                    style: { fontSize: '14px', fontWeight: '800', colors: ['#1e293b'] }
+                },
+                legend: { show: false },
+                xaxis: {
+                    categories: ['Annual/Renewal', 'New', 'Reminder', 'Total'],
+                    labels: { style: { fontSize: '12px', fontWeight: '700', colors: '#475569' } }
+                },
+                yaxis: {
+                    max: 200,
+                    tickAmount: 4,
+                    labels: { style: { fontSize: '11px', fontWeight: '600' } }
+                },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+            };
+
+            chartDistribusi = new ApexCharts(document.querySelector("#chartDistribusiBhp"), options);
+            chartDistribusi.render();
+        }
+
+        // 2. INISIALISASI GRAFIK TREN PROGRESS CAPAIAN BULANAN
+        function initChartProgress() {
+            const options = {
+                series: [
+                    { name: "Target SPP Ditagihkan", data: [15, 30, 45, 60, 75, 90, 110, 130, 145, 158, 158, 158] },
+                    { name: "Realisasi Tagihan Terbit", data: [16, 36, 60, 84, 116, 136, 156, 158, 158, 0, 0, 0] }
+                ],
+                chart: {
+                    type: 'area',
+                    height: 310,
+                    toolbar: { show: false },
+                    dropShadow: { enabled: true, color: '#0f4c81', top: 8, left: 0, blur: 6, opacity: 0.15 },
+                    animations: { enabled: true, easing: 'easeinout', speed: 900 }
+                },
+                colors: ['#94a3b8', '#10b981'],
+                stroke: { curve: 'smooth', width: 3 },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        opacityTo: 0.05,
+                        stops: [0, 90, 100]
+                    }
+                },
+                markers: { size: 4, strokeColors: '#fff', strokeWidth: 2 },
+                xaxis: {
+                    categories: bulanList,
+                    labels: { style: { fontSize: '11px', fontWeight: 600, colors: '#64748b' } }
+                },
+                yaxis: {
+                    labels: { style: { fontSize: '11px', fontWeight: 600 } }
+                },
+                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+            };
+
+            chartProgress = new ApexCharts(document.querySelector("#chartProgressBulanan"), options);
+            chartProgress.render();
+        }
+
+        // 3. LOAD DATA REALTIME DARI FIREBASE (TERHUBUNG KE SARPRAS)
+        function loadBhpDataRealtime(tahun = selectedYear) {
+            const pathNode = (String(tahun) === '2026') 
+                ? 'kinerja_sarpras' 
+                : `kinerja_sarpras_by_year/${tahun}`;
+
+            database.ref(pathNode).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    updateUIFromFirebase(data);
+                } else {
+                    updateUIFromFirebase({});
+                }
+            });
+        }
+
+        function updateUIFromFirebase(data) {
+            let annual = 81;
+            let newTagihan = 0;
+            let reminder = 77;
+            let total = 158;
+
+            if (data.bhp_detail) {
+                if (data.bhp_detail.annual !== undefined) annual = parseInt(data.bhp_detail.annual) || 0;
+                if (data.bhp_detail.new_tagihan !== undefined) newTagihan = parseInt(data.bhp_detail.new_tagihan) || 0;
+                if (data.bhp_detail.reminder !== undefined) reminder = parseInt(data.bhp_detail.reminder) || 0;
+                total = annual + newTagihan + reminder;
+            }
+
+            // Update KPI Cards
+            document.getElementById('valAnnual').innerText = annual;
+            document.getElementById('valNew').innerText = newTagihan;
+            document.getElementById('valReminder').innerText = reminder;
+            document.getElementById('valTotal').innerText = total;
+
+            // Update Grafik Kolom Distribusi
+            if (chartDistribusi) {
+                chartDistribusi.updateSeries([{
+                    name: 'Jumlah Tagihan',
+                    data: [annual, newTagihan, reminder, total]
+                }]);
+            }
+
+            // Update Grafik Progress Bulanan jika ada data realisasi anggaran BHP dari node sarpras
+            if (chartProgress && data.realisasi_anggaran) {
+                const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
+                const bhpItem = listAngg.find(item => item.id === 'bhp');
+
+                if (bhpItem && bhpItem.monthlyNominal && Array.isArray(bhpItem.monthlyNominal)) {
+                    // Konversi nominal ke estimasi akumulasi tagihan terbit
+                    const isrRealizationCount = bhpItem.monthlyNominal.map(val => Math.round(val / 1120000));
+                    chartProgress.updateSeries([
+                        { name: "Target SPP Ditagihkan", data: [15, 30, 45, 60, 75, 90, 110, 130, 145, 158, 158, 158] },
+                        { name: "Realisasi Tagihan Terbit", data: isrRealizationCount }
+                    ]);
+                }
+            }
+
+            // Populate Tabel Detail Penagihan
+            if (data.bhp_detail && data.bhp_detail.tagihan_list && Array.isArray(data.bhp_detail.tagihan_list)) {
+                rawBhpList = data.bhp_detail.tagihan_list;
+            } else {
+                rawBhpList = [
+                    { wajibBayar: "PT. Telkomsel TBK", noSpp: "SPP-2026-08129", kategori: "Annual/Renewal", nominal: 145000000, tglJatuhTempo: "15 Mar 2026", status: "Lunas" },
+                    { wajibBayar: "PT. Indosat TBK", noSpp: "SPP-2026-08130", kategori: "Annual/Renewal", nominal: 98000000, tglJatuhTempo: "20 Mar 2026", status: "Lunas" },
+                    { wajibBayar: "PT. XL Axiata TBK", noSpp: "SPP-2026-08131", kategori: "Annual/Renewal", nominal: 87500000, tglJatuhTempo: "10 Apr 2026", status: "Lunas" },
+                    { wajibBayar: "PT. Smartfren Telecom", noSpp: "SPP-2026-08145", kategori: "Reminder", nominal: 45000000, tglJatuhTempo: "05 Mei 2026", status: "Peringatan 1" },
+                    { wajibBayar: "PT. Radio Palangka FM", noSpp: "SPP-2026-08150", kategori: "Annual/Renewal", nominal: 12500000, tglJatuhTempo: "18 Mei 2026", status: "Lunas" },
+                    { wajibBayar: "PT. Borneo Maritime Radio", noSpp: "SPP-2026-08162", kategori: "Reminder", nominal: 24000000, tglJatuhTempo: "12 Jun 2026", status: "Progres Bayar" },
+                    { wajibBayar: "Dinas Perhubungan Kalteng", noSpp: "SPP-2026-08170", kategori: "Annual/Renewal", nominal: 32000000, tglJatuhTempo: "25 Jun 2026", status: "Lunas" }
+                ];
+            }
+            renderBhpTable(rawBhpList);
+        }
+
+        // 4. RENDER TABEL DETAIL TAGIHAN BHP
+        function renderBhpTable(list) {
+            const tbody = document.getElementById('tbodyBhpData');
+            const badgeTotal = document.getElementById('badgeTotalTable');
+
+            if (badgeTotal) badgeTotal.textContent = `${list.length} Tagihan`;
+
+            if (!list || list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">Belum ada data penagihan BHP.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            list.forEach((item, idx) => {
+                let badgeClass = 'bg-primary';
+                const st = (item.status || '').toLowerCase();
+                if (st.includes('lunas')) badgeClass = 'bg-success';
+                else if (st.includes('peringatan') || st.includes('reminder')) badgeClass = 'bg-warning text-dark';
+                else if (st.includes('progres') || st.includes('proses')) badgeClass = 'bg-info text-white';
+
+                const nominalFormatted = item.nominal ? `Rp ${parseInt(item.nominal).toLocaleString('id-ID')}` : 'Rp 0';
+
+                html += `
+                    <tr>
+                        <td class="fw-bold">${idx + 1}</td>
+                        <td class="text-start fw-semibold text-dark">${item.wajibBayar || '-'}</td>
+                        <td class="small text-primary fw-bold">${item.noSpp || '-'}</td>
+                        <td><span class="badge bg-light text-dark border">${item.kategori || 'Annual/Renewal'}</span></td>
+                        <td class="text-end fw-bold text-dark">${nominalFormatted}</td>
+                        <td class="small">${item.tglJatuhTempo || '-'}</td>
+                        <td><span class="badge ${badgeClass}">${item.status || 'Aktif'}</span></td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function filterBhpTable() {
+            const query = document.getElementById('inpSearchBhp').value.toLowerCase().trim();
+            if (!query) {
+                renderBhpTable(rawBhpList);
+                return;
+            }
+
+            const filtered = rawBhpList.filter(item => {
+                return (item.wajibBayar && item.wajibBayar.toLowerCase().includes(query)) ||
+                       (item.noSpp && item.noSpp.toLowerCase().includes(query)) ||
+                       (item.kategori && item.kategori.toLowerCase().includes(query)) ||
+                       (item.status && item.status.toLowerCase().includes(query));
+            });
+
+            renderBhpTable(filtered);
+        }
+
+        function changeTahun(tahun, element, evt) {
+            if (evt) evt.preventDefault();
+            selectedYear = tahun;
+
+            document.getElementById('lblTahunHeader').textContent = tahun;
+            document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChartProgress').textContent = tahun;
+
+            document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) element.classList.add('active');
+
+            loadBhpDataRealtime(tahun);
+        }
+    </script>
+</body>
+</html>
