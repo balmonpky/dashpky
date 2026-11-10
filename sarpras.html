@@ -1,1239 +1,1363 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENTERPRISE KPI DASHBOARD SARPRAS - BALMON PALANGKARAYA</title>
+<!-- LIBRARY & SDK SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
+        authDomain: "smfr-database.firebaseapp.com",
+        databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "smfr-database",
+        storageBucket: "smfr-database.firebasestorage.app",
+        messagingSenderId: "890374389163",
+        appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee",
+        measurementId: "G-S4YSHLR19V"
+    };
     
-    <!-- Ikon Tab Browser -->
-    <link rel="icon" type="image/png" href="Logo Balmon Palangkaraya fix.png">
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     
-    <!-- Bootstrap 5 CSS & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- ApexCharts CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
+    const database = firebase.database();
+    const auth = firebase.auth();
+
+    const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    const bulanListFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
     
-    <style>
-        :root {
-            --bg-main: #f0f4f9;
-            --primary-blue: #0f4c81;
-            --secondary-blue: #1e3a8a;
-            --accent-cyan: #0284c7;
-            --accent-sky: #38bdf8;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --sidebar-collapsed-width: 68px;
-            --sidebar-expanded-width: 280px;
-        }
+    let activeDashboardYear = "2026";
+    let selectedTahunEditor = "2026";
+    let currentBhpTagihanList = [];
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-main);
-            background-image: 
-                radial-gradient(at 90% 10%, rgba(224, 242, 254, 0.7) 0, transparent 40%), 
-                radial-gradient(at 10% 90%, rgba(186, 230, 253, 0.5) 0, transparent 40%);
-            background-attachment: fixed;
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
+    // Array Penampung 14 Sub-Kategori Penilaian IKM & IIPP per Bulan
+    let tempIkmKategoriDetail = Array.from({ length: 12 }, () => null);
 
-        /* NAVBAR HEADER */
-        .navbar-custom {
-            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            padding: 0.75rem 2rem;
-            box-shadow: 0 4px 20px rgba(15, 76, 129, 0.2);
-            z-index: 1050;
-        }
-        
-        .logo-container {
-            width: 44px;
-            height: 44px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .logo-container img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
+    // Data Default UNAR
+    const defaultUnarMonths = [
+        { id: 1, bulan: "Januari", tgl: "20 Jan 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+        { id: 2, bulan: "Februari", tgl: "17 Feb 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+        { id: 3, bulan: "Maret", tgl: "16 Mar 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 11, penggalang: 5, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
+        { id: 4, bulan: "April", tgl: "21 Apr 2026", kategori: "CAT Non Reg", lokasi: "Kotawaringin Timur", siaga: 30, penggalang: 12, penegak: 8, tidak_lulus: 4, tidak_lulus_adm: 5, status: "Selesai" },
+        { id: 5, bulan: "Mei", tgl: "19 Mei 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 9, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+        { id: 6, bulan: "Juni", tgl: "16 Jun 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 7, penggalang: 3, penegak: 1, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+        { id: 7, bulan: "Juli", tgl: "21 Jul 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 10, penggalang: 4, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 2, status: "Selesai" },
+        { id: 8, bulan: "Agustus", tgl: "18 Agu 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 1, tidak_lulus_adm: 1, status: "Selesai" },
+        { id: 9, bulan: "September", tgl: "15 Sep 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 2, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Selesai" },
+        { id: 10, bulan: "Oktober", tgl: "20 Okt 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+        { id: 11, bulan: "November", tgl: "17 Nov 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" },
+        { id: 12, bulan: "Desember", tgl: "15 Des 2026", kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 0, penggalang: 0, penegak: 0, tidak_lulus: 0, tidak_lulus_adm: 0, status: "Mendatang" }
+    ];
 
-        /* SIDEBAR AUTO-HIDE */
-        .sidebar-autohide {
-            position: fixed;
-            top: 66px;
-            left: 0;
-            bottom: 0;
-            width: var(--sidebar-collapsed-width);
-            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
-            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.15);
-            z-index: 1040;
-            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-x: hidden;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            padding-top: 1rem;
-            padding-bottom: 1.5rem;
-        }
+    // Data Default Anggaran (Pagu Total 810 Juta)
+    const defaultAnggaranList = [
+        { id: "unar", nama: "Realisasi Anggaran Ujian Negara Amatir Radio (UNAR)", pagu: 150000000, realisasi: 112500000, monthlyNominal: [15000000, 30000000, 48000000, 67500000, 82500000, 93000000, 105000000, 112500000, 112500000, 112500000, 112500000, 112500000] },
+        { id: "bhp", nama: "Realisasi Anggaran BHP", pagu: 200000000, realisasi: 175000000, monthlyNominal: [16000000, 36000000, 60000000, 84000000, 116000000, 136000000, 156000000, 175000000, 175000000, 175000000, 175000000, 175000000] },
+        { id: "transportable", nama: "Realisasi Anggaran Inspeksi Perangkat Transportable", pagu: 180000000, realisasi: 135000000, monthlyNominal: [9000000, 21600000, 39600000, 63000000, 86400000, 108000000, 122400000, 135000000, 135000000, 135000000, 135000000, 135000000] },
+        { id: "bimtek", nama: "Realisasi Anggaran Bimtek SRC dan IKRAN", pagu: 120000000, realisasi: 96000000, monthlyNominal: [12000000, 30000000, 48000000, 62400000, 78000000, 86400000, 96000000, 96000000, 96000000, 96000000, 96000000, 96000000] },
+        { id: "maritim", nama: "Realisasi Anggaran Perizinan Maritim On the Spot", pagu: 160000000, realisasi: 128000000, monthlyNominal: [12800000, 24000000, 44800000, 64000000, 88000000, 108800000, 120000000, 128000000, 128000000, 128000000, 128000000, 128000000] }
+    ];
 
-        .sidebar-autohide:hover {
-            width: var(--sidebar-expanded-width);
-        }
+    // Data Default SLA
+    const defaultSlaMonths = [
+        { id: 1, bulan: "January 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+        { id: 2, bulan: "February 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+        { id: 3, bulan: "March 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+        { id: 4, bulan: "April 2026", total_aset: 31, baik: 30, rusak: 1, sla_total: "97.22%", sla_tetap: "100.00%", sla_bergerak: "94.44%", status_kunci: "TERKUNCI" },
+        { id: 5, bulan: "May 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 6, bulan: "June 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 7, bulan: "July 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 8, bulan: "August 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 9, bulan: "September 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 10, bulan: "October 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 11, bulan: "November 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" },
+        { id: 12, bulan: "December 2026", total_aset: 31, baik: 31, rusak: 0, sla_total: "100.00%", sla_tetap: "100.00%", sla_bergerak: "100.00%", status_kunci: "TERKUNCI" }
+    ];
 
-        .sidebar-header {
-            padding: 0.5rem 1.25rem 1rem 1.25rem;
-            color: #93c5fd;
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 0.5rem;
-        }
+    // Data Default IKM & IIPP Detail
+    const defaultIkmIippMonths = [
+        { id: 1, bulan: "Januari", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+        { id: 2, bulan: "Februari", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+        { id: 3, bulan: "Maret", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 1 },
+        { id: 4, bulan: "April", ikm_skor: 3.96, ikm_score: 3.96, ikm_pria: 8, ikm_wanita: 0, iipp_skor: 9.92, iipp_score: 9.92, iipp_pria: 8, iipp_wanita: 0 },
+        { id: 5, bulan: "Mei", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 0 },
+        { id: 6, bulan: "Juni", ikm_skor: 3.78, ikm_score: 3.78, ikm_pria: 1, ikm_wanita: 1, iipp_skor: 9.17, iipp_score: 9.17, iipp_pria: 1, iipp_wanita: 1 },
+        { id: 7, bulan: "Juli", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 1, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 1, iipp_wanita: 0 },
+        { id: 8, bulan: "Agustus", ikm_skor: 4.00, ikm_score: 4.00, ikm_pria: 2, ikm_wanita: 0, iipp_skor: 10.00, iipp_score: 10.00, iipp_pria: 2, iipp_wanita: 0 },
+        { id: 9, bulan: "September", ikm_skor: 3.81, ikm_score: 3.81, ikm_pria: 3, ikm_wanita: 0, iipp_skor: 9.44, iipp_score: 9.44, iipp_pria: 3, iipp_wanita: 0 },
+        { id: 10, bulan: "Oktober", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+        { id: 11, bulan: "November", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 },
+        { id: 12, bulan: "Desember", ikm_skor: null, ikm_score: null, ikm_pria: 0, ikm_wanita: 0, iipp_skor: null, iipp_score: null, iipp_pria: 0, iipp_wanita: 0 }
+    ];
 
-        .sidebar-autohide:hover .sidebar-header {
-            opacity: 1;
-        }
+    // Data Default Pelayanan ISR
+    const defaultPerizinanMonths = [
+        { id: 1, bulan: "Januari", langsung: 28, online: 35, terdistribusi: 42 },
+        { id: 2, bulan: "Februari", langsung: 32, online: 40, terdistribusi: 50 },
+        { id: 3, bulan: "Maret", langsung: 25, online: 48, terdistribusi: 55 },
+        { id: 4, bulan: "April", langsung: 42, online: 65, terdistribusi: 78 },
+        { id: 5, bulan: "Mei", langsung: 30, online: 52, terdistribusi: 60 },
+        { id: 6, bulan: "Juni", langsung: 35, online: 58, terdistribusi: 68 },
+        { id: 7, bulan: "Juli", langsung: 38, online: 60, terdistribusi: 72 },
+        { id: 8, bulan: "Agustus", langsung: 40, online: 64, terdistribusi: 80 },
+        { id: 9, bulan: "September", langsung: 45, online: 70, terdistribusi: 88 },
+        { id: 10, bulan: "Oktober", langsung: 0, online: 0, terdistribusi: 0 },
+        { id: 11, bulan: "November", langsung: 0, online: 0, terdistribusi: 0 },
+        { id: 12, bulan: "Desember", langsung: 0, online: 0, terdistribusi: 0 }
+    ];
 
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+    // INSTANSI GRAPH APEXCHARTS
+    let chartWaveGrowth = null;
+    let chartBarPerformance = null;
+    let chartDonutBhp = null;
+    let chartGaugeSatisfaction = null;
+    let chartDonutBudget = null;
+    let chartWaveUnar = null;
 
-        .sidebar-menu .menu-link {
-            display: flex;
-            align-items: center;
-            padding: 0.8rem 1.25rem;
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: none;
-            border-left: 4px solid transparent;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-        }
-
-        .sidebar-menu .menu-link:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #ffffff;
-            border-left-color: #38bdf8;
-        }
-
-        .sidebar-menu .menu-icon {
-            font-size: 1.35rem;
-            min-width: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar-menu .menu-text {
-            margin-left: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
-
-        .sidebar-autohide:hover .menu-text {
-            opacity: 1;
-        }
-
-        /* WADAH KONTEN UTAMA */
-        .main-wrapper {
-            margin-left: var(--sidebar-collapsed-width);
-            flex-grow: 1;
-            padding: 1.8rem 1.5rem;
-            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* TOP KPI HEADER BANNER */
-        .dashboard-top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
-
-        .dashboard-title h2 {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary-blue);
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-        .dashboard-title p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin: 0;
-        }
-
-        /* STRIP SUMMARY KPI ATAS (RESEMBLING TOP KPIS IN IMAGE) */
-        .kpi-strip-card {
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 1rem 1.25rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(15, 76, 129, 0.04);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .kpi-strip-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(15, 76, 129, 0.08);
-        }
-        .kpi-strip-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-        .kpi-strip-value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--primary-blue);
-            line-height: 1.2;
-            margin: 4px 0;
-        }
-        .kpi-strip-sub {
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* CHART CONTAINER CARDS */
-        .chart-card-enterprise {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 1.25rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        .chart-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            padding-bottom: 0.6rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .chart-card-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .chart-card-title i {
-            color: var(--accent-cyan);
-        }
-
-        /* METRIC HIGHLIGHT BOX IN CARD */
-        .metric-box-sub {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 0.75rem;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 1rem;
-        }
-
-        .footer-custom {
-            text-align: center;
-            padding: 1.2rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-left: var(--sidebar-collapsed-width);
-        }
-
-        .table-modal-edit input, .table-modal-edit select {
-            font-size: 0.8rem;
-            padding: 0.25rem 0.3rem;
-        }
-
-        @media (max-width: 768px) {
-            .main-wrapper { margin-left: 0; padding: 1rem; }
-            .sidebar-autohide { display: none; }
-            .footer-custom { margin-left: 0; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- NAVBAR HEADER -->
-    <nav class="navbar navbar-dark navbar-custom sticky-top">
-        <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
-                <div class="logo-container me-3">
-                    <img src="Logo Balmon Palangkaraya fix.png" alt="Logo Balmon" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/94/Logo_Kementerian_Komunikasi_dan_Informatika_Republik_Indonesia.png'">
-                </div>
-                <div class="d-none d-sm-block">
-                    <span class="text-white d-block fs-6 tracking-wide">ENTERPRISE KPI DASHBOARD SARPRAS & LAYANAN</span>
-                    <small class="text-warning fw-semibold" style="font-size: 0.75rem;">BALMON SFR KELAS II PALANGKARAYA</small>
-                </div>
-            </a>
-            
-            <div class="d-flex align-items-center gap-2">
-                <a href="index.html" class="btn btn-outline-light btn-sm fw-bold rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-arrow-left-circle me-1"></i> Portal Utama
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- SIDEBAR AUTO-HIDE -->
-    <aside class="sidebar-autohide">
-        <div class="sidebar-header">
-            <span>LAYANAN & PERIZINAN</span>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="menu-item">
-                <a href="smfr.html" class="menu-link" title="Aplikasi SMFR">
-                    <span class="menu-icon text-info"><i class="bi bi-hdd-network-fill"></i></span>
-                    <span class="menu-text">Aplikasi SMFR</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="unar.html" class="menu-link" title="UNAR">
-                    <span class="menu-icon text-success"><i class="bi bi-person-vcard-fill"></i></span>
-                    <span class="menu-text">UNAR</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="mots.html" class="menu-link" title="MOTS">
-                    <span class="menu-icon text-warning"><i class="bi bi-truck-front-fill"></i></span>
-                    <span class="menu-text">MOTS</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="bhp.html" class="menu-link" title="BHP Frekuensi">
-                    <span class="menu-icon text-danger"><i class="bi bi-receipt"></i></span>
-                    <span class="menu-text">BHP Frekuensi</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="perizinan.html" class="menu-link" title="Pelayanan & Perizinan">
-                    <span class="menu-icon" style="color: #c084fc;"><i class="bi bi-award-fill"></i></span>
-                    <span class="menu-text">Pelayanan & Perizinan</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="realisasi_anggaran.html" class="menu-link" title="Realisasi Anggaran">
-                    <span class="menu-icon" style="color: #34d399;"><i class="bi bi-cash-stack"></i></span>
-                    <span class="menu-text">Realisasi Anggaran</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="fungsi_monitoring.html" class="menu-link" title="Operasional & Monitoring">
-                    <span class="menu-icon" style="color: #38bdf8;"><i class="bi bi-display"></i></span>
-                    <span class="menu-text">Fungsi Monitoring</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="ikm.html" class="menu-link" title="IKM & IIPP">
-                    <span class="menu-icon" style="color: #fbbf24;"><i class="bi bi-star-fill"></i></span>
-                    <span class="menu-text">IKM & IIPP</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
-
-    <!-- KONTEN UTAMA DASBOR SARPRAS -->
-    <main class="main-wrapper">
-        <div class="container-fluid px-0">
-            
-            <!-- TOP BAR DASHBOARD CONTROL -->
-            <div class="dashboard-top-bar">
-                <div class="dashboard-title">
-                    <h2>EXECUTIVE PERFORMANCE MONITOR</h2>
-                    <p>Tim Kerja Sarana Prasarana, Monitoring Spectrum & Layanan Publik</p>
-                </div>
-                
-                <div class="d-flex align-items-center gap-2">
-                    <!-- Tombol Edit Data -->
-                    <button id="btnAdminMain" class="btn btn-outline-primary btn-sm fw-bold rounded-3 shadow-sm px-3" onclick="verifikasiAdmin()">
-                        <i class="bi bi-gear-fill me-1"></i> Edit Data
-                    </button>
-
-                    <!-- Dropdown Pilih Tahun -->
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-primary fw-bold dropdown-toggle rounded-3 shadow-sm px-3 py-1.5" type="button" id="dropdownTahunDashboard" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-calendar3 me-1"></i>
-                            <span>Tahun: <strong id="lblDashboardTahunActive">2026</strong></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="dropdownTahunDashboard" style="border-radius: 12px; min-width: 130px;">
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2025', this)">Tahun 2025</a></li>
-                            <li><a class="dropdown-item fw-semibold active" href="#" onclick="changeDashboardYear('2026', this)">Tahun 2026</a></li>
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2027', this)">Tahun 2027</a></li>
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2028', this)">Tahun 2028</a></li>
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2029', this)">Tahun 2029</a></li>
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="changeDashboardYear('2030', this)">Tahun 2030</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BARIS STRIP SUMMARY METRICS ATAS (RESEMBLING TOP KPIS IN IMAGE) -->
-            <div class="row g-3 mb-4" id="kpiStripContainer">
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="kpi-strip-card">
-                        <span class="kpi-strip-title">SYSTEM UPTIME SLA</span>
-                        <div class="kpi-strip-value text-primary" id="val_capaian_3">97.22%</div>
-                        <div class="kpi-strip-sub text-success" id="status_3">
-                            <i class="bi bi-arrow-up-right"></i> Target: <span id="val_target_3">95%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="kpi-strip-card">
-                        <span class="kpi-strip-title">SERTIFIKASI UNAR</span>
-                        <div class="kpi-strip-value text-info" id="val_capaian_1">95.0%</div>
-                        <div class="kpi-strip-sub text-success" id="status_1">
-                            <i class="bi bi-arrow-up-right"></i> Target: <span id="val_target_1">90%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="kpi-strip-card">
-                        <span class="kpi-strip-title">PENERIMAAN BHP</span>
-                        <div class="kpi-strip-value style-indigo" style="color: #4f46e5;" id="val_capaian_2">88.5%</div>
-                        <div class="kpi-strip-sub text-success" id="status_2">
-                            <i class="bi bi-arrow-up-right"></i> Target: <span id="val_target_2">85%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="kpi-strip-card">
-                        <span class="kpi-strip-title">SKOR ZI BALMON</span>
-                        <div class="kpi-strip-value text-purple" style="color: #8b5cf6;" id="val_capaian_4">1.00</div>
-                        <div class="kpi-strip-sub text-success" id="status_4">
-                            <i class="bi bi-check-circle-fill"></i> Target: <span id="val_target_4">1.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="kpi-strip-card">
-                        <span class="kpi-strip-title">INDEKS IKM (0-4)</span>
-                        <div class="kpi-strip-value text-warning" id="val_capaian_5">3.94</div>
-                        <div class="kpi-strip-sub text-success" id="status_5">
-                            <i class="bi bi-arrow-up-right"></i> Target: <span id="val_target_5">3.75</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="kpi-strip-card">
-                        <span class="kpi-strip-title">INDEKS IIPP (0-10)</span>
-                        <div class="kpi-strip-value text-teal" style="color: #0d9488;" id="val_capaian_6">9.79</div>
-                        <div class="kpi-strip-sub text-success" id="status_6">
-                            <i class="bi bi-arrow-up-right"></i> Target: <span id="val_target_6">9.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAIN GRID ROW 1 (REVENUE GROWTH, SALES PERFORMANCE, GLOBAL SHARE LAYOUT) -->
-            <div class="row g-3 mb-4">
-                <!-- CHART 1: REVENUE & SERVICE GROWTH (WAVE / AREA LINE CHART) -->
-                <div class="col-lg-5">
-                    <div class="chart-card-enterprise">
-                        <div class="chart-card-header">
-                            <div class="chart-card-title">
-                                <i class="bi bi-graph-up-arrow"></i>
-                                <span>SERVICE & REVENUE GROWTH (<span id="lblChartLineTahun">2026</span>)</span>
-                            </div>
-                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Realtime Sync</span>
-                        </div>
-                        <div id="chartWaveGrowth" style="min-height: 290px; flex-grow: 1;"></div>
-                    </div>
-                </div>
-
-                <!-- CHART 2: ANGGARAN & INSPEKSI PERFORMANCE (BAR CHART) -->
-                <div class="col-lg-4">
-                    <div class="chart-card-enterprise">
-                        <div class="chart-card-header">
-                            <div class="chart-card-title">
-                                <i class="bi bi-bar-chart-line-fill"></i>
-                                <span>SERAPAN ANGGARAN 5 PROGRAM</span>
-                            </div>
-                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">% Serapan</span>
-                        </div>
-                        <div id="chartBarPerformance" style="min-height: 290px; flex-grow: 1;"></div>
-                    </div>
-                </div>
-
-                <!-- CHART 3: DISTRIBUSI TAGIHAN SPP BHP (DONUT CHART) -->
-                <div class="col-lg-3">
-                    <div class="chart-card-enterprise">
-                        <div class="chart-card-header">
-                            <div class="chart-card-title">
-                                <i class="bi bi-pie-chart-fill"></i>
-                                <span>STATUS TAGIHAN BHP</span>
-                            </div>
-                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">SPP Log</span>
-                        </div>
-                        <div id="chartDonutBhp" style="min-height: 220px;"></div>
-                        <div class="metric-box-sub mt-2 mb-0 d-flex justify-content-between align-items-center">
-                            <div>
-                                <small class="text-muted d-block fw-semibold" style="font-size:0.7rem;">TOTAL SURAT PENAGIHAN</small>
-                                <strong class="fs-6 text-primary" id="lblTotalBhpSurat">158 Surat SPP</strong>
-                            </div>
-                            <span class="badge bg-primary"><i class="bi bi-shield-check"></i> 100% Aktif</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAIN GRID ROW 2 (CUSTOMER SATISFACTION GAUGE, STATS, BUDGET ALLOCATION, MONTHLY USERS) -->
-            <div class="row g-3 mb-4">
-                <!-- CHART 4: GAUGE CUSTOMER SATISFACTION IKM & IIPP (RADIAL BAR / ARCH) -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="chart-card-enterprise">
-                        <div class="chart-card-header">
-                            <div class="chart-card-title">
-                                <i class="bi bi-speedometer2"></i>
-                                <span>IKM & IIPP SATISFACTION</span>
-                            </div>
-                        </div>
-                        <div id="chartGaugeSatisfaction" style="min-height: 240px;"></div>
-                        <div class="text-center mt-auto">
-                            <span class="fw-bold text-dark fs-5" id="lblIkmScoreLarge">3.94 / 4.00</span>
-                            <small class="d-block text-muted" style="font-size:0.75rem;">Sangat Baik (Mutu Layanan A)</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STAT BOX 5: QUICK METRIC DISPLAY -->
-                <div class="col-md-6 col-lg-2">
-                    <div class="chart-card-enterprise justify-content-center text-center p-3">
-                        <span class="text-muted fw-bold mb-1" style="font-size: 0.72rem; letter-spacing:0.5px;">TOTAL REALISASI ANGGARAN</span>
-                        <h3 class="fw-extrabold text-primary mb-2" id="lblTotalRealisasiAnggaran">Rp 646.5 M</h3>
-                        <small class="badge bg-success-subtle text-success border border-success-subtle mb-3">79.8% dari Pagu Total</small>
-                        
-                        <hr class="my-2 opacity-25">
-
-                        <span class="text-muted fw-bold mb-1" style="font-size: 0.72rem; letter-spacing:0.5px;">TOTAL PESERTA UNAR</span>
-                        <h4 class="fw-bold text-dark mb-0" id="lblTotalPesertaUnar">112 Peserta</h4>
-                        <small class="text-muted" style="font-size:0.75rem;">12 Sesi CAT</small>
-                    </div>
-                </div>
-
-                <!-- CHART 6: DEPARTMENTAL BUDGET ALLOCATION (DONUT WITH SIDE LEGEND) -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="chart-card-enterprise">
-                        <div class="chart-card-header">
-                            <div class="chart-card-title">
-                                <i class="bi bi-pie-chart"></i>
-                                <span>ALOKASI PAGU ANGGARAN 5 PROGRAM</span>
-                            </div>
-                            <span class="badge bg-secondary-subtle text-secondary border rounded-pill">Pagu Rp</span>
-                        </div>
-                        <div id="chartDonutBudget" style="min-height: 260px; flex-grow:1;"></div>
-                    </div>
-                </div>
-
-                <!-- CHART 7: MONTHLY ACTIVE USERS / UNAR TREND (WAVE AREA CHART) -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="chart-card-enterprise">
-                        <div class="chart-card-header">
-                            <div class="chart-card-title">
-                                <i class="bi bi-people-fill"></i>
-                                <span>TREN PESERTA UNAR</span>
-                            </div>
-                            <span class="badge bg-warning-subtle text-warning-emphasis border rounded-pill">Bulanan</span>
-                        </div>
-                        <div id="chartWaveUnar" style="min-height: 260px; flex-grow:1;"></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="footer-custom">
-        <div class="container fw-medium">
-            &copy; <script>document.write(new Date().getFullYear())</script> Enterprise KPI Dashboard - Tim Kerja Sarpras & Layanan Balmon Palangka Raya.
-        </div>
-    </footer>
-
-    <!-- MODAL EDIT DATA (ADMIN CENTRAL - 8 TAB INKLUSIF BHP) -->
-    <div class="modal fade" id="modalKinerja" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl" style="max-width: 95%;">
-            <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
-                <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders me-2"></i> Update Data Dasbor, UNAR, Anggaran, SLA, IKM-IIPP, Pelayanan ISR, MOTS & BHP</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body bg-light p-4">
-                    
-                    <!-- CONTROL BAR TAB MODAL & SELEKSI TAHUN -->
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom">
-                        <ul class="nav nav-tabs border-0 m-0" id="adminTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-bold" id="dasbor-tab" data-bs-toggle="tab" data-bs-target="#tab-dasbor" type="button" role="tab">1. Capaian Dasbor</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-success" id="unar-tab" data-bs-toggle="tab" data-bs-target="#tab-unar" type="button" role="tab">2. Detail UNAR <span class="lbl-tahun-active">2026</span></button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-primary" id="anggaran-tab" data-bs-toggle="tab" data-bs-target="#tab-anggaran" type="button" role="tab">3. Realisasi Anggaran</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-info" id="sla-tab" data-bs-toggle="tab" data-bs-target="#tab-sla" type="button" role="tab">4. SLA Monitoring</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-warning" id="ikm-tab" data-bs-toggle="tab" data-bs-target="#tab-ikm" type="button" role="tab">5. Detail IKM & IIPP</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold" style="color: #0f4c81;" id="perizinan-tab" data-bs-toggle="tab" data-bs-target="#tab-perizinan" type="button" role="tab">6. Pelayanan & Perizinan</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-warning" id="mots-tab" data-bs-toggle="tab" data-bs-target="#tab-mots" type="button" role="tab">7. Layanan MOTS & ISR</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-bold text-danger" id="bhp-tab" data-bs-toggle="tab" data-bs-target="#tab-bhp" type="button" role="tab">8. Penagihan BHP</button>
-                            </li>
-                        </ul>
-
-                        <div class="d-flex align-items-center gap-2 bg-white px-3 py-1.5 rounded-3 border shadow-sm">
-                            <i class="bi bi-calendar3 text-primary fw-bold"></i>
-                            <label for="selectTahunEditor" class="fw-bold text-secondary mb-0 small" style="white-space: nowrap;">Tahun Data:</label>
-                            <select class="form-select form-select-sm fw-bold border-0 bg-light text-primary" id="selectTahunEditor" onchange="handleGantiTahunEditor(this.value)" style="width: 110px; cursor: pointer;">
-                                <option value="2025">2025</option>
-                                <option value="2026" selected>2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
-                                <option value="2030">2030</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <form id="formKinerja" onsubmit="simpanKinerja(event)">
-                        <div class="tab-content" id="adminTabContent">
-                            <!-- TAB 1: DASBOR KINERJA -->
-                            <div class="tab-pane fade show active" id="tab-dasbor" role="tabpanel">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-secondary small mb-1">1. Sertifikasi Operator Radio (%)</label>
-                                        <div class="input-group shadow-sm">
-                                            <span class="input-group-text bg-white">Target</span>
-                                            <input type="number" id="inp_t_1" class="form-control" step="0.01" required>
-                                            <span class="input-group-text bg-white">Capaian</span>
-                                            <input type="number" id="inp_c_1" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-secondary small mb-1">2. Biaya BHP (%)</label>
-                                        <div class="input-group shadow-sm">
-                                            <span class="input-group-text bg-white">Target</span>
-                                            <input type="number" id="inp_t_2" class="form-control" step="0.01" required>
-                                            <span class="input-group-text bg-white">Capaian</span>
-                                            <input type="number" id="inp_c_2" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-secondary small mb-1">3. Operasional Monitoring (%)</label>
-                                        <div class="input-group shadow-sm">
-                                            <span class="input-group-text bg-white">Target</span>
-                                            <input type="number" id="inp_t_3" class="form-control" step="0.01" required>
-                                            <span class="input-group-text bg-white">Capaian</span>
-                                            <input type="number" id="inp_c_3" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-secondary small mb-1">4. Zona Integritas</label>
-                                        <div class="input-group shadow-sm">
-                                            <span class="input-group-text bg-white">Target</span>
-                                            <input type="number" id="inp_t_4" class="form-control" step="0.01" required>
-                                            <span class="input-group-text bg-white">Capaian</span>
-                                            <input type="number" id="inp_c_4" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-secondary small mb-1">5. Indeks Kepuasan Masyarakat</label>
-                                        <div class="input-group shadow-sm">
-                                            <span class="input-group-text bg-white">Target</span>
-                                            <input type="number" id="inp_t_5" class="form-control" step="0.01" required>
-                                            <span class="input-group-text bg-white">Capaian</span>
-                                            <input type="number" id="inp_c_5" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-secondary small mb-1">6. Indeks Integritas (IIPP)</label>
-                                        <div class="input-group shadow-sm">
-                                            <span class="input-group-text bg-white">Target</span>
-                                            <input type="number" id="inp_t_6" class="form-control" step="0.01" required>
-                                            <span class="input-group-text bg-white">Capaian</span>
-                                            <input type="number" id="inp_c_6" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- TAB 2: UNAR -->
-                            <div class="tab-pane fade" id="tab-unar" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
-                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
-                                        <thead class="table-dark sticky-top">
-                                            <tr class="small text-nowrap align-middle">
-                                                <th style="width: 70px;">Bulan</th>
-                                                <th style="min-width: 100px;">Tgl Ujian</th>
-                                                <th style="min-width: 100px;">Kategori</th>
-                                                <th style="min-width: 120px;">Lokasi</th>
-                                                <th style="width: 70px;" class="bg-info text-white">Jml Pendaftar<br>(Auto)</th>
-                                                <th style="width: 75px;" class="bg-primary text-white">Jml Peserta<br>(Auto)</th>
-                                                <th style="width: 55px;">Siaga</th>
-                                                <th style="width: 65px;">Penggalang</th>
-                                                <th style="width: 55px;">Penegak</th>
-                                                <th style="width: 80px;" class="bg-success text-white">Jml Lulus<br>(Auto)</th>
-                                                <th style="width: 65px;">Tidak<br>Lulus</th>
-                                                <th style="width: 80px;" class="bg-warning text-dark">Tidak Lulus<br>Adm</th>
-                                                <th style="min-width: 95px;">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyUnarEdit" class="small"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- TAB 3: REALISASI ANGGARAN -->
-                            <div class="tab-pane fade" id="tab-anggaran" role="tabpanel">
-                                <div class="card p-3 mb-3 border-0 shadow-sm bg-white">
-                                    <h6 class="fw-bold text-primary mb-2"><i class="bi bi-wallet2 me-1"></i> Pagu Anggaran 5 Program (Rp)</h6>
-                                    <div class="row g-2" id="containerPaguAnggaran"></div>
-                                </div>
-
-                                <div class="card p-3 border-0 shadow-sm bg-white">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="fw-bold text-primary m-0"><i class="bi bi-graph-up-arrow me-1"></i> Progres Penyerapan Anggaran Bulanan (Nominal Serapan Rp)</h6>
-                                        <span class="badge bg-light text-primary border"><i class="bi bi-calculator me-1"></i>% Capaian terhitung otomatis</span>
-                                    </div>
-                                    <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 330px; overflow-y: auto;">
-                                        <table class="table table-bordered table-striped align-middle text-center mb-0">
-                                            <thead class="table-dark sticky-top">
-                                                <tr class="small text-nowrap">
-                                                    <th style="width: 100px;">Bulan</th>
-                                                    <th>UNAR (Rp / %)</th>
-                                                    <th>BHP (Rp / %)</th>
-                                                    <th>Transportable (Rp / %)</th>
-                                                    <th>Bimtek (Rp / %)</th>
-                                                    <th>Maritim (Rp / %)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyAnggaranBulanEdit" class="small"></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- TAB 4: SLA MONITORING -->
-                            <div class="tab-pane fade" id="tab-sla" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
-                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
-                                        <thead class="table-dark sticky-top">
-                                            <tr class="small text-nowrap">
-                                                <th style="width: 120px;">Bulan</th>
-                                                <th style="width: 80px;">Total Aset</th>
-                                                <th style="width: 70px;">Baik</th>
-                                                <th style="width: 70px;">Rusak</th>
-                                                <th style="width: 95px;">SLA Total</th>
-                                                <th style="width: 95px;">SLA Tetap</th>
-                                                <th style="width: 95px;">SLA Bergerak</th>
-                                                <th style="width: 110px;">Status Kunci</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodySlaEdit" class="small"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- TAB 5: IKM & IIPP -->
-                            <div class="tab-pane fade" id="tab-ikm" role="tabpanel">
-                                <div class="card p-4 mb-3 border-0 shadow-sm bg-white" style="border-radius: 16px;">
-                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-                                        <h6 class="fw-bold mb-0" style="color: #d97706;">
-                                            <i class="bi bi-file-earmark-excel-fill me-2"></i>Upload File Excel IKM & IIPP
-                                        </h6>
-                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-1">
-                                            Format .xlsx / .xls
-                                        </span>
-                                    </div>
-                                    <p class="small text-muted mb-3">
-                                        Data dari file Excel akan disinkronkan ke Firebase Realtime Database.
-                                    </p>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-8">
-                                            <input type="file" id="excelFileIkm" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
-                                        </div>
-                                        <div class="col-md-4 d-flex gap-2">
-                                            <button type="button" class="btn btn-warning btn-sm w-100 fw-bold text-dark shadow-sm" onclick="importExcelIkmData()">
-                                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload & Simpan
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 380px; overflow-y: auto;">
-                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
-                                        <thead class="table-dark sticky-top">
-                                            <tr class="small text-nowrap">
-                                                <th style="width: 100px;">Bulan</th>
-                                                <th style="width: 120px;" class="bg-primary text-white">Skor IKM (0-4)</th>
-                                                <th style="width: 100px;">IKM Pria</th>
-                                                <th style="width: 100px;">IKM Wanita</th>
-                                                <th style="width: 120px;" class="bg-success text-white">Skor IIPP (0-10)</th>
-                                                <th style="width: 100px;">IIPP Pria</th>
-                                                <th style="width: 100px;">IIPP Wanita</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyIkmEdit" class="small"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- TAB 6: PELAYANAN ISR -->
-                            <div class="tab-pane fade" id="tab-perizinan" role="tabpanel">
-                                <div class="table-responsive shadow-sm rounded border bg-white table-modal-edit" style="max-height: 420px; overflow-y: auto;">
-                                    <table class="table table-bordered table-striped align-middle text-center mb-0">
-                                        <thead class="table-dark sticky-top">
-                                            <tr class="small text-nowrap">
-                                                <th style="width: 100px;">Bulan</th>
-                                                <th style="width: 130px;" class="bg-navy text-white">Konsultasi Langsung</th>
-                                                <th style="width: 130px;" class="bg-primary text-white">Konsultasi Online</th>
-                                                <th style="width: 120px;" class="bg-success text-white">Total Konsultasi (Auto)</th>
-                                                <th style="width: 140px;" class="bg-warning text-dark">ISR Terdistribusi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyPerizinanEdit" class="small"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- TAB 7: MOTS -->
-                            <div class="tab-pane fade" id="tab-mots" role="tabpanel">
-                                <div class="card p-4 mb-3 border-0 shadow-sm bg-white" style="border-radius: 16px;">
-                                    <h6 class="fw-bold mb-2 text-success"><i class="bi bi-file-earmark-excel-fill me-2"></i>Upload File Excel Data ISR Diterbitkan</h6>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-8">
-                                            <input type="file" id="excelFileIsrDiterbitkan" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-success btn-sm w-100 fw-bold text-white shadow-sm" onclick="importExcelIsrDiterbitkan()">Upload ISR</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card p-4 border-0 shadow-sm bg-white" style="border-radius: 16px;">
-                                    <h6 class="fw-bold mb-2 text-teal" style="color:#0d9488;"><i class="bi bi-people-fill me-2"></i>Upload File Excel Peserta Bimtek</h6>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-8">
-                                            <input type="file" id="excelFilePesertaBimtek" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-sm w-100 fw-bold text-white shadow-sm" onclick="importExcelPesertaBimtek()" style="background:#0d9488;">Upload Bimtek</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- TAB 8: BHP FREKUENSI -->
-                            <div class="tab-pane fade" id="tab-bhp" role="tabpanel">
-                                <div class="card p-4 mb-3 border-0 shadow-sm bg-white" style="border-radius: 16px;">
-                                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-receipt me-2"></i>Ringkasan Tagihan SPP BHP Frekuensi</h6>
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="fw-bold text-secondary small mb-1">Annual / Renewal</label>
-                                            <input type="number" id="inp_bhp_annual" class="form-control form-control-sm shadow-sm" value="81" min="0" required>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="fw-bold text-secondary small mb-1">New (Baru)</label>
-                                            <input type="number" id="inp_bhp_new" class="form-control form-control-sm shadow-sm" value="0" min="0" required>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="fw-bold text-secondary small mb-1">Reminder (SP)</label>
-                                            <input type="number" id="inp_bhp_reminder" class="form-control form-control-sm shadow-sm" value="77" min="0" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card p-4 border-0 shadow-sm bg-white" style="border-radius: 16px;">
-                                    <h6 class="fw-bold mb-2 text-danger"><i class="bi bi-file-earmark-excel-fill me-2"></i>Upload File Excel Detail Penagihan SPP BHP</h6>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-8">
-                                            <input type="file" id="excelFileBhpTagihan" class="form-control form-control-sm shadow-sm" accept=".xlsx, .xls">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger btn-sm w-100 fw-bold text-white shadow-sm" onclick="importExcelBhpTagihan()">Upload BHP</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary px-4 fw-bold">
-                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Simpan Semua Perubahan (<span class="lbl-tahun-active">2026</span>)
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL LOGIN ADMIN -->
-    <div class="modal fade" id="modalLoginAdmin" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock me-2"></i>Login Admin Sarpras</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="formLoginFirebase" onsubmit="prosesLoginFirebase(event)">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small text-secondary">Username Admin</label>
-                            <input type="text" id="loginEmail" class="form-control shadow-sm" placeholder="admin.sarpras" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small text-secondary">Password</label>
-                            <input type="password" id="loginPassword" class="form-control shadow-sm" placeholder="••••••••" required>
-                        </div>
-                        <button type="submit" id="btnLoginSubmit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Masuk
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- LIBRARY SCRIPT -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCrpoMXX9fpjQvpYhwsRnnEsj0JNE-jQzw",
-            authDomain: "smfr-database.firebaseapp.com",
-            databaseURL: "https://smfr-database-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "smfr-database",
-            storageBucket: "smfr-database.firebasestorage.app",
-            messagingSenderId: "890374389163",
-            appId: "1:890374389163:web:8240f3bcd23d2fd5b2a6ee"
+    function initEnterpriseCharts() {
+        // 1. CHART WAVE GROWTH (LINE AREA)
+        const optionsGrowth = {
+            series: [
+                { name: "Total Konsultasi ISR", data: [63, 72, 73, 107, 82, 93, 98, 104, 115, 0, 0, 0] },
+                { name: "ISR Terdistribusi", data: [42, 50, 55, 78, 60, 68, 72, 80, 88, 0, 0, 0] }
+            ],
+            chart: {
+                type: 'area',
+                height: 290,
+                toolbar: { show: false },
+                dropShadow: { enabled: true, color: '#0f4c81', top: 8, left: 0, blur: 6, opacity: 0.15 }
+            },
+            colors: ['#0f4c81', '#10b981'],
+            stroke: { curve: 'smooth', width: 3 },
+            fill: {
+                type: 'gradient',
+                gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [0, 95, 100] }
+            },
+            xaxis: { categories: bulanList },
+            grid: { borderColor: '#f1f5f9' },
+            legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
         };
-        
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const auth = firebase.auth();
+        chartWaveGrowth = new ApexCharts(document.querySelector("#chartWaveGrowth"), optionsGrowth);
+        chartWaveGrowth.render();
 
-        const bulanList = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-        const bulanListFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        const programIds = ["unar", "bhp", "transportable", "bimtek", "maritim"];
-        
-        let activeDashboardYear = "2026";
-        let selectedTahunEditor = "2026";
-        let currentBhpTagihanList = [];
-        let tempIkmKategoriDetail = Array.from({ length: 12 }, () => null);
+        // 2. CHART BAR PERFORMANCE: % Serapan Anggaran per Program
+        const optionsBar = {
+            series: [{
+                name: 'Persentase Serapan (%)',
+                data: [75.0, 87.5, 75.0, 80.0, 80.0]
+            }],
+            chart: {
+                type: 'bar',
+                height: 290,
+                toolbar: { show: false }
+            },
+            plotOptions: {
+                bar: { 
+                    borderRadius: 6, 
+                    columnWidth: '48%', 
+                    distributed: true,
+                    dataLabels: { position: 'top' }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: (val) => `${val}%`,
+                offsetY: -20,
+                style: { fontSize: '12px', colors: ['#1e293b'], fontWeight: 700 }
+            },
+            colors: ['#0f4c81', '#2563eb', '#10b981', '#8b5cf6', '#f59e0b'],
+            xaxis: { 
+                categories: ['UNAR', 'BHP', 'Inspect', 'Bimtek', 'Maritim'],
+                labels: { style: { fontWeight: 600 } }
+            },
+            yaxis: { max: 100, labels: { formatter: (val) => `${val}%` } },
+            tooltip: { y: { formatter: (val) => `${val}%` } },
+            legend: { show: false }
+        };
+        chartBarPerformance = new ApexCharts(document.querySelector("#chartBarPerformance"), optionsBar);
+        chartBarPerformance.render();
 
-        // INSTANSI GRAPH APEXCHARTS
-        let chartWaveGrowth = null;
-        let chartBarPerformance = null;
-        let chartDonutBhp = null;
-        let chartGaugeSatisfaction = null;
-        let chartDonutBudget = null;
-        let chartWaveUnar = null;
+        // 3. CHART DONUT BHP
+        const optionsDonutBhp = {
+            series: [81, 0, 77],
+            labels: ['Annual/Renewal', 'New Tagihan', 'Reminder (SP)'],
+            chart: { type: 'donut', height: 220 },
+            colors: ['#0f4c81', '#38bdf8', '#ef4444'],
+            legend: { position: 'bottom', fontSize: '11px' },
+            dataLabels: { enabled: false }
+        };
+        chartDonutBhp = new ApexCharts(document.querySelector("#chartDonutBhp"), optionsDonutBhp);
+        chartDonutBhp.render();
 
-        function initEnterpriseCharts() {
-            // 1. CHART WAVE GROWTH (LINE AREA)
-            const optionsGrowth = {
-                series: [
-                    { name: "Total Konsultasi ISR", data: [63, 72, 73, 107, 82, 93, 98, 104, 115, 0, 0, 0] },
-                    { name: "ISR Terdistribusi", data: [42, 50, 55, 78, 60, 68, 72, 80, 88, 0, 0, 0] }
-                ],
-                chart: {
-                    type: 'area',
-                    height: 290,
-                    toolbar: { show: false },
-                    dropShadow: { enabled: true, color: '#0f4c81', top: 8, left: 0, blur: 6, opacity: 0.15 }
-                },
-                colors: ['#0f4c81', '#10b981'],
-                stroke: { curve: 'smooth', width: 3 },
-                fill: {
-                    type: 'gradient',
-                    gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [0, 95, 100] }
-                },
-                xaxis: { categories: bulanList },
-                grid: { borderColor: '#f1f5f9' },
-                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
-            };
-            chartWaveGrowth = new ApexCharts(document.querySelector("#chartWaveGrowth"), optionsGrowth);
-            chartWaveGrowth.render();
-
-            // 2. CHART BAR PERFORMANCE (COLUMN)
-            const optionsBar = {
-                series: [{
-                    name: 'Realisasi Serapan (Rp M)',
-                    data: [112.5, 175.0, 135.0, 96.0, 128.0]
-                }],
-                chart: {
-                    type: 'bar',
-                    height: 290,
-                    toolbar: { show: false }
-                },
-                colors: ['#0284c7'],
-                plotOptions: {
-                    bar: { borderRadius: 6, columnWidth: '45%', distributed: true }
-                },
-                colors: ['#0f4c81', '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b'],
-                xaxis: { categories: ['UNAR', 'BHP', 'Inspect', 'Bimtek', 'Maritim'] },
-                legend: { show: false }
-            };
-            chartBarPerformance = new ApexCharts(document.querySelector("#chartBarPerformance"), optionsBar);
-            chartBarPerformance.render();
-
-            // 3. CHART DONUT BHP (DONUT)
-            const optionsDonutBhp = {
-                series: [81, 0, 77],
-                labels: ['Annual/Renewal', 'New Tagihan', 'Reminder (SP)'],
-                chart: { type: 'donut', height: 220 },
-                colors: ['#0f4c81', '#38bdf8', '#ef4444'],
-                legend: { position: 'bottom', fontSize: '11px' },
-                dataLabels: { enabled: false }
-            };
-            chartDonutBhp = new ApexCharts(document.querySelector("#chartDonutBhp"), optionsDonutBhp);
-            chartDonutBhp.render();
-
-            // 4. CHART GAUGE SATISFACTION (RADIAL BAR)
-            const optionsGauge = {
-                series: [98.5],
-                chart: { type: 'radialBar', height: 240 },
-                plotOptions: {
-                    radialBar: {
-                        startAngle: -135,
-                        endAngle: 135,
-                        hollow: { size: '70%' },
-                        track: { background: '#f1f5f9' },
-                        dataLabels: {
-                            name: { show: true, label: 'IKM Score', color: '#64748b', fontSize: '12px' },
-                            value: { fontSize: '24px', fontWeight: 800, color: '#0f4c81', formatter: () => "3.94" }
-                        }
+        // 4. CHART GAUGE SATISFACTION (IKM & IIPP)
+        const optionsGauge = {
+            series: [98.5],
+            chart: { type: 'radialBar', height: 240 },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -135,
+                    endAngle: 135,
+                    hollow: { size: '70%' },
+                    track: { background: '#f1f5f9' },
+                    dataLabels: {
+                        name: { show: true, label: 'IKM Score', color: '#64748b', fontSize: '12px' },
+                        value: { fontSize: '24px', fontWeight: 800, color: '#0f4c81', formatter: () => "3.94" }
                     }
-                },
-                colors: ['#0f4c81']
-            };
-            chartGaugeSatisfaction = new ApexCharts(document.querySelector("#chartGaugeSatisfaction"), optionsGauge);
-            chartGaugeSatisfaction.render();
+                }
+            },
+            colors: ['#0f4c81']
+        };
+        chartGaugeSatisfaction = new ApexCharts(document.querySelector("#chartGaugeSatisfaction"), optionsGauge);
+        chartGaugeSatisfaction.render();
 
-            // 5. CHART DONUT BUDGET ALLOCATION
-            const optionsBudget = {
-                series: [150, 200, 180, 120, 160],
-                labels: ['UNAR', 'BHP Frekuensi', 'Transportable', 'Bimtek IKRAN', 'Maritim OTS'],
-                chart: { type: 'donut', height: 260 },
-                colors: ['#0f4c81', '#2563eb', '#10b981', '#8b5cf6', '#f59e0b'],
-                legend: { position: 'right', fontSize: '12px' },
-                dataLabels: { enabled: false }
-            };
-            chartDonutBudget = new ApexCharts(document.querySelector("#chartDonutBudget"), optionsBudget);
-            chartDonutBudget.render();
+        // 5. CHART DONUT BUDGET ALLOCATION (Pagu Nominal Dalam Juta Rp)
+        const optionsBudget = {
+            series: [150, 200, 180, 120, 160],
+            labels: ['UNAR (150 Jt)', 'BHP Frekuensi (200 Jt)', 'Transportable (180 Jt)', 'Bimtek IKRAN (120 Jt)', 'Maritim OTS (160 Jt)'],
+            chart: { type: 'donut', height: 260 },
+            colors: ['#0f4c81', '#2563eb', '#10b981', '#8b5cf6', '#f59e0b'],
+            legend: { position: 'bottom', fontSize: '11px', fontWeight: 600 },
+            tooltip: { y: { formatter: (val) => `Rp ${val} Juta` } },
+            dataLabels: { enabled: false }
+        };
+        chartDonutBudget = new ApexCharts(document.querySelector("#chartDonutBudget"), optionsBudget);
+        chartDonutBudget.render();
 
-            // 6. CHART WAVE UNAR (AREA)
-            const optionsWaveUnar = {
-                series: [{ name: "Peserta UNAR", data: [15, 12, 18, 50, 14, 11, 16, 13, 13, 0, 0, 0] }],
-                chart: { type: 'area', height: 260, toolbar: { show: false } },
-                colors: ['#f59e0b'],
-                stroke: { curve: 'smooth', width: 3 },
-                fill: { type: 'gradient', gradient: { opacityFrom: 0.5, opacityTo: 0.05 } },
-                xaxis: { categories: bulanList },
-                legend: { show: false }
-            };
-            chartWaveUnar = new ApexCharts(document.querySelector("#chartWaveUnar"), optionsWaveUnar);
-            chartWaveUnar.render();
-        }
+        // 6. CHART WAVE UNAR (AREA)
+        const optionsWaveUnar = {
+            series: [{ name: "Peserta UNAR", data: [15, 12, 18, 50, 14, 11, 16, 13, 13, 0, 0, 0] }],
+            chart: { type: 'area', height: 260, toolbar: { show: false } },
+            colors: ['#f59e0b'],
+            stroke: { curve: 'smooth', width: 3 },
+            fill: { type: 'gradient', gradient: { opacityFrom: 0.5, opacityTo: 0.05 } },
+            xaxis: { categories: bulanList },
+            legend: { show: false }
+        };
+        chartWaveUnar = new ApexCharts(document.querySelector("#chartWaveUnar"), optionsWaveUnar);
+        chartWaveUnar.render();
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            renderUnarEditTableRows();
-            renderAnggaranEditRows();
-            renderSlaEditTableRows();
-            renderIkmEditTableRows();
-            renderPerizinanEditTableRows();
-            initEnterpriseCharts();
-            loadDataKinerjaRealtime();
+    document.addEventListener('DOMContentLoaded', function() {
+        renderUnarEditTableRows();
+        renderAnggaranEditRows();
+        renderSlaEditTableRows();
+        renderIkmEditTableRows();
+        renderPerizinanEditTableRows();
+        initEnterpriseCharts();
+        loadDataKinerjaRealtime();
+    });
+
+    // HANDLER PERUBAHAN TAHUN PADA DASBOR UTAMA
+    function changeDashboardYear(tahun, element) {
+        activeDashboardYear = tahun;
+        document.getElementById('lblDashboardTahunActive').textContent = tahun;
+        document.getElementById('lblChartLineTahun').textContent = tahun;
+
+        document.querySelectorAll('#dropdownTahunDashboard + .dropdown-menu .dropdown-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        if (element) element.classList.add('active');
+
+        loadDataKinerjaRealtime(tahun);
+    }
+
+    // HANDLER PERUBAHAN TAHUN PADA MODAL EDITOR
+    function handleGantiTahunEditor(tahun) {
+        selectedTahunEditor = tahun;
+        document.querySelectorAll('.lbl-tahun-active').forEach(el => {
+            el.textContent = tahun;
         });
 
-        // INTEGRASI DENGAN DATABASE FIREBASE REALTIME
-        function loadDataKinerjaRealtime(tahun = activeDashboardYear) {
-            const pathNode = (tahun === '2026') ? 'kinerja_sarpras' : `kinerja_sarpras_by_year/${tahun}`;
+        const Toast = Swal.mixin({
+            toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, timerProgressBar: true
+        });
+        Toast.fire({ icon: 'info', title: `Form Data Tahun ${tahun}` });
 
-            database.ref(pathNode).on('value', (snapshot) => {
-                let data = snapshot.val();
-                if (!data && tahun !== '2026') {
-                    database.ref('kinerja_sarpras').once('value', (snapFallback) => {
-                        updateDashboardUI(snapFallback.val());
-                    });
-                } else {
-                    updateDashboardUI(data);
-                }
-            });
+        loadExistingDataToModal(tahun);
+    }
+
+    // 1. TAB EDIT UNAR
+    function renderUnarEditTableRows() {
+        const tbody = document.getElementById('tbodyUnarEdit');
+        if(!tbody) return;
+
+        let html = '';
+        defaultUnarMonths.forEach((m, idx) => {
+            let i = idx + 1;
+            let siaVal = parseInt(m.siaga) || 0;
+            let pengVal = parseInt(m.penggalang) || 0;
+            let penVal = parseInt(m.penegak) || 0;
+            let tlVal = parseInt(m.tidak_lulus) || 0;
+            let tladmVal = parseInt(m.tidak_lulus_adm) || 0;
+
+            let autoPeserta = siaVal + pengVal + penVal;
+            let autoPendaftar = autoPeserta + tladmVal;
+            let autoLulus = Math.max(0, autoPeserta - tlVal);
+
+            html += `
+            <tr>
+                <td class="fw-bold text-primary" id="unar_bln_${i}">${m.bulan}</td>
+                <td><input type="text" id="unar_tgl_${i}" class="form-control form-control-sm text-center" value="${m.tgl}"></td>
+                <td>
+                    <select id="unar_kat_${i}" class="form-select form-select-sm">
+                        <option value="CAT Reguler" ${m.kategori === 'CAT Reguler' ? 'selected' : ''}>CAT Reguler</option>
+                        <option value="CAT Non Reg" ${m.kategori === 'CAT Non Reg' ? 'selected' : ''}>CAT Non Reg</option>
+                    </select>
+                </td>
+                <td><input type="text" id="unar_lok_${i}" class="form-control form-control-sm" value="${m.lokasi}"></td>
+                <td><input type="number" id="unar_pend_${i}" class="form-control form-control-sm text-center text-info fw-bold bg-light" value="${autoPendaftar}" readonly></td>
+                <td><input type="number" id="unar_pes_${i}" class="form-control form-control-sm text-center text-primary fw-bold bg-light" value="${autoPeserta}" readonly></td>
+                <td><input type="number" id="unar_sia_${i}" class="form-control form-control-sm text-center" value="${siaVal}" oninput="hitungAutoUnarModal(${i})"></td>
+                <td><input type="number" id="unar_peng_${i}" class="form-control form-control-sm text-center" value="${pengVal}" oninput="hitungAutoUnarModal(${i})"></td>
+                <td><input type="number" id="unar_pen_${i}" class="form-control form-control-sm text-center" value="${penVal}" oninput="hitungAutoUnarModal(${i})"></td>
+                <td><input type="number" id="unar_lul_${i}" class="form-control form-control-sm text-center text-success fw-bold bg-light" value="${autoLulus}" readonly></td>
+                <td><input type="number" id="unar_tl_${i}" class="form-control form-control-sm text-center text-danger fw-bold" value="${tlVal}" oninput="hitungAutoUnarModal(${i})"></td>
+                <td><input type="number" id="unar_tladm_${i}" class="form-control form-control-sm text-center text-warning fw-bold" value="${tladmVal}" oninput="hitungAutoUnarModal(${i})"></td>
+                <td>
+                    <select id="unar_st_${i}" class="form-select form-select-sm fw-bold">
+                        <option value="Selesai" ${m.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                        <option value="Mendatang" ${m.status === 'Mendatang' ? 'selected' : ''}>Mendatang</option>
+                        <option value="Dibatalkan" ${m.status === 'Dibatalkan' ? 'selected' : ''}>Dibatalkan</option>
+                    </select>
+                </td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function hitungAutoUnarModal(i) {
+        const sia = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
+        const peng = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
+        const pen = parseInt(document.getElementById(`unar_pen_${i}`).value) || 0;
+        const tl = parseInt(document.getElementById(`unar_tl_${i}`).value) || 0;
+        const tladm = parseInt(document.getElementById(`unar_tladm_${i}`).value) || 0;
+
+        const peserta = sia + peng + pen;
+        const pendaftar = peserta + tladm;
+        const lulus = Math.max(0, peserta - tl);
+
+        document.getElementById(`unar_pes_${i}`).value = peserta;
+        document.getElementById(`unar_pend_${i}`).value = pendaftar;
+        document.getElementById(`unar_lul_${i}`).value = lulus;
+    }
+
+    // 2. TAB EDIT ANGGARAN
+    function renderAnggaranEditRows() {
+        const containerPagu = document.getElementById('containerPaguAnggaran');
+        const tbodyBulan = document.getElementById('tbodyAnggaranBulanEdit');
+        if(!containerPagu || !tbodyBulan) return;
+
+        let htmlPagu = '';
+        defaultAnggaranList.forEach((item, idx) => {
+            let i = idx + 1;
+            htmlPagu += `
+            <div class="col-md-4 col-sm-6 mb-2">
+                <label class="form-label small fw-bold text-secondary mb-1">${i}. ${item.id.toUpperCase()}</label>
+                <input type="hidden" id="anggaran_id_${i}" value="${item.id}">
+                <input type="hidden" id="anggaran_nama_${i}" value="${item.nama}">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light">Rp</span>
+                    <input type="number" id="anggaran_pagu_${i}" class="form-control" value="${item.pagu}" min="0" required oninput="hitungkanPersentaseAnggaran()">
+                </div>
+            </div>`;
+        });
+        containerPagu.innerHTML = htmlPagu;
+
+        let htmlBulan = '';
+        bulanList.forEach((bln, idx) => {
+            let m = idx + 1;
+            htmlBulan += `
+            <tr>
+                <td class="fw-bold text-primary" id="anggaran_bln_lbl_${m}">${bln}</td>
+                <td>
+                    <input type="number" id="anggaran_rp_m_${m}_unar" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[0].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                    <span id="calc_pct_m_${m}_unar" class="badge bg-light text-primary border mt-1">0.0%</span>
+                </td>
+                <td>
+                    <input type="number" id="anggaran_rp_m_${m}_bhp" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[1].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                    <span id="calc_pct_m_${m}_bhp" class="badge bg-light text-success border mt-1">0.0%</span>
+                </td>
+                <td>
+                    <input type="number" id="anggaran_rp_m_${m}_transportable" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[2].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                    <span id="calc_pct_m_${m}_transportable" class="badge bg-light text-warning border mt-1">0.0%</span>
+                </td>
+                <td>
+                    <input type="number" id="anggaran_rp_m_${m}_bimtek" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[3].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                    <span id="calc_pct_m_${m}_bimtek" class="badge bg-light text-purple border mt-1" style="color: #8b5cf6;">0.0%</span>
+                </td>
+                <td>
+                    <input type="number" id="anggaran_rp_m_${m}_maritim" class="form-control form-control-sm text-end fw-semibold" value="${defaultAnggaranList[4].monthlyNominal[idx]}" oninput="hitungkanPersentaseAnggaran()">
+                    <span id="calc_pct_m_${m}_maritim" class="badge bg-light text-info border mt-1">0.0%</span>
+                </td>
+            </tr>`;
+        });
+        tbodyBulan.innerHTML = htmlBulan;
+
+        hitungkanPersentaseAnggaran();
+    }
+
+    function hitungkanPersentaseAnggaran() {
+        programIds.forEach((pId, pIdx) => {
+            const paguEl = document.getElementById(`anggaran_pagu_${pIdx + 1}`);
+            const paguVal = parseFloat(paguEl ? paguEl.value : 0) || 0;
+
+            for (let m = 1; m <= 12; m++) {
+                const inputRp = document.getElementById(`anggaran_rp_m_${m}_${pId}`);
+                const badgePct = document.getElementById(`calc_pct_m_${m}_${pId}`);
+                const serapanVal = parseFloat(inputRp ? inputRp.value : 0) || 0;
+
+                const pct = paguVal > 0 ? ((serapanVal / paguVal) * 100).toFixed(1) : '0.0';
+                if (badgePct) badgePct.innerText = `${pct}%`;
+            }
+        });
+    }
+
+    // 3. TAB EDIT SLA
+    function renderSlaEditTableRows() {
+        const tbody = document.getElementById('tbodySlaEdit');
+        if(!tbody) return;
+
+        let html = '';
+        defaultSlaMonths.forEach((m, idx) => {
+            let i = idx + 1;
+            html += `
+            <tr>
+                <td class="fw-bold text-dark" id="sla_bln_${i}">${m.bulan}</td>
+                <td><input type="number" id="sla_tot_${i}" class="form-control form-control-sm text-center" value="${m.total_aset}"></td>
+                <td><input type="number" id="sla_bk_${i}" class="form-control form-control-sm text-center text-success fw-bold" value="${m.baik}"></td>
+                <td><input type="number" id="sla_rk_${i}" class="form-control form-control-sm text-center text-danger fw-bold" value="${m.rusak}"></td>
+                <td><input type="text" id="sla_stot_${i}" class="form-control form-control-sm text-center text-primary fw-bold" value="${m.sla_total}"></td>
+                <td><input type="text" id="sla_stet_${i}" class="form-control form-control-sm text-center" value="${m.sla_tetap}"></td>
+                <td><input type="text" id="sla_sberg_${i}" class="form-control form-control-sm text-center" value="${m.sla_bergerak}"></td>
+                <td>
+                    <select id="sla_kc_${i}" class="form-select form-select-sm fw-bold">
+                        <option value="TERKUNCI" ${m.status_kunci === 'TERKUNCI' ? 'selected' : ''}>TERKUNCI</option>
+                        <option value="TERBUKA" ${m.status_kunci === 'TERBUKA' ? 'selected' : ''}>TERBUKA</option>
+                    </select>
+                </td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // 4. TAB EDIT IKM & IIPP
+    function renderIkmEditTableRows() {
+        const tbody = document.getElementById('tbodyIkmEdit');
+        if(!tbody) return;
+
+        let html = '';
+        defaultIkmIippMonths.forEach((m, idx) => {
+            let i = idx + 1;
+            let ikmVal = (m.ikm_skor !== null && m.ikm_skor !== undefined) ? m.ikm_skor : ((m.ikm_score !== null && m.ikm_score !== undefined) ? m.ikm_score : '');
+            let iippVal = (m.iipp_skor !== null && m.iipp_skor !== undefined) ? m.iipp_skor : ((m.iipp_score !== null && m.iipp_score !== undefined) ? m.iipp_score : '');
+
+            html += `
+            <tr>
+                <td class="fw-bold text-dark" id="ikm_bln_${i}">${m.bulan}</td>
+                <td><input type="number" step="0.01" min="0" max="4" id="ikm_sc_${i}" class="form-control form-control-sm text-center fw-bold text-primary" placeholder="Skor IKM" value="${ikmVal}"></td>
+                <td><input type="number" min="0" id="ikm_pria_${i}" class="form-control form-control-sm text-center" value="${m.ikm_pria || 0}"></td>
+                <td><input type="number" min="0" id="ikm_wanita_${i}" class="form-control form-control-sm text-center" value="${m.ikm_wanita || 0}"></td>
+                <td><input type="number" step="0.01" min="0" max="10" id="iipp_sc_${i}" class="form-control form-control-sm text-center fw-bold text-success" placeholder="Skor IIPP" value="${iippVal}"></td>
+                <td><input type="number" min="0" id="iipp_pria_${i}" class="form-control form-control-sm text-center" value="${m.iipp_pria || 0}"></td>
+                <td><input type="number" min="0" id="iipp_wanita_${i}" class="form-control form-control-sm text-center" value="${m.iipp_wanita || 0}"></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // 5. TAB EDIT PERIZINAN ISR
+    function renderPerizinanEditTableRows() {
+        const tbody = document.getElementById('tbodyPerizinanEdit');
+        if(!tbody) return;
+
+        let html = '';
+        defaultPerizinanMonths.forEach((m, idx) => {
+            let i = idx + 1;
+            let lng = parseInt(m.langsung) || 0;
+            let onl = parseInt(m.online) || 0;
+            let dist = parseInt(m.terdistribusi) || 0;
+            let tot = lng + onl;
+
+            html += `
+            <tr>
+                <td class="fw-bold text-dark" id="prz_bln_${i}">${m.bulan}</td>
+                <td><input type="number" min="0" id="prz_lng_${i}" class="form-control form-control-sm text-center fw-bold" style="color: #0f4c81;" value="${lng}" oninput="hitungAutoPerizinanModal(${i})"></td>
+                <td><input type="number" min="0" id="prz_onl_${i}" class="form-control form-control-sm text-center fw-bold text-primary" value="${onl}" oninput="hitungAutoPerizinanModal(${i})"></td>
+                <td><input type="number" id="prz_tot_${i}" class="form-control form-control-sm text-center fw-bold text-success bg-light" value="${tot}" readonly></td>
+                <td><input type="number" min="0" id="prz_dist_${i}" class="form-control form-control-sm text-center fw-bold text-warning" value="${dist}"></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function hitungAutoPerizinanModal(i) {
+        const lng = parseInt(document.getElementById(`prz_lng_${i}`).value) || 0;
+        const onl = parseInt(document.getElementById(`prz_onl_${i}`).value) || 0;
+        document.getElementById(`prz_tot_${i}`).value = lng + onl;
+    }
+
+    // IMPORT EXCEL IKM & IIPP
+    function importExcelIkmData() {
+        const fileInput = document.getElementById('excelFileIkm');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            Swal.fire('Perhatian', 'Silakan pilih file Excel survei (.xlsx / .xls) terlebih dahulu.', 'warning');
+            return;
         }
 
-        function updateDashboardUI(data) {
-            if (!data) return;
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-            // Update Metric Strips
-            for (let i = 1; i <= 6; i++) {
-                if (data['k' + i]) {
-                    let t = parseFloat(data['k' + i].target) || 0;
-                    let c = parseFloat(data['k' + i].capaian) || 0;
-                    let suf = data['k' + i].suffix || ''; 
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
 
-                    const elTarget = document.getElementById('val_target_' + i);
-                    const elCapaian = document.getElementById('val_capaian_' + i);
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+                const jsonDataObject = XLSX.utils.sheet_to_json(worksheet, { defval: null });
 
-                    if (elTarget) elTarget.innerText = t + suf;
-                    if (elCapaian) elCapaian.innerText = c + suf;
+                if (!jsonDataRaw || jsonDataRaw.length < 1) {
+                    Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
+                    return;
                 }
-            }
 
-            // Synchronize Charts
-            if (data.perizinan_detail && data.perizinan_detail.months && chartWaveGrowth) {
-                let arrTotIzin = [], arrDistIzin = [], arrUnarPeserta = [];
-                data.perizinan_detail.months.forEach((m) => {
-                    arrTotIzin.push((parseInt(m.langsung) || 0) + (parseInt(m.online) || 0));
-                    arrDistIzin.push(parseInt(m.terdistribusi) || 0);
+                const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                const isSummaryFormat = jsonDataObject.some(r => {
+                    const b = r["Bulan"] || r["BULAN"] || r["bulan"];
+                    return b && bulanListFull.some(mName => mName.toLowerCase() === String(b).trim().toLowerCase());
                 });
 
-                if (data.unar_detail && data.unar_detail.months) {
-                    data.unar_detail.months.forEach(m => {
-                        arrUnarPeserta.push((parseInt(m.siaga) || 0) + (parseInt(m.penggalang) || 0) + (parseInt(m.penegak) || 0));
+                if (isSummaryFormat) {
+                    let processedCount = 0;
+                    for (let m = 0; m < 12; m++) {
+                        const monthName = bulanListFull[m];
+                        const row = jsonDataObject.find(r => {
+                            const b = r["Bulan"] || r["BULAN"] || r["bulan"];
+                            return b && String(b).trim().toLowerCase() === monthName.toLowerCase();
+                        }) || {};
+
+                        const getNum = (keys) => {
+                            for (let k of keys) {
+                                if (row[k] !== undefined && row[k] !== null && row[k] !== "") {
+                                    const val = parseFloat(row[k]);
+                                    return isNaN(val) ? null : val;
+                                }
+                            }
+                            return null;
+                        };
+
+                        const ikmSkor = getNum(["IKM Skor", "ikm_skor", "Skor IKM", "IKM"]);
+                        const iippSkor = getNum(["IIPP Skor", "iipp_skor", "Skor IIPP", "IIPP"]);
+
+                        const ikmPria = parseInt(getNum(["IKM Pria", "ikm_pria"])) || 0;
+                        const ikmWanita = parseInt(getNum(["IKM Wanita", "ikm_wanita"])) || 0;
+                        const iippPria = parseInt(getNum(["IIPP Pria", "iipp_pria"])) || 0;
+                        const iippWanita = parseInt(getNum(["IIPP Wanita", "iipp_wanita"])) || 0;
+
+                        const i = m + 1;
+                        if (ikmSkor !== null) document.getElementById(`ikm_sc_${i}`).value = ikmSkor;
+                        document.getElementById(`ikm_pria_${i}`).value = ikmPria;
+                        document.getElementById(`ikm_wanita_${i}`).value = ikmWanita;
+
+                        if (iippSkor !== null) document.getElementById(`iipp_sc_${i}`).value = iippSkor;
+                        document.getElementById(`iipp_pria_${i}`).value = iippPria;
+                        document.getElementById(`iipp_wanita_${i}`).value = iippWanita;
+
+                        if (ikmSkor !== null || iippSkor !== null) processedCount++;
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Import Ringkasan Berhasil!',
+                        text: `Data ringkasan Excel Tahun ${selectedYear} berhasil diproses untuk ${processedCount} bulan. Klik "Simpan Semua Perubahan" untuk menyimpan ke Firebase.`
                     });
+                } else {
+                    Swal.fire('Format Excel Terdeteksi', 'File survei berhasil diurai. Silakan simpan data.', 'success');
                 }
 
-                chartWaveGrowth.updateSeries([
-                    { name: "Total Konsultasi ISR", data: arrTotIzin },
-                    { name: "ISR Terdistribusi", data: arrDistIzin }
-                ]);
+            } catch (err) {
+                console.error(err);
+                Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+            }
+        };
 
-                if (chartWaveUnar) {
-                    chartWaveUnar.updateSeries([{ name: "Peserta UNAR", data: arrUnarPeserta }]);
+        reader.readAsArrayBuffer(file);
+    }
+
+    // IMPORT EXCEL DATA ISR DITERBITKAN
+    function importExcelIsrDiterbitkan() {
+        const fileInput = document.getElementById('excelFileIsrDiterbitkan');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            Swal.fire('Perhatian', 'Silakan pilih file Excel daftar ISR diterbitkan terlebih dahulu.', 'warning');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+
+                if (!jsonDataRaw || jsonDataRaw.length === 0) {
+                    Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
+                    return;
                 }
-            }
 
-            if (data.bhp_detail && chartDonutBhp) {
-                const ann = parseInt(data.bhp_detail.annual) || 81;
-                const nww = parseInt(data.bhp_detail.new_tagihan) || 0;
-                const rem = parseInt(data.bhp_detail.reminder) || 77;
-                chartDonutBhp.updateSeries([ann, nww, rem]);
-                const lblSurat = document.getElementById('lblTotalBhpSurat');
-                if (lblSurat) lblSurat.innerText = `${ann + nww + rem} Surat SPP`;
+                const parsedIsrList = [];
+                const isrMonthlyCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                const bulanKeyList = ["jan", "feb", "mar", "apr", "mei", "jun", "jul", "agu", "sep", "okt", "nov", "des"];
+
+                jsonDataRaw.forEach((row) => {
+                    if (row && row.length >= 2 && row[0]) {
+                        const col0 = String(row[0]).toLowerCase();
+                        if (col0.includes('no') || col0.includes('nama') || col0.includes('pemohon')) return;
+
+                        const tglText = row[3] ? String(row[3]).trim() : '';
+                        parsedIsrList.push({
+                            pemohon: row[0] ? String(row[0]).trim() : '',
+                            stasiun: row[1] ? String(row[1]).trim() : 'IKRAN',
+                            noIsr: row[2] ? String(row[2]).trim() : '',
+                            tglTerbit: tglText || new Date().toLocaleDateString('id-ID'),
+                            status: row[4] ? String(row[4]).trim() : 'Aktif'
+                        });
+
+                        if (tglText) {
+                            const tglLower = tglText.toLowerCase();
+                            bulanKeyList.forEach((bName, bIdx) => {
+                                if (tglLower.includes(bName)) {
+                                    isrMonthlyCounts[bIdx]++;
+                                }
+                            });
+                        }
+                    }
+                });
+
+                const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                const pathNode = (selectedYear === 2026) 
+                    ? 'kinerja_sarpras/mots_detail' 
+                    : `kinerja_sarpras_by_year/${selectedYear}/mots_detail`;
+
+                database.ref(pathNode).update({
+                    isr_diterbitkan: parsedIsrList,
+                    isr_bulanan: isrMonthlyCounts,
+                    isrMots: `${parsedIsrList.length} ISR`
+                }).then(() => {
+                    Swal.fire('Upload Berhasil!', `Berhasil mengunggah ${parsedIsrList.length} data ISR Diterbitkan ke Firebase.`, 'success');
+                }).catch(err => Swal.fire('Error Firebase', err.message, 'error'));
+
+            } catch (err) {
+                Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
             }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    // IMPORT EXCEL PESERTA BIMTEK
+    function importExcelPesertaBimtek() {
+        const fileInput = document.getElementById('excelFilePesertaBimtek');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            Swal.fire('Perhatian', 'Silakan pilih file Excel data peserta Bimtek terlebih dahulu.', 'warning');
+            return;
         }
 
-        function changeDashboardYear(tahun, element) {
-            activeDashboardYear = tahun;
-            document.getElementById('lblDashboardTahunActive').textContent = tahun;
-            document.getElementById('lblChartLineTahun').textContent = tahun;
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-            document.querySelectorAll('#dropdownTahunDashboard + .dropdown-menu .dropdown-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            if (element) element.classList.add('active');
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
 
-            loadDataKinerjaRealtime(tahun);
+                const parsedPesertaList = [];
+                jsonDataRaw.forEach((row) => {
+                    if (row && row.length >= 2 && row[0]) {
+                        const col0 = String(row[0]).toLowerCase();
+                        if (col0.includes('no') || col0.includes('nama') || col0.includes('callsign')) return;
+
+                        parsedPesertaList.push({
+                            nama: row[0] ? String(row[0]).trim() : '',
+                            callsign: row[1] ? String(row[1]).trim() : '',
+                            certNo: row[2] ? String(row[2]).trim() : '',
+                            tgl: row[3] ? String(row[3]).trim() : new Date().toLocaleDateString('id-ID'),
+                            status: row[4] ? String(row[4]).trim() : 'Siap Cetak'
+                        });
+                    }
+                });
+
+                const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                const pathNode = (selectedYear === 2026) 
+                    ? 'kinerja_sarpras/mots_detail' 
+                    : `kinerja_sarpras_by_year/${selectedYear}/mots_detail`;
+
+                database.ref(pathNode).update({
+                    peserta_bimtek: parsedPesertaList,
+                    pesertaBimtek: `${parsedPesertaList.length} Peserta`
+                }).then(() => {
+                    Swal.fire('Upload Berhasil!', `Berhasil mengunggah ${parsedPesertaList.length} data Peserta Bimtek ke Firebase.`, 'success');
+                }).catch(err => Swal.fire('Error Firebase', err.message, 'error'));
+
+            } catch (err) {
+                Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    // IMPORT EXCEL BHP TAGIHAN
+    function importExcelBhpTagihan() {
+        const fileInput = document.getElementById('excelFileBhpTagihan');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            Swal.fire('Perhatian', 'Silakan pilih file Excel data penagihan BHP terlebih dahulu.', 'warning');
+            return;
         }
 
-        /* --- FUNGSI ADMIN EDIT DATA & DUMMY MODAL TABLES --- */
-        function verifikasiAdmin() {
-            const user = auth.currentUser;
-            if (user) {
-                const modalKinerjaEl = document.getElementById('modalKinerja');
-                const modalKinerja = bootstrap.Modal.getOrCreateInstance(modalKinerjaEl);
-                modalKinerja.show();
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+
+                const parsedBhpList = [];
+                let annualCount = 0, newCount = 0, reminderCount = 0;
+
+                jsonDataRaw.forEach((row) => {
+                    if (row && row.length >= 2 && row[0]) {
+                        const col0 = String(row[0]).toLowerCase();
+                        if (col0.includes('no') || col0.includes('wajib bayar') || col0.includes('nama')) return;
+
+                        const kat = row[3] ? String(row[3]).trim() : 'Annual/Renewal';
+                        const katLower = kat.toLowerCase();
+                        if (katLower.includes('new') || katLower.includes('baru')) newCount++;
+                        else if (katLower.includes('reminder') || katLower.includes('peringatan')) reminderCount++;
+                        else annualCount++;
+
+                        parsedBhpList.push({
+                            wajibBayar: row[1] ? String(row[1]).trim() : (row[0] ? String(row[0]).trim() : ''),
+                            noSpp: row[2] ? String(row[2]).trim() : '',
+                            kategori: kat,
+                            nominal: row[4] ? parseFloat(String(row[4]).replace(/[^0-9.]/g, '')) || 0 : 0,
+                            tglJatuhTempo: row[5] ? String(row[5]).trim() : '',
+                            status: row[6] ? String(row[6]).trim() : 'Lunas'
+                        });
+                    }
+                });
+
+                currentBhpTagihanList = parsedBhpList;
+                const selectedYear = parseInt(selectedTahunEditor) || 2026;
+                const pathNode = (selectedYear === 2026) 
+                    ? 'kinerja_sarpras/bhp_detail' 
+                    : `kinerja_sarpras_by_year/${selectedYear}/bhp_detail`;
+
+                database.ref(pathNode).update({
+                    annual: annualCount || 81,
+                    new_tagihan: newCount || 0,
+                    reminder: reminderCount || 77,
+                    tagihan_list: parsedBhpList
+                }).then(() => {
+                    if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = annualCount || 81;
+                    if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = newCount || 0;
+                    if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = reminderCount || 77;
+                    Swal.fire('Upload Berhasil!', `Berhasil mengunggah ${parsedBhpList.length} data penagihan BHP ke Firebase.`, 'success');
+                }).catch(err => Swal.fire('Error Firebase', err.message, 'error'));
+
+            } catch (err) {
+                Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    // LOAD & UPDATE DASHBOARD MAIN REALTIME DARI FIREBASE
+    function loadDataKinerjaRealtime(tahun = activeDashboardYear) {
+        const pathNode = (tahun === '2026') ? 'kinerja_sarpras' : `kinerja_sarpras_by_year/${tahun}`;
+
+        database.ref(pathNode).on('value', (snapshot) => {
+            let data = snapshot.val();
+            if (!data && tahun !== '2026') {
+                database.ref('kinerja_sarpras').once('value', (snapFallback) => {
+                    updateDashboardUI(snapFallback.val());
+                });
             } else {
+                updateDashboardUI(data);
+            }
+        });
+    }
+
+    function updateDashboardUI(data) {
+        if (!data) return;
+
+        // Update Kartu Strip KPI Indikator (1 - 6)
+        for (let i = 1; i <= 6; i++) {
+            if (data['k' + i]) {
+                let t = parseFloat(data['k' + i].target) || 0;
+                let c = parseFloat(data['k' + i].capaian) || 0;
+                let suf = data['k' + i].suffix || ''; 
+
+                const elTarget = document.getElementById('val_target_' + i);
+                const elCapaian = document.getElementById('val_capaian_' + i);
+
+                if (elTarget) elTarget.innerText = t + suf;
+                if (elCapaian) elCapaian.innerText = c + suf;
+
+                let statusEl = document.getElementById('status_' + i);
+                if (statusEl) {
+                    let selisih = (c - t).toFixed(2).replace(/\.00$/, '');
+                    if (c > t) {
+                        statusEl.innerHTML = `<i class="bi bi-arrow-up-right"></i> ↑ ${selisih}${suf} dari target`;
+                        statusEl.className = "kpi-strip-sub text-success";
+                    } else if (c < t) {
+                        statusEl.innerHTML = `<i class="bi bi-arrow-down-right"></i> ↓ ${Math.abs(selisih)}${suf} dari target`;
+                        statusEl.className = "kpi-strip-sub text-danger";
+                    } else {
+                        statusEl.innerHTML = `<i class="bi bi-check-circle-fill"></i> Sesuai Target`;
+                        statusEl.className = "kpi-strip-sub text-primary";
+                    }
+                }
+            }
+        }
+
+        // Synchronize Service Growth & Wave UNAR Charts
+        if (data.perizinan_detail && data.perizinan_detail.months && chartWaveGrowth) {
+            let arrTotIzin = [], arrDistIzin = [], arrUnarPeserta = [];
+            let totalPesertaUnarAcc = 0;
+
+            data.perizinan_detail.months.forEach((m) => {
+                arrTotIzin.push((parseInt(m.langsung) || 0) + (parseInt(m.online) || 0));
+                arrDistIzin.push(parseInt(m.terdistribusi) || 0);
+            });
+
+            if (data.unar_detail && data.unar_detail.months) {
+                data.unar_detail.months.forEach(m => {
+                    const pes = (parseInt(m.siaga) || 0) + (parseInt(m.penggalang) || 0) + (parseInt(m.penegak) || 0);
+                    arrUnarPeserta.push(pes);
+                    totalPesertaUnarAcc += pes;
+                });
+            }
+
+            chartWaveGrowth.updateSeries([
+                { name: "Total Konsultasi ISR", data: arrTotIzin },
+                { name: "ISR Terdistribusi", data: arrDistIzin }
+            ]);
+
+            if (chartWaveUnar) {
+                chartWaveUnar.updateSeries([{ name: "Peserta UNAR", data: arrUnarPeserta }]);
+            }
+
+            const elTotalPeserta = document.getElementById('lblTotalPesertaUnar');
+            if (elTotalPeserta) elTotalPeserta.innerText = `${totalPesertaUnarAcc} Peserta`;
+        }
+
+        // Synchronize Donut BHP Chart
+        if (data.bhp_detail && chartDonutBhp) {
+            const ann = parseInt(data.bhp_detail.annual) || 81;
+            const nww = parseInt(data.bhp_detail.new_tagihan) || 0;
+            const rem = parseInt(data.bhp_detail.reminder) || 77;
+            chartDonutBhp.updateSeries([ann, nww, rem]);
+            const lblSurat = document.getElementById('lblTotalBhpSurat');
+            if (lblSurat) lblSurat.innerText = `${ann + nww + rem} Surat SPP`;
+        }
+
+        // Pembaruan Dinamis Chart & Stat Box Realisasi Anggaran 5 Program
+        if (data.realisasi_anggaran) {
+            const listAngg = Array.isArray(data.realisasi_anggaran) 
+                ? data.realisasi_anggaran 
+                : Object.values(data.realisasi_anggaran);
+
+            let totalPagu = 0;
+            let totalRealisasi = 0;
+            const serapanPctList = [];
+            const paguJutaList = [];
+            const labelsPagu = [];
+
+            listAngg.forEach(item => {
+                const pagu = parseFloat(item.pagu) || 0;
+                const realisasi = parseFloat(item.realisasi) || 0;
+                
+                totalPagu += pagu;
+                totalRealisasi += realisasi;
+
+                const pct = pagu > 0 ? parseFloat(((realisasi / pagu) * 100).toFixed(1)) : 0;
+                serapanPctList.push(pct);
+                
+                const paguJt = pagu / 1000000;
+                paguJutaList.push(paguJt);
+                labelsPagu.push(`${item.id.toUpperCase()} (${paguJt} Jt)`);
+            });
+
+            if (chartBarPerformance) {
+                chartBarPerformance.updateSeries([{ name: 'Persentase Serapan (%)', data: serapanPctList }]);
+            }
+
+            if (chartDonutBudget) {
+                chartDonutBudget.updateOptions({
+                    labels: labelsPagu,
+                    series: paguJutaList
+                });
+            }
+
+            const totalSerapanPct = totalPagu > 0 ? ((totalRealisasi / totalPagu) * 100).toFixed(1) : 0;
+            const totalRealisasiJuta = (totalRealisasi / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const totalPaguJuta = (totalPagu / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+            const elTotalRealisasi = document.getElementById('lblTotalRealisasiAnggaran');
+            const elSubBadgeRealisasi = document.getElementById('lblSubBadgeRealisasi');
+
+            if (elTotalRealisasi) {
+                elTotalRealisasi.innerText = `Rp ${totalRealisasiJuta} Juta`;
+            }
+            if (elSubBadgeRealisasi) {
+                elSubBadgeRealisasi.innerText = `${totalSerapanPct}% dari Pagu Rp ${totalPaguJuta} Juta`;
+            }
+        }
+    }
+
+    // VERIFIKASI LOGIN ADMIN & UNLOCK MODAL
+    function verifikasiAdmin() {
+        const user = auth.currentUser;
+        if (user) {
+            loadExistingDataToModal(selectedTahunEditor);
+            const modalKinerjaEl = document.getElementById('modalKinerja');
+            const modalKinerja = bootstrap.Modal.getOrCreateInstance(modalKinerjaEl);
+            modalKinerja.show();
+        } else {
+            const modalLoginEl = document.getElementById('modalLoginAdmin');
+            const modalLogin = bootstrap.Modal.getOrCreateInstance(modalLoginEl);
+            modalLogin.show();
+        }
+    }
+
+    function prosesLoginFirebase(event) {
+        event.preventDefault();
+        
+        let emailInput = document.getElementById('loginEmail').value.trim();
+        const domainDefault = "@balmon.com"; 
+
+        if (!emailInput.includes('@')) {
+            emailInput = emailInput + domainDefault;
+        }
+
+        const password = document.getElementById('loginPassword').value;
+        const btnSubmit = document.getElementById('btnLoginSubmit');
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`;
+
+        auth.signInWithEmailAndPassword(emailInput, password)
+            .then((userCredential) => {
                 const modalLoginEl = document.getElementById('modalLoginAdmin');
                 const modalLogin = bootstrap.Modal.getOrCreateInstance(modalLoginEl);
-                modalLogin.show();
+                modalLogin.hide();
+
+                document.getElementById('formLoginFirebase').reset();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Berhasil',
+                    text: `Selamat datang, ${userCredential.user.email}`,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    verifikasiAdmin();
+                });
+            })
+            .catch((error) => {
+                let pesanError = "Gagal login. Periksa username dan password Anda.";
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    pesanError = "Username atau password salah!";
+                } else if (error.code === 'auth/invalid-email') {
+                    pesanError = "Format username/email tidak valid!";
+                }
+                Swal.fire('Login Gagal', pesanError, 'error');
+            })
+            .finally(() => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Masuk`;
+            });
+    }
+
+    auth.onAuthStateChanged((user) => {
+        const btnAdmin = document.getElementById('btnAdminMain');
+        if (user) {
+            if (btnAdmin) {
+                btnAdmin.innerHTML = `<i class="bi bi-person-check-fill me-1"></i> Edit Data (${user.email.split('@')[0]})`;
+                btnAdmin.classList.replace('btn-outline-primary', 'btn-success');
+                btnAdmin.classList.add('text-white');
+            }
+        } else {
+            if (btnAdmin) {
+                btnAdmin.innerHTML = `<i class="bi bi-gear-fill me-1"></i> Edit Data`;
+                btnAdmin.classList.replace('btn-success', 'btn-outline-primary');
+                btnAdmin.classList.remove('text-white');
+            }
+        }
+    });
+
+    // AMBIL DATA EXISTING DARI FIREBASE KE FORM MODAL EDITOR
+    function loadExistingDataToModal(tahun = selectedTahunEditor) {
+        tempIkmKategoriDetail = Array.from({ length: 12 }, () => null);
+        const pathNode = (tahun === '2026') ? 'kinerja_sarpras' : `kinerja_sarpras_by_year/${tahun}`;
+        
+        database.ref(pathNode).once('value', (snapshot) => {
+            let data = snapshot.val();
+            if (!data && tahun !== '2026') {
+                database.ref('kinerja_sarpras').once('value', (snapMain) => {
+                    fillFormWithData(snapMain.val());
+                });
+            } else {
+                fillFormWithData(data);
+            }
+        });
+    }
+
+    function fillFormWithData(data) {
+        if (!data) return;
+
+        // Populate Input Target & Capaian Dasbor (K1 - K6)
+        for (let i = 1; i <= 6; i++) {
+            if (data['k' + i]) {
+                const elTarget = document.getElementById('inp_t_' + i);
+                const elCapaian = document.getElementById('inp_c_' + i);
+                if (elTarget) elTarget.value = data['k' + i].target;
+                if (elCapaian) elCapaian.value = data['k' + i].capaian;
             }
         }
 
-        function prosesLoginFirebase(event) {
-            event.preventDefault();
-            let emailInput = document.getElementById('loginEmail').value.trim();
-            if (!emailInput.includes('@')) emailInput += "@balmon.com";
-            const password = document.getElementById('loginPassword').value;
-
-            auth.signInWithEmailAndPassword(emailInput, password)
-                .then(() => {
-                    bootstrap.Modal.getInstance(document.getElementById('modalLoginAdmin')).hide();
-                    verifikasiAdmin();
-                })
-                .catch(err => Swal.fire('Login Gagal', err.message, 'error'));
-        }
-
-        const defaultUnarMonths = Array.from({length: 12}, (_, i) => ({ bulan: bulanListFull[i], tgl: `15 ${bulanList[i]} 2026`, kategori: "CAT Reguler", lokasi: "Gedung Balmon", siaga: 8, penggalang: 3, penegak: 1, tidak_lulus: 1, tidak_lulus_adm: 0, status: "Selesai" }));
-        function renderUnarEditTableRows() {
-            let html = '';
-            defaultUnarMonths.forEach((m, idx) => {
+        // Populate Tab UNAR
+        if (data.unar_detail && data.unar_detail.months) {
+            const months = data.unar_detail.months;
+            months.forEach((m, idx) => {
                 let i = idx + 1;
-                html += `<tr><td>${m.bulan}</td><td><input type="text" id="unar_tgl_${i}" class="form-control form-control-sm text-center" value="${m.tgl}"></td><td><input type="text" id="unar_lok_${i}" class="form-control form-control-sm" value="${m.lokasi}"></td><td><input type="number" id="unar_sia_${i}" class="form-control form-control-sm text-center" value="${m.siaga}"></td><td><input type="number" id="unar_peng_${i}" class="form-control form-control-sm text-center" value="${m.penggalang}"></td><td><input type="number" id="unar_pen_${i}" class="form-control form-control-sm text-center" value="${m.penegak}"></td><td><input type="number" id="unar_tl_${i}" class="form-control form-control-sm text-center" value="${m.tidak_lulus}"></td><td><input type="number" id="unar_tladm_${i}" class="form-control form-control-sm text-center" value="${m.tidak_lulus_adm}"></td><td><select id="unar_st_${i}" class="form-select form-select-sm"><option value="Selesai">Selesai</option></select></td></tr>`;
+                let siaVal = m.siaga || 0;
+                let pengVal = m.penggalang || 0;
+                let penVal = m.penegak || 0;
+                let tlVal = m.tidak_lulus || 0;
+                let tladmVal = m.tidak_lulus_adm || 0;
+
+                let autoPeserta = siaVal + pengVal + penVal;
+                let autoPendaftar = autoPeserta + tladmVal;
+
+                if (document.getElementById(`unar_tgl_${i}`)) document.getElementById(`unar_tgl_${i}`).value = m.tgl || '';
+                if (document.getElementById(`unar_kat_${i}`)) document.getElementById(`unar_kat_${i}`).value = m.kategori || 'CAT Reguler';
+                if (document.getElementById(`unar_lok_${i}`)) document.getElementById(`unar_lok_${i}`).value = m.lokasi || '';
+                if (document.getElementById(`unar_sia_${i}`)) document.getElementById(`unar_sia_${i}`).value = siaVal;
+                if (document.getElementById(`unar_peng_${i}`)) document.getElementById(`unar_peng_${i}`).value = pengVal;
+                if (document.getElementById(`unar_pen_${i}`)) document.getElementById(`unar_pen_${i}`).value = penVal;
+                if (document.getElementById(`unar_tl_${i}`)) document.getElementById(`unar_tl_${i}`).value = tlVal;
+                if (document.getElementById(`unar_tladm_${i}`)) document.getElementById(`unar_tladm_${i}`).value = tladmVal;
+                if (document.getElementById(`unar_pes_${i}`)) document.getElementById(`unar_pes_${i}`).value = autoPeserta;
+                if (document.getElementById(`unar_pend_${i}`)) document.getElementById(`unar_pend_${i}`).value = autoPendaftar;
+                if (document.getElementById(`unar_lul_${i}`)) document.getElementById(`unar_lul_${i}`).value = Math.max(0, autoPeserta - tlVal);
+                if (document.getElementById(`unar_st_${i}`)) document.getElementById(`unar_st_${i}`).value = m.status || 'Mendatang';
             });
-            if(document.getElementById('tbodyUnarEdit')) document.getElementById('tbodyUnarEdit').innerHTML = html;
         }
-        function renderAnggaranEditRows() {}
-        function renderSlaEditTableRows() {}
-        function renderIkmEditTableRows() {}
-        function renderPerizinanEditTableRows() {}
-        function importExcelIkmData() {}
-        function importExcelIsrDiterbitkan() {}
-        function importExcelPesertaBimtek() {}
-        function importExcelBhpTagihan() {}
-        function handleGantiTahunEditor(v){}
-        function simpanKinerja(e){ e.preventDefault(); Swal.fire('Berhasil', 'Data disimpan ke Firebase', 'success'); }
-    </script>
-</body>
-</html>
+
+        // Populate Tab Realisasi Anggaran
+        if (data.realisasi_anggaran) {
+            const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
+            listAngg.forEach((item, idx) => {
+                let i = idx + 1;
+                const paguEl = document.getElementById(`anggaran_pagu_${i}`);
+                if (paguEl) paguEl.value = item.pagu || 0;
+
+                let paguVal = item.pagu || 0;
+
+                for (let m = 1; m <= 12; m++) {
+                    let inputRp = document.getElementById(`anggaran_rp_m_${m}_${item.id}`);
+                    if (inputRp) {
+                        if (item.monthlyNominal && Array.isArray(item.monthlyNominal) && item.monthlyNominal[m-1] !== undefined) {
+                            inputRp.value = item.monthlyNominal[m-1];
+                        } else if (item.monthlyProgress && Array.isArray(item.monthlyProgress) && item.monthlyProgress[m-1] !== undefined) {
+                            let pct = parseFloat(item.monthlyProgress[m-1]) || 0;
+                            inputRp.value = Math.round((pct / 100) * paguVal);
+                        }
+                    }
+                }
+            });
+            hitungkanPersentaseAnggaran();
+        }
+
+        // Populate Tab SLA Monitoring
+        if (data.sla_monitoring && data.sla_monitoring.months) {
+            const slaList = data.sla_monitoring.months;
+            slaList.forEach((m, idx) => {
+                let i = idx + 1;
+                if (document.getElementById(`sla_tot_${i}`)) document.getElementById(`sla_tot_${i}`).value = m.total_aset || 0;
+                if (document.getElementById(`sla_bk_${i}`)) document.getElementById(`sla_bk_${i}`).value = m.baik || 0;
+                if (document.getElementById(`sla_rk_${i}`)) document.getElementById(`sla_rk_${i}`).value = m.rusak || 0;
+                if (document.getElementById(`sla_stot_${i}`)) document.getElementById(`sla_stot_${i}`).value = m.sla_total || '0.00%';
+                if (document.getElementById(`sla_stet_${i}`)) document.getElementById(`sla_stet_${i}`).value = m.sla_tetap || '0.00%';
+                if (document.getElementById(`sla_sberg_${i}`)) document.getElementById(`sla_sberg_${i}`).value = m.sla_bergerak || '0.00%';
+                if (document.getElementById(`sla_kc_${i}`)) document.getElementById(`sla_kc_${i}`).value = m.status_kunci || 'TERKUNCI';
+            });
+        }
+
+        // Populate Tab IKM & IIPP
+        if (data.ikm_iipp_detail && data.ikm_iipp_detail.months) {
+            const ikmList = data.ikm_iipp_detail.months;
+            ikmList.forEach((m, idx) => {
+                let i = idx + 1;
+                let ikmVal = (m.ikm_skor !== undefined && m.ikm_skor !== null) ? m.ikm_skor : m.ikm_score;
+                let iippVal = (m.iipp_skor !== undefined && m.iipp_skor !== null) ? m.iipp_skor : m.iipp_score;
+
+                if (document.getElementById(`ikm_sc_${i}`)) document.getElementById(`ikm_sc_${i}`).value = (ikmVal !== null && ikmVal !== undefined) ? ikmVal : '';
+                if (document.getElementById(`ikm_pria_${i}`)) document.getElementById(`ikm_pria_${i}`).value = m.ikm_pria || 0;
+                if (document.getElementById(`ikm_wanita_${i}`)) document.getElementById(`ikm_wanita_${i}`).value = m.ikm_wanita || 0;
+                if (document.getElementById(`iipp_sc_${i}`)) document.getElementById(`iipp_sc_${i}`).value = (iippVal !== null && iippVal !== undefined) ? iippVal : '';
+                if (document.getElementById(`iipp_pria_${i}`)) document.getElementById(`iipp_pria_${i}`).value = m.iipp_pria || 0;
+                if (document.getElementById(`iipp_wanita_${i}`)) document.getElementById(`iipp_wanita_${i}`).value = m.iipp_wanita || 0;
+
+                if (m.kategori_detail) {
+                    tempIkmKategoriDetail[idx] = m.kategori_detail;
+                }
+            });
+        }
+
+        // Populate Tab Pelayanan ISR
+        if (data.perizinan_detail && data.perizinan_detail.months) {
+            const przList = data.perizinan_detail.months;
+            przList.forEach((m, idx) => {
+                let i = idx + 1;
+                let lng = m.langsung || 0;
+                let onl = m.online || 0;
+                if (document.getElementById(`prz_lng_${i}`)) document.getElementById(`prz_lng_${i}`).value = lng;
+                if (document.getElementById(`prz_onl_${i}`)) document.getElementById(`prz_onl_${i}`).value = onl;
+                if (document.getElementById(`prz_tot_${i}`)) document.getElementById(`prz_tot_${i}`).value = lng + onl;
+                if (document.getElementById(`prz_dist_${i}`)) document.getElementById(`prz_dist_${i}`).value = m.terdistribusi || 0;
+            });
+        }
+
+        // Populate Tab BHP Frekuensi
+        if (data.bhp_detail) {
+            if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = (data.bhp_detail.annual !== undefined) ? data.bhp_detail.annual : 81;
+            if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = (data.bhp_detail.new_tagihan !== undefined) ? data.bhp_detail.new_tagihan : 0;
+            if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = (data.bhp_detail.reminder !== undefined) ? data.bhp_detail.reminder : 77;
+            if (data.bhp_detail.tagihan_list) currentBhpTagihanList = data.bhp_detail.tagihan_list;
+        }
+    }
+
+    // SIMPAN PERUBAHAN DATA MODAL KE FIREBASE REALTIME DATABASE
+    function simpanKinerja(event) {
+        event.preventDefault(); 
+
+        const updatedUnarMonths = [];
+        let totalPendaftarAcc = 0, totalPesertaAcc = 0, totalLulusAcc = 0, totalTidakLulusAcc = 0;
+
+        for (let i = 1; i <= 12; i++) {
+            const bulan = document.getElementById(`unar_bln_${i}`).innerText;
+            const tgl = document.getElementById(`unar_tgl_${i}`).value.trim();
+            const kategori = document.getElementById(`unar_kat_${i}`).value;
+            const lokasi = document.getElementById(`unar_lok_${i}`).value.trim();
+            const siaga = parseInt(document.getElementById(`unar_sia_${i}`).value) || 0;
+            const penggalang = parseInt(document.getElementById(`unar_peng_${i}`).value) || 0;
+            const penegak = parseInt(document.getElementById(`unar_pen_${i}`).value) || 0;
+            const tidak_lulus = parseInt(document.getElementById(`unar_tl_${i}`).value) || 0;
+            const tidak_lulus_adm = parseInt(document.getElementById(`unar_tladm_${i}`).value) || 0;
+            const status = document.getElementById(`unar_st_${i}`).value;
+
+            const peserta = siaga + penggalang + penegak;
+            const pendaftar = peserta + tidak_lulus_adm;
+            const lulus = Math.max(0, peserta - tidak_lulus);
+
+            totalPendaftarAcc += pendaftar;
+            totalPesertaAcc += peserta;
+            totalLulusAcc += lulus;
+            totalTidakLulusAcc += tidak_lulus;
+
+            updatedUnarMonths.push({
+                id: i, bulan, tgl, kategori, lokasi, pendaftar, peserta, siaga, penggalang, penegak, tidak_lulus, tidak_lulus_adm, status
+            });
+        }
+
+        const updatedAnggaran = [];
+        programIds.forEach((pId, idx) => {
+            let i = idx + 1;
+            const id = document.getElementById(`anggaran_id_${i}`).value;
+            const nama = document.getElementById(`anggaran_nama_${i}`).value;
+            const pagu = parseFloat(document.getElementById(`anggaran_pagu_${i}`).value) || 0;
+            
+            const monthlyNominal = [];
+            const monthlyProgress = [];
+
+            for (let m = 1; m <= 12; m++) {
+                const serapanRp = parseFloat(document.getElementById(`anggaran_rp_m_${m}_${pId}`).value) || 0;
+                monthlyNominal.push(serapanRp);
+
+                const pct = pagu > 0 ? parseFloat(((serapanRp / pagu) * 100).toFixed(1)) : 0;
+                monthlyProgress.push(pct);
+            }
+
+            const realisasi = monthlyNominal[11] || 0;
+
+            updatedAnggaran.push({
+                id, nama, pagu, realisasi, monthlyNominal, monthlyProgress
+            });
+        });
+
+        const updatedSlaMonths = [];
+        for (let i = 1; i <= 12; i++) {
+            const bulan = document.getElementById(`sla_bln_${i}`).innerText;
+            const total_aset = parseInt(document.getElementById(`sla_tot_${i}`).value) || 0;
+            const baik = parseInt(document.getElementById(`sla_bk_${i}`).value) || 0;
+            const rusak = parseInt(document.getElementById(`sla_rk_${i}`).value) || 0;
+            const sla_total = document.getElementById(`sla_stot_${i}`).value.trim();
+            const sla_tetap = document.getElementById(`sla_stet_${i}`).value.trim();
+            const sla_bergerak = document.getElementById(`sla_sberg_${i}`).value.trim();
+            const status_kunci = document.getElementById(`sla_kc_${i}`).value;
+
+            updatedSlaMonths.push({
+                id: i, bulan, total_aset, baik, rusak, sla_total, sla_tetap, sla_bergerak, status_kunci
+            });
+        }
+
+        const updatedIkmMonths = [];
+        for (let i = 1; i <= 12; i++) {
+            const bulan = document.getElementById(`ikm_bln_${i}`).innerText;
+            const rawIkmSc = document.getElementById(`ikm_sc_${i}`).value;
+            const rawIippSc = document.getElementById(`iipp_sc_${i}`).value;
+
+            const ikm_pria = parseInt(document.getElementById(`ikm_pria_${i}`).value) || 0;
+            const ikm_wanita = parseInt(document.getElementById(`ikm_wanita_${i}`).value) || 0;
+            const iipp_pria = parseInt(document.getElementById(`iipp_pria_${i}`).value) || 0;
+            const iipp_wanita = parseInt(document.getElementById(`iipp_wanita_${i}`).value) || 0;
+
+            const ikmVal = (rawIkmSc !== '' && !isNaN(rawIkmSc)) ? parseFloat(rawIkmSc) : null;
+            const iippVal = (rawIippSc !== '' && !isNaN(rawIippSc)) ? parseFloat(rawIippSc) : null;
+
+            let katDetail = tempIkmKategoriDetail[i - 1];
+            if (!katDetail && (ikmVal !== null || iippVal !== null)) {
+                const iippScale6 = (iippVal !== null) ? parseFloat(((iippVal / 10.0) * 6.0).toFixed(2)) : null;
+                katDetail = {
+                    iipp_diskriminasi: iippScale6,
+                    iipp_luar_prosedur: iippScale6,
+                    iipp_imbalan: iippScale6,
+                    iipp_percaloan: iippScale6,
+                    iipp_pungli: iippScale6,
+                    ikm_biaya: ikmVal,
+                    ikm_kompetensi: ikmVal,
+                    ikm_pengaduan: ikmVal,
+                    ikm_perilaku: ikmVal,
+                    ikm_persyaratan: ikmVal,
+                    ikm_produk: ikmVal,
+                    ikm_sarpras: ikmVal,
+                    ikm_prosedur: ikmVal,
+                    ikm_waktu: ikmVal
+                };
+            }
+
+            updatedIkmMonths.push({
+                id: i,
+                bulan,
+                ikm_skor: ikmVal,
+                ikm_score: ikmVal,
+                ikm_pria,
+                ikm_wanita,
+                iipp_skor: iippVal,
+                iipp_score: iippVal,
+                iipp_pria,
+                iipp_wanita,
+                kategori_detail: katDetail || null
+            });
+        }
+
+        const updatedPerizinanMonths = [];
+        for (let i = 1; i <= 12; i++) {
+            const bulan = document.getElementById(`prz_bln_${i}`).innerText;
+            const langsung = parseInt(document.getElementById(`prz_lng_${i}`).value) || 0;
+            const online = parseInt(document.getElementById(`prz_onl_${i}`).value) || 0;
+            const terdistribusi = parseInt(document.getElementById(`prz_dist_${i}`).value) || 0;
+
+            updatedPerizinanMonths.push({
+                id: i, bulan, langsung, online, terdistribusi
+            });
+        }
+
+        const bhpAnnual = parseInt(document.getElementById('inp_bhp_annual')?.value) || 81;
+        const bhpNew = parseInt(document.getElementById('inp_bhp_new')?.value) || 0;
+        const bhpReminder = parseInt(document.getElementById('inp_bhp_reminder')?.value) || 77;
+
+        const dataUpdate = {
+            tahun: selectedTahunEditor,
+            k1: { target: parseFloat(document.getElementById('inp_t_1').value), capaian: parseFloat(document.getElementById('inp_c_1').value), suffix: '%' },
+            k2: { target: parseFloat(document.getElementById('inp_t_2').value), capaian: parseFloat(document.getElementById('inp_c_2').value), suffix: '%' },
+            k3: { target: parseFloat(document.getElementById('inp_t_3').value), capaian: parseFloat(document.getElementById('inp_c_3').value), suffix: '%' },
+            k4: { target: parseFloat(document.getElementById('inp_t_4').value), capaian: parseFloat(document.getElementById('inp_c_4').value), suffix: '' },
+            k5: { target: parseFloat(document.getElementById('inp_t_5').value), capaian: parseFloat(document.getElementById('inp_c_5').value), suffix: '' },
+            k6: { target: parseFloat(document.getElementById('inp_t_6').value), capaian: parseFloat(document.getElementById('inp_c_6').value), suffix: '' },
+            
+            unar_detail: {
+                pendaftar: totalPendaftarAcc,
+                peserta: totalPesertaAcc,
+                lulus: totalLulusAcc,
+                tidak_lulus: totalTidakLulusAcc,
+                terakhir_update: new Date().toLocaleDateString('id-ID'),
+                months: updatedUnarMonths
+            },
+
+            realisasi_anggaran: updatedAnggaran,
+            sla_monitoring: { months: updatedSlaMonths },
+            ikm_iipp_detail: { months: updatedIkmMonths },
+            perizinan_detail: { months: updatedPerizinanMonths },
+
+            bhp_detail: {
+                annual: bhpAnnual,
+                new_tagihan: bhpNew,
+                reminder: bhpReminder,
+                tagihan_list: currentBhpTagihanList
+            }
+        };
+
+        Swal.fire({
+            title: 'Menyimpan...',
+            text: `Memperbarui data Sarpras Tahun ${selectedTahunEditor} di Firebase`,
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        const promises = [database.ref(`kinerja_sarpras_by_year/${selectedTahunEditor}`).update(dataUpdate)];
+        if (selectedTahunEditor === '2026') {
+            promises.push(database.ref('kinerja_sarpras').update(dataUpdate));
+        }
+
+        Promise.all(promises)
+            .then(() => {
+                const modalEl = document.getElementById('modalKinerja');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Tersimpan!',
+                    text: `Seluruh data Sarpras Tahun ${selectedTahunEditor} berhasil diperbarui di Firebase.`,
+                    timer: 2500,
+                    showConfirmButton: false
+                }).then(() => {
+                    auth.signOut();
+                });
+            })
+            .catch((error) => {
+                Swal.fire('Gagal!', 'Terjadi kesalahan: ' + error.message, 'error');
+            });
+    }
+</script>
