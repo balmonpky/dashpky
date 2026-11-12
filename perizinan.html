@@ -13,15 +13,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Chart.js CDN -->
+    <!-- ApexCharts CSS & Chart.js CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
             --primary-navy: #0f4c81;
             --accent-blue: #1b75bc;
-            --bg-light: #f8fafc;
-            --card-shadow: 0 10px 30px rgba(15, 76, 129, 0.08);
+            --bg-light: #071936;
+            --panel-bg: #0c2752;
+            --panel-border: #1d4ed8;
+            --cyan-glow: #38bdf8;
+            --card-shadow: 0 15px 35px rgba(4, 15, 36, 0.35);
             --sidebar-collapsed-width: 68px;
             --sidebar-expanded-width: 280px;
         }
@@ -29,7 +33,12 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
-            color: #334155;
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(29, 155, 240, 0.16) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+                linear-gradient(180deg, #071936 0%, #0a2246 100%);
+            background-attachment: fixed;
+            color: #e2e8f0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -37,9 +46,9 @@
 
         /* NAVBAR */
         .navbar-custom {
-            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 50%, #3b82f6 100%);
             padding: 1rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 25px rgba(15, 76, 129, 0.25);
             z-index: 1050;
         }
 
@@ -51,7 +60,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
         .logo-container img {
             width: 36px;
@@ -66,8 +75,8 @@
             left: 0;
             bottom: 0;
             width: var(--sidebar-collapsed-width);
-            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
-            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 60%, #091e42 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.25);
             z-index: 1040;
             transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
@@ -121,13 +130,13 @@
         }
 
         .sidebar-menu .menu-link:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
             color: #ffffff;
             border-left-color: #38bdf8;
         }
 
         .sidebar-menu .menu-link.active {
-            background: rgba(255, 255, 255, 0.2) !important;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
             color: #ffffff !important;
             border-left-color: #38bdf8 !important;
             font-weight: 700;
@@ -157,17 +166,18 @@
         .main-wrapper {
             margin-left: var(--sidebar-collapsed-width);
             flex-grow: 1;
-            padding: 2rem 2rem;
+            padding: 1.75rem 2rem;
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* BANNER */
         .header-banner {
-            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 40%, #0284c7 100%);
             color: white;
             border-radius: 20px;
-            padding: 2rem 2.5rem;
-            box-shadow: var(--card-shadow);
+            padding: 1.85rem 2.35rem;
+            box-shadow: 0 20px 40px rgba(8, 28, 66, 0.45);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             position: relative;
         }
 
@@ -222,18 +232,19 @@
             color: #ffffff;
         }
 
-        /* STAT CARDS */
+        /* 4 STAT CARDS UTAMA */
         .stat-card {
             background: #ffffff;
             border-radius: 16px;
             padding: 1.25rem 1.5rem;
             border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 12px 28px rgba(4, 15, 36, 0.28);
             height: 100%;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .stat-card:hover {
             transform: translateY(-4px);
+            box-shadow: 0 18px 35px rgba(4, 15, 36, 0.38);
         }
         .stat-card .title {
             font-size: 0.78rem;
@@ -242,35 +253,198 @@
             text-transform: uppercase;
         }
         .stat-card .value {
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             font-weight: 800;
             margin-top: 4px;
         }
 
-        /* CHART CARD */
-        .chart-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
+        /* COMMAND CENTER DARK NAVY BENTO PANELS (SERAGAM DENGAN DASHBOARD SEBELUMNYA) */
+        .cc-grid-wrapper {
+            background: #081e40;
+            border: 1px solid #1e4b8f;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 20px 50px rgba(3, 12, 30, 0.6);
+        }
+
+        .cc-panel {
+            background: linear-gradient(180deg, #0d2b59 0%, #0a2247 100%);
+            border: 1px solid #1d4ed8;
+            border-radius: 6px;
+            padding: 14px 16px;
             position: relative;
+            box-shadow: inset 0 0 24px rgba(29, 155, 240, 0.08);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .cc-panel:hover {
+            border-color: #38bdf8;
+            box-shadow: inset 0 0 28px rgba(56, 189, 248, 0.14);
         }
 
-        .chart-3d-wrapper {
-            perspective: 1000px;
+        .cc-panel-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .chart-3d-canvas {
-            transform-style: preserve-3d;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        /* HERO KPI METRICS IN CENTER PANEL */
+        .hero-metric-val {
+            font-size: 2.05rem;
+            font-weight: 700;
+            color: #dbeafe;
+            line-height: 1.08;
+            letter-spacing: -0.5px;
+        }
+        .pill-trend-up {
+            background: #2dd4bf;
+            color: #062825;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .pill-trend-coral {
+            background: #fb7185;
+            color: #2b0910;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
         }
 
-        .chart-card:hover .chart-3d-canvas {
-            transform: rotateX(4deg) rotateY(-2deg) scale(1.005);
+        /* DOTS INDICATOR UNDER MAIN CHART */
+        .cc-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0 12px 0;
+        }
+        .cc-dots span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #335c99;
+        }
+        .cc-dots span.active {
+            width: 8px;
+            height: 8px;
+            background: #93c5fd;
         }
 
-        /* TABEL */
+        /* TOP 5 RANKING STRIP (No.1 - No.5) */
+        .top5-strip {
+            border-top: 1px solid rgba(56, 189, 248, 0.15);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 12px 6px;
+            margin-bottom: 10px;
+        }
+        .top5-item .rank-no {
+            font-size: 0.72rem;
+            color: #7dd3fc;
+            font-weight: 600;
+        }
+        .top5-item .rank-val {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #f0f9ff;
+            line-height: 1.2;
+        }
+        .top5-item .rank-month {
+            font-size: 0.72rem;
+            color: #93c5fd;
+        }
+
+        /* GAUGE CAPTION STYLING */
+        .gauge-caption-blue {
+            font-size: 0.72rem;
+            color: #38bdf8;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-coral {
+            font-size: 0.72rem;
+            color: #fb7185;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-amber {
+            font-size: 0.72rem;
+            color: #fbbf24;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        /* TOP-RIGHT LAST SESSION CARD */
+        .last-session-highlight {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .last-session-bar {
+            width: 4px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #38bdf8 0%, #1d4ed8 100%);
+            flex-shrink: 0;
+        }
+
+        /* BOTTOM-RIGHT HORIZONTAL RANK BARS */
+        .rank-bar-item {
+            margin-bottom: 11px;
+        }
+        .rank-bar-item:last-child {
+            margin-bottom: 0;
+        }
+        .rank-bar-label {
+            font-size: 0.74rem;
+            color: #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4px;
+        }
+        .rank-bar-track {
+            width: 100%;
+            height: 7px;
+            background: rgba(15, 42, 86, 0.85);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .rank-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        /* RADIAL LEGEND ITEMS */
+        .radial-legend-item {
+            margin-bottom: 8px;
+        }
+        .radial-legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* TABEL REKAPITULASI (DIPERTAHANKAN) */
+        .table-card-wrapper {
+            background: #ffffff;
+            color: #334155;
+            border-radius: 18px;
+            border: 1px solid #1d4ed8;
+            box-shadow: 0 18px 40px rgba(4, 15, 36, 0.35);
+        }
         .table-custom th {
             background-color: var(--primary-navy);
             color: white;
@@ -278,17 +452,17 @@
             vertical-align: middle;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            padding: 0.6rem 0.3rem;
-            line-height: 1.2;
+            padding: 0.75rem 0.35rem;
+            line-height: 1.25;
         }
         .table-custom td {
-            font-size: 0.82rem;
+            font-size: 0.83rem;
             vertical-align: middle;
-            padding: 0.5rem 0.3rem;
+            padding: 0.55rem 0.35rem;
         }
 
         @media (max-width: 768px) {
-            .main-wrapper { margin-left: 0; padding: 1.5rem 1rem; }
+            .main-wrapper { margin-left: 0; padding: 1.25rem 0.85rem; }
             .sidebar-autohide { display: none; }
         }
     </style>
@@ -402,7 +576,7 @@
                 </div>
             </div>
 
-            <!-- TOP STAT CARDS -->
+            <!-- TOP 4 STAT CARDS UTAMA -->
             <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
                 <div class="col">
                     <div class="stat-card" style="border-left: 5px solid #0f4c81;">
@@ -434,44 +608,253 @@
                 </div>
             </div>
 
-            <!-- LINE CHART: KONSULTASI ISR LANGSUNG VS ONLINE -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="chart-card chart-3d-wrapper">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up me-2" style="color: #0f4c81;"></i>Grafik Tren Konsultasi ISR Mitra Per Bulan</h5>
-                                <small class="text-muted">Perbandingan Mitra Hadir Langsung vs Online dengan Efek Animasi & Layer 3D</small>
+            <!-- DASHBOARD VISUALIZATION BENTO GRID (GAYA SERAGAM DENGAN DASHBOARD SEBELUMNYA) -->
+            <div class="cc-grid-wrapper mb-4">
+                <div class="row g-2 align-items-stretch">
+                    
+                    <!-- KOLOM KIRI (3/12): 3 PANEL GRAFIK -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 1: DISTRIBUSI KONSULTASI ISR (RADIAL CONCENTRIC ARCS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Distribusi Konsultasi ISR</span>
                             </div>
-                            <span class="badge bg-light text-dark border"><i class="bi bi-layers me-1"></i>3D Layer Gradient Line</span>
+                            <div class="row align-items-center g-0">
+                                <div class="col-6">
+                                    <div id="chartRadialPerizinan" style="min-height: 155px;"></div>
+                                </div>
+                                <div class="col-6 ps-1">
+                                    <div class="text-white fw-semibold mb-2" style="font-size: 0.72rem; line-height: 1.25;">
+                                        Proporsi Kanal Layanan
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-info" style="font-size: 0.78rem; min-width: 34px;" id="lblPctLangsung">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Langsung</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold" style="color: #2dd4bf; font-size: 0.78rem; min-width: 34px;" id="lblPctOnline">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Online</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-warning" style="font-size: 0.78rem; min-width: 34px;" id="lblPctDistRatio">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Rasio Terbit</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div style="height: 380px; position: relative;" class="chart-3d-canvas">
-                            <canvas id="chartLineIsrKonsultasi"></canvas>
+
+                        <!-- PANEL 2: SEBARAN LAYANAN MITRA (RADAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Sebaran Layanan Mitra</span>
+                            </div>
+                            <div id="chartRadarPerizinan" style="min-height: 185px;"></div>
+                        </div>
+
+                        <!-- PANEL 3: GRAFIK ISR TERDISTRIBUSI PER BULAN (MEMPERTAHANKAN #chartBarIsrTerdistribusi) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>ISR Terdistribusi Bulanan</span>
+                            </div>
+                            <div style="height: 145px; position: relative;">
+                                <canvas id="chartBarIsrTerdistribusi"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- KOLOM TENGAH (6/12): PANEL HERO TREN KONSULTASI ISR MITRA -->
+                    <div class="col-lg-6 d-flex flex-column">
+                        <div class="cc-panel h-100 d-flex flex-column justify-content-between">
+                            
+                            <!-- HEADER & TOP DUAL METRICS -->
+                            <div>
+                                <div class="cc-panel-title mb-2">
+                                    <span>Tren Konsultasi ISR Mitra Per Bulan <span id="lblTahunChartPerizinan" class="text-info">2026</span></span>
+                                    <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25" style="font-size: 0.68rem;">3D LAYER LINE</span>
+                                </div>
+
+                                <div class="row g-3 px-2 mb-1">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="hero-metric-val" id="lblHeroKonsultasi">0</div>
+                                            <span class="pill-trend-up" id="badgeHeroLangsung">0% Langsung</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #2dd4bf;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #2dd4bf; display: inline-block;"></span>
+                                            <span>Total Konsultasi Mitra</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="hero-metric-val" id="lblHeroTerdistribusi">0</div>
+                                            <span class="pill-trend-coral" id="badgeHeroOnline">0% Online</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #fb7185;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #fb7185; display: inline-block;"></span>
+                                            <span>ISR Terdistribusi (Dokumen)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MAIN CHART.JS LINE CHART (MEMPERTAHANKAN ID #chartLineIsrKonsultasi) -->
+                                <div style="height: 215px; position: relative;">
+                                    <canvas id="chartLineIsrKonsultasi"></canvas>
+                                </div>
+
+                                <!-- PAGINATION DOTS -->
+                                <div class="cc-dots">
+                                    <span class="active"></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- MIDDLE-BOTTOM: TOP 5 BULAN KONSULTASI TERBANYAK (No.1 - No.5) -->
+                            <div class="top5-strip">
+                                <div class="row row-cols-5 g-2 text-center" id="containerTop5Perizinan">
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.1</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.2</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.3</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.4</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.5</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM: 3 CIRCULAR PROGRESS GAUGES -->
+                            <div class="row g-2 text-center pt-1">
+                                <!-- GAUGE 1: KONSULTASI LANGSUNG -->
+                                <div class="col-4">
+                                    <div id="chartGaugeLangsung" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-blue mt-1">
+                                        <div>Konsultasi Langsung</div>
+                                        <div><strong id="lblGaugeValLangsung">0</strong> Mitra di Kantor</div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 2: KONSULTASI ONLINE -->
+                                <div class="col-4">
+                                    <div id="chartGaugeOnline" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-coral mt-1">
+                                        <div>Konsultasi Online</div>
+                                        <div><strong id="lblGaugeValOnline">0</strong> Layanan Digital</div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 3: DISTRIBUSI ISR -->
+                                <div class="col-4">
+                                    <div id="chartGaugeDistribusi" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-amber mt-1">
+                                        <div>Sertifikat Terdistribusi</div>
+                                        <div><strong id="lblGaugeValDistribusi">0</strong> Dokumen ISR</div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
+
+                    <!-- KOLOM KANAN (3/12): 3 PANEL RINGKASAN -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 5: AKTIVITAS TERAKHIR -->
+                        <div class="cc-panel">
+                            <div class="cc-panel-title mb-1">
+                                <span>Terakhir</span>
+                                <span class="text-info fw-semibold" style="font-size: 0.74rem;" id="lblLastPerizinanPeriode">2026-09</span>
+                            </div>
+                            <div class="last-session-highlight">
+                                <div class="last-session-bar"></div>
+                                <div>
+                                    <div class="text-light opacity-75" style="font-size: 0.72rem;">Rekap Pelayanan Bulanan</div>
+                                    <div class="fw-bold text-info" style="font-size: 0.92rem; line-height: 1.25;" id="lblLastPerizinanBulan">September</div>
+                                    <div class="fw-semibold" style="color: #60a5fa !important; font-size: 0.84rem;" id="lblLastPerizinanDetail">45 Langsung • 70 Online</div>
+                                    <div class="text-light opacity-50 mt-1" style="font-size: 0.7rem;" id="lblLastPerizinanDist">ISR Terdistribusi: 88 Dokumen</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 6: PROPORSI PELAYANAN ISR (DONUT RING) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Proporsi Pelayanan ISR</span>
+                            </div>
+                            <div id="chartDonutPerizinan" style="min-height: 175px;"></div>
+                        </div>
+
+                        <!-- PANEL 7: CAPAIAN PELAYANAN ISR (HORIZONTAL RANK BARS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title mb-2">
+                                <span>Peringkat Capaian</span>
+                            </div>
+                            
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Konsultasi Online</span>
+                                    <span class="fw-bold text-white" id="lblRankOnline">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankOnline" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Konsultasi Langsung</span>
+                                    <span class="fw-bold text-white" id="lblRankLangsung">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankLangsung" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>ISR Terdistribusi</span>
+                                    <span class="fw-bold text-white" id="lblRankDistribusi">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankDistribusi" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Total Konsultasi</span>
+                                    <span class="fw-bold text-white" id="lblRankTotalKonsul">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankTotalKonsul" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
-            <!-- BAR CHART: ISR TERDISTRIBUSI PER BULAN -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="chart-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-line-fill me-2 text-warning"></i>Grafik ISR Terdistribusi Setiap Bulan</h5>
-                                <small class="text-muted">Jumlah Dokumen / Lisensi Izin Stasiun Radio (ISR) yang Berhasil Diserahkan</small>
-                            </div>
-                            <span class="badge bg-light text-dark border"><i class="bi bi-box-seam me-1"></i>Distribusi Per Bulan</span>
-                        </div>
-                        <div style="height: 320px; position: relative;">
-                            <canvas id="chartBarIsrTerdistribusi"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TABEL RINCIAN BULANAN -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <!-- TABEL RINCIAN BULANAN (DIPERTAHANKAN) -->
+            <div class="table-card-wrapper p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Rekapitulasi Pelayanan & Distribusi ISR (<span id="lblTahunTabel">2026</span>)</h5>
                     <span class="badge bg-primary px-3 py-2" id="badgeTahunTabel">Tahun 2026</span>
@@ -497,10 +880,11 @@
         </div>
     </main>
 
-    <!-- FIREBASE SDK COMPAT -->
+    <!-- FIREBASE SDK COMPAT & APEXCHARTS -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.42.0/dist/apexcharts.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -553,9 +937,18 @@
         let lineChartInstance = null;
         let barChartInstance = null;
 
+        // GRAFIK BENTO COMMAND CENTER
+        let radialPerizinanInstance = null;
+        let radarPerizinanInstance = null;
+        let gaugeLangsungInstance = null;
+        let gaugeOnlineInstance = null;
+        let gaugeDistribusiInstance = null;
+        let donutPerizinanInstance = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             perizinanMonths = getDefaultMonthsForYear(currentSelectedYear);
             initCharts();
+            initBentoSecondaryCharts();
             loadPerizinanDataRealtime(currentSelectedYear);
         });
 
@@ -591,6 +984,7 @@
 
             document.getElementById('lblTahunHeader').textContent = tahun;
             document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChartPerizinan').textContent = tahun;
             document.getElementById('lblTahunTabel').textContent = tahun;
             document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
 
@@ -607,13 +1001,13 @@
         function initCharts() {
             const ctxLine = document.getElementById('chartLineIsrKonsultasi').getContext('2d');
             
-            const gradLangsung = ctxLine.createLinearGradient(0, 0, 0, 350);
-            gradLangsung.addColorStop(0, 'rgba(15, 76, 129, 0.45)');
-            gradLangsung.addColorStop(1, 'rgba(15, 76, 129, 0.01)');
+            const gradLangsung = ctxLine.createLinearGradient(0, 0, 0, 220);
+            gradLangsung.addColorStop(0, 'rgba(29, 155, 240, 0.45)');
+            gradLangsung.addColorStop(1, 'rgba(29, 155, 240, 0.02)');
 
-            const gradOnline = ctxLine.createLinearGradient(0, 0, 0, 350);
-            gradOnline.addColorStop(0, 'rgba(27, 117, 188, 0.40)');
-            gradOnline.addColorStop(1, 'rgba(27, 117, 188, 0.01)');
+            const gradOnline = ctxLine.createLinearGradient(0, 0, 0, 220);
+            gradOnline.addColorStop(0, 'rgba(45, 212, 191, 0.40)');
+            gradOnline.addColorStop(1, 'rgba(45, 212, 191, 0.02)');
 
             lineChartInstance = new Chart(ctxLine, {
                 type: 'line',
@@ -623,99 +1017,225 @@
                         {
                             label: 'Konsultasi Langsung (Hadir)',
                             data: [],
-                            borderColor: '#0f4c81',
+                            borderColor: '#1d9bf0',
                             backgroundColor: gradLangsung,
-                            borderWidth: 4,
+                            borderWidth: 3,
                             fill: true,
                             tension: 0.38,
-                            pointBackgroundColor: '#0f4c81',
+                            pointBackgroundColor: '#1d9bf0',
                             pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverRadius: 10
+                            pointBorderWidth: 1.5,
+                            pointRadius: 4,
+                            pointHoverRadius: 7
                         },
                         {
                             label: 'Konsultasi Online (Virtual)',
                             data: [],
-                            borderColor: '#1b75bc',
+                            borderColor: '#2dd4bf',
                             backgroundColor: gradOnline,
-                            borderWidth: 4,
+                            borderWidth: 3,
                             fill: true,
                             tension: 0.38,
-                            pointBackgroundColor: '#1b75bc',
+                            pointBackgroundColor: '#2dd4bf',
                             pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverRadius: 10
+                            pointBorderWidth: 1.5,
+                            pointRadius: 4,
+                            pointHoverRadius: 7
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: { duration: 1800, easing: 'easeInOutQuart' },
+                    animation: { duration: 1400, easing: 'easeInOutQuart' },
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: {
                             position: 'top',
-                            labels: { font: { family: 'Inter', weight: 'bold', size: 12 }, usePointStyle: true, padding: 20 }
+                            align: 'end',
+                            labels: {
+                                color: '#cbd5e1',
+                                font: { family: 'Inter', weight: '600', size: 11 },
+                                usePointStyle: true,
+                                padding: 12
+                            }
                         }
                     },
                     scales: {
-                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', weight: '600' } } },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#7dd3fc', font: { family: 'Inter', weight: '600', size: 10 } }
+                        },
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(226, 232, 240, 0.8)' },
-                            title: { display: true, text: 'Jumlah Mitra Konsultasi', color: '#0f4c81', font: { family: 'Inter', weight: 'bold' } }
+                            grid: { color: 'rgba(56, 189, 248, 0.14)' },
+                            ticks: { color: '#7dd3fc', font: { family: 'Inter', size: 10 } }
                         }
                     }
                 }
             });
 
             const ctxBar = document.getElementById('chartBarIsrTerdistribusi').getContext('2d');
-            const gradBar = ctxBar.createLinearGradient(0, 0, 0, 300);
-            gradBar.addColorStop(0, '#f59e0b');
-            gradBar.addColorStop(1, '#d97706');
+            const gradBar = ctxBar.createLinearGradient(0, 0, 0, 150);
+            gradBar.addColorStop(0, '#38bdf8');
+            gradBar.addColorStop(1, '#1d4ed8');
 
             barChartInstance = new Chart(ctxBar, {
                 type: 'bar',
                 data: {
-                    labels: bulanList,
+                    labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
                     datasets: [{
                         label: 'ISR Terdistribusi',
                         data: [],
                         backgroundColor: gradBar,
-                        borderColor: '#b45309',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barPercentage: 0.55
+                        borderColor: '#38bdf8',
+                        borderWidth: 0,
+                        borderRadius: 4,
+                        barPercentage: 0.65
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: { duration: 1400, easing: 'easeOutBounce' },
+                    animation: { duration: 1200, easing: 'easeOutQuart' },
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', weight: '600' } } },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#7dd3fc', font: { family: 'Inter', weight: '600', size: 8.5 } }
+                        },
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(226, 232, 240, 0.8)' },
-                            title: { display: true, text: 'Jumlah Sertifikat/Lisensi ISR', color: '#d97706', font: { family: 'Inter', weight: 'bold' } }
+                            grid: { color: 'rgba(56, 189, 248, 0.12)' },
+                            ticks: { color: '#7dd3fc', font: { family: 'Inter', size: 9 } }
                         }
                     }
                 }
             });
         }
 
+        function createBentoGaugeOptions(colorHex, labelText) {
+            return {
+                series: [0],
+                chart: {
+                    height: 130,
+                    type: 'radialBar',
+                    sparkline: { enabled: true }
+                },
+                colors: [colorHex],
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: { size: '66%', background: 'transparent' },
+                        track: { background: '#15386e', strokeWidth: '100%' },
+                        dataLabels: {
+                            name: { show: true, offsetY: 16, color: '#e2e8f0', fontSize: '10px', fontWeight: 500 },
+                            value: {
+                                show: true,
+                                offsetY: -8,
+                                color: colorHex,
+                                fontSize: '20px',
+                                fontWeight: 800,
+                                formatter: function(val) { return Math.round(val) + '%'; }
+                            }
+                        }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: [labelText]
+            };
+        }
+
+        function initBentoSecondaryCharts() {
+            // 1. Radial Concentric (Top-Left)
+            radialPerizinanInstance = new ApexCharts(document.getElementById('chartRadialPerizinan'), {
+                series: [0, 0, 0],
+                chart: { height: 155, type: 'radialBar', sparkline: { enabled: true } },
+                colors: ['#1d9bf0', '#2dd4bf', '#fbbf24'],
+                plotOptions: {
+                    radialBar: {
+                        hollow: { size: '30%' },
+                        track: { background: '#14366b', margin: 4 },
+                        dataLabels: { show: false }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: ['Langsung', 'Online', 'Rasio Terbit']
+            });
+            radialPerizinanInstance.render();
+
+            // 2. Radar Chart (Middle-Left)
+            radarPerizinanInstance = new ApexCharts(document.getElementById('chartRadarPerizinan'), {
+                series: [
+                    { name: 'Triwulan I-II', data: [0, 0, 0, 0, 0] },
+                    { name: 'Triwulan III-IV', data: [0, 0, 0, 0, 0] }
+                ],
+                chart: { height: 185, type: 'radar', toolbar: { show: false } },
+                colors: ['#1d9bf0', '#2dd4bf'],
+                fill: { opacity: 0.45 },
+                stroke: { width: 2 },
+                markers: { size: 0 },
+                xaxis: {
+                    categories: ['Langsung', 'Online', 'Total Konsul', 'Terdistribusi', 'Bulan Aktif'],
+                    labels: { style: { colors: ['#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd'], fontSize: '9px' } }
+                },
+                yaxis: { show: false },
+                plotOptions: {
+                    radar: {
+                        polygons: {
+                            strokeColors: 'rgba(147, 197, 253, 0.25)',
+                            connectorColors: 'rgba(147, 197, 253, 0.25)'
+                        }
+                    }
+                },
+                legend: { show: false },
+                tooltip: { theme: 'dark' }
+            });
+            radarPerizinanInstance.render();
+
+            // 3. Three Bottom Gauges
+            gaugeLangsungInstance = new ApexCharts(document.getElementById('chartGaugeLangsung'), createBentoGaugeOptions('#1d9bf0', 'Langsung'));
+            gaugeLangsungInstance.render();
+
+            gaugeOnlineInstance = new ApexCharts(document.getElementById('chartGaugeOnline'), createBentoGaugeOptions('#fb7185', 'Online'));
+            gaugeOnlineInstance.render();
+
+            gaugeDistribusiInstance = new ApexCharts(document.getElementById('chartGaugeDistribusi'), createBentoGaugeOptions('#fbbf24', 'Rasio ISR'));
+            gaugeDistribusiInstance.render();
+
+            // 4. Donut Status (Middle-Right)
+            donutPerizinanInstance = new ApexCharts(document.getElementById('chartDonutPerizinan'), {
+                series: [0, 0, 0],
+                chart: { height: 175, type: 'donut' },
+                labels: ['Langsung', 'Online', 'ISR Terdistribusi'],
+                colors: ['#1d9bf0', '#2dd4bf', '#6366f1'],
+                stroke: { width: 0 },
+                plotOptions: {
+                    pie: { donut: { size: '62%' } }
+                },
+                dataLabels: { enabled: false },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '10px',
+                    labels: { colors: '#cbd5e1' },
+                    markers: { width: 8, height: 8 }
+                },
+                tooltip: { theme: 'dark' }
+            });
+            donutPerizinanInstance.render();
+        }
+
         function updateDashboard() {
             const arrLangsung = [];
             const arrOnline = [];
             const arrTerdistribusi = [];
+            const monthlyStats = [];
 
             let totLangsung = 0;
             let totOnline = 0;
             let totTerdistribusi = 0;
+            let lastActiveMonth = null;
 
             const tbody = document.getElementById('tblBodyPerizinan');
             tbody.innerHTML = '';
@@ -739,6 +1259,25 @@
                 totOnline += onl;
                 totTerdistribusi += dist;
 
+                monthlyStats.push({
+                    id: m.id || (idx + 1),
+                    bulan: m.bulan,
+                    langsung: lng,
+                    online: onl,
+                    totalKonsul: totalKonsul,
+                    terdistribusi: dist
+                });
+
+                if (totalKonsul > 0 || dist > 0) {
+                    lastActiveMonth = {
+                        id: m.id || (idx + 1),
+                        bulan: m.bulan,
+                        langsung: lng,
+                        online: onl,
+                        terdistribusi: dist
+                    };
+                }
+
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-bold">${idx + 1}</td>
@@ -760,13 +1299,102 @@
             document.getElementById('lblTotalKonsultasi').textContent = totalKonsultasiAll;
             document.getElementById('lblTotalTerdistribusi').textContent = totTerdistribusi;
 
-            // Update Charts
+            // Update Charts Utama
             lineChartInstance.data.datasets[0].data = arrLangsung;
             lineChartInstance.data.datasets[1].data = arrOnline;
             lineChartInstance.update();
 
             barChartInstance.data.datasets[0].data = arrTerdistribusi;
             barChartInstance.update();
+
+            // Sinkronisasi Bento Grid Visuals
+            syncBentoPerizinanVisuals(totLangsung, totOnline, totalKonsultasiAll, totTerdistribusi, monthlyStats, lastActiveMonth);
+        }
+
+        function syncBentoPerizinanVisuals(totLangsung, totOnline, totalKonsultasiAll, totTerdistribusi, monthlyStats, lastActiveMonth) {
+            const pctLangsungNum = totalKonsultasiAll > 0 ? Math.round((totLangsung / totalKonsultasiAll) * 100) : 0;
+            const pctOnlineNum = totalKonsultasiAll > 0 ? Math.round((totOnline / totalKonsultasiAll) * 100) : 0;
+            const totalAllService = totalKonsultasiAll + totTerdistribusi;
+            const pctDistRatio = totalAllService > 0 ? Math.min(100, Math.round((totTerdistribusi / totalAllService) * 100)) : 0;
+
+            // Update Hero Metrics di Panel Tengah
+            document.getElementById('lblHeroKonsultasi').textContent = totalKonsultasiAll;
+            document.getElementById('badgeHeroLangsung').textContent = `${pctLangsungNum}% Langsung`;
+            document.getElementById('lblHeroTerdistribusi').textContent = totTerdistribusi;
+            document.getElementById('badgeHeroOnline').textContent = `${pctOnlineNum}% Online`;
+
+            // Update Top 5 Bulan Konsultasi Terbanyak Strip (No.1 - No.5)
+            const top5 = [...monthlyStats].sort((a, b) => b.totalKonsul - a.totalKonsul).slice(0, 5);
+            const top5Container = document.getElementById('containerTop5Perizinan');
+            if (top5Container) {
+                top5Container.innerHTML = top5.map((m, i) => `
+                    <div class="col top5-item">
+                        <div class="rank-no">No.${i + 1}</div>
+                        <div class="rank-val">${m.totalKonsul}</div>
+                        <div class="rank-month">${m.bulan}</div>
+                    </div>
+                `).join('');
+            }
+
+            // Update Radial Arcs & Legend (Top-Left)
+            document.getElementById('lblPctLangsung').textContent = `${pctLangsungNum}%`;
+            document.getElementById('lblPctOnline').textContent = `${pctOnlineNum}%`;
+            document.getElementById('lblPctDistRatio').textContent = `${pctDistRatio}%`;
+            if (radialPerizinanInstance) {
+                radialPerizinanInstance.updateSeries([pctLangsungNum, pctOnlineNum, pctDistRatio]);
+            }
+
+            // Update Radar Chart (Middle-Left: Semester 1 vs Semester 2)
+            const sem1 = monthlyStats.slice(0, 6);
+            const sem2 = monthlyStats.slice(6, 12);
+            const sumField = (arr, field) => arr.reduce((a, b) => a + (b[field] || 0), 0);
+            const activeSem1 = sem1.filter(x => x.totalKonsul > 0 || x.terdistribusi > 0).length * 20;
+            const activeSem2 = sem2.filter(x => x.totalKonsul > 0 || x.terdistribusi > 0).length * 20;
+
+            if (radarPerizinanInstance) {
+                radarPerizinanInstance.updateSeries([
+                    { name: 'Semester I', data: [sumField(sem1, 'langsung'), sumField(sem1, 'online'), sumField(sem1, 'totalKonsul'), sumField(sem1, 'terdistribusi'), activeSem1] },
+                    { name: 'Semester II', data: [sumField(sem2, 'langsung'), sumField(sem2, 'online'), sumField(sem2, 'totalKonsul'), sumField(sem2, 'terdistribusi'), activeSem2] }
+                ]);
+            }
+
+            // Update 3 Bottom Gauges
+            document.getElementById('lblGaugeValLangsung').textContent = totLangsung;
+            document.getElementById('lblGaugeValOnline').textContent = totOnline;
+            document.getElementById('lblGaugeValDistribusi').textContent = totTerdistribusi;
+
+            if (gaugeLangsungInstance) gaugeLangsungInstance.updateSeries([pctLangsungNum]);
+            if (gaugeOnlineInstance) gaugeOnlineInstance.updateSeries([pctOnlineNum]);
+            if (gaugeDistribusiInstance) gaugeDistribusiInstance.updateSeries([pctDistRatio]);
+
+            // Update Panel "Terakhir" (Top-Right)
+            const activeInfo = lastActiveMonth || monthlyStats[0];
+            if (activeInfo) {
+                const blnPad = String(activeInfo.id || 1).padStart(2, '0');
+                document.getElementById('lblLastPerizinanPeriode').textContent = `${currentSelectedYear}-${blnPad}`;
+                document.getElementById('lblLastPerizinanBulan').textContent = activeInfo.bulan;
+                document.getElementById('lblLastPerizinanDetail').textContent = `${activeInfo.langsung} Langsung • ${activeInfo.online} Online`;
+                document.getElementById('lblLastPerizinanDist').textContent = `ISR Terdistribusi: ${activeInfo.terdistribusi} Dokumen`;
+            }
+
+            // Update Donut Chart (Middle-Right)
+            if (donutPerizinanInstance) {
+                donutPerizinanInstance.updateSeries([totLangsung, totOnline, totTerdistribusi]);
+            }
+
+            // Update Horizontal Rank Bars (Bottom-Right)
+            const maxVal = Math.max(totLangsung, totOnline, totTerdistribusi, totalKonsultasiAll, 1);
+            document.getElementById('lblRankOnline').textContent = totOnline;
+            document.getElementById('barRankOnline').style.width = `${Math.round((totOnline / maxVal) * 100)}%`;
+
+            document.getElementById('lblRankLangsung').textContent = totLangsung;
+            document.getElementById('barRankLangsung').style.width = `${Math.round((totLangsung / maxVal) * 100)}%`;
+
+            document.getElementById('lblRankDistribusi').textContent = totTerdistribusi;
+            document.getElementById('barRankDistribusi').style.width = `${Math.round((totTerdistribusi / maxVal) * 100)}%`;
+
+            document.getElementById('lblRankTotalKonsul').textContent = totalKonsultasiAll;
+            document.getElementById('barRankTotalKonsul').style.width = `${Math.round((totalKonsultasiAll / maxVal) * 100)}%`;
         }
     </script>
 </body>
