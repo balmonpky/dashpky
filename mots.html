@@ -25,20 +25,24 @@
             --accent-blue: #1b75bc;
             --accent-teal: #0d9488;
             --accent-green: #10b981;
-            --bg-light: #f8fafc;
-            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+            --bg-light: #071936;
+            --panel-bg: #0c2752;
+            --panel-border: #1d4ed8;
+            --cyan-glow: #38bdf8;
+            --card-shadow: 0 15px 35px rgba(4, 15, 36, 0.45);
             --sidebar-collapsed-width: 68px;
             --sidebar-expanded-width: 280px;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
+            background-color: var(--bg-light);
             background-image: 
-                radial-gradient(at 100% 0%, rgba(13, 148, 136, 0.08) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(15, 76, 129, 0.08) 0px, transparent 50%);
+                radial-gradient(at 100% 0%, rgba(29, 155, 240, 0.16) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+                linear-gradient(180deg, #071936 0%, #0a2246 100%);
             background-attachment: fixed;
-            color: #334155;
+            color: #e2e8f0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -46,25 +50,25 @@
 
         /* NAVBAR HEADER */
         .navbar-custom {
-            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            padding: 0.8rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 50%, #3b82f6 100%);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 25px rgba(15, 76, 129, 0.25);
             z-index: 1050;
         }
         
         .logo-container {
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             background: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
         .logo-container img {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
         }
 
@@ -75,8 +79,8 @@
             left: 0;
             bottom: 0;
             width: var(--sidebar-collapsed-width);
-            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
-            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 60%, #091e42 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.25);
             z-index: 1040;
             transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
@@ -130,13 +134,13 @@
         }
 
         .sidebar-menu .menu-link:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
             color: #ffffff;
             border-left-color: #38bdf8;
         }
 
         .sidebar-menu .menu-link.active {
-            background: rgba(255, 255, 255, 0.2) !important;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
             color: #ffffff !important;
             border-left-color: #38bdf8 !important;
             font-weight: 700;
@@ -166,27 +170,30 @@
         .main-wrapper {
             margin-left: var(--sidebar-collapsed-width);
             flex-grow: 1;
-            padding: 1.5rem 2rem;
+            padding: 1.75rem 2rem;
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* HEADER BANNER UTAMA */
+        /* HEADER BANNER UTAMA (SERAGAM DENGAN UNAR) */
         .header-mots-banner {
-            background: linear-gradient(135deg, #0f4c81 0%, #0369a1 60%, #0d9488 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 40%, #0284c7 100%);
             color: white;
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 10px 25px rgba(15, 76, 129, 0.18);
+            border-radius: 20px;
+            padding: 1.8rem 2.2rem;
+            box-shadow: 0 20px 40px rgba(8, 28, 66, 0.45);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .banner-bg-circle {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             pointer-events: none;
             z-index: 0;
@@ -195,24 +202,24 @@
         .banner-bg-circle::after {
             content: '';
             position: absolute;
-            top: -40%; right: -5%;
-            width: 280px; height: 280px;
+            top: -50%; right: -10%;
+            width: 320px; height: 320px;
             background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
         }
 
         /* DROPDOWN TAHUN STYLING */
         .btn-tahun-dropdown {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: #ffffff;
             transition: all 0.25s ease;
         }
         .btn-tahun-dropdown:hover, .btn-tahun-dropdown:focus, .btn-tahun-dropdown.show {
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.3);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.5);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .dropdown-menu-tahun {
@@ -235,49 +242,206 @@
             color: #ffffff;
         }
 
-        /* KARTU KPI & DASHBOARD */
+        /* COMMAND CENTER DARK NAVY BENTO PANELS (IDENTIK DENGAN UNAR.HTML) */
+        .cc-grid-wrapper {
+            background: #081e40;
+            border: 1px solid #1e4b8f;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 20px 50px rgba(3, 12, 30, 0.6);
+        }
+
+        .cc-panel {
+            background: linear-gradient(180deg, #0d2b59 0%, #0a2247 100%);
+            border: 1px solid #1d4ed8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            position: relative;
+            box-shadow: inset 0 0 24px rgba(29, 155, 240, 0.08);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .cc-panel:hover {
+            border-color: #38bdf8;
+            box-shadow: inset 0 0 28px rgba(56, 189, 248, 0.14);
+        }
+
+        .cc-panel-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* HERO KPI METRICS IN CENTER PANEL */
+        .hero-metric-val {
+            font-size: 1.95rem;
+            font-weight: 700;
+            color: #dbeafe;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+        .pill-trend-up {
+            background: #2dd4bf;
+            color: #062825;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .pill-trend-coral {
+            background: #fb7185;
+            color: #2b0910;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        /* DOTS INDICATOR UNDER MAIN CHART */
+        .cc-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 2px 0 12px 0;
+        }
+        .cc-dots span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #335c99;
+        }
+        .cc-dots span.active {
+            width: 8px;
+            height: 8px;
+            background: #93c5fd;
+        }
+
+        /* TOP 5 RANKING STRIP (No.1 - No.5) */
+        .top5-strip {
+            border-top: 1px solid rgba(56, 189, 248, 0.15);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 12px 6px;
+            margin-bottom: 10px;
+        }
+        .top5-item .rank-no {
+            font-size: 0.72rem;
+            color: #7dd3fc;
+            font-weight: 600;
+        }
+        .top5-item .rank-val {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #f0f9ff;
+            line-height: 1.2;
+        }
+        .top5-item .rank-month {
+            font-size: 0.72rem;
+            color: #93c5fd;
+        }
+
+        /* GAUGE CAPTION STYLING */
+        .gauge-caption-blue {
+            font-size: 0.72rem;
+            color: #38bdf8;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-coral {
+            font-size: 0.72rem;
+            color: #fb7185;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-amber {
+            font-size: 0.72rem;
+            color: #fbbf24;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        /* TOP-RIGHT LAST SESSION CARD */
+        .last-session-highlight {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .last-session-bar {
+            width: 4px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #38bdf8 0%, #1d4ed8 100%);
+            flex-shrink: 0;
+        }
+
+        /* BOTTOM-RIGHT HORIZONTAL RANK BARS */
+        .rank-bar-item {
+            margin-bottom: 12px;
+        }
+        .rank-bar-item:last-child {
+            margin-bottom: 0;
+        }
+        .rank-bar-label {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4px;
+        }
+        .rank-bar-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(15, 42, 86, 0.85);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .rank-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        /* RADIAL LEGEND ITEMS */
+        .radial-legend-item {
+            margin-bottom: 8px;
+        }
+        .radial-legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* KARTU DATA DUKUNG & TABEL */
         .card-kpi {
             background: #ffffff;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
+            color: #334155;
+            border-radius: 18px;
+            border: 1px solid #1d4ed8;
+            box-shadow: 0 18px 40px rgba(4, 15, 36, 0.35);
             transition: all 0.3s ease;
             height: 100%;
             overflow: hidden;
         }
         .card-kpi:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 35px rgba(15, 76, 129, 0.1);
-        }
-
-        .kpi-header-teal {
-            background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
-            color: white;
-            padding: 0.85rem 1.25rem;
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .kpi-header-blue {
-            background: linear-gradient(135deg, #0284c7 0%, #0f4c81 100%);
-            color: white;
-            padding: 0.85rem 1.25rem;
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .kpi-subcard {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 1rem;
+            box-shadow: 0 22px 45px rgba(4, 15, 36, 0.45);
         }
 
         /* LEAFLET MAP CONTAINER */
         #motsMap {
-            height: 380px;
+            height: 390px;
             width: 100%;
-            border-radius: 16px;
+            border-radius: 14px;
             z-index: 1;
         }
 
@@ -289,7 +453,7 @@
         .table-data-scroll table th {
             position: sticky;
             top: 0;
-            background-color: #0f4c81 !important;
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%) !important;
             color: white;
             z-index: 2;
             font-size: 0.75rem;
@@ -302,7 +466,7 @@
         }
 
         @media (max-width: 768px) {
-            .main-wrapper { margin-left: 0; padding: 1rem; }
+            .main-wrapper { margin-left: 0; padding: 1.25rem 0.85rem; }
             .sidebar-autohide { display: none; }
         }
     </style>
@@ -391,18 +555,20 @@
     <main class="main-wrapper">
         <div class="container-fluid">
 
-            <!-- HEADER BANNER -->
+            <!-- HEADER BANNER (SERAGAM DENGAN UNAR) -->
             <div class="header-mots-banner mb-4">
                 <div class="banner-bg-circle"></div>
 
                 <div style="z-index: 1;">
-                    <h3 class="fw-bold mb-1">DASHBOARD MONITORING & EVALUASI</h3>
-                    <h5 class="fw-light mb-0 text-white-50">BIMTEK SRC & IKRAN DAN LAYANAN MOTS (<span id="lblTahunHeader">2026</span>)</h5>
+                    <h2 class="fw-800 mb-1" style="font-weight: 800; letter-spacing: 0.5px;">
+                        BIMTEK SRC & IKRAN DAN LAYANAN MOTS (<span id="lblTahunHeader">2026</span>)
+                    </h2>
+                    <p class="mb-0 text-white-50">Dashboard Monitoring & Evaluasi Layanan Mobile On The Spot & Bimtek Balmon Palangkaraya</p>
                 </div>
 
                 <!-- DROPDOWN SELEKSI TAHUN -->
                 <div class="dropdown" style="z-index: 2;">
-                    <button class="btn btn-sm btn-tahun-dropdown fw-bold dropdown-toggle rounded-3 px-3 py-2 d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-tahun-dropdown fw-bold dropdown-toggle px-3.5 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2" type="button" id="dropdownTahun" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-calendar3 fs-6"></i>
                         <span>Tahun <strong id="lblTahunSelected">2026</strong></span>
                     </button>
@@ -417,89 +583,248 @@
                 </div>
             </div>
 
-            <!-- SEKSI 1: RINGKASAN KINERJA (KPIs) -->
-            <div class="mb-2">
-                <h6 class="fw-bold text-secondary text-uppercase mb-3" style="letter-spacing: 0.5px;">
-                    <i class="bi bi-speedometer me-1 text-primary"></i> Ringkasan Kinerja (KPIs)
-                </h6>
-            </div>
-
-            <div class="row g-3 mb-4">
-                <!-- KPI CARD 1: BIMTEK SRC DAN IKRAN -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card-kpi">
-                        <div class="kpi-header-teal d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-easel-fill me-2"></i>Bimtek SRC dan IKRAN</span>
-                            <span class="badge bg-white text-dark rounded-pill px-2 py-1" style="font-size: 0.7rem;">Target Terpenuhi</span>
-                        </div>
-                        <div class="p-3">
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="small fw-bold text-secondary">Sesi Terlaksana</span>
-                                    <span class="fw-extrabold text-teal fs-5" id="valSesiBimtek">1 Kali</span>
-                                </div>
-                                <div class="progress" style="height: 10px; border-radius: 8px;">
-                                    <div class="progress-bar bg-teal" role="progressbar" id="barSesiBimtek" style="width: 100%; background-color: #0d9488;"></div>
-                                </div>
+            <!-- DASHBOARD VISUALIZATION BENTO GRID (SAMA DENGAN STRUKTUR DASHBOARD UNAR) -->
+            <div class="cc-grid-wrapper mb-4">
+                <div class="row g-2 align-items-stretch">
+                    
+                    <!-- KOLOM KIRI (3/12): 3 PANEL GRAFIK -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 1: DISTRIBUSI LAYANAN & SERTIFIKAT (RADIAL CONCENTRIC ARCS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Distribusi Layanan MOTS</span>
                             </div>
-
-                            <div class="row g-2">
+                            <div class="row align-items-center g-0">
                                 <div class="col-6">
-                                    <div class="kpi-subcard text-center">
-                                        <small class="text-muted d-block fw-semibold mb-1">Jumlah Peserta</small>
-                                        <h4 class="fw-bold text-teal mb-0" id="valPesertaBimtek">30 Peserta</h4>
-                                        <small class="text-success fw-bold" style="font-size: 0.7rem;"><i class="bi bi-graph-up-arrow me-1"></i>100% Target</small>
-                                    </div>
+                                    <div id="chartRadialMots" style="min-height: 155px;"></div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="kpi-subcard text-center" style="background: #eff6ff; border-color: #bfdbfe;">
-                                        <small class="text-muted d-block fw-semibold mb-1">Sertifikat Terbit</small>
-                                        <h4 class="fw-bold text-primary mb-0" id="valSertifikatBimtek">30 ISR</h4>
-                                        <small class="text-primary fw-bold" style="font-size: 0.7rem;"><i class="bi bi-check-circle-fill me-1"></i>Terverifikasi</small>
+                                <div class="col-6 ps-1">
+                                    <div class="text-white fw-semibold mb-2" style="font-size: 0.72rem; line-height: 1.25;">
+                                        Capaian Target Layanan
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-info" style="font-size: 0.78rem; min-width: 34px;" id="lblPctBimtek">100%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Bimtek SRC</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold" style="color: #2dd4bf; font-size: 0.78rem; min-width: 34px;" id="lblPctIsr">100%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">ISR Terbit</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-warning" style="font-size: 0.78rem; min-width: 34px;" id="lblPctSesi">100%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Sesi Aktif</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- KPI CARD 2: LOKET MOTS (GAUGE CHART) -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card-kpi">
-                        <div class="kpi-header-blue d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-truck-front-fill me-2"></i>Loket MOTS</span>
-                            <span class="badge bg-white text-primary rounded-pill px-2 py-1" style="font-size: 0.7rem;">Real-time</span>
+                        <!-- PANEL 2: SEBARAN LAYANAN & BIMTEK (RADAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Sebaran Layanan</span>
+                            </div>
+                            <div id="chartRadarMots" style="min-height: 185px;"></div>
                         </div>
-                        <div class="p-3 d-flex align-items-center justify-content-between">
-                            <div id="gaugeMots" style="min-height: 120px; width: 45%;"></div>
-                            <div style="width: 52%;">
-                                <small class="text-muted d-block fw-bold mb-1">Sertifikat ISR Diterbitkan</small>
-                                <h2 class="fw-extrabold text-primary mb-1" id="valIsrMots">6 ISR</h2>
-                                <p class="small text-muted mb-0">Sertifikat/Waktu Rata-rata <span class="text-success fw-bold"><i class="bi bi-clock-history"></i> <span id="valWaktuMots">1-2 Hari</span></span></p>
+
+                        <!-- PANEL 3: SAMPLING PENERBITAN ISR BULANAN (VERTICAL BAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Sampling ISR Bulanan</span>
+                            </div>
+                            <div id="chartBarSamplingMots" style="min-height: 135px;"></div>
+                        </div>
+
+                    </div>
+
+                    <!-- KOLOM TENGAH (6/12): PANEL HERO TREN PENERBITAN ISR & KPI UTAMA -->
+                    <div class="col-lg-6 d-flex flex-column">
+                        <div class="cc-panel h-100 d-flex flex-column justify-content-between">
+                            
+                            <!-- HEADER & TOP DUAL METRICS -->
+                            <div>
+                                <div class="cc-panel-title mb-2">
+                                    <span>Tren Penerbitan ISR Bulanan <span id="lblTahunChartIsr" class="text-info">2026</span></span>
+                                    <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25" style="font-size: 0.68rem;">REAL-TIME</span>
+                                </div>
+
+                                <div class="row g-3 px-2 mb-1">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <div class="hero-metric-val" id="valPesertaBimtek">30 Peserta</div>
+                                            <span class="pill-trend-up">100% ↑</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #2dd4bf;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #2dd4bf; display: inline-block;"></span>
+                                            <span>Bimtek SRC & IKRAN</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <div class="hero-metric-val" id="valIsrMots">6 ISR</div>
+                                            <span class="pill-trend-coral" id="valWaktuMots">1-2 Hari</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #fb7185;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #fb7185; display: inline-block;"></span>
+                                            <span>Loket MOTS & Rata-rata Waktu</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MAIN AREA CHART (MEMPERTAHANKAN ID #chartPerformanceMots) -->
+                                <div id="chartPerformanceMots" style="min-height: 205px;"></div>
+
+                                <!-- PAGINATION DOTS -->
+                                <div class="cc-dots">
+                                    <span class="active"></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- MIDDLE-BOTTOM: TOP 5 BULAN PENERBITAN ISR (No.1 - No.5) -->
+                            <div class="top5-strip">
+                                <div class="row row-cols-5 g-2 text-center" id="containerTop5Isr">
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.1</div>
+                                        <div class="rank-val">6</div>
+                                        <div class="rank-month">Agustus</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.2</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">Januari</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.3</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">Februari</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.4</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">Maret</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.5</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">April</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM: 3 CIRCULAR DONUT PROGRESS GAUGES -->
+                            <div class="row g-2 text-center pt-1">
+                                <!-- GAUGE 1: LOKET MOTS (MEMPERTAHANKAN ID #gaugeMots) -->
+                                <div class="col-4">
+                                    <div id="gaugeMots" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-blue mt-1">
+                                        <div>Loket Layanan MOTS</div>
+                                        <div>Sesi: <strong id="valSesiBimtek">1 Kali</strong></div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 2: SERTIFIKAT BIMTEK -->
+                                <div class="col-4">
+                                    <div id="gaugeBimtekTarget" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-coral mt-1">
+                                        <div>Sertifikat Bimtek Terbit</div>
+                                        <div><strong id="valSertifikatBimtek">30 ISR</strong></div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 3: DATA ISR TERVERIFIKASI -->
+                                <div class="col-4">
+                                    <div id="gaugeIsrVerif" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-amber mt-1">
+                                        <div>ISR Maritim Terverifikasi</div>
+                                        <div><strong id="lblGaugeTotalIsr">6 ISR</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- KOLOM KANAN (3/12): 3 PANEL RINGKASAN -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 5: PELAKSANAAN TERAKHIR -->
+                        <div class="cc-panel">
+                            <div class="cc-panel-title mb-1">
+                                <span>Terakhir</span>
+                                <span class="text-info fw-semibold" style="font-size: 0.74rem;" id="lblLastMotsTanggal">07 Agu 2026</span>
+                            </div>
+                            <div class="last-session-highlight">
+                                <div class="last-session-bar"></div>
+                                <div>
+                                    <div class="text-light opacity-75" style="font-size: 0.72rem;" id="lblLastMotsKategori">Bimtek SRC & IKRAN</div>
+                                    <div class="fw-bold text-info" style="font-size: 0.92rem; line-height: 1.25;" id="lblLastMotsLokasi">Desa Kubu / Kumai</div>
+                                    <div class="fw-semibold" style="color: #60a5fa !important; font-size: 0.85rem;" id="lblLastMotsPerusahaan">KM. Borneo Express</div>
+                                    <div class="text-light opacity-50 mt-1" style="font-size: 0.7rem;" id="lblLastMotsStatus">Status: Terverifikasi</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- KPI CARD 3: TREN PENERBITAN ISR BULANAN (LINE CHART) -->
-                <div class="col-lg-4 col-md-12">
-                    <div class="card-kpi p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold text-dark fs-6"><i class="bi bi-graph-up-arrow me-1 text-teal" style="color:#0d9488;"></i>Tren Penerbitan ISR Bulanan</span>
-                            <span class="badge bg-light text-dark border fw-bold" style="font-size: 0.72rem;">Tahun <span id="lblTahunChartIsr">2026</span></span>
+                        <!-- PANEL 6: STATUS LAYANAN (DONUT RING) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Status Layanan</span>
+                            </div>
+                            <div id="chartDonutMotsStatus" style="min-height: 175px;"></div>
                         </div>
-                        <div id="chartPerformanceMots" style="min-height: 125px;"></div>
+
+                        <!-- PANEL 7: PERINGKAT CAPAIAN LAYANAN (HORIZONTAL RANK BARS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title mb-2">
+                                <span>Peringkat Capaian</span>
+                            </div>
+                            
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Peserta Bimtek</span>
+                                    <span class="fw-bold text-white" id="lblRankPesertaBimtek">30</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankPesertaBimtek" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Sertifikat Bimtek</span>
+                                    <span class="fw-bold text-white" id="lblRankSertifikat">30</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankSertifikat" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>ISR Diterbitkan</span>
+                                    <span class="fw-bold text-white" id="lblRankIsrTerbit">6</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankIsrTerbit" style="width: 60%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Sesi Terlaksana</span>
+                                    <span class="fw-bold text-white" id="lblRankSesi">1</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankSesi" style="width: 40%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
             </div>
 
-            <!-- SEKSI 2: GALLERY KEGIATAN & DATA DUKUNG -->
-            <div class="mb-2">
-                <h6 class="fw-bold text-secondary text-uppercase mb-3" style="letter-spacing: 0.5px;">
-                    <i class="bi bi-card-checklist me-1 text-primary"></i> Data Dukung & Layanan Terintegrasi
-                </h6>
-            </div>
-
+            <!-- SEKSI 2: DATA DUKUNG, TABEL & PETA LOKASI -->
             <div class="row g-3 mb-4">
                 <!-- BOX 1: DATA ISR DITERBITKAN -->
                 <div class="col-lg-4 col-md-6">
@@ -520,7 +845,7 @@
                             <input type="text" id="inpSearchIsr" class="form-control" placeholder="Cari perusahaan, kapal, nomor izin..." onkeyup="filterIsrTable()">
                         </div>
 
-                        <!-- TABEL SCROLL DATA ISR (5 KOLOM sesuaI instruksi) -->
+                        <!-- TABEL SCROLL DATA ISR (5 KOLOM) -->
                         <div class="table-responsive table-data-scroll border rounded-3 bg-white">
                             <table class="table table-hover table-striped table-bordered align-middle text-center mb-0">
                                 <thead>
@@ -552,7 +877,7 @@
                                 </h6>
                                 <small class="text-muted" style="font-size: 0.72rem;">Hasil Upload Excel Edit Data Sarpras</small>
                             </div>
-                            <span class="badge bg-teal text-white rounded-pill px-2.5 py-1" id="badgeTotalPeserta">0 Peserta</span>
+                            <span class="badge bg-primary text-white rounded-pill px-2.5 py-1" id="badgeTotalPeserta">0 Peserta</span>
                         </div>
 
                         <!-- SEARCH FILTER PESERTA -->
@@ -625,9 +950,18 @@
         let rawPesertaBimtekList = [];
         let rawDataIsrList = [];
 
+        // GRAFIK TAMBAHAN UNTUK BENTO COMMAND CENTER
+        let chartRadialMotsInstance = null;
+        let chartRadarMotsInstance = null;
+        let chartBarSamplingMotsInstance = null;
+        let gaugeBimtekTargetInstance = null;
+        let gaugeIsrVerifInstance = null;
+        let chartDonutMotsStatusInstance = null;
+
         document.addEventListener('DOMContentLoaded', function() {
             initGaugeChart();
             initPerformanceChart();
+            initBentoSecondaryCharts();
             initLeafletMap();
             loadMotsDataRealtime(selectedYear);
         });
@@ -638,41 +972,42 @@
                 series: [75],
                 chart: {
                     type: 'radialBar',
-                    height: 140,
+                    height: 130,
                     sparkline: { enabled: true }
                 },
                 plotOptions: {
                     radialBar: {
-                        startAngle: -90,
-                        endAngle: 90,
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: {
+                            size: '66%',
+                            background: 'transparent'
+                        },
                         track: {
-                            background: "#e2e8f0",
-                            strokeWidth: '97%',
-                            margin: 5
+                            background: "#15386e",
+                            strokeWidth: '100%'
                         },
                         dataLabels: {
-                            name: { show: false },
+                            name: {
+                                show: true,
+                                offsetY: 16,
+                                color: '#e2e8f0',
+                                fontSize: '10px',
+                                fontWeight: 500
+                            },
                             value: {
-                                offsetY: -2,
-                                fontSize: '16px',
+                                offsetY: -8,
+                                fontSize: '20px',
                                 fontWeight: '800',
-                                color: '#0f4c81'
+                                color: '#1d9bf0',
+                                formatter: function(val) { return Math.round(val) + '%'; }
                             }
                         }
                     }
                 },
-                grid: { padding: { top: -10 } },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shade: 'light',
-                        type: 'horizontal',
-                        gradientToColors: ['#0d9488'],
-                        stops: [0, 100]
-                    }
-                },
-                colors: ['#0284c7'],
-                labels: ['ISR']
+                stroke: { lineCap: 'round' },
+                colors: ['#1d9bf0'],
+                labels: ['Loket MOTS']
             };
 
             motsGaugeChart = new ApexCharts(document.querySelector("#gaugeMots"), optionsGauge);
@@ -688,29 +1023,35 @@
                 }],
                 chart: {
                     type: 'area',
-                    height: 125,
+                    height: 205,
                     sparkline: { enabled: false },
                     toolbar: { show: false },
+                    background: 'transparent',
+                    dropShadow: { enabled: true, color: '#020617', top: 8, left: 0, blur: 6, opacity: 0.35 },
                     animations: { enabled: true, easing: 'easeinout', speed: 800 }
                 },
-                colors: ['#0d9488'],
-                stroke: { curve: 'smooth', width: 2.5 },
+                colors: ['#1d9bf0'],
+                stroke: { curve: 'smooth', width: 3 },
                 fill: {
                     type: 'gradient',
                     gradient: {
                         shadeIntensity: 1,
                         opacityFrom: 0.45,
                         opacityTo: 0.05,
-                        stops: [0, 90, 100]
+                        stops: [0, 95, 100]
                     }
                 },
-                markers: { size: 4, colors: ['#0d9488'], strokeColors: '#fff', strokeWidth: 2 },
+                markers: { size: 4, colors: ['#f97316'], strokeColors: '#fff', strokeWidth: 2 },
                 xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-                    labels: { style: { fontSize: '9px', fontWeight: 600, colors: '#64748b' } }
+                    categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                    labels: { style: { fontSize: '11px', colors: '#7dd3fc' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
                 },
-                yaxis: { show: false },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 3 },
+                yaxis: {
+                    labels: { style: { fontSize: '11px', colors: '#7dd3fc' } }
+                },
+                grid: { borderColor: 'rgba(56, 189, 248, 0.14)', strokeDashArray: 0 },
                 tooltip: {
                     theme: 'dark',
                     y: {
@@ -723,6 +1064,138 @@
 
             motsPerformanceChart = new ApexCharts(document.querySelector("#chartPerformanceMots"), optionsPerformance);
             motsPerformanceChart.render();
+        }
+
+        function createBentoGaugeOptions(colorHex, labelText, initialVal = 100) {
+            return {
+                series: [initialVal],
+                chart: {
+                    height: 130,
+                    type: 'radialBar',
+                    sparkline: { enabled: true }
+                },
+                colors: [colorHex],
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: { size: '66%', background: 'transparent' },
+                        track: { background: '#15386e', strokeWidth: '100%' },
+                        dataLabels: {
+                            name: { show: true, offsetY: 16, color: '#e2e8f0', fontSize: '10px', fontWeight: 500 },
+                            value: {
+                                show: true,
+                                offsetY: -8,
+                                color: colorHex,
+                                fontSize: '20px',
+                                fontWeight: 800,
+                                formatter: function(val) { return Math.round(val) + '%'; }
+                            }
+                        }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: [labelText]
+            };
+        }
+
+        function initBentoSecondaryCharts() {
+            // 1. Radial Concentric (Top-Left)
+            chartRadialMotsInstance = new ApexCharts(document.getElementById('chartRadialMots'), {
+                series: [100, 85, 75],
+                chart: { height: 155, type: 'radialBar', sparkline: { enabled: true } },
+                colors: ['#1d9bf0', '#2dd4bf', '#fbbf24'],
+                plotOptions: {
+                    radialBar: {
+                        hollow: { size: '30%' },
+                        track: { background: '#14366b', margin: 4 },
+                        dataLabels: { show: false }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: ['Bimtek SRC', 'ISR Terbit', 'Sesi Aktif']
+            });
+            chartRadialMotsInstance.render();
+
+            // 2. Radar Chart (Middle-Left)
+            chartRadarMotsInstance = new ApexCharts(document.getElementById('chartRadarMots'), {
+                series: [
+                    { name: 'Target', data: [30, 30, 10, 10, 30] },
+                    { name: 'Realisasi', data: [30, 30, 6, 6, 30] }
+                ],
+                chart: { height: 185, type: 'radar', toolbar: { show: false } },
+                colors: ['#1d9bf0', '#2dd4bf'],
+                fill: { opacity: 0.45 },
+                stroke: { width: 2 },
+                markers: { size: 0 },
+                xaxis: {
+                    categories: ['Bimtek SRC', 'IKRAN', 'ISR Terbit', 'Loket MOTS', 'Sertifikat'],
+                    labels: { style: { colors: ['#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd'], fontSize: '9px' } }
+                },
+                yaxis: { show: false },
+                plotOptions: {
+                    radar: {
+                        polygons: {
+                            strokeColors: 'rgba(147, 197, 253, 0.25)',
+                            connectorColors: 'rgba(147, 197, 253, 0.25)'
+                        }
+                    }
+                },
+                legend: { show: false },
+                tooltip: { theme: 'dark' }
+            });
+            chartRadarMotsInstance.render();
+
+            // 3. Sampling Bar Chart (Bottom-Left)
+            chartBarSamplingMotsInstance = new ApexCharts(document.getElementById('chartBarSamplingMots'), {
+                series: [{ name: 'ISR Terbit', data: [0, 0, 0, 0, 0, 0, 6] }],
+                chart: { height: 135, type: 'bar', toolbar: { show: false } },
+                colors: ['#1d9bf0'],
+                plotOptions: {
+                    bar: { borderRadius: 4, columnWidth: '48%' }
+                },
+                dataLabels: { enabled: false },
+                xaxis: {
+                    categories: ['Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
+                    labels: { rotate: -30, style: { colors: '#7dd3fc', fontSize: '9px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: { style: { colors: '#7dd3fc', fontSize: '9px' } }
+                },
+                grid: { borderColor: 'rgba(56, 189, 248, 0.12)' },
+                tooltip: { theme: 'dark' }
+            });
+            chartBarSamplingMotsInstance.render();
+
+            // 4. Center Bottom Gauges (Gauge 2 & 3)
+            gaugeBimtekTargetInstance = new ApexCharts(document.getElementById('gaugeBimtekTarget'), createBentoGaugeOptions('#fb7185', 'Bimtek', 100));
+            gaugeBimtekTargetInstance.render();
+
+            gaugeIsrVerifInstance = new ApexCharts(document.getElementById('gaugeIsrVerif'), createBentoGaugeOptions('#fbbf24', 'Terverifikasi', 100));
+            gaugeIsrVerifInstance.render();
+
+            // 5. Donut Status (Middle-Right)
+            chartDonutMotsStatusInstance = new ApexCharts(document.getElementById('chartDonutMotsStatus'), {
+                series: [30, 30, 6],
+                chart: { height: 175, type: 'donut' },
+                labels: ['Peserta Bimtek', 'Sertifikat Bimtek', 'ISR Loket MOTS'],
+                colors: ['#1d9bf0', '#2dd4bf', '#6366f1'],
+                stroke: { width: 0 },
+                plotOptions: {
+                    pie: { donut: { size: '62%' } }
+                },
+                dataLabels: { enabled: false },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '10px',
+                    labels: { colors: '#cbd5e1' },
+                    markers: { width: 8, height: 8 }
+                },
+                tooltip: { theme: 'dark' }
+            });
+            chartDonutMotsStatusInstance.render();
         }
 
         // 3. INISIALISASI PETA INTERAKTIF LEAFLET MAP
@@ -843,6 +1316,81 @@
                 ];
             }
             renderPesertaBimtekTable(rawPesertaBimtekList);
+
+            // SINKRONISASI VISUAL BENTO GRID
+            syncBentoVisuals(data, isrMonthlyTrend);
+        }
+
+        function syncBentoVisuals(data, isrMonthlyTrend) {
+            const namaBulanFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            const numPeserta = parseInt(String(data.pesertaBimtek || '30').replace(/\D/g, '')) || rawPesertaBimtekList.length || 0;
+            const numIsr = parseInt(String(data.isrMots || rawDataIsrList.length).replace(/\D/g, '')) || rawDataIsrList.length || 0;
+            const numSesi = parseInt(String(data.sesiBimtek || '1').replace(/\D/g, '')) || 1;
+
+            // Update caption gauges
+            document.getElementById('valSertifikatBimtek').textContent = `${numPeserta} ISR`;
+            document.getElementById('lblGaugeTotalIsr').textContent = `${rawDataIsrList.length} ISR`;
+
+            // Update Top 5 Bulan Penerbitan ISR (No.1 - No.5)
+            const monthlyPaired = isrMonthlyTrend.map((val, idx) => ({
+                bulan: namaBulanFull[idx],
+                count: val
+            }));
+            const top5 = [...monthlyPaired].sort((a, b) => b.count - a.count).slice(0, 5);
+            const containerTop5 = document.getElementById('containerTop5Isr');
+            if (containerTop5) {
+                containerTop5.innerHTML = top5.map((item, i) => `
+                    <div class="col top5-item">
+                        <div class="rank-no">No.${i + 1}</div>
+                        <div class="rank-val">${item.count}</div>
+                        <div class="rank-month">${item.bulan}</div>
+                    </div>
+                `).join('');
+            }
+
+            // Update Sampling Bar Chart (Feb - Agu)
+            if (chartBarSamplingMotsInstance) {
+                chartBarSamplingMotsInstance.updateSeries([{
+                    name: 'ISR Terbit',
+                    data: isrMonthlyTrend.slice(1, 8)
+                }]);
+            }
+
+            // Update Radar & Donut
+            if (chartRadarMotsInstance) {
+                chartRadarMotsInstance.updateSeries([
+                    { name: 'Target', data: [Math.max(numPeserta, 30), Math.max(numPeserta, 30), Math.max(numIsr, 10), Math.max(numIsr, 10), Math.max(numPeserta, 30)] },
+                    { name: 'Realisasi', data: [numPeserta, numPeserta, numIsr, rawDataIsrList.length, numPeserta] }
+                ]);
+            }
+
+            if (chartDonutMotsStatusInstance) {
+                chartDonutMotsStatusInstance.updateSeries([numPeserta, numPeserta, rawDataIsrList.length]);
+            }
+
+            // Update Panel "Terakhir" (Top-Right)
+            const lastPeserta = rawPesertaBimtekList[rawPesertaBimtekList.length - 1];
+            const lastIsr = rawDataIsrList[rawDataIsrList.length - 1];
+            if (lastPeserta) {
+                document.getElementById('lblLastMotsTanggal').textContent = lastPeserta.tgl || `Tahun ${selectedYear}`;
+            }
+            if (lastIsr) {
+                document.getElementById('lblLastMotsPerusahaan').textContent = `${lastIsr.namaKapal || '-'} (${lastIsr.namaPerusahaan || '-'})`;
+            }
+
+            // Update Horizontal Rank Bars (Bottom-Right)
+            const maxVal = Math.max(numPeserta, rawDataIsrList.length, numSesi, 1);
+            document.getElementById('lblRankPesertaBimtek').textContent = numPeserta;
+            document.getElementById('barRankPesertaBimtek').style.width = `${Math.round((numPeserta / maxVal) * 100)}%`;
+
+            document.getElementById('lblRankSertifikat').textContent = numPeserta;
+            document.getElementById('barRankSertifikat').style.width = `${Math.round((numPeserta / maxVal) * 100)}%`;
+
+            document.getElementById('lblRankIsrTerbit').textContent = rawDataIsrList.length;
+            document.getElementById('barRankIsrTerbit').style.width = `${Math.round((rawDataIsrList.length / maxVal) * 100)}%`;
+
+            document.getElementById('lblRankSesi').textContent = numSesi;
+            document.getElementById('barRankSesi').style.width = `${Math.max(25, Math.round((numSesi / maxVal) * 100))}%`;
         }
 
         // RENDER TABEL ISR DITERBITKAN (DENGAN 5 KOLOM BARU)
