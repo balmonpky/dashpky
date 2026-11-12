@@ -20,8 +20,11 @@
         :root {
             --primary-navy: #0f4c81;
             --accent-blue: #1b75bc;
-            --bg-light: #f8fafc;
-            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08);
+            --bg-light: #071936;
+            --panel-bg: #0c2752;
+            --panel-border: #1d4ed8;
+            --cyan-glow: #38bdf8;
+            --card-shadow: 0 15px 35px rgba(4, 15, 36, 0.35);
             --sidebar-collapsed-width: 68px;
             --sidebar-expanded-width: 280px;
         }
@@ -29,14 +32,21 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
-            color: #334155;
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(29, 155, 240, 0.16) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+                linear-gradient(180deg, #071936 0%, #0a2246 100%);
+            background-attachment: fixed;
+            color: #e2e8f0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .navbar-custom {
-            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 50%, #3b82f6 100%);
             padding: 1rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 25px rgba(15, 76, 129, 0.25);
             z-index: 1050;
         }
 
@@ -48,7 +58,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
         .logo-container img {
             width: 36px;
@@ -63,8 +73,8 @@
             left: 0;
             bottom: 0;
             width: var(--sidebar-collapsed-width);
-            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 100%);
-            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.2);
+            background: linear-gradient(180deg, #0f4c81 0%, #1e3a8a 60%, #091e42 100%);
+            box-shadow: 4px 0 25px rgba(15, 76, 129, 0.25);
             z-index: 1040;
             transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
@@ -95,9 +105,13 @@
             color: rgba(255, 255, 255, 0.82); text-decoration: none;
             border-left: 4px solid transparent; transition: all 0.25s ease; white-space: nowrap;
         }
-        .sidebar-menu .menu-link:hover { background: rgba(255, 255, 255, 0.12); color: #ffffff; border-left-color: #38bdf8; }
+        .sidebar-menu .menu-link:hover {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
+            color: #ffffff;
+            border-left-color: #38bdf8;
+        }
         .sidebar-menu .menu-link.active {
-            background: rgba(255, 255, 255, 0.2) !important;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
             color: #ffffff !important;
             border-left-color: #38bdf8 !important;
             font-weight: 700;
@@ -109,13 +123,18 @@
         .main-wrapper {
             margin-left: var(--sidebar-collapsed-width);
             flex-grow: 1;
-            padding: 2rem 2rem;
+            padding: 1.75rem 2rem;
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* HEADER BANNER (DIPERTAHANKAN SESUAI GAMBAR) */
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-            color: white; border-radius: 20px; padding: 2rem 2.5rem; box-shadow: var(--card-shadow);
+            color: white;
+            border-radius: 20px;
+            padding: 1.85rem 2.35rem;
+            box-shadow: 0 20px 40px rgba(8, 28, 66, 0.45);
+            border: 1px solid rgba(56, 189, 248, 0.3);
             position: relative;
         }
 
@@ -170,29 +189,253 @@
             color: #ffffff;
         }
 
+        /* 4 KARTU STAT UTAMA (DIPERTAHANKAN PERSIS SEPERTI GAMBAR) */
         .stat-card {
-            background: #ffffff; border-radius: 16px; padding: 1.25rem 1.5rem;
-            border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%; transition: transform 0.3s ease;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 12px 28px rgba(4, 15, 36, 0.28);
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .stat-card:hover { transform: translateY(-4px); }
-        .stat-card .title { font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
-        .stat-card .value { font-size: 1.6rem; font-weight: 800; margin-top: 4px; }
-
-        .chart-card {
-            background: #ffffff; border-radius: 20px; padding: 1.5rem;
-            border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); height: 100%; transition: all 0.3s ease;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 35px rgba(4, 15, 36, 0.38);
         }
-        .chart-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12); }
-        .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; }
+        .stat-card .title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+        .stat-card .value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-top: 4px;
+        }
 
-        .donut-wrapper { position: relative; min-height: 360px; }
+        /* COMMAND CENTER DARK NAVY BENTO PANELS (SERAGAM DENGAN UNAR & MOTS) */
+        .cc-grid-wrapper {
+            background: #081e40;
+            border: 1px solid #1e4b8f;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 20px 50px rgba(3, 12, 30, 0.6);
+        }
+
+        .cc-panel {
+            background: linear-gradient(180deg, #0d2b59 0%, #0a2247 100%);
+            border: 1px solid #1d4ed8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            position: relative;
+            box-shadow: inset 0 0 24px rgba(29, 155, 240, 0.08);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .cc-panel:hover {
+            border-color: #38bdf8;
+            box-shadow: inset 0 0 28px rgba(56, 189, 248, 0.14);
+        }
+
+        .cc-panel-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* HERO KPI METRICS IN CENTER PANEL */
+        .hero-metric-val {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: #dbeafe;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+        .pill-trend-up {
+            background: #2dd4bf;
+            color: #062825;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .pill-trend-coral {
+            background: #fb7185;
+            color: #2b0910;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        /* DOTS INDICATOR UNDER MAIN CHART */
+        .cc-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 2px 0 12px 0;
+        }
+        .cc-dots span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #335c99;
+        }
+        .cc-dots span.active {
+            width: 8px;
+            height: 8px;
+            background: #93c5fd;
+        }
+
+        /* TOP 5 RANKING STRIP (No.1 - No.5) */
+        .top5-strip {
+            border-top: 1px solid rgba(56, 189, 248, 0.15);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 12px 6px;
+            margin-bottom: 10px;
+        }
+        .top5-item .rank-no {
+            font-size: 0.72rem;
+            color: #7dd3fc;
+            font-weight: 600;
+        }
+        .top5-item .rank-val {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #f0f9ff;
+            line-height: 1.25;
+        }
+        .top5-item .rank-month {
+            font-size: 0.7rem;
+            color: #93c5fd;
+            font-weight: 600;
+        }
+
+        /* GAUGE CAPTION STYLING */
+        .gauge-caption-blue {
+            font-size: 0.72rem;
+            color: #38bdf8;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-coral {
+            font-size: 0.72rem;
+            color: #fb7185;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-amber {
+            font-size: 0.72rem;
+            color: #fbbf24;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        /* TOP-RIGHT HIGHLIGHT CARD */
+        .last-session-highlight {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .last-session-bar {
+            width: 4px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #38bdf8 0%, #1d4ed8 100%);
+            flex-shrink: 0;
+        }
+
+        /* DONUT INTERAKTIF DI PANEL KANAN */
+        .donut-wrapper { position: relative; min-height: 235px; }
         .donut-center-info {
-            position: absolute; top: 44%; left: 50%; transform: translate(-50%, -50%);
-            pointer-events: none; text-align: center; width: 55%; z-index: 10; transition: all 0.3s ease;
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            text-align: center;
+            width: 58%;
+            z-index: 10;
+            transition: all 0.3s ease;
         }
 
-        .table-custom th { background-color: var(--primary-navy); color: white; font-size: 0.78rem; vertical-align: middle; text-transform: uppercase; padding: 0.75rem 0.5rem; }
-        .table-custom td { font-size: 0.85rem; vertical-align: middle; padding: 0.65rem 0.5rem; }
+        /* BOTTOM-RIGHT HORIZONTAL RANK BARS */
+        .rank-bar-item {
+            margin-bottom: 10px;
+        }
+        .rank-bar-item:last-child {
+            margin-bottom: 0;
+        }
+        .rank-bar-label {
+            font-size: 0.73rem;
+            color: #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3px;
+        }
+        .rank-bar-track {
+            width: 100%;
+            height: 7px;
+            background: rgba(15, 42, 86, 0.85);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .rank-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        /* RADIAL LEGEND ITEMS */
+        .radial-legend-item {
+            margin-bottom: 8px;
+        }
+        .radial-legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* TABEL RINCIAN ANGGARAN (DIPERTAHANKAN) */
+        .table-card-wrapper {
+            background: #ffffff;
+            color: #334155;
+            border-radius: 18px;
+            border: 1px solid #1d4ed8;
+            box-shadow: 0 18px 40px rgba(4, 15, 36, 0.35);
+        }
+        .table-custom th {
+            background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%) !important;
+            color: white;
+            font-size: 0.78rem;
+            vertical-align: middle;
+            text-transform: uppercase;
+            padding: 0.8rem 0.5rem;
+            border: none;
+        }
+        .table-custom td {
+            font-size: 0.85rem;
+            vertical-align: middle;
+            padding: 0.65rem 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper { margin-left: 0; padding: 1.25rem 0.85rem; }
+            .sidebar-autohide { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -278,6 +521,7 @@
     <main class="main-wrapper">
         <div class="container-fluid">
             
+            <!-- HEADER BANNER (DIPERTAHANKAN SESUAI GAMBAR) -->
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div class="banner-bg-circle"></div>
                 <div style="z-index: 1;">
@@ -302,6 +546,7 @@
                 </div>
             </div>
 
+            <!-- 4 KARTU KPI UTAMA (DIPERTAHANKAN PERSIS SEPERTI GAMBAR) -->
             <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
                 <div class="col">
                     <div class="stat-card" style="border-left: 5px solid #0f4c81;">
@@ -333,38 +578,224 @@
                 </div>
             </div>
 
-            <div class="row g-4 mb-4">
-                <div class="col-lg-5">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-pie-chart-fill me-2" style="color: #7c3aed;"></i>Proporsi Realisasi Per Program</h5>
-                                <small class="text-muted">Klik program di keterangan untuk melihat Realisasi & Sisa</small>
+            <!-- DASHBOARD VISUALIZATION BENTO GRID (STRUKTUR SERAGAM DENGAN UNAR & MOTS) -->
+            <div class="cc-grid-wrapper mb-4">
+                <div class="row g-2 align-items-stretch">
+                    
+                    <!-- KOLOM KIRI (3/12): 3 PANEL GRAFIK -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 1: CAPAIAN SERAPAN PROGRAM (RADIAL CONCENTRIC ARCS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Capaian Serapan Program</span>
                             </div>
-                            <span class="badge bg-light text-purple border fw-semibold" style="color: #7c3aed;">Interaktif 3D</span>
+                            <div class="row align-items-center g-0">
+                                <div class="col-6">
+                                    <div id="chartRadialProgram" style="min-height: 155px;"></div>
+                                </div>
+                                <div class="col-6 ps-1">
+                                    <div class="text-white fw-semibold mb-2" style="font-size: 0.72rem; line-height: 1.25;">
+                                        Rasio Realisasi Utama
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-info" style="font-size: 0.78rem; min-width: 34px;" id="lblPctProg1">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">UNAR</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold" style="color: #2dd4bf; font-size: 0.78rem; min-width: 34px;" id="lblPctProg2">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">BHP</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-warning" style="font-size: 0.78rem; min-width: 34px;" id="lblPctProg3">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Transportable</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="donut-wrapper">
-                            <div id="donutChart3DAnggaran"></div>
-                            <div id="donutCenterInfo" class="donut-center-info"></div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-7">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Tren Penyerapan Anggaran Bulanan</h5>
-                                <small class="text-muted">Progres Akumulasi Serapan Nominal (Rp) Januari - Desember</small>
+                        <!-- PANEL 2: SEBARAN PAGU VS REALISASI 5 PROGRAM (RADAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Sebaran 5 Program (Jt)</span>
                             </div>
-                            <span class="badge bg-light text-primary border fw-semibold">Akumulasi Bulanan</span>
+                            <div id="chartRadarProgram" style="min-height: 185px;"></div>
                         </div>
-                        <div id="barChartAnggaranBulanan" style="min-height: 360px;"></div>
+
+                        <!-- PANEL 3: SAMPLING SERAPAN BULANAN (VERTICAL BAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Serapan Bulanan (Jt)</span>
+                            </div>
+                            <div id="chartBarSamplingAnggaran" style="min-height: 135px;"></div>
+                        </div>
+
                     </div>
+
+                    <!-- KOLOM TENGAH (6/12): PANEL HERO TREN PENYERAPAN ANGGARAN -->
+                    <div class="col-lg-6 d-flex flex-column">
+                        <div class="cc-panel h-100 d-flex flex-column justify-content-between">
+                            
+                            <!-- HEADER & TOP DUAL METRICS -->
+                            <div>
+                                <div class="cc-panel-title mb-2">
+                                    <span>Tren Penyerapan Anggaran Bulanan <span id="lblTahunChartAnggaran" class="text-info">2026</span></span>
+                                    <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25" style="font-size: 0.68rem;">AKUMULASI BULANAN</span>
+                                </div>
+
+                                <div class="row g-3 px-2 mb-1">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <div class="hero-metric-val" id="lblHeroRealisasi">Rp 0</div>
+                                            <span class="pill-trend-up" id="badgeHeroSerapan">0% ↑</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #2dd4bf;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #2dd4bf; display: inline-block;"></span>
+                                            <span>Akumulasi Realisasi</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <div class="hero-metric-val" id="lblHeroSisa">Rp 0</div>
+                                            <span class="pill-trend-coral" id="badgeHeroSisa">0%</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #fb7185;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #fb7185; display: inline-block;"></span>
+                                            <span>Sisa Pagu DIPA</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MAIN AREA CHART (MEMPERTAHANKAN ID #barChartAnggaranBulanan) -->
+                                <div id="barChartAnggaranBulanan" style="min-height: 215px;"></div>
+
+                                <!-- PAGINATION DOTS -->
+                                <div class="cc-dots">
+                                    <span class="active"></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- MIDDLE-BOTTOM: TOP 5 REALISASI PROGRAM (No.1 - No.5) -->
+                            <div class="top5-strip">
+                                <div class="row row-cols-5 g-2 text-center" id="containerTop5Program">
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.1</div>
+                                        <div class="rank-val">Rp 0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.2</div>
+                                        <div class="rank-val">Rp 0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.3</div>
+                                        <div class="rank-val">Rp 0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.4</div>
+                                        <div class="rank-val">Rp 0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.5</div>
+                                        <div class="rank-val">Rp 0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM: 3 CIRCULAR PROGRESS GAUGES -->
+                            <div class="row g-2 text-center pt-1">
+                                <!-- GAUGE 1: SERAPAN TOTAL -->
+                                <div class="col-4">
+                                    <div id="chartGaugeSerapanTotal" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-blue mt-1">
+                                        <div>Realisasi Terhadap Pagu</div>
+                                        <div>5 Program Utama</div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 2: RATA-RATA PROGRAM -->
+                                <div class="col-4">
+                                    <div id="chartGaugeRataProgram" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-coral mt-1">
+                                        <div>Rata-rata Serapan</div>
+                                        <div>Per Kegiatan DIPA</div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 3: SISA PAGU -->
+                                <div class="col-4">
+                                    <div id="chartGaugeSisaPagu" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-amber mt-1">
+                                        <div>Persentase Sisa Pagu</div>
+                                        <div>Belum Terserap</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- KOLOM KANAN (3/12): 3 PANEL RINGKASAN -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 5: PROGRAM TERTINGGI (TOP PROGRAM) -->
+                        <div class="cc-panel">
+                            <div class="cc-panel-title mb-1">
+                                <span>Serapan Tertinggi</span>
+                                <span class="text-info fw-semibold" style="font-size: 0.74rem;" id="lblTopProgTahun">TA 2026</span>
+                            </div>
+                            <div class="last-session-highlight">
+                                <div class="last-session-bar"></div>
+                                <div>
+                                    <div class="text-light opacity-75" style="font-size: 0.72rem;" id="lblTopProgKode">PROGRAM UTAMA</div>
+                                    <div class="fw-bold text-info" style="font-size: 0.9rem; line-height: 1.25;" id="lblTopProgNama">-</div>
+                                    <div class="fw-semibold" style="color: #60a5fa !important; font-size: 0.84rem;" id="lblTopProgNominal">Rp 0</div>
+                                    <div class="text-light opacity-50 mt-1" style="font-size: 0.7rem;" id="lblTopProgPct">Capaian: 0%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 6: PROPORSI REALISASI PER PROGRAM (MEMPERTAHANKAN #donutChart3DAnggaran & #donutCenterInfo) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title mb-1">
+                                <span>Proporsi Per Program</span>
+                                <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25" style="font-size: 0.65rem;">Klik Slice</span>
+                            </div>
+                            <div class="donut-wrapper">
+                                <div id="donutChart3DAnggaran"></div>
+                                <div id="donutCenterInfo" class="donut-center-info"></div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 7: PERINGKAT SERAPAN 5 PROGRAM (HORIZONTAL RANK BARS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title mb-2">
+                                <span>Progres 5 Program</span>
+                            </div>
+                            <div id="containerRankBarsAnggaran">
+                                <div class="rank-bar-item">
+                                    <div class="rank-bar-label">
+                                        <span>UNAR</span>
+                                        <span class="fw-bold text-white">0%</span>
+                                    </div>
+                                    <div class="rank-bar-track">
+                                        <div class="rank-bar-fill" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <!-- TABEL RINCIAN REALISASI 5 PROGRAM SARPRAS (DIPERTAHANKAN) -->
+            <div class="table-card-wrapper p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Rincian Realisasi 5 Program Sarpras (<span id="lblTahunTabel">2026</span>)</h5>
                     <span class="badge bg-primary px-3 py-2" id="badgeTahunTabel">Tahun 2026</span>
@@ -437,14 +868,31 @@
         let areaChartInstance = null;
         let selectedProgramIndex = null;
 
+        // GRAFIK BENTO COMMAND CENTER
+        let radialProgramInstance = null;
+        let radarProgramInstance = null;
+        let barSamplingAnggaranInstance = null;
+        let gaugeSerapanTotalInstance = null;
+        let gaugeRataProgramInstance = null;
+        let gaugeSisaPaguInstance = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             defaultAnggaranList = getDefaultAnggaranForYear(currentSelectedYear);
             initCharts();
+            initBentoSecondaryCharts();
             loadAnggaranRealtime(currentSelectedYear);
         });
 
         function formatRupiah(angka) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+        }
+
+        function formatCompactRupiah(angka) {
+            const val = parseFloat(angka) || 0;
+            if (val >= 1000000000) return 'Rp ' + (val / 1000000000).toFixed(2).replace('.', ',') + ' M';
+            if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1).replace('.', ',') + ' Jt';
+            if (val >= 1000) return 'Rp ' + (val / 1000).toFixed(0) + ' Rb';
+            return formatRupiah(val);
         }
 
         function toggleProgramSelection(index) {
@@ -466,10 +914,10 @@
                 let totPct = totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0';
 
                 centerEl.innerHTML = `
-                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Realisasi</div>
-                    <div style="font-size: 1.35rem; font-weight: 800; color: #0f4c81; line-height: 1.2; margin: 2px 0;">${formatRupiah(totRealisasi)}</div>
-                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706;">Sisa: ${formatRupiah(totSisa)}</div>
-                    <div style="font-size: 0.7rem; font-weight: 600; color: #10b981; margin-top: 2px;"><i class="bi bi-check-circle-fill"></i> Serapan ${totPct}%</div>
+                    <div style="font-size: 0.65rem; font-weight: 700; color: #93c5fd; text-transform: uppercase;">Total Realisasi</div>
+                    <div style="font-size: 0.92rem; font-weight: 800; color: #ffffff; line-height: 1.2; margin: 2px 0;">${formatCompactRupiah(totRealisasi)}</div>
+                    <div style="font-size: 0.66rem; font-weight: 700; color: #fbbf24;">Sisa: ${formatCompactRupiah(totSisa)}</div>
+                    <div style="font-size: 0.64rem; font-weight: 600; color: #2dd4bf; margin-top: 1px;"><i class="bi bi-check-circle-fill"></i> ${totPct}%</div>
                 `;
             } else {
                 const item = defaultAnggaranList[selectedProgramIndex];
@@ -479,11 +927,10 @@
                 const progName = item.id ? item.id.toUpperCase() : `PROGRAM ${selectedProgramIndex + 1}`;
 
                 centerEl.innerHTML = `
-                    <span class="badge bg-primary px-2 py-1 mb-1" style="font-size: 0.7rem;">${progName}</span>
-                    <div style="font-size: 0.72rem; font-weight: 700; color: #059669; text-transform: uppercase;">Realisasi</div>
-                    <div style="font-size: 1.2rem; font-weight: 800; color: #059669;">${formatRupiah(realisasi)}</div>
-                    <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; margin-top: 3px;">Sisa: ${formatRupiah(sisa)}</div>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Klik lagi untuk reset</small>
+                    <span class="badge bg-info text-dark px-2 py-0.5 mb-1" style="font-size: 0.62rem;">${progName}</span>
+                    <div style="font-size: 0.85rem; font-weight: 800; color: #2dd4bf; line-height: 1.15;">${formatCompactRupiah(realisasi)}</div>
+                    <div style="font-size: 0.65rem; font-weight: 700; color: #fbbf24; margin-top: 2px;">Sisa: ${formatCompactRupiah(sisa)}</div>
+                    <small class="d-block mt-0.5" style="font-size: 0.58rem; color: #93c5fd;">Klik lagi untuk reset</small>
                 `;
             }
         }
@@ -494,17 +941,25 @@
                 labels: ['UNAR', 'BHP', 'TRANSPORTABLE', 'BIMTEK', 'MARITIM'],
                 chart: {
                     type: 'donut',
-                    height: 360,
+                    height: 245,
                     events: {
                         legendClick: function(chartContext, seriesIndex) { toggleProgramSelection(seriesIndex); return false; },
                         dataPointSelection: function(event, chartContext, config) { toggleProgramSelection(config.dataPointIndex); }
                     },
-                    dropShadow: { enabled: true, color: '#0f4c81', top: 14, left: 0, blur: 10, opacity: 0.22 }
+                    dropShadow: { enabled: true, color: '#020617', top: 10, left: 0, blur: 8, opacity: 0.35 }
                 },
-                colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9'],
-                plotOptions: { pie: { donut: { size: '67%', labels: { show: false } } } },
+                colors: ['#1d9bf0', '#2dd4bf', '#fbbf24', '#a78bfa', '#38bdf8'],
+                stroke: { width: 0 },
+                plotOptions: { pie: { donut: { size: '68%', labels: { show: false } } } },
                 dataLabels: { enabled: false },
-                legend: { position: 'bottom', fontSize: '12px', fontWeight: 700 }
+                legend: {
+                    position: 'bottom',
+                    fontSize: '10px',
+                    fontWeight: 600,
+                    labels: { colors: '#cbd5e1' },
+                    markers: { width: 8, height: 8 }
+                },
+                tooltip: { theme: 'dark', y: { formatter: (val) => formatRupiah(val) } }
             };
 
             donutChartInstance = new ApexCharts(document.getElementById('donutChart3DAnggaran'), optionsDonut);
@@ -514,22 +969,157 @@
             const optionsArea = {
                 series: [],
                 chart: {
-                    height: 360,
+                    height: 215,
                     type: 'area',
                     toolbar: { show: false },
-                    dropShadow: { enabled: true, color: '#1e3a8a', top: 10, left: 0, blur: 6, opacity: 0.15 }
+                    background: 'transparent',
+                    dropShadow: { enabled: true, color: '#020617', top: 8, left: 0, blur: 6, opacity: 0.35 }
                 },
-                colors: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9'],
-                stroke: { curve: 'smooth', width: 3 },
+                colors: ['#1d9bf0', '#2dd4bf', '#fbbf24', '#fb7185', '#a78bfa'],
+                stroke: { curve: 'smooth', width: 2.5 },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.38,
+                        opacityTo: 0.04,
+                        stops: [0, 95, 100]
+                    }
+                },
                 dataLabels: { enabled: false },
-                xaxis: { categories: bulanList },
-                yaxis: { labels: { formatter: (val) => 'Rp ' + (val / 1000000).toFixed(0) + ' Jt' } },
-                tooltip: { enabled: true, y: { formatter: (val) => formatRupiah(val) } },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+                xaxis: {
+                    categories: bulanList,
+                    labels: { style: { colors: '#7dd3fc', fontSize: '10px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: '#7dd3fc', fontSize: '10px' },
+                        formatter: (val) => 'Rp ' + (val / 1000000).toFixed(0) + ' Jt'
+                    }
+                },
+                legend: { show: false },
+                tooltip: { theme: 'dark', enabled: true, y: { formatter: (val) => formatRupiah(val) } },
+                grid: { borderColor: 'rgba(56, 189, 248, 0.14)', strokeDashArray: 0 }
             };
 
             areaChartInstance = new ApexCharts(document.getElementById('barChartAnggaranBulanan'), optionsArea);
             areaChartInstance.render();
+        }
+
+        function createBentoGaugeOptions(colorHex, labelText) {
+            return {
+                series: [0],
+                chart: {
+                    height: 130,
+                    type: 'radialBar',
+                    sparkline: { enabled: true }
+                },
+                colors: [colorHex],
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: { size: '66%', background: 'transparent' },
+                        track: { background: '#15386e', strokeWidth: '100%' },
+                        dataLabels: {
+                            name: { show: true, offsetY: 16, color: '#e2e8f0', fontSize: '10px', fontWeight: 500 },
+                            value: {
+                                show: true,
+                                offsetY: -8,
+                                color: colorHex,
+                                fontSize: '20px',
+                                fontWeight: 800,
+                                formatter: function(val) { return Number(val).toFixed(1) + '%'; }
+                            }
+                        }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: [labelText]
+            };
+        }
+
+        function initBentoSecondaryCharts() {
+            // 1. Radial Concentric (Top-Left)
+            radialProgramInstance = new ApexCharts(document.getElementById('chartRadialProgram'), {
+                series: [0, 0, 0],
+                chart: { height: 155, type: 'radialBar', sparkline: { enabled: true } },
+                colors: ['#1d9bf0', '#2dd4bf', '#fbbf24'],
+                plotOptions: {
+                    radialBar: {
+                        hollow: { size: '30%' },
+                        track: { background: '#14366b', margin: 4 },
+                        dataLabels: { show: false }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: ['UNAR', 'BHP', 'Transportable']
+            });
+            radialProgramInstance.render();
+
+            // 2. Radar Chart (Middle-Left)
+            radarProgramInstance = new ApexCharts(document.getElementById('chartRadarProgram'), {
+                series: [
+                    { name: 'Pagu (Jt)', data: [0, 0, 0, 0, 0] },
+                    { name: 'Realisasi (Jt)', data: [0, 0, 0, 0, 0] }
+                ],
+                chart: { height: 185, type: 'radar', toolbar: { show: false } },
+                colors: ['#1d9bf0', '#2dd4bf'],
+                fill: { opacity: 0.45 },
+                stroke: { width: 2 },
+                markers: { size: 0 },
+                xaxis: {
+                    categories: ['UNAR', 'BHP', 'TRANS', 'BIMTEK', 'MARITIM'],
+                    labels: { style: { colors: ['#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd'], fontSize: '9px' } }
+                },
+                yaxis: { show: false },
+                plotOptions: {
+                    radar: {
+                        polygons: {
+                            strokeColors: 'rgba(147, 197, 253, 0.25)',
+                            connectorColors: 'rgba(147, 197, 253, 0.25)'
+                        }
+                    }
+                },
+                legend: { show: false },
+                tooltip: { theme: 'dark' }
+            });
+            radarProgramInstance.render();
+
+            // 3. Sampling Bar Chart (Bottom-Left)
+            barSamplingAnggaranInstance = new ApexCharts(document.getElementById('chartBarSamplingAnggaran'), {
+                series: [{ name: 'Serapan (Jt)', data: [] }],
+                chart: { height: 135, type: 'bar', toolbar: { show: false } },
+                colors: ['#1d9bf0'],
+                plotOptions: {
+                    bar: { borderRadius: 4, columnWidth: '48%' }
+                },
+                dataLabels: { enabled: false },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
+                    labels: { rotate: -30, style: { colors: '#7dd3fc', fontSize: '9px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: { style: { colors: '#7dd3fc', fontSize: '9px' } }
+                },
+                grid: { borderColor: 'rgba(56, 189, 248, 0.12)' },
+                tooltip: { theme: 'dark' }
+            });
+            barSamplingAnggaranInstance.render();
+
+            // 4. Three Gauges (Center Bottom)
+            gaugeSerapanTotalInstance = new ApexCharts(document.getElementById('chartGaugeSerapanTotal'), createBentoGaugeOptions('#1d9bf0', 'Serapan'));
+            gaugeSerapanTotalInstance.render();
+
+            gaugeRataProgramInstance = new ApexCharts(document.getElementById('chartGaugeRataProgram'), createBentoGaugeOptions('#fb7185', 'Rata-rata'));
+            gaugeRataProgramInstance.render();
+
+            gaugeSisaPaguInstance = new ApexCharts(document.getElementById('chartGaugeSisaPagu'), createBentoGaugeOptions('#fbbf24', 'Sisa Pagu'));
+            gaugeSisaPaguInstance.render();
         }
 
         function loadAnggaranRealtime(tahun = currentSelectedYear) {
@@ -566,8 +1156,10 @@
 
             document.getElementById('lblTahunHeader').textContent = tahun;
             document.getElementById('lblTahunSelected').textContent = tahun;
+            document.getElementById('lblTahunChartAnggaran').textContent = tahun;
             document.getElementById('lblTahunTabel').textContent = tahun;
             document.getElementById('badgeTahunTabel').textContent = "Tahun " + tahun;
+            document.getElementById('lblTopProgTahun').textContent = "TA " + tahun;
 
             document.querySelectorAll('.dropdown-menu-tahun .dropdown-item').forEach(item => {
                 item.classList.remove('active');
@@ -582,6 +1174,9 @@
         function updateDashboard() {
             let totPagu = 0, totRealisasi = 0;
             const donutSeries = [], donutLabels = [], areaSeries = [];
+            const programStats = [];
+            const monthlyTotalSum = Array(12).fill(0);
+
             const tbody = document.getElementById('tblBodyAnggaran');
             tbody.innerHTML = '';
 
@@ -590,13 +1185,26 @@
                 const realisasi = parseFloat(item.realisasi) || 0;
                 const sisa = pagu - realisasi;
                 const pct = pagu > 0 ? ((realisasi / pagu) * 100).toFixed(1) : '0.0';
+                const kodeLabel = item.id ? item.id.toUpperCase() : `Prog ${idx+1}`;
 
                 totPagu += pagu; totRealisasi += realisasi;
                 donutSeries.push(realisasi);
-                donutLabels.push(item.id ? item.id.toUpperCase() : `Prog ${idx+1}`);
+                donutLabels.push(kodeLabel);
+
+                programStats.push({
+                    kode: kodeLabel,
+                    nama: item.nama || kodeLabel,
+                    pagu: pagu,
+                    realisasi: realisasi,
+                    sisa: sisa,
+                    pct: parseFloat(pct)
+                });
 
                 if (item.monthlyNominal && Array.isArray(item.monthlyNominal)) {
-                    areaSeries.push({ name: item.id ? item.id.toUpperCase() : `Prog ${idx+1}`, data: item.monthlyNominal });
+                    areaSeries.push({ name: kodeLabel, data: item.monthlyNominal });
+                    item.monthlyNominal.forEach((mVal, mIdx) => {
+                        if (mIdx < 12) monthlyTotalSum[mIdx] += (parseFloat(mVal) || 0);
+                    });
                 }
 
                 tbody.innerHTML += `
@@ -615,11 +1223,102 @@
                     </tr>`;
             });
 
+            const totSisa = totPagu - totRealisasi;
+            const pctTotalNum = totPagu > 0 ? ((totRealisasi / totPagu) * 100) : 0;
+            const pctSisaNum = totPagu > 0 ? ((totSisa / totPagu) * 100) : 0;
+
+            // Update 4 Kartu KPI Utama (Sesuai Gambar)
             document.getElementById('lblTotalPagu').textContent = formatRupiah(totPagu);
             document.getElementById('lblTotalRealisasi').textContent = formatRupiah(totRealisasi);
-            document.getElementById('lblSisaAnggaran').textContent = formatRupiah(totPagu - totRealisasi);
-            document.getElementById('lblPersenRealisasi').textContent = (totPagu > 0 ? ((totRealisasi / totPagu) * 100).toFixed(1) : '0.0') + '%';
+            document.getElementById('lblSisaAnggaran').textContent = formatRupiah(totSisa);
+            document.getElementById('lblPersenRealisasi').textContent = pctTotalNum.toFixed(1) + '%';
 
+            // Update Hero Metrics di Panel Tengah Bento Grid
+            document.getElementById('lblHeroRealisasi').textContent = formatCompactRupiah(totRealisasi);
+            document.getElementById('badgeHeroSerapan').textContent = `${pctTotalNum.toFixed(1)}% ↑`;
+            document.getElementById('lblHeroSisa').textContent = formatCompactRupiah(totSisa);
+            document.getElementById('badgeHeroSisa').textContent = `${pctSisaNum.toFixed(1)}%`;
+
+            // Update Top 5 Realisasi Program Strip (No.1 - No.5)
+            const sortedPrograms = [...programStats].sort((a, b) => b.realisasi - a.realisasi).slice(0, 5);
+            const top5Container = document.getElementById('containerTop5Program');
+            if (top5Container) {
+                top5Container.innerHTML = sortedPrograms.map((p, i) => `
+                    <div class="col top5-item">
+                        <div class="rank-no">No.${i + 1}</div>
+                        <div class="rank-val">${formatCompactRupiah(p.realisasi)}</div>
+                        <div class="rank-month">${p.kode}</div>
+                    </div>
+                `).join('');
+            }
+
+            // Update Radial Concentric (Top-Left: 3 Program Pertama)
+            const p1Pct = programStats[0] ? Math.round(programStats[0].pct) : 0;
+            const p2Pct = programStats[1] ? Math.round(programStats[1].pct) : 0;
+            const p3Pct = programStats[2] ? Math.round(programStats[2].pct) : 0;
+            document.getElementById('lblPctProg1').textContent = `${p1Pct}%`;
+            document.getElementById('lblPctProg2').textContent = `${p2Pct}%`;
+            document.getElementById('lblPctProg3').textContent = `${p3Pct}%`;
+            if (radialProgramInstance) {
+                radialProgramInstance.updateSeries([p1Pct, p2Pct, p3Pct]);
+            }
+
+            // Update Radar Chart (Middle-Left: Pagu vs Realisasi dalam Juta)
+            if (radarProgramInstance && programStats.length > 0) {
+                radarProgramInstance.updateOptions({
+                    xaxis: {
+                        categories: programStats.map(p => p.kode.slice(0, 7)),
+                        labels: { style: { colors: Array(programStats.length).fill('#93c5fd'), fontSize: '9px' } }
+                    }
+                });
+                radarProgramInstance.updateSeries([
+                    { name: 'Pagu (Jt)', data: programStats.map(p => Math.round(p.pagu / 1000000)) },
+                    { name: 'Realisasi (Jt)', data: programStats.map(p => Math.round(p.realisasi / 1000000)) }
+                ]);
+            }
+
+            // Update Sampling Bar Chart (Bottom-Left: Serapan bulanan Jan-Jul dalam Juta)
+            if (barSamplingAnggaranInstance) {
+                const samplingJt = monthlyTotalSum.slice(0, 7).map(v => Math.round(v / 1000000));
+                barSamplingAnggaranInstance.updateSeries([
+                    { name: 'Akumulasi (Jt)', data: samplingJt }
+                ]);
+            }
+
+            // Update 3 Bottom Gauges
+            const avgProgramPct = programStats.length > 0
+                ? (programStats.reduce((acc, cur) => acc + cur.pct, 0) / programStats.length)
+                : 0;
+            if (gaugeSerapanTotalInstance) gaugeSerapanTotalInstance.updateSeries([Number(pctTotalNum.toFixed(1))]);
+            if (gaugeRataProgramInstance) gaugeRataProgramInstance.updateSeries([Number(avgProgramPct.toFixed(1))]);
+            if (gaugeSisaPaguInstance) gaugeSisaPaguInstance.updateSeries([Number(pctSisaNum.toFixed(1))]);
+
+            // Update Panel Serapan Tertinggi (Top-Right)
+            const topProg = sortedPrograms[0];
+            if (topProg) {
+                document.getElementById('lblTopProgKode').textContent = topProg.kode;
+                document.getElementById('lblTopProgNama').textContent = topProg.nama;
+                document.getElementById('lblTopProgNominal').textContent = formatRupiah(topProg.realisasi);
+                document.getElementById('lblTopProgPct').textContent = `Capaian Serapan: ${topProg.pct.toFixed(1)}%`;
+            }
+
+            // Update Horizontal Rank Bars (Bottom-Right)
+            const rankBarsEl = document.getElementById('containerRankBarsAnggaran');
+            if (rankBarsEl) {
+                rankBarsEl.innerHTML = programStats.map(p => `
+                    <div class="rank-bar-item">
+                        <div class="rank-bar-label">
+                            <span>${p.kode}</span>
+                            <span class="fw-bold text-white">${p.pct.toFixed(1)}%</span>
+                        </div>
+                        <div class="rank-bar-track">
+                            <div class="rank-bar-fill" style="width: ${Math.min(100, Math.round(p.pct))}%;"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Update Donut & Area Charts Utama
             donutChartInstance.updateOptions({ series: donutSeries, labels: donutLabels });
             updateDonutCenterText();
             if (areaSeries.length > 0) areaChartInstance.updateSeries(areaSeries);
