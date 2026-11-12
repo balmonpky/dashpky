@@ -20,8 +20,12 @@
         :root {
             --primary-navy: #0f4c81;
             --accent-blue: #1b75bc;
-            --bg-light: #f8fafc;
-            --card-shadow: 0 15px 35px rgba(15, 76, 129, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+            --bg-light: #071936;
+            --panel-bg: #0c2752;
+            --panel-bg-dark: #091f42;
+            --panel-border: #1d4ed8;
+            --cyan-glow: #38bdf8;
+            --card-shadow: 0 15px 35px rgba(4, 15, 36, 0.45);
             --sidebar-collapsed-width: 68px;
             --sidebar-expanded-width: 280px;
         }
@@ -30,11 +34,11 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
             background-image: 
-                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.08) 0px, transparent 60%);
+                radial-gradient(at 100% 0%, rgba(29, 155, 240, 0.16) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+                linear-gradient(180deg, #071936 0%, #0a2246 100%);
             background-attachment: fixed;
-            color: #334155;
+            color: #e2e8f0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -162,24 +166,25 @@
         .main-wrapper {
             margin-left: var(--sidebar-collapsed-width);
             flex-grow: 1;
-            padding: 2rem 2rem;
+            padding: 1.75rem 2rem;
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* BANNER GRADASI */
+        /* BANNER GRADASI (DIPERTAHANKAN) */
         .header-banner {
             background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 40%, #0284c7 100%);
             color: white;
-            border-radius: 24px;
-            padding: 2.2rem 2.5rem;
-            box-shadow: 0 20px 40px rgba(15, 76, 129, 0.22);
+            border-radius: 20px;
+            padding: 1.8rem 2.2rem;
+            box-shadow: 0 20px 40px rgba(8, 28, 66, 0.45);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             position: relative;
         }
 
         .banner-bg-circle {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
             pointer-events: none;
             z-index: 0;
@@ -227,70 +232,193 @@
             color: #ffffff;
         }
 
-        /* STAT CARDS */
-        .stat-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 1.25rem 1.4rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            height: 100%;
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-        .stat-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
-            border-color: #cbd5e1;
-        }
-        .stat-card-icon {
-            width: 44px;
-            height: 44px;
+        /* COMMAND CENTER DARK NAVY BENTO PANELS (SESUAI GAMBAR REFERENSI) */
+        .cc-grid-wrapper {
+            background: #081e40;
+            border: 1px solid #1e4b8f;
             border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 20px 50px rgba(3, 12, 30, 0.6);
+        }
+
+        .cc-panel {
+            background: linear-gradient(180deg, #0d2b59 0%, #0a2247 100%);
+            border: 1px solid #1d4ed8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            position: relative;
+            box-shadow: inset 0 0 24px rgba(29, 155, 240, 0.08);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .cc-panel:hover {
+            border-color: #38bdf8;
+            box-shadow: inset 0 0 28px rgba(56, 189, 248, 0.14);
+        }
+
+        .cc-panel-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.35rem;
-            color: white;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            justify-content: space-between;
         }
 
-        .grad-info { background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); }
-        .grad-primary { background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%); }
-        .grad-success { background: linear-gradient(135deg, #34d399 0%, #059669 100%); }
-        .grad-danger { background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); }
-        .grad-warning { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
-
-        .stat-card .title {
-            font-size: 0.75rem;
+        /* HERO KPI METRICS IN CENTER PANEL */
+        .hero-metric-val {
+            font-size: 2.15rem;
             font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-card .value {
-            font-size: 1.9rem;
-            font-weight: 800;
-            margin-top: 4px;
+            color: #dbeafe;
+            line-height: 1.05;
             letter-spacing: -0.5px;
         }
+        .pill-trend-up {
+            background: #2dd4bf;
+            color: #062825;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .pill-trend-coral {
+            background: #fb7185;
+            color: #2b0910;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
 
-        /* CHART CARD */
-        .chart-card-3d {
+        /* DOTS INDICATOR UNDER MAIN CHART */
+        .cc-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 2px 0 12px 0;
+        }
+        .cc-dots span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #335c99;
+        }
+        .cc-dots span.active {
+            width: 8px;
+            height: 8px;
+            background: #93c5fd;
+        }
+
+        /* TOP 5 RANKING STRIP (No.1 - No.5) */
+        .top5-strip {
+            border-top: 1px solid rgba(56, 189, 248, 0.15);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 12px 6px;
+            margin-bottom: 10px;
+        }
+        .top5-item .rank-no {
+            font-size: 0.72rem;
+            color: #7dd3fc;
+            font-weight: 600;
+        }
+        .top5-item .rank-val {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #f0f9ff;
+            line-height: 1.2;
+        }
+        .top5-item .rank-month {
+            font-size: 0.72rem;
+            color: #93c5fd;
+        }
+
+        /* GAUGE CAPTION STYLING */
+        .gauge-caption-blue {
+            font-size: 0.72rem;
+            color: #38bdf8;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-coral {
+            font-size: 0.72rem;
+            color: #fb7185;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .gauge-caption-amber {
+            font-size: 0.72rem;
+            color: #fbbf24;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        /* TOP-RIGHT LAST SESSION CARD */
+        .last-session-highlight {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .last-session-bar {
+            width: 4px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #38bdf8 0%, #1d4ed8 100%);
+            flex-shrink: 0;
+        }
+
+        /* BOTTOM-RIGHT HORIZONTAL RANK BARS */
+        .rank-bar-item {
+            margin-bottom: 12px;
+        }
+        .rank-bar-item:last-child {
+            margin-bottom: 0;
+        }
+        .rank-bar-label {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4px;
+        }
+        .rank-bar-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(15, 42, 86, 0.85);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .rank-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        /* RADIAL LEGEND ITEMS */
+        .radial-legend-item {
+            margin-bottom: 8px;
+        }
+        .radial-legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* TABEL PELAKSANAAN UNAR (DIPERTAHANKAN) */
+        .table-card-wrapper {
             background: #ffffff;
-            border-radius: 24px;
-            padding: 1.8rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
+            color: #334155;
+            border-radius: 18px;
+            border: 1px solid #1d4ed8;
+            box-shadow: 0 18px 40px rgba(4, 15, 36, 0.35);
         }
-        .chart-card-3d:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 22px 45px rgba(15, 76, 129, 0.14);
-        }
-
-        /* TABEL */
         .table-custom {
             border-collapse: separate;
             border-spacing: 0;
@@ -315,7 +443,7 @@
         }
 
         @media (max-width: 768px) {
-            .main-wrapper { margin-left: 0; padding: 1.5rem 1rem; }
+            .main-wrapper { margin-left: 0; padding: 1.25rem 0.85rem; }
             .sidebar-autohide { display: none; }
         }
     </style>
@@ -404,7 +532,7 @@
     <main class="main-wrapper">
         <div class="container-fluid">
             
-            <!-- HEADER BANNER DENGAN DROPDOWN TAHUN -->
+            <!-- HEADER BANNER DENGAN DROPDOWN TAHUN (DIPERTAHANKAN) -->
             <div class="header-banner mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div class="banner-bg-circle"></div>
                 <div style="z-index: 1;">
@@ -431,73 +559,249 @@
                 </div>
             </div>
 
-            <!-- REKAP TOP CARDS STATISTIK -->
-            <div class="row row-cols-1 row-cols-md-5 g-3 mb-4">
-                <div class="col">
-                    <div class="stat-card" style="border-top: 4px solid #0284c7;">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="stat-card-icon grad-info"><i class="bi bi-journal-text"></i></div>
-                            <div class="title text-info">Total Pendaftar</div>
-                        </div>
-                        <div class="value text-dark" id="lblTotalPendaftar">0</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="stat-card" style="border-top: 4px solid #2563eb;">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="stat-card-icon grad-primary"><i class="bi bi-people"></i></div>
-                            <div class="title text-primary">Peserta Ujian</div>
-                        </div>
-                        <div class="value text-primary" id="lblTotalPeserta">0</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="stat-card" style="border-top: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="stat-card-icon grad-success"><i class="bi bi-check-circle"></i></div>
-                            <div class="title text-success">Lulus Ujian</div>
-                        </div>
-                        <div class="value text-success" id="lblTotalLulus">0</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="stat-card" style="border-top: 4px solid #ef4444;">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="stat-card-icon grad-danger"><i class="bi bi-x-circle"></i></div>
-                            <div class="title text-danger">Tidak Lulus</div>
-                        </div>
-                        <div class="value text-danger" id="lblTotalTidakLulus">0</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="stat-card" style="border-top: 4px solid #f59e0b;">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="stat-card-icon grad-warning"><i class="bi bi-exclamation-triangle"></i></div>
-                            <div class="title text-warning">Tidak Lulus Adm</div>
-                        </div>
-                        <div class="value text-warning" id="lblTotalTidakLulusAdm">0</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GRAFIK TREN 3D UNAR -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="chart-card-3d">
-                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-                            <div>
-                                <h5 class="fw-bold text-dark m-0"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Grafik Tren Pelaksanaan UNAR <span id="lblTahunChart">2026</span></h5>
-                                <small class="text-muted">Visualisasi Tren Pendaftar, Peserta Ujian, dan Tingkat Kelulusan Per Bulan</small>
+            <!-- DASHBOARD VISUALIZATION BENTO GRID (MENYERUPAI GAMBAR REFERENSI) -->
+            <div class="cc-grid-wrapper mb-4">
+                <div class="row g-2 align-items-stretch">
+                    
+                    <!-- KOLOM KIRI (3/12): 3 PANEL GRAFIK -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 1: DISTRIBUSI TINGKAT UJIAN (RADIAL CONCENTRIC ARCS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Distribusi Tingkat UNAR</span>
                             </div>
-                            <span class="badge bg-light text-primary border fw-semibold px-3 py-2"><i class="bi bi-layers me-1"></i>3D Spline Gradient</span>
+                            <div class="row align-items-center g-0">
+                                <div class="col-6">
+                                    <div id="chartRadialTingkat" style="min-height: 155px;"></div>
+                                </div>
+                                <div class="col-6 ps-1">
+                                    <div class="text-white fw-semibold mb-2" style="font-size: 0.72rem; line-height: 1.25;">
+                                        Hasil Klasifikasi Tingkat
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-info" style="font-size: 0.78rem; min-width: 34px;" id="lblPctSiaga">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Tingkat Siaga</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold" style="color: #2dd4bf; font-size: 0.78rem; min-width: 34px;" id="lblPctPenggalang">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Penggalang</span>
+                                    </div>
+                                    <div class="radial-legend-item d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-warning" style="font-size: 0.78rem; min-width: 34px;" id="lblPctPenegak">0%</span>
+                                        <span class="text-light opacity-75" style="font-size: 0.72rem;">Penegak</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div id="chart3DUnarTrend" style="min-height: 360px;"></div>
+
+                        <!-- PANEL 2: SEBARAN KATEGORI & HASIL (RADAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Sebaran Kategori</span>
+                            </div>
+                            <div id="chartRadarKategori" style="min-height: 185px;"></div>
+                        </div>
+
+                        <!-- PANEL 3: VOLUME PESERTA BULANAN (VERTICAL BAR CHART) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Sampling Peserta Bulanan</span>
+                            </div>
+                            <div id="chartBarSampling" style="min-height: 135px;"></div>
+                        </div>
+
                     </div>
+
+                    <!-- KOLOM TENGAH (6/12): PANEL HERO DATA EXCHANGE / TREN UNAR -->
+                    <div class="col-lg-6 d-flex flex-column">
+                        <div class="cc-panel h-100 d-flex flex-column justify-content-between">
+                            
+                            <!-- HEADER & TOP DUAL METRICS -->
+                            <div>
+                                <div class="cc-panel-title mb-2">
+                                    <span>Rekapitulasi & Tren UNAR <span id="lblTahunChart" class="text-info">2026</span></span>
+                                    <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25" style="font-size: 0.68rem;">LIVE DATA</span>
+                                </div>
+
+                                <div class="row g-3 px-2 mb-1">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="hero-metric-val" id="lblTotalPendaftar">0</div>
+                                            <span class="pill-trend-up" id="badgeTrendPendaftar">100% ↑</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #2dd4bf;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #2dd4bf; display: inline-block;"></span>
+                                            <span>Total Pendaftar</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="hero-metric-val" id="lblTotalPeserta">0</div>
+                                            <span class="pill-trend-coral" id="badgeTrendPeserta">0% ↑</span>
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-2" style="font-size: 0.76rem; color: #fb7185;">
+                                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #fb7185; display: inline-block;"></span>
+                                            <span>Peserta Ujian</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MAIN DUAL-WAVE SMOOTH AREA CHART -->
+                                <div id="chart3DUnarTrend" style="min-height: 205px;"></div>
+
+                                <!-- PAGINATION DOTS -->
+                                <div class="cc-dots">
+                                    <span class="active"></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- MIDDLE-BOTTOM: TOP 5 BULAN PESERTA TERBANYAK (No.1 - No.5) -->
+                            <div class="top5-strip">
+                                <div class="row row-cols-5 g-2 text-center" id="containerTop5Bulan">
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.1</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.2</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.3</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.4</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                    <div class="col top5-item">
+                                        <div class="rank-no">No.5</div>
+                                        <div class="rank-val">0</div>
+                                        <div class="rank-month">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM: 3 CIRCULAR DONUT PROGRESS GAUGES -->
+                            <div class="row g-2 text-center pt-1">
+                                <!-- GAUGE 1: LULUS UJIAN -->
+                                <div class="col-4">
+                                    <div id="chartGaugeLulus" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-blue mt-1">
+                                        <div>Kelulusan Ujian UNAR</div>
+                                        <div><strong id="lblTotalLulus">0</strong> Peserta Lulus</div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 2: TIDAK LULUS -->
+                                <div class="col-4">
+                                    <div id="chartGaugeTidakLulus" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-coral mt-1">
+                                        <div>Peserta Tidak Lulus</div>
+                                        <div><strong id="lblTotalTidakLulus">0</strong> Peserta</div>
+                                    </div>
+                                </div>
+                                <!-- GAUGE 3: TIDAK LULUS ADM -->
+                                <div class="col-4">
+                                    <div id="chartGaugeTidakLulusAdm" style="min-height: 125px;"></div>
+                                    <div class="gauge-caption-amber mt-1">
+                                        <div>Tidak Lulus Administrasi</div>
+                                        <div><strong id="lblTotalTidakLulusAdm">0</strong> Pendaftar</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- KOLOM KANAN (3/12): 3 PANEL RINGKASAN -->
+                    <div class="col-lg-3 d-flex flex-column gap-2">
+                        
+                        <!-- PANEL 5: PELAKSANAAN TERAKHIR (LAST SESSION) -->
+                        <div class="cc-panel">
+                            <div class="cc-panel-title mb-1">
+                                <span>Terakhir</span>
+                                <span class="text-info fw-semibold" style="font-size: 0.74rem;" id="lblLastTanggal">2026-09</span>
+                            </div>
+                            <div class="last-session-highlight">
+                                <div class="last-session-bar"></div>
+                                <div>
+                                    <div class="text-light opacity-75" style="font-size: 0.72rem;" id="lblLastKategori">CAT Reguler</div>
+                                    <div class="fw-bold text-info" style="font-size: 0.92rem; line-height: 1.25;" id="lblLastLokasi">Gedung Balmon</div>
+                                    <div class="fw-semibold text-primary-emphasis" style="color: #60a5fa !important; font-size: 0.85rem;" id="lblLastBulan">September</div>
+                                    <div class="text-light opacity-50 mt-1" style="font-size: 0.7rem;" id="lblLastStatus">Status: Selesai</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 6: STATUS KELULUSAN (DONUT RING) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title">
+                                <span>Status Kelulusan</span>
+                            </div>
+                            <div id="chartDonutStatus" style="min-height: 175px;"></div>
+                        </div>
+
+                        <!-- PANEL 7: PERINGKAT TINGKAT AMATIR (HORIZONTAL RANK BARS) -->
+                        <div class="cc-panel flex-fill">
+                            <div class="cc-panel-title mb-2">
+                                <span>Peringkat Tingkat</span>
+                            </div>
+                            
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Tingkat Siaga</span>
+                                    <span class="fw-bold text-white" id="lblRankSiaga">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankSiaga" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Tingkat Penggalang</span>
+                                    <span class="fw-bold text-white" id="lblRankPenggalang">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankPenggalang" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Tingkat Penegak</span>
+                                    <span class="fw-bold text-white" id="lblRankPenegak">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankPenegak" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rank-bar-item">
+                                <div class="rank-bar-label">
+                                    <span>Lulus Ujian</span>
+                                    <span class="fw-bold text-white" id="lblRankLulus">0</span>
+                                </div>
+                                <div class="rank-bar-track">
+                                    <div class="rank-bar-fill" id="barRankLulus" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
-            <!-- TABEL RINCIAN UNAR -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <!-- TABEL RINCIAN UNAR (DIPERTAHANKAN) -->
+            <div class="table-card-wrapper p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark m-0"><i class="bi bi-table me-2 text-primary"></i>Tabel Pelaksanaan UNAR Per Bulan (<span id="lblTahunTabel">2026</span>)</h5>
                     <span class="badge bg-primary px-3 py-2 fw-semibold" id="badgeTahunTabel">Tahun 2026</span>
@@ -592,10 +896,18 @@
         }
 
         let chart3DUnarInstance = null;
+        let chartRadialTingkatInstance = null;
+        let chartRadarKategoriInstance = null;
+        let chartBarSamplingInstance = null;
+        let chartGaugeLulusInstance = null;
+        let chartGaugeTidakLulusInstance = null;
+        let chartGaugeTidakLulusAdmInstance = null;
+        let chartDonutStatusInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             unarMonths = getDefaultMonthsForYear(currentSelectedYear);
             init3DChart();
+            initSecondaryCharts();
             loadUnarDataRealtime(currentSelectedYear);
         });
 
@@ -603,35 +915,192 @@
             const options = {
                 series: [
                     { name: "Pendaftar", data: [] },
-                    { name: "Peserta Ujian", data: [] },
-                    { name: "Lulus Ujian", data: [] }
+                    { name: "Peserta Ujian", data: [] }
                 ],
                 chart: {
-                    height: 360,
+                    height: 205,
                     type: 'area',
                     toolbar: { show: false },
-                    dropShadow: { enabled: true, color: '#0f4c81', top: 12, left: 0, blur: 8, opacity: 0.22 }
+                    background: 'transparent',
+                    dropShadow: { enabled: true, color: '#020617', top: 8, left: 0, blur: 6, opacity: 0.35 }
                 },
-                colors: ['#0284c7', '#2563eb', '#10b981'],
-                stroke: { curve: 'smooth', width: 3.5 },
+                colors: ['#1d9bf0', '#f97316'],
+                stroke: { curve: 'smooth', width: 3 },
                 fill: {
                     type: 'gradient',
                     gradient: {
                         shadeIntensity: 1,
                         opacityFrom: 0.45,
                         opacityTo: 0.05,
-                        stops: [0, 90, 100]
+                        stops: [0, 95, 100]
                     }
                 },
-                xaxis: { categories: bulanList },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                xaxis: {
+                    categories: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+                    labels: { style: { colors: '#7dd3fc', fontSize: '11px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: { style: { colors: '#7dd3fc', fontSize: '11px' } }
+                },
+                grid: { borderColor: 'rgba(56, 189, 248, 0.14)', strokeDashArray: 0 },
                 dataLabels: { enabled: false },
-                tooltip: { enabled: true },
-                legend: { position: 'top', horizontalAlign: 'right', fontWeight: 600 }
+                tooltip: { theme: 'dark' },
+                legend: { show: false }
             };
 
             chart3DUnarInstance = new ApexCharts(document.getElementById('chart3DUnarTrend'), options);
             chart3DUnarInstance.render();
+        }
+
+        function createGaugeOptions(colorHex, labelText) {
+            return {
+                series: [0],
+                chart: {
+                    height: 130,
+                    type: 'radialBar',
+                    sparkline: { enabled: true }
+                },
+                colors: [colorHex],
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: {
+                            size: '66%',
+                            background: 'transparent'
+                        },
+                        track: {
+                            background: '#15386e',
+                            strokeWidth: '100%'
+                        },
+                        dataLabels: {
+                            name: {
+                                show: true,
+                                offsetY: 16,
+                                color: '#e2e8f0',
+                                fontSize: '10px',
+                                fontWeight: 500
+                            },
+                            value: {
+                                show: true,
+                                offsetY: -8,
+                                color: colorHex,
+                                fontSize: '20px',
+                                fontWeight: 800,
+                                formatter: function(val) { return Math.round(val) + '%'; }
+                            }
+                        }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: [labelText]
+            };
+        }
+
+        function initSecondaryCharts() {
+            // 1. Radial Bar Concentric (Top-Left)
+            chartRadialTingkatInstance = new ApexCharts(document.getElementById('chartRadialTingkat'), {
+                series: [0, 0, 0],
+                chart: { height: 155, type: 'radialBar', sparkline: { enabled: true } },
+                colors: ['#1d9bf0', '#2dd4bf', '#fbbf24'],
+                plotOptions: {
+                    radialBar: {
+                        hollow: { size: '30%' },
+                        track: { background: '#14366b', margin: 4 },
+                        dataLabels: { show: false }
+                    }
+                },
+                stroke: { lineCap: 'round' },
+                labels: ['Siaga', 'Penggalang', 'Penegak']
+            });
+            chartRadialTingkatInstance.render();
+
+            // 2. Radar Chart (Middle-Left)
+            chartRadarKategoriInstance = new ApexCharts(document.getElementById('chartRadarKategori'), {
+                series: [
+                    { name: 'Peserta', data: [0, 0, 0, 0, 0] },
+                    { name: 'Lulus', data: [0, 0, 0, 0, 0] }
+                ],
+                chart: { height: 185, type: 'radar', toolbar: { show: false }, sparkline: { enabled: false } },
+                colors: ['#1d9bf0', '#2dd4bf'],
+                fill: { opacity: 0.45 },
+                stroke: { width: 2 },
+                markers: { size: 0 },
+                xaxis: {
+                    categories: ['Siaga', 'Penggalang', 'Penegak', 'Reguler', 'Non-Reg'],
+                    labels: { style: { colors: ['#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd', '#93c5fd'], fontSize: '9px' } }
+                },
+                yaxis: { show: false },
+                plotOptions: {
+                    radar: {
+                        polygons: {
+                            strokeColors: 'rgba(147, 197, 253, 0.25)',
+                            connectorColors: 'rgba(147, 197, 253, 0.25)'
+                        }
+                    }
+                },
+                legend: { show: false },
+                tooltip: { theme: 'dark' }
+            });
+            chartRadarKategoriInstance.render();
+
+            // 3. Sampling Bar Chart (Bottom-Left)
+            chartBarSamplingInstance = new ApexCharts(document.getElementById('chartBarSampling'), {
+                series: [{ name: 'Peserta', data: [] }],
+                chart: { height: 135, type: 'bar', toolbar: { show: false } },
+                colors: ['#1d9bf0'],
+                plotOptions: {
+                    bar: { borderRadius: 4, columnWidth: '48%' }
+                },
+                dataLabels: { enabled: false },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
+                    labels: { rotate: -30, style: { colors: '#7dd3fc', fontSize: '9px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: { style: { colors: '#7dd3fc', fontSize: '9px' } }
+                },
+                grid: { borderColor: 'rgba(56, 189, 248, 0.12)' },
+                tooltip: { theme: 'dark' }
+            });
+            chartBarSamplingInstance.render();
+
+            // 4. Three Gauges (Center Bottom)
+            chartGaugeLulusInstance = new ApexCharts(document.getElementById('chartGaugeLulus'), createGaugeOptions('#1d9bf0', 'Lulus'));
+            chartGaugeLulusInstance.render();
+
+            chartGaugeTidakLulusInstance = new ApexCharts(document.getElementById('chartGaugeTidakLulus'), createGaugeOptions('#fb7185', 'Tidak Lulus'));
+            chartGaugeTidakLulusInstance.render();
+
+            chartGaugeTidakLulusAdmInstance = new ApexCharts(document.getElementById('chartGaugeTidakLulusAdm'), createGaugeOptions('#fbbf24', 'Tdk Lulus Adm'));
+            chartGaugeTidakLulusAdmInstance.render();
+
+            // 5. Donut Status (Middle-Right)
+            chartDonutStatusInstance = new ApexCharts(document.getElementById('chartDonutStatus'), {
+                series: [0, 0, 0],
+                chart: { height: 175, type: 'donut' },
+                labels: ['Lulus', 'Tidak Lulus', 'Tdk Lulus Adm'],
+                colors: ['#1d9bf0', '#2dd4bf', '#6366f1'],
+                stroke: { width: 0 },
+                plotOptions: {
+                    pie: {
+                        donut: { size: '62%' }
+                    }
+                },
+                dataLabels: { enabled: false },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '10px',
+                    labels: { colors: '#cbd5e1' },
+                    markers: { width: 8, height: 8 }
+                },
+                tooltip: { theme: 'dark' }
+            });
+            chartDonutStatusInstance.render();
         }
 
         function loadUnarDataRealtime(tahun = currentSelectedYear) {
@@ -690,9 +1159,17 @@
             let totalTidakLulus = 0;
             let totalTidakLulusAdm = 0;
 
+            let totalSiaga = 0;
+            let totalPenggalang = 0;
+            let totalPenegak = 0;
+            let totalReguler = 0;
+            let totalNonReguler = 0;
+
             const arrPendaftar = [];
             const arrPeserta = [];
             const arrLulus = [];
+            const monthlySummary = [];
+            let lastCompletedMonth = null;
 
             const tbody = document.getElementById('tblBodyUnar');
             tbody.innerHTML = '';
@@ -713,6 +1190,26 @@
                 totalLulus += lulusBulanIni;
                 totalTidakLulus += tidakLulus;
                 totalTidakLulusAdm += tidakLulusAdm;
+
+                totalSiaga += siaga;
+                totalPenggalang += penggalang;
+                totalPenegak += penegak;
+
+                if ((m.kategori || '').toLowerCase().includes('non')) {
+                    totalNonReguler += peserta;
+                } else {
+                    totalReguler += peserta;
+                }
+
+                if (m.status === 'Selesai' || peserta > 0) {
+                    lastCompletedMonth = { ...m, peserta, idx: idx + 1 };
+                }
+
+                monthlySummary.push({
+                    bulan: m.bulan,
+                    peserta: peserta,
+                    pendaftar: pendaftar
+                });
 
                 arrPendaftar.push(pendaftar);
                 arrPeserta.push(peserta);
@@ -742,19 +1239,111 @@
                 `;
             });
 
+            // Update Nilai Utama
             document.getElementById('lblTotalPendaftar').textContent = totalPendaftar;
             document.getElementById('lblTotalPeserta').textContent = totalPeserta;
             document.getElementById('lblTotalLulus').textContent = totalLulus;
             document.getElementById('lblTotalTidakLulus').textContent = totalTidakLulus;
             document.getElementById('lblTotalTidakLulusAdm').textContent = totalTidakLulusAdm;
 
+            // Update Pill Badges di Hero Panel
+            const pctPeserta = totalPendaftar > 0 ? Math.round((totalPeserta / totalPendaftar) * 100) : 0;
+            const pctLulus = totalPeserta > 0 ? Math.round((totalLulus / totalPeserta) * 100) : 0;
+            const pctTidakLulus = totalPeserta > 0 ? Math.round((totalTidakLulus / totalPeserta) * 100) : 0;
+            const pctTidakLulusAdm = totalPendaftar > 0 ? Math.round((totalTidakLulusAdm / totalPendaftar) * 100) : 0;
+
+            document.getElementById('badgeTrendPendaftar').textContent = `${pctPeserta}% ↑`;
+            document.getElementById('badgeTrendPeserta').textContent = `${pctLulus}% ↑`;
+
+            // Update Top 5 Ranking Strip (No.1 - No.5)
+            const sortedMonths = [...monthlySummary].sort((a, b) => b.peserta - a.peserta).slice(0, 5);
+            const top5Container = document.getElementById('containerTop5Bulan');
+            if (top5Container) {
+                top5Container.innerHTML = sortedMonths.map((item, i) => `
+                    <div class="col top5-item">
+                        <div class="rank-no">No.${i + 1}</div>
+                        <div class="rank-val">${item.peserta}</div>
+                        <div class="rank-month">${item.bulan}</div>
+                    </div>
+                `).join('');
+            }
+
+            // Update Radial Arcs & Legend (Top-Left)
+            const pctSiaga = totalPeserta > 0 ? Math.round((totalSiaga / totalPeserta) * 100) : 0;
+            const pctPenggalang = totalPeserta > 0 ? Math.round((totalPenggalang / totalPeserta) * 100) : 0;
+            const pctPenegak = totalPeserta > 0 ? Math.round((totalPenegak / totalPeserta) * 100) : 0;
+
+            document.getElementById('lblPctSiaga').textContent = `${pctSiaga}%`;
+            document.getElementById('lblPctPenggalang').textContent = `${pctPenggalang}%`;
+            document.getElementById('lblPctPenegak').textContent = `${pctPenegak}%`;
+
+            if (chartRadialTingkatInstance) {
+                chartRadialTingkatInstance.updateSeries([pctSiaga, pctPenggalang, pctPenegak]);
+            }
+
+            // Update Radar Chart (Middle-Left)
+            if (chartRadarKategoriInstance) {
+                chartRadarKategoriInstance.updateSeries([
+                    { name: 'Peserta', data: [totalSiaga, totalPenggalang, totalPenegak, totalReguler, totalNonReguler] },
+                    { name: 'Lulus', data: [
+                        Math.round(totalSiaga * (pctLulus / 100)),
+                        Math.round(totalPenggalang * (pctLulus / 100)),
+                        Math.round(totalPenegak * (pctLulus / 100)),
+                        Math.round(totalReguler * (pctLulus / 100)),
+                        Math.round(totalNonReguler * (pctLulus / 100))
+                    ] }
+                ]);
+            }
+
+            // Update Sampling Bar Chart (Bottom-Left: Jan - Jul)
+            if (chartBarSamplingInstance) {
+                chartBarSamplingInstance.updateSeries([
+                    { name: 'Peserta', data: arrPeserta.slice(0, 7) }
+                ]);
+            }
+
+            // Update Main Wave Chart (Center)
             if (chart3DUnarInstance) {
                 chart3DUnarInstance.updateSeries([
                     { name: "Pendaftar", data: arrPendaftar },
-                    { name: "Peserta Ujian", data: arrPeserta },
-                    { name: "Lulus Ujian", data: arrLulus }
+                    { name: "Peserta Ujian", data: arrPeserta }
                 ]);
             }
+
+            // Update Three Bottom Gauges (Center Bottom)
+            if (chartGaugeLulusInstance) chartGaugeLulusInstance.updateSeries([pctLulus]);
+            if (chartGaugeTidakLulusInstance) chartGaugeTidakLulusInstance.updateSeries([pctTidakLulus]);
+            if (chartGaugeTidakLulusAdmInstance) chartGaugeTidakLulusAdmInstance.updateSeries([pctTidakLulusAdm]);
+
+            // Update Top-Right Last Session Card
+            const activeSession = lastCompletedMonth || unarMonths[0];
+            if (activeSession) {
+                const blnPad = String(activeSession.id || 1).padStart(2, '0');
+                document.getElementById('lblLastTanggal').textContent = `${currentSelectedYear}-${blnPad}`;
+                document.getElementById('lblLastKategori').textContent = activeSession.kategori || 'CAT Reguler';
+                document.getElementById('lblLastLokasi').textContent = activeSession.lokasi || 'Gedung Balmon';
+                document.getElementById('lblLastBulan').textContent = `${activeSession.bulan} (${activeSession.tgl || '-'})`;
+                document.getElementById('lblLastStatus').textContent = `Status: ${activeSession.status || 'Selesai'}`;
+            }
+
+            // Update Middle-Right Donut Status
+            if (chartDonutStatusInstance) {
+                chartDonutStatusInstance.updateSeries([totalLulus, totalTidakLulus, totalTidakLulusAdm]);
+            }
+
+            // Update Bottom-Right Horizontal Rank Bars
+            const maxRankVal = Math.max(totalSiaga, totalPenggalang, totalPenegak, totalLulus, 1);
+            document.getElementById('lblRankSiaga').textContent = totalSiaga;
+            document.getElementById('barRankSiaga').style.width = `${Math.round((totalSiaga / maxRankVal) * 100)}%`;
+
+            document.getElementById('lblRankPenggalang').textContent = totalPenggalang;
+            document.getElementById('barRankPenggalang').style.width = `${Math.round((totalPenggalang / maxRankVal) * 100)}%`;
+
+            document.getElementById('lblRankPenegak').textContent = totalPenegak;
+            document.getElementById('barRankPenegak').style.width = `${Math.round((totalPenegak / maxRankVal) * 100)}%`;
+
+            document.getElementById('lblRankLulus').textContent = totalLulus;
+            document.getElementById('barRankLulus').style.width = `${Math.round((totalLulus / maxRankVal) * 100)}%`;
         }
     </script>
 </body>
