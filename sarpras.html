@@ -512,7 +512,7 @@
                         <div class="metric-box-sub mt-2 mb-0 d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted d-block fw-semibold" style="font-size:0.7rem;">TOTAL SURAT PENAGIHAN</small>
-                                <strong class="fs-6 text-primary" id="lblTotalBhpSurat">158 Surat SPP</strong>
+                                <strong class="fs-6 text-primary" id="lblTotalBhpSurat">29 Surat SPP</strong>
                             </div>
                             <span class="badge bg-primary"><i class="bi bi-shield-check"></i> 100% Aktif</span>
                         </div>
@@ -876,17 +876,21 @@
                                 <div class="card p-4 mb-3 border-0 shadow-sm bg-white" style="border-radius: 16px;">
                                     <h6 class="fw-bold text-primary mb-3"><i class="bi bi-receipt me-2"></i>Ringkasan Tagihan SPP BHP Frekuensi</h6>
                                     <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="fw-bold text-secondary small mb-1">Annual / Renewal</label>
-                                            <input type="number" id="inp_bhp_annual" class="form-control form-control-sm shadow-sm" value="81" min="0" required>
+                                        <div class="col-md-3 col-6">
+                                            <label class="fw-bold text-secondary small mb-1">Annual</label>
+                                            <input type="number" id="inp_bhp_annual" class="form-control form-control-sm shadow-sm" value="16" min="0" required>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3 col-6">
+                                            <label class="fw-bold text-secondary small mb-1">Renewal</label>
+                                            <input type="number" id="inp_bhp_renewal" class="form-control form-control-sm shadow-sm" value="2" min="0" required>
+                                        </div>
+                                        <div class="col-md-3 col-6">
                                             <label class="fw-bold text-secondary small mb-1">New (Baru)</label>
                                             <input type="number" id="inp_bhp_new" class="form-control form-control-sm shadow-sm" value="0" min="0" required>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3 col-6">
                                             <label class="fw-bold text-secondary small mb-1">Reminder (SP)</label>
-                                            <input type="number" id="inp_bhp_reminder" class="form-control form-control-sm shadow-sm" value="77" min="0" required>
+                                            <input type="number" id="inp_bhp_reminder" class="form-control form-control-sm shadow-sm" value="11" min="0" required>
                                         </div>
                                     </div>
                                 </div>
@@ -1123,10 +1127,10 @@
 
             // 3. CHART DONUT BHP
             const optionsDonutBhp = {
-                series: [81, 0, 77],
-                labels: ['Annual/Renewal', 'New Tagihan', 'Reminder (SP)'],
+                series: [16, 2, 0, 11],
+                labels: ['Annual', 'Renewal', 'New Tagihan', 'Reminder (SP)'],
                 chart: { type: 'donut', height: 220 },
-                colors: ['#0f4c81', '#38bdf8', '#ef4444'],
+                colors: ['#0f4c81', '#8b5cf6', '#38bdf8', '#ef4444'],
                 legend: { position: 'bottom', fontSize: '11px' },
                 dataLabels: { enabled: false }
             };
@@ -1659,31 +1663,88 @@
                     const workbook = XLSX.read(data, { type: 'array', cellDates: true });
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+                    const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+
+                    if (!jsonDataRaw || jsonDataRaw.length < 2) {
+                        Swal.fire('Error', 'File Excel kosong atau tidak memiliki baris data.', 'error');
+                        return;
+                    }
+
+                    const formatTanggalBhp = (val) => {
+                        if (!val) return '-';
+                        const namaBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                        if (val instanceof Date && !isNaN(val.getTime())) {
+                            const dd = String(val.getDate()).padStart(2, '0');
+                            const mmm = namaBulan[val.getMonth()];
+                            const yyyy = val.getFullYear();
+                            return `${dd} ${mmm} ${yyyy}`;
+                        }
+                        const str = String(val).trim();
+                        const parsedDate = new Date(str);
+                        if (!isNaN(parsedDate.getTime()) && /\d{4}|\d{1,2}\/\d{1,2}/.test(str)) {
+                            const dd = String(parsedDate.getDate()).padStart(2, '0');
+                            const mmm = namaBulan[parsedDate.getMonth()];
+                            const yyyy = parsedDate.getFullYear();
+                            return `${dd} ${mmm} ${yyyy}`;
+                        }
+                        return str;
+                    };
+
+                    // Deteksi indeks kolom berdasarkan header baris pertama (default sesuai format Laporan Penanganan Piutang)
+                    const headerRow = (jsonDataRaw[0] || []).map(h => h ? String(h).trim().toUpperCase() : '');
+                    const findCol = (keywords, fallbackIdx) => {
+                        const idx = headerRow.findIndex(h => keywords.some(k => h === k || h.includes(k)));
+                        return idx !== -1 ? idx : fallbackIdx;
+                    };
+
+                    const idxWajibBayar = findCol(['NAMA PEMEGANG IZIN', 'WAJIB BAYAR', 'PERUSAHAAN'], 4);
+                    const idxNoSpp      = findCol(['NO. INVOICE', 'NO INVOICE', 'NOMOR SPP', 'NO SPP'], 2);
+                    const idxKategori   = findCol(['TIPE INVOICE', 'KATEGORI'], 12);
+                    const idxNominal    = findCol(['NILAI INVOICE', 'NOMINAL'], 8);
+                    const idxJatuhTempo = findCol(['TGL JATUH TEMPO', 'JATUH TEMPO'], 11);
+                    const idxStatus     = findCol(['STATUS INVOICE', 'STATUS'], 9);
 
                     const parsedBhpList = [];
-                    let annualCount = 0, newCount = 0, reminderCount = 0;
+                    let annualCount = 0, renewalCount = 0, newCount = 0, reminderCount = 0;
 
-                    jsonDataRaw.forEach((row) => {
-                        if (row && row.length >= 2 && row[0]) {
-                            const col0 = String(row[0]).toLowerCase();
-                            if (col0.includes('no') || col0.includes('wajib bayar') || col0.includes('nama')) return;
+                    jsonDataRaw.forEach((row, rowIndex) => {
+                        if (rowIndex === 0 || !row || row.length < 3) return;
 
-                            const kat = row[3] ? String(row[3]).trim() : 'Annual/Renewal';
-                            const katLower = kat.toLowerCase();
-                            if (katLower.includes('new') || katLower.includes('baru')) newCount++;
-                            else if (katLower.includes('reminder') || katLower.includes('peringatan')) reminderCount++;
-                            else annualCount++;
+                        const rawWajibBayar = row[idxWajibBayar];
+                        const rawNoSpp = row[idxNoSpp];
+                        if (!rawWajibBayar && !rawNoSpp) return;
 
-                            parsedBhpList.push({
-                                wajibBayar: row[1] ? String(row[1]).trim() : (row[0] ? String(row[0]).trim() : ''),
-                                noSpp: row[2] ? String(row[2]).trim() : '',
-                                kategori: kat,
-                                nominal: row[4] ? parseFloat(String(row[4]).replace(/[^0-9.]/g, '')) || 0 : 0,
-                                tglJatuhTempo: row[5] ? String(row[5]).trim() : '',
-                                status: row[6] ? String(row[6]).trim() : 'Lunas'
-                            });
+                        const wajibBayar = rawWajibBayar ? String(rawWajibBayar).trim() : '-';
+                        const noSpp = rawNoSpp ? String(rawNoSpp).trim() : '-';
+                        const kat = row[idxKategori] ? String(row[idxKategori]).trim() : 'ANNUAL';
+                        const katUpper = kat.toUpperCase();
+
+                        if (katUpper.includes('RENEWAL') || katUpper.includes('PERPANJANGAN')) {
+                            renewalCount++;
+                        } else if (katUpper.includes('NEW') || katUpper.includes('BARU')) {
+                            newCount++;
+                        } else if (katUpper.includes('REMINDER') || katUpper.includes('PERINGATAN') || katUpper.includes('SP')) {
+                            reminderCount++;
+                        } else {
+                            annualCount++;
                         }
+
+                        const rawNominal = row[idxNominal];
+                        const nominal = typeof rawNominal === 'number'
+                            ? rawNominal
+                            : (rawNominal ? parseFloat(String(rawNominal).replace(/[^0-9.-]/g, '')) || 0 : 0);
+
+                        const tglJatuhTempo = formatTanggalBhp(row[idxJatuhTempo]);
+                        const status = row[idxStatus] ? String(row[idxStatus]).trim().toUpperCase() : 'NOT PAID';
+
+                        parsedBhpList.push({
+                            wajibBayar: wajibBayar,
+                            noSpp: noSpp,
+                            kategori: kat,
+                            nominal: nominal,
+                            tglJatuhTempo: tglJatuhTempo,
+                            status: status
+                        });
                     });
 
                     currentBhpTagihanList = parsedBhpList;
@@ -1693,15 +1754,21 @@
                         : `kinerja_sarpras_by_year/${selectedYear}/bhp_detail`;
 
                     database.ref(pathNode).update({
-                        annual: annualCount || 81,
-                        new_tagihan: newCount || 0,
-                        reminder: reminderCount || 77,
+                        annual: annualCount,
+                        renewal: renewalCount,
+                        new_tagihan: newCount,
+                        reminder: reminderCount,
                         tagihan_list: parsedBhpList
                     }).then(() => {
-                        if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = annualCount || 81;
-                        if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = newCount || 0;
-                        if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = reminderCount || 77;
-                        Swal.fire('Upload Berhasil!', `Berhasil mengunggah ${parsedBhpList.length} data penagihan BHP ke Firebase.`, 'success');
+                        if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = annualCount;
+                        if (document.getElementById('inp_bhp_renewal')) document.getElementById('inp_bhp_renewal').value = renewalCount;
+                        if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = newCount;
+                        if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = reminderCount;
+                        Swal.fire(
+                            'Upload Berhasil!',
+                            `Berhasil mengunggah ${parsedBhpList.length} data BHP (Annual: ${annualCount}, Renewal: ${renewalCount}, New: ${newCount}, Reminder: ${reminderCount}) ke Firebase.`,
+                            'success'
+                        );
                     }).catch(err => Swal.fire('Error Firebase', err.message, 'error'));
 
                 } catch (err) {
@@ -1794,12 +1861,14 @@
 
             // Synchronize Donut BHP Chart
             if (data.bhp_detail && chartDonutBhp) {
-                const ann = parseInt(data.bhp_detail.annual) || 81;
-                const nww = parseInt(data.bhp_detail.new_tagihan) || 0;
-                const rem = parseInt(data.bhp_detail.reminder) || 77;
-                chartDonutBhp.updateSeries([ann, nww, rem]);
+                const ann = data.bhp_detail.annual !== undefined ? (parseInt(data.bhp_detail.annual) || 0) : 16;
+                const ren = data.bhp_detail.renewal !== undefined ? (parseInt(data.bhp_detail.renewal) || 0) : 2;
+                const nww = data.bhp_detail.new_tagihan !== undefined ? (parseInt(data.bhp_detail.new_tagihan) || 0) : 0;
+                const rem = data.bhp_detail.reminder !== undefined ? (parseInt(data.bhp_detail.reminder) || 0) : 11;
+                chartDonutBhp.updateSeries([ann, ren, nww, rem]);
                 const lblSurat = document.getElementById('lblTotalBhpSurat');
-                if (lblSurat) lblSurat.innerText = `${ann + nww + rem} Surat SPP`;
+                if (lblSurat) lblSurat.innerText = `${ann + ren + nww + rem} Surat SPP`;
+                if (data.bhp_detail.tagihan_list) currentBhpTagihanList = data.bhp_detail.tagihan_list;
             }
 
             // Pembaruan Dinamis Chart & Stat Box Realisasi Anggaran 5 Program
@@ -2073,9 +2142,10 @@
 
             // Populate Tab BHP Frekuensi
             if (data.bhp_detail) {
-                if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = (data.bhp_detail.annual !== undefined) ? data.bhp_detail.annual : 81;
+                if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = (data.bhp_detail.annual !== undefined) ? data.bhp_detail.annual : 16;
+                if (document.getElementById('inp_bhp_renewal')) document.getElementById('inp_bhp_renewal').value = (data.bhp_detail.renewal !== undefined) ? data.bhp_detail.renewal : 2;
                 if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = (data.bhp_detail.new_tagihan !== undefined) ? data.bhp_detail.new_tagihan : 0;
-                if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = (data.bhp_detail.reminder !== undefined) ? data.bhp_detail.reminder : 77;
+                if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = (data.bhp_detail.reminder !== undefined) ? data.bhp_detail.reminder : 11;
                 if (data.bhp_detail.tagihan_list) currentBhpTagihanList = data.bhp_detail.tagihan_list;
             }
         }
@@ -2216,9 +2286,15 @@
                 });
             }
 
-            const bhpAnnual = parseInt(document.getElementById('inp_bhp_annual')?.value) || 81;
-            const bhpNew = parseInt(document.getElementById('inp_bhp_new')?.value) || 0;
-            const bhpReminder = parseInt(document.getElementById('inp_bhp_reminder')?.value) || 77;
+            const rawBhpAnnual = document.getElementById('inp_bhp_annual')?.value;
+            const rawBhpRenewal = document.getElementById('inp_bhp_renewal')?.value;
+            const rawBhpNew = document.getElementById('inp_bhp_new')?.value;
+            const rawBhpReminder = document.getElementById('inp_bhp_reminder')?.value;
+
+            const bhpAnnual = (rawBhpAnnual !== undefined && rawBhpAnnual !== '') ? (parseInt(rawBhpAnnual) || 0) : 16;
+            const bhpRenewal = (rawBhpRenewal !== undefined && rawBhpRenewal !== '') ? (parseInt(rawBhpRenewal) || 0) : 2;
+            const bhpNew = (rawBhpNew !== undefined && rawBhpNew !== '') ? (parseInt(rawBhpNew) || 0) : 0;
+            const bhpReminder = (rawBhpReminder !== undefined && rawBhpReminder !== '') ? (parseInt(rawBhpReminder) || 0) : 11;
 
             const dataUpdate = {
                 tahun: selectedTahunEditor,
@@ -2245,6 +2321,7 @@
 
                 bhp_detail: {
                     annual: bhpAnnual,
+                    renewal: bhpRenewal,
                     new_tagihan: bhpNew,
                     reminder: bhpReminder,
                     tagihan_list: currentBhpTagihanList
