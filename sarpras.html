@@ -1648,136 +1648,121 @@
 
         // IMPORT EXCEL BHP TAGIHAN
         function importExcelBhpTagihan() {
-            const fileInput = document.getElementById('excelFileBhpTagihan');
-            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-                Swal.fire('Perhatian', 'Silakan pilih file Excel data penagihan BHP terlebih dahulu.', 'warning');
+    const fileInput = document.getElementById('excelFileBhpTagihan');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        Swal.fire('Perhatian', 'Silakan pilih file Excel data penagihan BHP terlebih dahulu.', 'warning');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array', cellDates: false });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+
+            // Baca berbasis nama header kolom Excel (raw: false agar format tanggal & nol di depan terjaga)
+            const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '', raw: false });
+
+            if (!rows || rows.length === 0) {
+                Swal.fire('Error', 'File Excel kosong atau format tidak sesuai.', 'error');
                 return;
             }
 
-            const file = fileInput.files[0];
-            const reader = new FileReader();
+            const parsedBhpList = [];
+            let annualCount = 0;
+            let renewalCount = 0;
+            let newCount = 0;
+            let reminderCount = 0;
 
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+            rows.forEach((r, idx) => {
+                const namaPemegangIzin = String(r['NAMA PEMEGANG IZIN'] || '').trim();
+                const noInvoice = String(r['NO. INVOICE'] || '').trim();
+                if (!namaPemegangIzin && !noInvoice) return;
 
-                    if (!jsonDataRaw || jsonDataRaw.length < 2) {
-                        Swal.fire('Error', 'File Excel kosong atau tidak memiliki baris data.', 'error');
-                        return;
-                    }
+                const tipeInvoice = String(r['TIPE INVOICE'] || 'ANNUAL').trim().toUpperCase();
+                if (tipeInvoice.includes('RENEWAL')) renewalCount++;
+                else if (tipeInvoice.includes('NEW')) newCount++;
+                else if (tipeInvoice.includes('REMINDER')) reminderCount++;
+                else annualCount++;
 
-                    const formatTanggalBhp = (val) => {
-                        if (!val) return '-';
-                        const namaBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-                        if (val instanceof Date && !isNaN(val.getTime())) {
-                            const dd = String(val.getDate()).padStart(2, '0');
-                            const mmm = namaBulan[val.getMonth()];
-                            const yyyy = val.getFullYear();
-                            return `${dd} ${mmm} ${yyyy}`;
-                        }
-                        const str = String(val).trim();
-                        const parsedDate = new Date(str);
-                        if (!isNaN(parsedDate.getTime()) && /\d{4}|\d{1,2}\/\d{1,2}/.test(str)) {
-                            const dd = String(parsedDate.getDate()).padStart(2, '0');
-                            const mmm = namaBulan[parsedDate.getMonth()];
-                            const yyyy = parsedDate.getFullYear();
-                            return `${dd} ${mmm} ${yyyy}`;
-                        }
-                        return str;
-                    };
+                const nilaiRaw = String(r['NILAI INVOICE'] || '0').replace(/[^0-9.-]/g, '');
 
-                    // Deteksi indeks kolom berdasarkan header baris pertama (default sesuai format Laporan Penanganan Piutang)
-                    const headerRow = (jsonDataRaw[0] || []).map(h => h ? String(h).trim().toUpperCase() : '');
-                    const findCol = (keywords, fallbackIdx) => {
-                        const idx = headerRow.findIndex(h => keywords.some(k => h === k || h.includes(k)));
-                        return idx !== -1 ? idx : fallbackIdx;
-                    };
+                parsedBhpList.push({
+                    no: parseInt(r['NO']) || (idx + 1),
+                    idInvoice: String(r['ID. INVOICE'] || '-').trim(),
+                    noInvoice: noInvoice || '-',
+                    idPemegangIzin: String(r['ID. PEMEGANG IZIN'] || '-').trim(),
+                    namaPemegangIzin: namaPemegangIzin || '-',
+                    noAplikasi: String(r['NO APLIKASI'] || '-').trim(),
+                    noRr: String(r['NO RR'] || '-').trim(),
+                    periodeAwalInvoice: String(r['PERIODE AWAL INVOICE'] || '-').trim(),
+                    nilaiInvoice: parseFloat(nilaiRaw) || 0,
+                    statusInvoice: String(r['STATUS INVOICE'] || 'NOT PAID').trim().toUpperCase(),
+                    tglTerbit: String(r['TGL TERBIT'] || '-').trim(),
+                    tglJatuhTempo: String(r['TGL JATUH TEMPO'] || '-').trim(),
+                    tipeInvoice: tipeInvoice,
+                    metodePenyampaian: String(r['METODE PENYAMPAIAN'] || '-').trim(),
+                    detailPenyampaian: String(r['DETAIL PENYAMPAIAN'] || '-').replace(/\r?\n/g, ' ').trim(),
+                    tglPenyampaian: String(r['TGL PENYAMPAIAN'] || '-').trim(),
+                    namaPenerima: String(r['NAMA PENERIMA'] || '-').trim() || '-',
+                    jabatanPenerima: String(r['JABATAN PENERIMA'] || '-').trim() || '-',
+                    linkBuktiPenyampaian: String(r['LINK BUKTI PENYAMPAIAN'] || '').trim(),
+                    permasalahan: String(r['PERMASALAHAN'] || '-').trim() || '-',
+                    keterangan: String(r['KETERANGAN'] || '-').trim() || '-'
+                });
+            });
 
-                    const idxWajibBayar = findCol(['NAMA PEMEGANG IZIN', 'WAJIB BAYAR', 'PERUSAHAAN'], 4);
-                    const idxNoSpp      = findCol(['NO. INVOICE', 'NO INVOICE', 'NOMOR SPP', 'NO SPP'], 2);
-                    const idxKategori   = findCol(['TIPE INVOICE', 'KATEGORI'], 12);
-                    const idxNominal    = findCol(['NILAI INVOICE', 'NOMINAL'], 8);
-                    const idxJatuhTempo = findCol(['TGL JATUH TEMPO', 'JATUH TEMPO'], 11);
-                    const idxStatus     = findCol(['STATUS INVOICE', 'STATUS'], 9);
+            if (parsedBhpList.length === 0) {
+                Swal.fire('Peringatan', 'Tidak ada baris data BHP yang valid ditemukan.', 'warning');
+                return;
+            }
 
-                    const parsedBhpList = [];
-                    let annualCount = 0, renewalCount = 0, newCount = 0, reminderCount = 0;
+            currentBhpTagihanList = parsedBhpList;
 
-                    jsonDataRaw.forEach((row, rowIndex) => {
-                        if (rowIndex === 0 || !row || row.length < 3) return;
+            const selectedYear = parseInt(selectedTahunEditor) || 2026;
+            const pathNode = (selectedYear === 2026)
+                ? 'kinerja_sarpras/bhp_detail'
+                : `kinerja_sarpras_by_year/${selectedYear}/bhp_detail`;
 
-                        const rawWajibBayar = row[idxWajibBayar];
-                        const rawNoSpp = row[idxNoSpp];
-                        if (!rawWajibBayar && !rawNoSpp) return;
+            Swal.fire({
+                title: 'Menyimpan Data...',
+                text: `Mengunggah ${parsedBhpList.length} data penagihan BHP ke Firebase`,
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
 
-                        const wajibBayar = rawWajibBayar ? String(rawWajibBayar).trim() : '-';
-                        const noSpp = rawNoSpp ? String(rawNoSpp).trim() : '-';
-                        const kat = row[idxKategori] ? String(row[idxKategori]).trim() : 'ANNUAL';
-                        const katUpper = kat.toUpperCase();
+            database.ref(pathNode).update({
+                annual: annualCount,
+                renewal: renewalCount,
+                new_tagihan: newCount,
+                reminder: reminderCount,
+                tagihan_list: parsedBhpList
+            }).then(() => {
+                if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = annualCount + renewalCount;
+                if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = newCount;
+                if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = reminderCount;
 
-                        if (katUpper.includes('RENEWAL') || katUpper.includes('PERPANJANGAN')) {
-                            renewalCount++;
-                        } else if (katUpper.includes('NEW') || katUpper.includes('BARU')) {
-                            newCount++;
-                        } else if (katUpper.includes('REMINDER') || katUpper.includes('PERINGATAN') || katUpper.includes('SP')) {
-                            reminderCount++;
-                        } else {
-                            annualCount++;
-                        }
-
-                        const rawNominal = row[idxNominal];
-                        const nominal = typeof rawNominal === 'number'
-                            ? rawNominal
-                            : (rawNominal ? parseFloat(String(rawNominal).replace(/[^0-9.-]/g, '')) || 0 : 0);
-
-                        const tglJatuhTempo = formatTanggalBhp(row[idxJatuhTempo]);
-                        const status = row[idxStatus] ? String(row[idxStatus]).trim().toUpperCase() : 'NOT PAID';
-
-                        parsedBhpList.push({
-                            wajibBayar: wajibBayar,
-                            noSpp: noSpp,
-                            kategori: kat,
-                            nominal: nominal,
-                            tglJatuhTempo: tglJatuhTempo,
-                            status: status
-                        });
-                    });
-
-                    currentBhpTagihanList = parsedBhpList;
-                    const selectedYear = parseInt(selectedTahunEditor) || 2026;
-                    const pathNode = (selectedYear === 2026) 
-                        ? 'kinerja_sarpras/bhp_detail' 
-                        : `kinerja_sarpras_by_year/${selectedYear}/bhp_detail`;
-
-                    database.ref(pathNode).update({
-                        annual: annualCount,
-                        renewal: renewalCount,
-                        new_tagihan: newCount,
-                        reminder: reminderCount,
-                        tagihan_list: parsedBhpList
-                    }).then(() => {
-                        if (document.getElementById('inp_bhp_annual')) document.getElementById('inp_bhp_annual').value = annualCount;
-                        if (document.getElementById('inp_bhp_renewal')) document.getElementById('inp_bhp_renewal').value = renewalCount;
-                        if (document.getElementById('inp_bhp_new')) document.getElementById('inp_bhp_new').value = newCount;
-                        if (document.getElementById('inp_bhp_reminder')) document.getElementById('inp_bhp_reminder').value = reminderCount;
-                        Swal.fire(
-                            'Upload Berhasil!',
-                            `Berhasil mengunggah ${parsedBhpList.length} data BHP (Annual: ${annualCount}, Renewal: ${renewalCount}, New: ${newCount}, Reminder: ${reminderCount}) ke Firebase.`,
-                            'success'
-                        );
-                    }).catch(err => Swal.fire('Error Firebase', err.message, 'error'));
-
-                } catch (err) {
-                    Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
-                }
-            };
-
-            reader.readAsArrayBuffer(file);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Upload Berhasil!',
+                    text: `Berhasil mengunggah ${parsedBhpList.length} data penagihan BHP & memperbarui dashboard bhp.html.`,
+                    confirmButtonText: 'OK'
+                });
+            }).catch(err => {
+                Swal.fire('Error Firebase', err.message, 'error');
+            });
+        } catch (err) {
+            console.error(err);
+            Swal.fire('Error Import', 'Gagal memproses file Excel: ' + err.message, 'error');
         }
+    };
+
+    reader.readAsArrayBuffer(file);
+}
 
         // LOAD DATA DASHBOARD MAIN REALTIME DARI FIREBASE
         function loadDataKinerjaRealtime(tahun = activeDashboardYear) {
