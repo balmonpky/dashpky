@@ -240,7 +240,7 @@
             color: #ffffff;
         }
 
-        /* 5 KARTU KPI UTAMA (ANNUAL & RENEWAL DIPISAH) */
+        /* 5 KARTU KPI UTAMA */
         .card-kpi-bhp {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -285,7 +285,7 @@
             flex-shrink: 0;
         }
 
-        /* COMMAND CENTER DARK NAVY BENTO PANELS (SERAGAM DENGAN DASHBOARD SEBELUMNYA) */
+        /* COMMAND CENTER DARK NAVY BENTO PANELS */
         .cc-grid-wrapper {
             background: #081e40;
             border: 1px solid #1e4b8f;
@@ -476,24 +476,46 @@
             padding: 1.5rem;
         }
 
-        /* TABEL SCROLLING */
+        /* TABEL SCROLLING VERTIKAL & HORIZONTAL SESUAI EXCEL 21 KOLOM */
         .table-data-scroll {
-            max-height: 350px;
-            overflow-y: auto;
+            max-height: 460px;
+            overflow: auto;
+        }
+        .table-data-scroll table {
+            border-collapse: separate;
+            border-spacing: 0;
         }
         .table-data-scroll table th {
             position: sticky;
             top: 0;
             background-color: #0f4c81 !important;
             color: white;
-            z-index: 2;
-            font-size: 0.75rem;
+            z-index: 3;
+            font-size: 0.72rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            padding: 0.65rem 0.75rem;
+            vertical-align: middle;
         }
         .table-data-scroll table td {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             vertical-align: middle;
+            white-space: nowrap;
+            padding: 0.55rem 0.75rem;
+        }
+        .table-data-scroll table td.col-wajib-bayar {
+            min-width: 240px;
+            max-width: 310px;
+            white-space: normal;
+            line-height: 1.35;
+        }
+        .table-data-scroll table td.col-detail-penyampaian {
+            min-width: 210px;
+            max-width: 280px;
+            white-space: normal;
+            line-height: 1.35;
         }
 
         .footer-custom {
@@ -624,7 +646,7 @@
                 </div>
             </div>
 
-            <!-- SEKSI 1: 5 KARTU KPI RINGKASAN TAGIHAN SPP (ANNUAL & RENEWAL DIPISAH DARI DATA SARPRAS) -->
+            <!-- SEKSI 1: 5 KARTU KPI RINGKASAN TAGIHAN SPP -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
                 <!-- KPI 1: Annual -->
                 <div class="col">
@@ -697,14 +719,14 @@
                 </div>
             </div>
 
-            <!-- SEKSI 2: DASHBOARD VISUALIZATION BENTO GRID (STRUKTUR SERAGAM DENGAN MENU SEBELUMNYA) -->
+            <!-- SEKSI 2: DASHBOARD VISUALIZATION BENTO GRID -->
             <div class="cc-grid-wrapper mb-4">
                 <div class="row g-2 align-items-stretch">
                     
                     <!-- KOLOM KIRI (3/12): 3 PANEL GRAFIK -->
                     <div class="col-lg-3 d-flex flex-column gap-2">
                         
-                        <!-- PANEL 1: PROPORSI KATEGORI TAGIHAN (RADIAL CONCENTRIC ARCS) -->
+                        <!-- PANEL 1: PROPORSI KATEGORI TAGIHAN -->
                         <div class="cc-panel flex-fill">
                             <div class="cc-panel-title">
                                 <span>Proporsi Kategori SPP</span>
@@ -741,7 +763,7 @@
                             <div id="chartRadarBhp" style="min-height: 185px;"></div>
                         </div>
 
-                        <!-- PANEL 3: DISTRIBUSI TAGIHAN SPP BHP (MEMPERTAHANKAN #chartDistribusiBhp) -->
+                        <!-- PANEL 3: DISTRIBUSI TAGIHAN SPP BHP -->
                         <div class="cc-panel flex-fill">
                             <div class="cc-panel-title">
                                 <span>Distribusi Tagihan SPP</span>
@@ -785,7 +807,7 @@
                                     </div>
                                 </div>
 
-                                <!-- MAIN AREA CHART (MEMPERTAHANKAN ID #chartProgressBulanan) -->
+                                <!-- MAIN AREA CHART -->
                                 <div id="chartProgressBulanan" style="min-height: 215px;"></div>
 
                                 <!-- PAGINATION DOTS -->
@@ -938,7 +960,7 @@
                 </div>
             </div>
 
-            <!-- SEKSI 3: TABEL DETAIL DATA DUKUNG SPP BHP -->
+            <!-- SEKSI 3: TABEL DETAIL DATA DUKUNG SPP BHP (STRUKTUR 21 KOLOM SESUAI EXCEL SARPRAS) -->
             <div class="row g-4 mb-4">
                 <div class="col-12">
                     <div class="card-custom">
@@ -947,38 +969,68 @@
                                 <h6 class="fw-bold text-dark mb-0">
                                     <i class="bi bi-table text-primary me-2"></i>Detail Daftar Penagihan SPP BHP Frekuensi Radio
                                 </h6>
-                                <small class="text-muted" style="font-size: 0.75rem;">Data riwayat penagihan dan status pembayaran wajib bayar</small>
+                                <small class="text-muted" style="font-size: 0.75rem;">Rincian Laporan Penanganan Piutang & Penyampaian Tagihan (Sinkronisasi Menu Sarpras)</small>
                             </div>
                             <span class="badge bg-primary text-white rounded-pill px-3 py-1.5 fw-bold" id="badgeTotalTable">29 Tagihan</span>
                         </div>
 
-                        <!-- SEARCH FILTER TABEL -->
+                        <!-- SEARCH & FILTER TABEL -->
                         <div class="row g-2 mb-3">
-                            <div class="col-md-6 col-lg-4">
+                            <div class="col-md-5 col-lg-4">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
-                                    <input type="text" id="inpSearchBhp" class="form-control" placeholder="Cari Wajib Bayar, Nomor SPP, atau Status..." onkeyup="filterBhpTable()">
+                                    <input type="text" id="inpSearchBhp" class="form-control" placeholder="Cari Pemegang Izin, No. Invoice, ID, No. RR..." onkeyup="filterBhpTable()">
                                 </div>
+                            </div>
+                            <div class="col-6 col-md-3 col-lg-2">
+                                <select id="filterTipeInvoice" class="form-select form-select-sm" onchange="filterBhpTable()">
+                                    <option value="">Semua Tipe Invoice</option>
+                                    <option value="ANNUAL">ANNUAL</option>
+                                    <option value="RENEWAL">RENEWAL</option>
+                                    <option value="NEW">NEW</option>
+                                    <option value="REMINDER">REMINDER</option>
+                                </select>
+                            </div>
+                            <div class="col-6 col-md-3 col-lg-2">
+                                <select id="filterStatusInvoice" class="form-select form-select-sm" onchange="filterBhpTable()">
+                                    <option value="">Semua Status</option>
+                                    <option value="PAID">PAID</option>
+                                    <option value="NOT PAID">NOT PAID</option>
+                                </select>
                             </div>
                         </div>
 
-                        <!-- TABEL SCROLL DATA -->
+                        <!-- TABEL SCROLL DATA (21 KOLOM SESUAI FORMAT EXCEL) -->
                         <div class="table-responsive table-data-scroll border rounded-3 bg-white">
                             <table class="table table-hover table-striped table-bordered align-middle text-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 40px;">No</th>
-                                        <th>Nama Wajib Bayar / Perusahaan</th>
-                                        <th>Nomor SPP / Tagihan</th>
-                                        <th>Kategori</th>
-                                        <th>Nominal (Rp)</th>
-                                        <th>Tgl Jatuh Tempo</th>
-                                        <th>Status Pembayaran</th>
+                                        <th style="width: 45px;">NO</th>
+                                        <th>ID. INVOICE</th>
+                                        <th>NO. INVOICE</th>
+                                        <th>ID. PEMEGANG IZIN</th>
+                                        <th class="text-start">NAMA PEMEGANG IZIN</th>
+                                        <th>NO APLIKASI</th>
+                                        <th>NO RR</th>
+                                        <th>PERIODE AWAL INVOICE</th>
+                                        <th class="text-end">NILAI INVOICE</th>
+                                        <th>STATUS INVOICE</th>
+                                        <th>TGL TERBIT</th>
+                                        <th>TGL JATUH TEMPO</th>
+                                        <th>TIPE INVOICE</th>
+                                        <th>METODE PENYAMPAIAN</th>
+                                        <th class="text-start">DETAIL PENYAMPAIAN</th>
+                                        <th>TGL PENYAMPAIAN</th>
+                                        <th>NAMA PENERIMA</th>
+                                        <th>JABATAN PENERIMA</th>
+                                        <th>LINK BUKTI PENYAMPAIAN</th>
+                                        <th>PERMASALAHAN</th>
+                                        <th>KETERANGAN</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyBhpData">
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-3">Memuat data penagihan BHP...</td>
+                                        <td colspan="21" class="text-center text-muted py-4">Memuat data penagihan BHP...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1027,38 +1079,141 @@
         let chartProgress = null;
         let rawBhpList = [];
 
-        // DATA DEFAULT SESUAI FILE EXCEL (LAPORAN PENANGANAN PIUTANG OKTOBER 2026)
+        // DATA DEFAULT SESUAI FILE EXCEL (21 KOLOM LENGKAP - LAPORAN PENANGANAN PIUTANG OKTOBER 2026)
         const defaultBhpTagihanList2026 = [
-            { wajibBayar: "AMANAH BORNEO BERSAMA, PT.", noSpp: "3339662", kategori: "REMINDER 2", nominal: 334169, tglJatuhTempo: "18 Nov 2026", status: "NOT PAID" },
-            { wajibBayar: "ANTANG GANDA UTAMA, PT.", noSpp: "3473753", kategori: "REMINDER 1", nominal: 2872739, tglJatuhTempo: "09 Nov 2026", status: "PAID" },
-            { wajibBayar: "BADAN PENANGGULANGAN BENCANA DAERAH KABUPATEN BARITO UTARA", noSpp: "3486915", kategori: "ANNUAL", nominal: 1141794, tglJatuhTempo: "16 Des 2026", status: "PAID" },
-            { wajibBayar: "BARITO TEKNIK PRASARANA, PT.", noSpp: "3587211", kategori: "ANNUAL", nominal: 1342415, tglJatuhTempo: "05 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "BARITO TEKNIK PRASARANA, PT.", noSpp: "3587212", kategori: "ANNUAL", nominal: 1356775, tglJatuhTempo: "21 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "BUMDES CANGKAL BAUSAHA", noSpp: "3563904", kategori: "ANNUAL", nominal: 86875, tglJatuhTempo: "03 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "BUPOLO INDONESIA, PT.", noSpp: "3439475", kategori: "REMINDER 3", nominal: 6149940, tglJatuhTempo: "30 Okt 2026", status: "PAID" },
-            { wajibBayar: "CV. MITRA AULIA", noSpp: "3179822", kategori: "ANNUAL", nominal: 135160, tglJatuhTempo: "28 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS KEHUTANAN PROVINSI KALIMANTAN TENGAH", noSpp: "3558011", kategori: "REMINDER 1", nominal: 1461203, tglJatuhTempo: "21 Nov 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS KEHUTANAN PROVINSI KALIMANTAN TENGAH", noSpp: "3114147", kategori: "REMINDER 3", nominal: 2992897, tglJatuhTempo: "29 Nov 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS KOMUNIKASI DAN INFORMATIKA KABUPATEN KAPUAS", noSpp: "3169312", kategori: "ANNUAL", nominal: 1458426, tglJatuhTempo: "15 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS KOMUNIKASI INFORMATIKA PERSANDIAN DAN STATISTIK PROV. KALTENG", noSpp: "3169448", kategori: "RENEWAL", nominal: 2620087, tglJatuhTempo: "15 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS KOMUNIKASI, INFORMATIKA DAN PERSANDIAN KAB. BARITO UTARA", noSpp: "3170153", kategori: "ANNUAL", nominal: 1380327, tglJatuhTempo: "16 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS PEMADAM KEBAKARAN DAN PENYELAMATAN KABUPATEN KAPUAS", noSpp: "3495213", kategori: "ANNUAL", nominal: 1624085, tglJatuhTempo: "29 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "DINAS PEMADAM KEBAKARAN DAN PENYELAMATAN KABUPATEN KOTAWARINGIN TIMUR", noSpp: "3171807", kategori: "ANNUAL", nominal: 1581775, tglJatuhTempo: "17 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "KANTOR KESEHATAN PELABUHAN PALANGKA RAYA", noSpp: "3565878", kategori: "ANNUAL", nominal: 2154211, tglJatuhTempo: "30 Nov 2026", status: "PAID" },
-            { wajibBayar: "KUMAI SENTOSA, PT.", noSpp: "3149244", kategori: "REMINDER 2", nominal: 599347, tglJatuhTempo: "25 Nov 2026", status: "NOT PAID" },
-            { wajibBayar: "PESONA CITRA PROPERTINDO, PT.", noSpp: "3338687", kategori: "REMINDER 2", nominal: 142514, tglJatuhTempo: "12 Nov 2026", status: "PAID" },
-            { wajibBayar: "RADIO BORNEO CITRA VOKALIA, PT.", noSpp: "3046274", kategori: "ANNUAL", nominal: 1411797, tglJatuhTempo: "11 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "RADIO CAHAYA NIKI SAE, PT.", noSpp: "3104679", kategori: "REMINDER 1", nominal: 1440033, tglJatuhTempo: "11 Nov 2026", status: "NOT PAID" },
-            { wajibBayar: "RADIO CITRA MUSIKA KUMALA, PT.", noSpp: "3177956", kategori: "ANNUAL", nominal: 723613, tglJatuhTempo: "25 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "SARITAMA MANDIRI ZAMRUD, PT.", noSpp: "3620992", kategori: "ANNUAL", nominal: 480860, tglJatuhTempo: "05 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "SDR. SYARIFUDIN", noSpp: "3167473", kategori: "REMINDER 12", nominal: 265593, tglJatuhTempo: "03 Nov 2026", status: "PAID" },
-            { wajibBayar: "SUMUR PANDANWANGI, PT.", noSpp: "3097885", kategori: "REMINDER 1", nominal: 1653527, tglJatuhTempo: "06 Nov 2026", status: "Paid" },
-            { wajibBayar: "TATA OPTIMA PROPERTI PALANGKA RAYA, PT.", noSpp: "3565964", kategori: "ANNUAL", nominal: 3655668, tglJatuhTempo: "08 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "TATA OPTIMA PROPERTI PALANGKA RAYA, PT.", noSpp: "3565808", kategori: "ANNUAL", nominal: 2524299, tglJatuhTempo: "08 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "TIBAWAN ENERGI INDONESIA, PT.", noSpp: "3567122", kategori: "ANNUAL", nominal: 325083, tglJatuhTempo: "07 Des 2026", status: "NOT PAID" },
-            { wajibBayar: "SDR. SYARIFUDIN", noSpp: "3167471", kategori: "REMINDER 11", nominal: 156792, tglJatuhTempo: "23 Okt 2026", status: "NOT PAID" },
-            { wajibBayar: "SDR. SYARIFUDIN", noSpp: "3166270", kategori: "RENEWAL", nominal: 214185, tglJatuhTempo: "16 Nov 2026", status: "NOT PAID" }
+            { no: 1, idInvoice: "3284837", noInvoice: "3339662", idPemegangIzin: "00122110", namaPemegangIzin: "AMANAH BORNEO BERSAMA, PT.", noAplikasi: "31957092023", noRr: "2713696", periodeAwalInvoice: "19 Sep 2026", nilaiInvoice: 334169, statusInvoice: "NOT PAID", tglTerbit: "19 Oct 2026", tglJatuhTempo: "18 Nov 2026", tipeInvoice: "REMINDER 2", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 822-5144-1901", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1_sBqqx7PWz12BOHnBF5qsU0qx20gJosu/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 2, idInvoice: "3279556", noInvoice: "3473753", idPemegangIzin: "00123788", namaPemegangIzin: "ANTANG GANDA UTAMA, PT.", noAplikasi: "39392102024", noRr: "3561647", periodeAwalInvoice: "10 Oct 2026", nilaiInvoice: 2872739, statusInvoice: "PAID", tglTerbit: "10 Oct 2026", tglJatuhTempo: "09 Nov 2026", tipeInvoice: "REMINDER 1", metodePenyampaian: "EMAIL", detailPenyampaian: "Penerima : antang.gandautama@dhanisthasuryanusantara.com", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/11YYNAptkA2uUQ5l-rJydyV2jP03LDyMV/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 3, idInvoice: "3284643", noInvoice: "3486915", idPemegangIzin: "00124328", namaPemegangIzin: "BADAN PENANGGULANGAN BENCANA DAERAH KABUPATEN BARITO UTARA", noAplikasi: "32086112024", noRr: "3614836", periodeAwalInvoice: "17 Dec 2026", nilaiInvoice: 1141794, statusInvoice: "PAID", tglTerbit: "18 Oct 2026", tglJatuhTempo: "16 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 821-4908-8800", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1eMG2XYj0sn1rMo2ycaKE61apeFFwzp7c/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 4, idInvoice: "3275355", noInvoice: "3587211", idPemegangIzin: "00122768", namaPemegangIzin: "BARITO TEKNIK PRASARANA, PT.", noAplikasi: "30921022024", noRr: "3085211/1", periodeAwalInvoice: "06 Dec 2026", nilaiInvoice: 1342415, statusInvoice: "NOT PAID", tglTerbit: "07 Oct 2026", tglJatuhTempo: "05 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-9851-1999", tglPenyampaian: "30 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1_pnEtk4A8KfxW4QGMiiZqi9zZCh1hj1p/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 5, idInvoice: "3287879", noInvoice: "3587212", idPemegangIzin: "00122768", namaPemegangIzin: "BARITO TEKNIK PRASARANA, PT.", noAplikasi: "37644122023", noRr: "2996936/1", periodeAwalInvoice: "22 Dec 2026", nilaiInvoice: 1356775, statusInvoice: "NOT PAID", tglTerbit: "23 Oct 2026", tglJatuhTempo: "21 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-9851-1999", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1_pnEtk4A8KfxW4QGMiiZqi9zZCh1hj1p/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 6, idInvoice: "3273745", noInvoice: "3563904", idPemegangIzin: "00125823", namaPemegangIzin: "BUMDES CANGKAL BAUSAHA", noAplikasi: "37071112025", noRr: "3896723", periodeAwalInvoice: "04 Dec 2026", nilaiInvoice: 86875, statusInvoice: "NOT PAID", tglTerbit: "05 Oct 2026", tglJatuhTempo: "03 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 852-4915-9705", tglPenyampaian: "01 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1brvCZLDM_kebIAhUIx7BcaC9yWYxXs05/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 7, idInvoice: "3272029", noInvoice: "3439475", idPemegangIzin: "00123687", namaPemegangIzin: "BUPOLO INDONESIA, PT.", noAplikasi: "35794072024", noRr: "3455424", periodeAwalInvoice: "31 Jul 2026", nilaiInvoice: 6149940, statusInvoice: "PAID", tglTerbit: "01 Oct 2026", tglJatuhTempo: "30 Oct 2026", tipeInvoice: "REMINDER 3", metodePenyampaian: "EMAIL", detailPenyampaian: "Penerima : adi.syatriya@kdc.co.id", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/16C8I-aN0oljpTlKz7faEcbnm4kmxbxow/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 8, idInvoice: "3291265", noInvoice: "3179822", idPemegangIzin: "00117259", namaPemegangIzin: "CV. MITRA AULIA", noAplikasi: "39364122020", noRr: "1044653", periodeAwalInvoice: "29 Dec 2026", nilaiInvoice: 135160, statusInvoice: "NOT PAID", tglTerbit: "30 Oct 2026", tglJatuhTempo: "28 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 851-9000-1720", tglPenyampaian: "30 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/11PoAR1HiSFlIrGwvTNt2Et52Ji9YCes-/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 9, idInvoice: "3287361", noInvoice: "3558011", idPemegangIzin: "00120025", namaPemegangIzin: "DINAS KEHUTANAN PROVINSI KALIMANTAN TENGAH", noAplikasi: "35479102025", noRr: "3868918", periodeAwalInvoice: "22 Oct 2026", nilaiInvoice: 1461203, statusInvoice: "NOT PAID", tglTerbit: "22 Oct 2026", tglJatuhTempo: "21 Nov 2026", tipeInvoice: "REMINDER 1", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-5376-0075", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1fjVW9rVxIzJRQcPygFsPMvCnrzS3DCB9/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 10, idInvoice: "3291258", noInvoice: "3114147", idPemegangIzin: "00120025", namaPemegangIzin: "DINAS KEHUTANAN PROVINSI KALIMANTAN TENGAH", noAplikasi: "38975082022", noRr: "1475478", periodeAwalInvoice: "30 Aug 2026", nilaiInvoice: 2992897, statusInvoice: "NOT PAID", tglTerbit: "30 Oct 2026", tglJatuhTempo: "29 Nov 2026", tipeInvoice: "REMINDER 3", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-5376-0075", tglPenyampaian: "30 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1fjVW9rVxIzJRQcPygFsPMvCnrzS3DCB9/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 11, idInvoice: "3283986", noInvoice: "3169312", idPemegangIzin: "00109582", namaPemegangIzin: "DINAS KOMUNIKASI DAN INFORMATIKA KABUPATEN KAPUAS", noAplikasi: "39809062019", noRr: "0831866", periodeAwalInvoice: "16 Dec 2026", nilaiInvoice: 1458426, statusInvoice: "NOT PAID", tglTerbit: "17 Oct 2026", tglJatuhTempo: "15 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 852-5196-1352", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/17YJ-zJqyyUO4rAdrbUkOtE-p_j1mrw4Z/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 12, idInvoice: "3284056", noInvoice: "3169448", idPemegangIzin: "00119044", namaPemegangIzin: "DINAS KOMUNIKASI INFORMATIKA PERSANDIAN DAN STATISTIK PROV. KALTENG", noAplikasi: "32631122021", noRr: "1216311", periodeAwalInvoice: "16 Dec 2026", nilaiInvoice: 2620087, statusInvoice: "NOT PAID", tglTerbit: "17 Oct 2026", tglJatuhTempo: "15 Dec 2026", tipeInvoice: "RENEWAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 821-3611-4099", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1cnpaVjehZpzkgMLhQeNMPdH4JW_LUv6w/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 13, idInvoice: "3284514", noInvoice: "3170153", idPemegangIzin: "00113142", namaPemegangIzin: "DINAS KOMUNIKASI, INFORMATIKA DAN PERSANDIAN KAB. BARITO UTARA", noAplikasi: "35268122019", noRr: "0833333", periodeAwalInvoice: "17 Dec 2026", nilaiInvoice: 1380327, statusInvoice: "NOT PAID", tglTerbit: "18 Oct 2026", tglJatuhTempo: "16 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 852-5144-4434", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1sQhDDSG9rw0E_w4qD8smGpmO4XyrcH51/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 14, idInvoice: "3291892", noInvoice: "3495213", idPemegangIzin: "00124530", namaPemegangIzin: "DINAS PEMADAM KEBAKARAN DAN PENYELAMATAN KABUPATEN KAPUAS", noAplikasi: "33605122024", noRr: "3644343", periodeAwalInvoice: "30 Dec 2026", nilaiInvoice: 1624085, statusInvoice: "NOT PAID", tglTerbit: "31 Oct 2026", tglJatuhTempo: "29 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-5492-3206", tglPenyampaian: "02 Nov 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1X4_qXvSApK9qqV9sPywnyISk-3sme2lc/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 15, idInvoice: "3284888", noInvoice: "3171807", idPemegangIzin: "00115769", namaPemegangIzin: "DINAS PEMADAM KEBAKARAN DAN PENYELAMATAN KABUPATEN KOTAWARINGIN TIMUR", noAplikasi: "35271122019", noRr: "0834193", periodeAwalInvoice: "18 Dec 2026", nilaiInvoice: 1581775, statusInvoice: "NOT PAID", tglTerbit: "19 Oct 2026", tglJatuhTempo: "17 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 853-4595-3380", tglPenyampaian: "26 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1JgdukCBnIrkb2_6fQr2mjxIHSISUCchF/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 16, idInvoice: "3272842", noInvoice: "3565878", idPemegangIzin: "00108648", namaPemegangIzin: "KANTOR KESEHATAN PELABUHAN PALANGKA RAYA", noAplikasi: "38093112025", noRr: "3908320", periodeAwalInvoice: "01 Dec 2026", nilaiInvoice: 2154211, statusInvoice: "PAID", tglTerbit: "02 Oct 2026", tglJatuhTempo: "30 Nov 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-4888-8171", tglPenyampaian: "19 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1jEd_1HOSWQt1sbRIvjgr1nKqJ1Jr02Yi/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 17, idInvoice: "3288892", noInvoice: "3149244", idPemegangIzin: "00120486", namaPemegangIzin: "KUMAI SENTOSA, PT.", noAplikasi: "30960092022", noRr: "1552175", periodeAwalInvoice: "26 Sep 2026", nilaiInvoice: 599347, statusInvoice: "NOT PAID", tglTerbit: "26 Oct 2026", tglJatuhTempo: "25 Nov 2026", tipeInvoice: "REMINDER 2", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 823-5886-8454", tglPenyampaian: "30 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/17KuhgSGQ98LjeQnTxQn89FWoEAudID1Y/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 18, idInvoice: "3281493", noInvoice: "3338687", idPemegangIzin: "00121799", namaPemegangIzin: "PESONA CITRA PROPERTINDO, PT.", noAplikasi: "31971092023", noRr: "2714082", periodeAwalInvoice: "13 Sep 2026", nilaiInvoice: 142514, statusInvoice: "PAID", tglTerbit: "13 Oct 2026", tglJatuhTempo: "12 Nov 2026", tipeInvoice: "REMINDER 2", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 858-8875-3008", tglPenyampaian: "19 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1QGekNPFoYLJ7kRtH2I4-LMsWeLnBxKjp/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 19, idInvoice: "3281487", noInvoice: "3046274", idPemegangIzin: "00006841", namaPemegangIzin: "RADIO BORNEO CITRA VOKALIA, PT.", noAplikasi: "15965122019", noRr: "0830135/1", periodeAwalInvoice: "12 Dec 2026", nilaiInvoice: 1411797, statusInvoice: "NOT PAID", tglTerbit: "13 Oct 2026", tglJatuhTempo: "11 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 896-6471-1065", tglPenyampaian: "19 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1WaFM6Eg3XUjsi6Xl2xlEXgRqhUSZUIH9/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 20, idInvoice: "3280129", noInvoice: "3104679", idPemegangIzin: "00101643", namaPemegangIzin: "RADIO CAHAYA NIKI SAE, PT.", noAplikasi: "19659102020", noRr: "0982604", periodeAwalInvoice: "12 Oct 2026", nilaiInvoice: 1440033, statusInvoice: "NOT PAID", tglTerbit: "12 Oct 2026", tglJatuhTempo: "11 Nov 2026", tipeInvoice: "REMINDER 1", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-2796-7861", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1ePwxFfg1jhwsWcvSLicpZEuWONCwt41_/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 21, idInvoice: "3289258", noInvoice: "3177956", idPemegangIzin: "00114232", namaPemegangIzin: "RADIO CITRA MUSIKA KUMALA, PT.", noAplikasi: "13762122018", noRr: "0668845", periodeAwalInvoice: "26 Dec 2026", nilaiInvoice: 723613, statusInvoice: "NOT PAID", tglTerbit: "27 Oct 2026", tglJatuhTempo: "25 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 813-1688-9996", tglPenyampaian: "30 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1IHI7zHYsTedPruwHkgrUHgwMcXTA0O52/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 22, idInvoice: "3275322", noInvoice: "3620992", idPemegangIzin: "00117736", namaPemegangIzin: "SARITAMA MANDIRI ZAMRUD, PT.", noAplikasi: "36760112023", noRr: "2916840/1", periodeAwalInvoice: "06 Dec 2026", nilaiInvoice: 480860, statusInvoice: "NOT PAID", tglTerbit: "07 Oct 2026", tglJatuhTempo: "05 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 852-5050-0722", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1R3a1AJ_DnfhVXxJvSlPx6m8lqd0_wdGv/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 23, idInvoice: "3273381", noInvoice: "3167473", idPemegangIzin: "00118721", namaPemegangIzin: "SDR. SYARIFUDIN", noAplikasi: "39108112021", noRr: "1196405", periodeAwalInvoice: "04 Nov 2025", nilaiInvoice: 265593, statusInvoice: "PAID", tglTerbit: "04 Oct 2026", tglJatuhTempo: "03 Nov 2026", tipeInvoice: "REMINDER 12", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 852-4870-5366", tglPenyampaian: "01 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1Mji4O1DZaV0IM-dYh8EHjbl7zUhjfyFr/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 24, idInvoice: "3275175", noInvoice: "3097885", idPemegangIzin: "00116975", namaPemegangIzin: "SUMUR PANDANWANGI, PT.", noAplikasi: "34099102020", noRr: "0979036", periodeAwalInvoice: "07 Oct 2026", nilaiInvoice: 1653527, statusInvoice: "PAID", tglTerbit: "07 Oct 2026", tglJatuhTempo: "06 Nov 2026", tipeInvoice: "REMINDER 1", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 812-5506-0906", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1utLPZvApkghP__nblWR2Y9bESP4TPB7f/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 25, idInvoice: "3279799", noInvoice: "3565964", idPemegangIzin: "00126010", namaPemegangIzin: "TATA OPTIMA PROPERTI PALANGKA RAYA, PT.", noAplikasi: "37968112025", noRr: "3906564", periodeAwalInvoice: "09 Dec 2026", nilaiInvoice: 3655668, statusInvoice: "NOT PAID", tglTerbit: "10 Oct 2026", tglJatuhTempo: "08 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 853-4802-7557", tglPenyampaian: "02 Nov 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1u8vUNDpzLW1YAIlQAPEQxQhKAyrxV7Y3/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 26, idInvoice: "3279800", noInvoice: "3565808", idPemegangIzin: "00126010", namaPemegangIzin: "TATA OPTIMA PROPERTI PALANGKA RAYA, PT.", noAplikasi: "37972112025", noRr: "3906645", periodeAwalInvoice: "09 Dec 2026", nilaiInvoice: 2524299, statusInvoice: "NOT PAID", tglTerbit: "10 Oct 2026", tglJatuhTempo: "08 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 853-4802-7557", tglPenyampaian: "02 Nov 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1u8vUNDpzLW1YAIlQAPEQxQhKAyrxV7Y3/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 27, idInvoice: "3278414", noInvoice: "3567122", idPemegangIzin: "00126002", namaPemegangIzin: "TIBAWAN ENERGI INDONESIA, PT.", noAplikasi: "38199112025", noRr: "3909682", periodeAwalInvoice: "08 Dec 2026", nilaiInvoice: 325083, statusInvoice: "NOT PAID", tglTerbit: "09 Oct 2026", tglJatuhTempo: "07 Dec 2026", tipeInvoice: "ANNUAL", metodePenyampaian: "EMAIL", detailPenyampaian: "Penerima : tibawanenergiindonesia@gmail.com", tglPenyampaian: "13 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1YLCPnx4wNgkNnhWQqjvu8tNJXD42jW6R/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 28, idInvoice: "3268385", noInvoice: "3167471", idPemegangIzin: "00118721", namaPemegangIzin: "SDR. SYARIFUDIN", noAplikasi: "30709112021", noRr: "1204909", periodeAwalInvoice: "24 Nov 2025", nilaiInvoice: 156792, statusInvoice: "NOT PAID", tglTerbit: "24 Sep 2026", tglJatuhTempo: "23 Oct 2026", tipeInvoice: "REMINDER 11", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 896-3241-2842", tglPenyampaian: "01 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1ydu5StGzkxbrY60beQz3oU-7Tvd7tX0w/view?usp=drive_link", permasalahan: "-", keterangan: "-" },
+            { no: 29, idInvoice: "3264704", noInvoice: "3166270", idPemegangIzin: "00118721", namaPemegangIzin: "SDR. SYARIFUDIN", noAplikasi: "30056112021", noRr: "1201336", periodeAwalInvoice: "17 Nov 2026", nilaiInvoice: 214185, statusInvoice: "NOT PAID", tglTerbit: "18 Sep 2026", tglJatuhTempo: "16 Nov 2026", tipeInvoice: "RENEWAL", metodePenyampaian: "WA", detailPenyampaian: "Penerima : +62 896-3241-2842", tglPenyampaian: "01 Oct 2026", namaPenerima: "-", jabatanPenerima: "-", linkBuktiPenyampaian: "https://drive.google.com/file/d/1ydu5StGzkxbrY60beQz3oU-7Tvd7tX0w/view?usp=drive_link", permasalahan: "-", keterangan: "-" }
         ];
+
+        // NORMALISASI RECORD AGAR KOMPATIBEL DENGAN UPLOAD EXCEL 21 KOLOM MAUPUN FORMAT LAMA SARPRAS
+        function normalizeBhpRecord(item, index) {
+            if (!item || typeof item !== 'object') return null;
+
+            // 1. Jika sudah berstruktur 21 kolom (camelCase atau header Excel langsung)
+            if (item.namaPemegangIzin !== undefined || item['NAMA PEMEGANG IZIN'] !== undefined || item.idInvoice !== undefined || item['ID. INVOICE'] !== undefined) {
+                return {
+                    no: item.no || item['NO'] || (index + 1),
+                    idInvoice: String(item.idInvoice ?? item['ID. INVOICE'] ?? '-').trim(),
+                    noInvoice: String(item.noInvoice ?? item['NO. INVOICE'] ?? '-').trim(),
+                    idPemegangIzin: String(item.idPemegangIzin ?? item['ID. PEMEGANG IZIN'] ?? '-').trim(),
+                    namaPemegangIzin: String(item.namaPemegangIzin ?? item['NAMA PEMEGANG IZIN'] ?? '-').trim(),
+                    noAplikasi: String(item.noAplikasi ?? item['NO APLIKASI'] ?? '-').trim(),
+                    noRr: String(item.noRr ?? item['NO RR'] ?? '-').trim(),
+                    periodeAwalInvoice: String(item.periodeAwalInvoice ?? item['PERIODE AWAL INVOICE'] ?? '-').trim(),
+                    nilaiInvoice: parseFloat(String(item.nilaiInvoice ?? item['NILAI INVOICE'] ?? 0).replace(/[^0-9.-]/g, '')) || 0,
+                    statusInvoice: String(item.statusInvoice ?? item['STATUS INVOICE'] ?? '-').trim().toUpperCase(),
+                    tglTerbit: String(item.tglTerbit ?? item['TGL TERBIT'] ?? '-').trim(),
+                    tglJatuhTempo: String(item.tglJatuhTempo ?? item['TGL JATUH TEMPO'] ?? '-').trim(),
+                    tipeInvoice: String(item.tipeInvoice ?? item['TIPE INVOICE'] ?? 'ANNUAL').trim().toUpperCase(),
+                    metodePenyampaian: String(item.metodePenyampaian ?? item['METODE PENYAMPAIAN'] ?? '-').trim(),
+                    detailPenyampaian: String(item.detailPenyampaian ?? item['DETAIL PENYAMPAIAN'] ?? '-').trim(),
+                    tglPenyampaian: String(item.tglPenyampaian ?? item['TGL PENYAMPAIAN'] ?? '-').trim(),
+                    namaPenerima: String(item.namaPenerima ?? item['NAMA PENERIMA'] ?? '-').trim() || '-',
+                    jabatanPenerima: String(item.jabatanPenerima ?? item['JABATAN PENERIMA'] ?? '-').trim() || '-',
+                    linkBuktiPenyampaian: String(item.linkBuktiPenyampaian ?? item['LINK BUKTI PENYAMPAIAN'] ?? '').trim(),
+                    permasalahan: String(item.permasalahan ?? item['PERMASALAHAN'] ?? '-').trim() || '-',
+                    keterangan: String(item.keterangan ?? item['KETERANGAN'] ?? '-').trim() || '-'
+                };
+            }
+
+            // 2. Fallback cerdas untuk data upload lama dari sarpras.html (row[1]..row[6] tergeser ke wajibBayar..status)
+            const rawCol1 = String(item.wajibBayar || '').trim();
+            const rawCol2 = String(item.noSpp || '').trim();
+            const rawCol3 = String(item.kategori || '').trim();
+            const rawCol5 = String(item.tglJatuhTempo || '').trim();
+            const rawCol6 = String(item.status || '').trim();
+
+            const isLegacyShiftedExcel = /^\d+$/.test(rawCol1) && /^\d+$/.test(rawCol2);
+            if (isLegacyShiftedExcel) {
+                const matched = defaultBhpTagihanList2026.find(d => d.noInvoice === rawCol2 || d.idInvoice === rawCol1);
+                if (matched) {
+                    return {
+                        ...matched,
+                        no: index + 1,
+                        idInvoice: rawCol1 || matched.idInvoice,
+                        noInvoice: rawCol2 || matched.noInvoice,
+                        idPemegangIzin: rawCol3 || matched.idPemegangIzin,
+                        noAplikasi: rawCol5 || matched.noAplikasi,
+                        noRr: rawCol6 || matched.noRr
+                    };
+                }
+                return {
+                    no: index + 1,
+                    idInvoice: rawCol1 || '-',
+                    noInvoice: rawCol2 || '-',
+                    idPemegangIzin: rawCol3 || '-',
+                    namaPemegangIzin: '-',
+                    noAplikasi: rawCol5 || '-',
+                    noRr: rawCol6 || '-',
+                    periodeAwalInvoice: '-',
+                    nilaiInvoice: parseFloat(item.nominal) || 0,
+                    statusInvoice: 'NOT PAID',
+                    tglTerbit: '-',
+                    tglJatuhTempo: '-',
+                    tipeInvoice: 'ANNUAL',
+                    metodePenyampaian: '-',
+                    detailPenyampaian: '-',
+                    tglPenyampaian: '-',
+                    namaPenerima: '-',
+                    jabatanPenerima: '-',
+                    linkBuktiPenyampaian: '',
+                    permasalahan: '-',
+                    keterangan: '-'
+                };
+            }
+
+            // 3. Fallback format lama non-Excel
+            return {
+                no: index + 1,
+                idInvoice: '-',
+                noInvoice: rawCol2 || '-',
+                idPemegangIzin: '-',
+                namaPemegangIzin: rawCol1 || '-',
+                noAplikasi: '-',
+                noRr: '-',
+                periodeAwalInvoice: '-',
+                nilaiInvoice: parseFloat(item.nominal) || 0,
+                statusInvoice: (rawCol6 || 'NOT PAID').toUpperCase(),
+                tglTerbit: '-',
+                tglJatuhTempo: rawCol5 || '-',
+                tipeInvoice: (rawCol3 || 'ANNUAL').toUpperCase(),
+                metodePenyampaian: '-',
+                detailPenyampaian: '-',
+                tglPenyampaian: '-',
+                namaPenerima: '-',
+                jabatanPenerima: '-',
+                linkBuktiPenyampaian: '',
+                permasalahan: '-',
+                keterangan: '-'
+            };
+        }
 
         // GRAFIK BENTO COMMAND CENTER
         let radialBhpInstance = null;
@@ -1075,7 +1230,7 @@
             loadBhpDataRealtime(selectedYear);
         });
 
-        // 1. INISIALISASI GRAFIK KOLOM KATEGORI (ANNUAL, RENEWAL, NEW, REMINDER, TOTAL)
+        // 1. INISIALISASI GRAFIK KOLOM KATEGORI
         function initChartDistribusi() {
             const options = {
                 series: [{
@@ -1096,9 +1251,7 @@
                         columnWidth: '52%'
                     }
                 },
-                dataLabels: {
-                    enabled: false
-                },
+                dataLabels: { enabled: false },
                 legend: { show: false },
                 xaxis: {
                     categories: ['Annual', 'Renewal', 'New', 'Reminder', 'Total'],
@@ -1202,7 +1355,6 @@
         }
 
         function initBentoSecondaryCharts() {
-            // 1. Radial Concentric (Top-Left)
             radialBhpInstance = new ApexCharts(document.getElementById('chartRadialBhp'), {
                 series: [55, 7, 38],
                 chart: { height: 155, type: 'radialBar', sparkline: { enabled: true } },
@@ -1219,7 +1371,6 @@
             });
             radialBhpInstance.render();
 
-            // 2. Radar Chart (Middle-Left)
             radarBhpInstance = new ApexCharts(document.getElementById('chartRadarBhp'), {
                 series: [
                     { name: 'Realisasi SPP', data: [16, 2, 0, 11, 29] },
@@ -1248,7 +1399,6 @@
             });
             radarBhpInstance.render();
 
-            // 3. Three Bottom Gauges
             gaugeAnnualInstance = new ApexCharts(document.getElementById('chartGaugeAnnual'), createBentoGaugeOptions('#38bdf8', 'Annual'));
             gaugeAnnualInstance.render();
 
@@ -1258,7 +1408,6 @@
             gaugeReminderInstance = new ApexCharts(document.getElementById('chartGaugeReminder'), createBentoGaugeOptions('#fbbf24', 'Reminder+New'));
             gaugeReminderInstance.render();
 
-            // 4. Donut Komposisi Kategori (Middle-Right)
             donutBhpInstance = new ApexCharts(document.getElementById('chartDonutBhp'), {
                 series: [16, 2, 0, 11],
                 chart: { height: 175, type: 'donut' },
@@ -1303,19 +1452,18 @@
         }
 
         function updateUIFromFirebase(data) {
-            // Default sesuai file Excel Laporan Penanganan Piutang Oktober 2026
             let annual = (String(selectedYear) === '2026') ? 16 : 0;
             let renewal = (String(selectedYear) === '2026') ? 2 : 0;
             let newTagihan = 0;
             let reminder = (String(selectedYear) === '2026') ? 11 : 0;
             let total = annual + renewal + newTagihan + reminder;
 
-            // Sinkronisasi daftar tagihan dari Firebase (menu sarpras.html) atau fallback Excel 2026
             let firebaseTagihanList = [];
             if (data.bhp_detail && data.bhp_detail.tagihan_list) {
-                firebaseTagihanList = Array.isArray(data.bhp_detail.tagihan_list)
+                const rawArr = Array.isArray(data.bhp_detail.tagihan_list)
                     ? data.bhp_detail.tagihan_list.filter(Boolean)
                     : Object.values(data.bhp_detail.tagihan_list).filter(Boolean);
+                firebaseTagihanList = rawArr.map((item, idx) => normalizeBhpRecord(item, idx)).filter(Boolean);
             }
 
             if (firebaseTagihanList.length > 0) {
@@ -1326,48 +1474,25 @@
                 rawBhpList = [];
             }
 
-            // Sinkronisasi jumlah kategori dari Firebase bhp_detail (update dari menu sarpras.html)
-            if (data.bhp_detail) {
-                const hasExplicitCounts = (
-                    data.bhp_detail.annual !== undefined ||
-                    data.bhp_detail.renewal !== undefined ||
-                    data.bhp_detail.perpanjangan !== undefined ||
-                    data.bhp_detail.new_tagihan !== undefined ||
-                    data.bhp_detail.new !== undefined ||
-                    data.bhp_detail.reminder !== undefined
-                );
-
-                if (hasExplicitCounts) {
-                    annual = parseInt(data.bhp_detail.annual) || 0;
-                    if (data.bhp_detail.renewal !== undefined) {
-                        renewal = parseInt(data.bhp_detail.renewal) || 0;
-                    } else if (data.bhp_detail.perpanjangan !== undefined) {
-                        renewal = parseInt(data.bhp_detail.perpanjangan) || 0;
-                    } else {
-                        renewal = 0;
-                    }
-                    if (data.bhp_detail.new_tagihan !== undefined) {
-                        newTagihan = parseInt(data.bhp_detail.new_tagihan) || 0;
-                    } else if (data.bhp_detail.new !== undefined) {
-                        newTagihan = parseInt(data.bhp_detail.new) || 0;
-                    } else {
-                        newTagihan = 0;
-                    }
-                    reminder = parseInt(data.bhp_detail.reminder) || 0;
-                } else if (firebaseTagihanList.length > 0) {
-                    annual = 0;
-                    renewal = 0;
-                    newTagihan = 0;
-                    reminder = 0;
-                    firebaseTagihanList.forEach(item => {
-                        const kat = (item.kategori || '').toLowerCase();
-                        if (kat.includes('renewal') || kat.includes('perpanjangan')) renewal++;
-                        else if (kat.includes('new') || kat.includes('baru')) newTagihan++;
-                        else if (kat.includes('reminder') || kat.includes('peringatan')) reminder++;
-                        else annual++;
-                    });
-                }
-
+            // Sinkronisasi hitungan kategori (prioritas dari daftar tagihan terstruktur jika tersedia)
+            if (rawBhpList.length > 0) {
+                annual = 0;
+                renewal = 0;
+                newTagihan = 0;
+                reminder = 0;
+                rawBhpList.forEach(item => {
+                    const kat = (item.tipeInvoice || '').toLowerCase();
+                    if (kat.includes('renewal') || kat.includes('perpanjangan')) renewal++;
+                    else if (kat.includes('new') || kat.includes('baru')) newTagihan++;
+                    else if (kat.includes('reminder') || kat.includes('peringatan')) reminder++;
+                    else annual++;
+                });
+                total = annual + renewal + newTagihan + reminder;
+            } else if (data.bhp_detail) {
+                annual = parseInt(data.bhp_detail.annual) || 0;
+                renewal = parseInt(data.bhp_detail.renewal ?? data.bhp_detail.perpanjangan) || 0;
+                newTagihan = parseInt(data.bhp_detail.new_tagihan ?? data.bhp_detail.new) || 0;
+                reminder = parseInt(data.bhp_detail.reminder) || 0;
                 total = annual + renewal + newTagihan + reminder;
             }
 
@@ -1386,7 +1511,7 @@
                 }]);
             }
 
-            // Update Grafik Progress Bulanan dari node sarpras atau default Excel 2026
+            // Update Grafik Progress Bulanan
             if (chartProgress) {
                 if (data.realisasi_anggaran) {
                     const listAngg = Array.isArray(data.realisasi_anggaran) ? data.realisasi_anggaran : Object.values(data.realisasi_anggaran);
@@ -1412,7 +1537,7 @@
                 }
             }
 
-            renderBhpTable(rawBhpList);
+            filterBhpTable();
             syncBentoBhpVisuals(annual, renewal, newTagihan, reminder, total, rawBhpList);
         }
 
@@ -1424,20 +1549,17 @@
             const pctReminderNew = total > 0 ? Math.round((reminderAndNew / total) * 100) : 0;
             const pctAnnualRenewal = total > 0 ? Math.round(((annual + renewal) / total) * 100) : 0;
 
-            // Update Hero Metrics di Panel Tengah
             document.getElementById('lblHeroTotalTagihan').textContent = total;
             document.getElementById('badgeHeroAnnualRenewal').textContent = `${pctAnnualRenewal}% Annual+Ren`;
             document.getElementById('lblHeroReminderNew').textContent = reminderAndNew;
             document.getElementById('badgeHeroReminder').textContent = `${pctReminderNew}% Rem+New`;
 
-            // Update Top 5 Strip (No.1 - No.5)
             document.getElementById('stripValAnnual').textContent = annual;
             document.getElementById('stripValRenewal').textContent = renewal;
             document.getElementById('stripValNew').textContent = newTagihan;
             document.getElementById('stripValReminder').textContent = reminder;
             document.getElementById('stripValTotal').textContent = total;
 
-            // Update Radial Arcs & Legend (Top-Left)
             document.getElementById('lblPctAnnual').textContent = `${pctAnnual}%`;
             document.getElementById('lblPctRenewal').textContent = `${pctRenewal}%`;
             document.getElementById('lblPctReminder').textContent = `${pctReminder}%`;
@@ -1445,7 +1567,6 @@
                 radialBhpInstance.updateSeries([pctAnnual, pctRenewal, pctReminder]);
             }
 
-            // Update Radar Chart (Middle-Left)
             if (radarBhpInstance) {
                 const targetBase = Math.max(total, 100);
                 radarBhpInstance.updateSeries([
@@ -1454,7 +1575,6 @@
                 ]);
             }
 
-            // Update 3 Bottom Gauges
             document.getElementById('lblGaugeValAnnual').textContent = annual;
             document.getElementById('lblGaugeValRenewal').textContent = renewal;
             document.getElementById('lblGaugeValReminder').textContent = reminderAndNew;
@@ -1466,26 +1586,24 @@
             // Update Panel "Terakhir" (Top-Right)
             if (list && list.length > 0) {
                 const lastItem = list[list.length - 1];
-                const nomStr = lastItem.nominal ? `Rp ${parseInt(lastItem.nominal).toLocaleString('id-ID')}` : 'Rp 0';
+                const nomStr = lastItem.nilaiInvoice ? `Rp ${parseInt(lastItem.nilaiInvoice).toLocaleString('id-ID')}` : 'Rp 0';
                 document.getElementById('lblLastBhpDate').textContent = lastItem.tglJatuhTempo || String(selectedYear);
-                document.getElementById('lblLastBhpSpp').textContent = lastItem.noSpp || '-';
-                document.getElementById('lblLastBhpWajibBayar').textContent = lastItem.wajibBayar || '-';
+                document.getElementById('lblLastBhpSpp').textContent = lastItem.noInvoice || '-';
+                document.getElementById('lblLastBhpWajibBayar').textContent = lastItem.namaPemegangIzin || '-';
                 document.getElementById('lblLastBhpNominal').textContent = nomStr;
-                document.getElementById('lblLastBhpKategori').textContent = `Kategori: ${lastItem.kategori || 'Annual'} • ${lastItem.status || 'Aktif'}`;
+                document.getElementById('lblLastBhpKategori').textContent = `Tipe: ${lastItem.tipeInvoice || 'ANNUAL'} • ${lastItem.statusInvoice || 'NOT PAID'}`;
             } else {
                 document.getElementById('lblLastBhpDate').textContent = String(selectedYear);
                 document.getElementById('lblLastBhpSpp').textContent = '-';
                 document.getElementById('lblLastBhpWajibBayar').textContent = 'Belum ada data';
                 document.getElementById('lblLastBhpNominal').textContent = 'Rp 0';
-                document.getElementById('lblLastBhpKategori').textContent = 'Kategori: -';
+                document.getElementById('lblLastBhpKategori').textContent = 'Tipe: -';
             }
 
-            // Update Donut Chart (Middle-Right)
             if (donutBhpInstance) {
                 donutBhpInstance.updateSeries([annual, renewal, newTagihan, reminder]);
             }
 
-            // Update Horizontal Rank Bars (Bottom-Right)
             const maxVal = Math.max(annual, renewal, reminder, newTagihan, 1);
             document.getElementById('lblRankAnnual').textContent = annual;
             document.getElementById('barRankAnnual').style.width = `${Math.round((annual / maxVal) * 100)}%`;
@@ -1500,7 +1618,7 @@
             document.getElementById('barRankNew').style.width = `${Math.round((newTagihan / maxVal) * 100)}%`;
         }
 
-        // 4. RENDER TABEL DETAIL TAGIHAN BHP
+        // 4. RENDER TABEL DETAIL TAGIHAN BHP (21 KOLOM SESUAI EXCEL)
         function renderBhpTable(list) {
             const tbody = document.getElementById('tbodyBhpData');
             const badgeTotal = document.getElementById('badgeTotalTable');
@@ -1508,30 +1626,66 @@
             if (badgeTotal) badgeTotal.textContent = `${list.length} Tagihan`;
 
             if (!list || list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">Belum ada data penagihan BHP.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="21" class="text-center text-muted py-4">Belum ada data penagihan BHP yang sesuai filter.</td></tr>`;
                 return;
             }
 
             let html = '';
             list.forEach((item, idx) => {
-                let badgeClass = 'bg-primary';
-                const st = (item.status || '').toLowerCase();
-                if (st === 'paid' || st.includes('lunas')) badgeClass = 'bg-success';
-                else if (st.includes('not paid') || st.includes('belum')) badgeClass = 'bg-danger';
-                else if (st.includes('peringatan') || st.includes('reminder')) badgeClass = 'bg-warning text-dark';
-                else if (st.includes('progres') || st.includes('proses')) badgeClass = 'bg-info text-white';
+                // Badge Status Invoice
+                let statusBadgeClass = 'bg-secondary';
+                const st = (item.statusInvoice || '').toUpperCase();
+                if (st === 'PAID' || st.includes('LUNAS')) statusBadgeClass = 'bg-success';
+                else if (st.includes('NOT PAID') || st.includes('BELUM')) statusBadgeClass = 'bg-danger';
 
-                const nominalFormatted = item.nominal ? `Rp ${parseInt(item.nominal).toLocaleString('id-ID')}` : 'Rp 0';
+                // Badge Tipe Invoice
+                let tipeBadgeClass = 'bg-primary-subtle text-primary border border-primary-subtle';
+                const tp = (item.tipeInvoice || '').toUpperCase();
+                if (tp.includes('REMINDER')) tipeBadgeClass = 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
+                else if (tp.includes('RENEWAL')) tipeBadgeClass = 'bg-info-subtle text-info-emphasis border border-info-subtle';
+                else if (tp.includes('NEW')) tipeBadgeClass = 'bg-success-subtle text-success-emphasis border border-success-subtle';
+
+                // Badge Metode Penyampaian
+                const metode = (item.metodePenyampaian || '-').toUpperCase();
+                const metodeHtml = metode === 'WA'
+                    ? `<span class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-whatsapp me-1"></i>WA</span>`
+                    : (metode === 'EMAIL'
+                        ? `<span class="badge bg-info-subtle text-info-emphasis border border-info-subtle"><i class="bi bi-envelope-fill me-1"></i>EMAIL</span>`
+                        : `<span class="badge bg-light text-dark border">${item.metodePenyampaian || '-'}</span>`);
+
+                // Link Bukti Penyampaian
+                const linkUrl = (item.linkBuktiPenyampaian || '').trim();
+                const linkHtml = (linkUrl && linkUrl.startsWith('http'))
+                    ? `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm py-0 px-2 fw-semibold" style="font-size: 0.72rem;"><i class="bi bi-file-earmark-check me-1"></i>Lihat Bukti</a>`
+                    : `<span class="text-muted">-</span>`;
+
+                const nominalFormatted = (item.nilaiInvoice !== undefined && item.nilaiInvoice !== null)
+                    ? `Rp ${parseInt(item.nilaiInvoice).toLocaleString('id-ID')}`
+                    : 'Rp 0';
 
                 html += `
                     <tr>
-                        <td class="fw-bold">${idx + 1}</td>
-                        <td class="text-start fw-semibold text-dark">${item.wajibBayar || '-'}</td>
-                        <td class="small text-primary fw-bold">${item.noSpp || '-'}</td>
-                        <td><span class="badge bg-light text-dark border">${item.kategori || 'Annual'}</span></td>
+                        <td class="fw-bold">${item.no || (idx + 1)}</td>
+                        <td class="text-secondary fw-medium">${item.idInvoice || '-'}</td>
+                        <td class="text-primary fw-bold">${item.noInvoice || '-'}</td>
+                        <td><span class="badge bg-light text-dark border fw-semibold">${item.idPemegangIzin || '-'}</span></td>
+                        <td class="text-start fw-semibold text-dark col-wajib-bayar">${item.namaPemegangIzin || '-'}</td>
+                        <td class="text-secondary">${item.noAplikasi || '-'}</td>
+                        <td class="fw-medium text-dark">${item.noRr || '-'}</td>
+                        <td>${item.periodeAwalInvoice || '-'}</td>
                         <td class="text-end fw-bold text-dark">${nominalFormatted}</td>
-                        <td class="small">${item.tglJatuhTempo || '-'}</td>
-                        <td><span class="badge ${badgeClass}">${item.status || 'Aktif'}</span></td>
+                        <td><span class="badge ${statusBadgeClass}">${item.statusInvoice || '-'}</span></td>
+                        <td>${item.tglTerbit || '-'}</td>
+                        <td class="fw-semibold">${item.tglJatuhTempo || '-'}</td>
+                        <td><span class="badge ${tipeBadgeClass}">${item.tipeInvoice || '-'}</span></td>
+                        <td>${metodeHtml}</td>
+                        <td class="text-start small text-secondary col-detail-penyampaian">${item.detailPenyampaian || '-'}</td>
+                        <td>${item.tglPenyampaian || '-'}</td>
+                        <td>${item.namaPenerima || '-'}</td>
+                        <td>${item.jabatanPenerima || '-'}</td>
+                        <td>${linkHtml}</td>
+                        <td>${item.permasalahan || '-'}</td>
+                        <td>${item.keterangan || '-'}</td>
                     </tr>
                 `;
             });
@@ -1540,17 +1694,33 @@
         }
 
         function filterBhpTable() {
-            const query = document.getElementById('inpSearchBhp').value.toLowerCase().trim();
-            if (!query) {
-                renderBhpTable(rawBhpList);
-                return;
-            }
+            const query = (document.getElementById('inpSearchBhp')?.value || '').toLowerCase().trim();
+            const filterTipe = (document.getElementById('filterTipeInvoice')?.value || '').toUpperCase().trim();
+            const filterStatus = (document.getElementById('filterStatusInvoice')?.value || '').toUpperCase().trim();
 
             const filtered = rawBhpList.filter(item => {
-                return (item.wajibBayar && item.wajibBayar.toLowerCase().includes(query)) ||
-                       (item.noSpp && item.noSpp.toLowerCase().includes(query)) ||
-                       (item.kategori && item.kategori.toLowerCase().includes(query)) ||
-                       (item.status && item.status.toLowerCase().includes(query));
+                const matchQuery = !query || [
+                    item.idInvoice,
+                    item.noInvoice,
+                    item.idPemegangIzin,
+                    item.namaPemegangIzin,
+                    item.noAplikasi,
+                    item.noRr,
+                    item.statusInvoice,
+                    item.tipeInvoice,
+                    item.metodePenyampaian,
+                    item.detailPenyampaian,
+                    item.namaPenerima,
+                    item.keterangan
+                ].some(val => val && String(val).toLowerCase().includes(query));
+
+                const itemTipe = (item.tipeInvoice || '').toUpperCase();
+                const matchTipe = !filterTipe || (filterTipe === 'REMINDER' ? itemTipe.includes('REMINDER') : itemTipe === filterTipe);
+
+                const itemStatus = (item.statusInvoice || '').toUpperCase();
+                const matchStatus = !filterStatus || itemStatus === filterStatus;
+
+                return matchQuery && matchTipe && matchStatus;
             });
 
             renderBhpTable(filtered);
